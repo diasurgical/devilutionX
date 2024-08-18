@@ -248,6 +248,7 @@ bool AreExtraFontsOutOfDate(MpqArchive &archive)
 void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
+		Log("init_cleanup() gbIsMultiplayer && gbRunGame");
 		pfile_write_hero(/*writeGameData=*/false);
 		sfile_write_stash();
 	}

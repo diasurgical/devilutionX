@@ -2587,9 +2587,10 @@ void LoadGame(bool firstflag)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
+//todo restore saving of inventory body
 void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 {
-	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + InventoryGridCells + MaxBeltItems; //7 + 40 + 8 = 55
+	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + /*InventoryGridCells +*/ MaxBeltItems; //7 + 40 + 8 = 55
 	//heroitems => hitms to get around VMU filename size limits
 	SaveHelper file(saveWriter, "hitms", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t)); //55 * 368 + 1 = 20241 bytes
 
@@ -2597,8 +2598,8 @@ void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 
 	for (const Item &item : player.InvBody)
 		SaveItem(file, item);
-	for (const Item &item : player.InvList)
-		SaveItem(file, item);
+	//for (const Item &item : player.InvList)
+		//SaveItem(file, item);
 	for (const Item &item : player.SpdList)
 		SaveItem(file, item);
 }

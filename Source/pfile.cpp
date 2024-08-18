@@ -611,33 +611,49 @@ std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::siz
 	error = 0;
 	const std::string path = dir_ + filename;
 	Log("path = \"{}\"", path);
-	std::byte* rawContents;
-	size_t read = fs_load(path.c_str(), &rawContents);
-        //read file size header
 	size_t size = 0;
-	memcpy(&size, rawContents, 4);
-	Log("rawSize = {}, {}, {}, {}", rawContents[0], rawContents[1], rawContents[2], rawContents[3]);
+	FILE* file = OpenFile(path.c_str(), "rb");
+	//first we read the real file size using the prewritten 4 byte header
+	std::fread(&size, sizeof(std::byte), 4, file);
 	Log("size = {}", size);
-	Log("read = {}", read);
 	if(size == 0)
 	{
+		app_fatal("SaveReader::ReadFile KO");
 		Log("SaveReader::ReadFile KO");
+		std::fclose(file);
 		return nullptr;
 	}
 	fileSize = size;
-	std::byte *contents = malloc(sizeof(std::byte) * size);
-	if(contents == nullptr)
-	{
-		Log("SaveReader::ReadFile KO");
-		return nullptr;
-	}
-	//skip 32 bit header that contains real file size
-	memcpy(contents, rawContents + 4, size);
-	result.reset(contents);
-	free(rawContents);
+	result.reset(new std::byte[size]);
+	std::fread(result.get(), sizeof(std::byte), size, file);
 	Log("SaveReader::ReadFile OK");
 	return result;
 }
+
+/*
+ * todo: add bzip compression to the inventory data (hitms)
+std::byte* compressHeroItems(std::byte *data, size_t size)
+{
+    int bzBuffToBuffCompress( char*         dest,
+                             unsigned int* destLen,
+                             char*         source,
+                             unsigned int  sourceLen,
+                             int           blockSize100k,
+                             int           verbosity,
+                             int           workFactor );
+
+    char *compressed = malloc(sizeof(std::byte) * size);
+    size_t compressedLength;
+    if(BZ_OK != bzBuffToBuffCompress(
+            compressed,
+            &compressedLength,
+            data,
+            size,
+
+    )) {
+        free(compressed);
+    }
+}*/
 
 bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t size)
 {
@@ -646,38 +662,44 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	Log("dir_ = {}", dir_);
 	Log("path = {}", path);
 	const char* baseName = basename(path.c_str());
-        if(!dir_.starts_with("/ram"))
-        {
-            int fd = fs_open(path.c_str(), O_WRONLY);
-            if(fd == -1)
-            {
-                LogError("fs_open(\"{}\", O_WRONLY) = -1", path);
-                return false;
-            }
-            std::byte rawSize[4];
-            memcpy(rawSize, &size, 4);
-            Log("size = {}", size);
-            Log("rawSize = {}, {}, {}, {}", rawSize[0], rawSize[1], rawSize[2], rawSize[3]);
-            //32 bit header to store the file size
-            if(fs_write(fd, rawSize, 4) == -1)
-            {
-                LogError("fs_write({}, {}, 4) = -1, file size header", fd, size);
-                return false;
-            }
-            if(fs_write(fd, data, size) == -1)
-            {
-                LogError("fs_write({}, data, {}) = -1", fd, size);
-                return false;
-            }
-            if(fs_close(fd) == -1)
-            {
-                LogError("fs_close({}) = -1", fd);
-                return false;
-            }
-            listdir("/vmu/a1", 0);
-            return true;
-        }
+	//vmu code
+	if(!dir_.starts_with("/ram"))
+	{
+		FILE* file = OpenFile(path.c_str(), "wb");
+		if(file == nullptr)
+		{
+			LogError("fopen(\"{}\", \"wb\") = nullptr", path);
+			app_fatal("SaveReader::ReadFile KO");
+			return false;
+		}
+		//32 bit header to store the file size because the VMU adds padding
+		//we will be reading it first in SaveWriter::ReadFile
+		std::byte rawSize[4];
+		memcpy(rawSize, &size, 4);
+		Log("size = {}", size);
+		Log("rawSize = {}, {}, {}, {}", rawSize[0], rawSize[1], rawSize[2], rawSize[3]);
+		size_t written = std::fwrite(rawSize, sizeof(std::byte), 4, file);
+		if(written != 4)
+		{
+			LogError("fwrite(rawSize, {], 4, file) = {} != 4, file size header", sizeof(std::byte), written);
+			return false;
+		}
+		written = std::fwrite(data, sizeof(std::byte), size, file);
+		if(written != size)
+		{
+			LogError("fwrite(data, {}, {}, file) = {} != -1", sizeof(std::byte), size, written);
+			return false;
+		}
+		if(std::fclose(file) != 0)
+		{
+			LogError("fclose(file) = 0");
+			return false;
+		}
+		listdir("/vmu/a1", 0);
+		return true;
+	}
 
+	//ramdisk code
 	bool exists = FileExists(baseName);
 	if(exists)
 	{
@@ -699,7 +721,7 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	int attach_result = fs_ramdisk_attach(baseName, buffer, size);
 	Log("\tAttach result: {}", attach_result);
 	Log("Current ramdisk contents:");
-        listdir("/ram", 0);
+	listdir("/ram", 0);
 	return attach_result != -1;
 }
 #else
@@ -825,6 +847,7 @@ void pfile_write_hero_demo(int demo)
 
 HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails)
 {
+	Log("pfile_compare_hero_demo({}, {})", demo, logDetails);
 	std::string referenceSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
 
 	if (!FileExists(referenceSavePath.c_str()))
@@ -1002,9 +1025,12 @@ void pfile_update(bool forceSave)
 		return;
 
 	Uint32 tick = SDL_GetTicks();
-	if (!forceSave && tick - prevTick <= 60000)
+	//600000 instead of 60000
+	//60000 ms is too frequent for the VMU, the game hangs too often and too long
+	if (!forceSave && tick - prevTick <= 600000)
 		return;
 
+	Log("pfile_update({})", forceSave);
 	prevTick = tick;
 	pfile_write_hero();
 	sfile_write_stash();

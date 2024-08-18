@@ -789,7 +789,11 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 	default:
 		if (IsCustomEvent(event.type)) {
 			if (gbIsMultiplayer)
+                        {
+				Log("IsCustomEvent({}) = true", event.type);
+				Log("pfile_write_hero");
 				pfile_write_hero();
+                        }
 			nthread_ignore_mutex(true);
 			PaletteFadeOut(8);
 			sound_stop();
@@ -909,6 +913,7 @@ void RunGameLoop(interface_mode uMsg)
 	demo::NotifyGameLoopEnd();
 
 	if (gbIsMultiplayer) {
+		Log("gbRunGame = {}, pfile_write_hero(/*writeGameData=*/false)", gbRunGame);
 		pfile_write_hero(/*writeGameData=*/false);
 		sfile_write_stash();
 	}
