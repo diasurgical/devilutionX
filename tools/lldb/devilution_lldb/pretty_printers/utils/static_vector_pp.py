@@ -28,5 +28,5 @@ class StaticVectorSyntheticChildrenProvider:
 
 def init(debugger: lldb.debugger):
     debugger.HandleCommand(
-        'type synthetic add -x "devilution::StaticVector<" -l lldbutils.pretty_printers.utils.static_vector_pp.StaticVectorSyntheticChildrenProvider'
+        'type synthetic add -x "devilution::StaticVector<" -l devilution_lldb.pretty_printers.utils.static_vector_pp.StaticVectorSyntheticChildrenProvider'
     )
