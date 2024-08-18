@@ -1,1 +1,1 @@
-source tools/gdb/pretty_printers/utils/static_vector_pp.py
+source tools/gdb/devilution_gdb/__init__.py
