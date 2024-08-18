@@ -2856,8 +2856,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SetRndSeed(DungeonSeeds[currlevel]);
 	IncProgress();
 	MakeLightTable();
-	SetDungeonMicros();
 	LoadLvlGFX();
+	SetDungeonMicros();
 	ClearClxDrawCache();
 	IncProgress();
 

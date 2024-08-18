@@ -1,19 +1,28 @@
 #include "levels/gendung.h"
 
+#include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <stack>
+#include <utility>
 #include <vector>
 
+#include <ankerl/unordered_dense.h>
+
+#include "engine/clx_sprite.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/drlg_l1.h"
 #include "levels/drlg_l2.h"
 #include "levels/drlg_l3.h"
 #include "levels/drlg_l4.h"
+#include "levels/reencode_dun_cels.hpp"
 #include "levels/town.h"
 #include "lighting.h"
 #include "options.h"
+#include "utils/bitset2d.hpp"
 
 namespace devilution {
 
@@ -490,12 +499,23 @@ void SetDungeonMicros()
 	size_t tileCount;
 	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
 
+	ankerl::unordered_dense::map<uint16_t, TileType> frameToTypeMap;
+	frameToTypeMap.reserve(4096);
 	for (size_t i = 0; i < tileCount / blocks; i++) {
 		uint16_t *pieces = &levelPieces[blocks * i];
 		for (size_t block = 0; block < blocks; block++) {
-			DPieceMicros[i].mt[block] = LevelCelBlock { SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]) };
+			const LevelCelBlock levelCelBlock { SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]) };
+			DPieceMicros[i].mt[block] = levelCelBlock;
+			if (levelCelBlock.hasValue()) {
+				if (const auto it = frameToTypeMap.find(levelCelBlock.frame()); it == frameToTypeMap.end()) {
+					frameToTypeMap.emplace_hint(it, levelCelBlock.frame(), levelCelBlock.type());
+				}
+			}
 		}
 	}
+	std::vector<std::pair<uint16_t, TileType>> frameToTypeList = std::move(frameToTypeMap).extract();
+	c_sort(frameToTypeList);
+	ReencodeDungeonCels(pDungeonCels, frameToTypeList);
 }
 
 void DRLG_InitTrans()

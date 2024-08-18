@@ -34,8 +34,9 @@ enum class TileType : uint8_t {
 
 	/**
 	 *🭮 Left-pointing 32x31 triangle. Encoded as 31 varying-width rows with 2 padding bytes before every even row.
+	 * We remove the padding bytes in `ReencodeDungeonCels`.
 	 *
-	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
+	 * The smallest rows (bottom and top) are 2px wide, the largest row is 32px wide (middle row).
 	 *
 	 * Encoding:
 	 * for i in [0, 30]:
@@ -46,8 +47,9 @@ enum class TileType : uint8_t {
 
 	/**
 	 * 🭬Right-pointing 32x31 triangle.  Encoded as 31 varying-width rows with 2 padding bytes after every even row.
+	 * We remove the padding bytes in `ReencodeDungeonCels`.
 	 *
-	 * The smallest rows (bottom and top) are 2px wide, the largest row is 16px wide (middle row).
+	 * The smallest rows (bottom and top) are 2px wide, the largest row is 32px wide (middle row).
 	 *
 	 * Encoding:
 	 * for i in [0, 30]:
