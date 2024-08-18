@@ -29,6 +29,7 @@
 #include "hwcursor.hpp"
 #include "init.h"
 #include "inv.h"
+#include "levels/gendung.h"
 #include "lighting.h"
 #include "lua/lua.hpp"
 #include "minitext.h"
@@ -48,9 +49,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "utils/attributes.h"
-#include "utils/bitset2d.hpp"
 #include "utils/display.h"
-#include "utils/endian.hpp"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
 
@@ -76,6 +75,16 @@ extern void DrawControllerModifierHints(const Surface &out);
 bool frameflag;
 
 namespace {
+
+[[nodiscard]] DVL_ALWAYS_INLINE bool IsFloor(Point tilePosition)
+{
+	return !TileHasAny(tilePosition, TileProperties::Solid);
+}
+
+[[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point tilePosition)
+{
+	return !IsFloor(tilePosition) || dSpecial[tilePosition.x][tilePosition.y] != 0;
+}
 
 /**
  * @brief Contains all Missile at rendering position
@@ -472,7 +481,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 	if ((SDL_GetModState() & KMOD_ALT) != 0)
 		transparency = false;
 #endif
-	const bool foliage = !TileHasAny(tilePosition, TileProperties::Solid);
+	const bool foliage = IsFloor(tilePosition);
 
 	const auto getFirstTileMaskLeft = [=](TileType tile) -> MaskType {
 		if (transparency) {
@@ -639,8 +648,9 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && (!MyPlayer->_pInfraFlag || TileHasAny(tilePosition, TileProperties::Solid)))
+	if (!IsTileLit(tilePosition) && !(MyPlayer->_pInfraFlag && IsFloor(tilePosition))) {
 		return;
+	}
 
 	if (static_cast<size_t>(mi) >= MaxMonsters) {
 		Log("Draw Monster: tried to draw illegal monster {}", mi);
@@ -836,8 +846,9 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
-				if (!TileHasAny(tilePosition, TileProperties::Solid))
+				if (IsFloor(tilePosition)) {
 					DrawFloorTile(out, tilePosition, targetBufferPosition);
+				}
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 			}
@@ -860,11 +871,6 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 			targetBufferPosition.x -= TILE_WIDTH / 2;
 		}
 	}
-}
-
-[[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point position)
-{
-	return TileHasAny(position, TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
 }
 
 /**
