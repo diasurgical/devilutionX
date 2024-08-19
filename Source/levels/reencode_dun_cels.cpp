@@ -19,7 +19,7 @@ namespace devilution {
 namespace {
 
 constexpr size_t LowerTriangleBloat = 16;
-constexpr size_t TriangleBloat = LowerTriangleBloat + 14;
+constexpr size_t TriangleBloat = 32;
 
 DVL_ALWAYS_INLINE void ReencodeDungeonCelsLeftTriangleLower(uint8_t *&dst, const uint8_t *&src)
 {
@@ -52,8 +52,9 @@ DVL_ALWAYS_INLINE void ReencodeDungeonCelsLeftTriangle(uint8_t *&dst, const uint
 		src += width;
 		dst += width;
 	}
+	src += 2; // Skips the two zero bytes (aka bloat).
+	width -= 2;
 	std::memcpy(dst, src, width);
-	src += width;
 	dst += width;
 }
 
@@ -86,8 +87,8 @@ DVL_ALWAYS_INLINE void ReencodeDungeonCelsRightTriangle(uint8_t *&dst, const uin
 		src += width;
 		dst += width;
 	}
+	width -= 2;
 	std::memcpy(dst, src, width);
-	src += width;
 	dst += width;
 }
 
@@ -95,7 +96,6 @@ DVL_ALWAYS_INLINE void ReencodeDungeonCelsLeftTrapezoid(uint8_t *&dst, const uin
 {
 	ReencodeDungeonCelsLeftTriangleLower(dst, src);
 	std::memcpy(dst, src, DunFrameWidth * 16);
-	src += DunFrameWidth * 16;
 	dst += DunFrameWidth * 16;
 }
 
@@ -103,7 +103,6 @@ DVL_ALWAYS_INLINE void ReencodeDungeonCelsRightTrapezoid(uint8_t *&dst, const ui
 {
 	ReencodeDungeonCelsRightTriangleLower(dst, src);
 	std::memcpy(dst, src, DunFrameWidth * 16);
-	src += DunFrameWidth * 16;
 	dst += DunFrameWidth * 16;
 }
 
