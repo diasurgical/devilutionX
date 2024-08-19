@@ -495,6 +495,19 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleLower(uint8_t *DVL_RESTRI
 	dst -= 16 * dstLineOffset;
 }
 
+template <>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleLower<LightType::FullyDark, /*Transparent=*/false>(uint8_t *DVL_RESTRICT &dst, ptrdiff_t dstLineOffset, const uint8_t *DVL_RESTRICT &src, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
+{
+	unsigned width = XStep;
+	for (unsigned i = 0; i < LowerHeight; ++i) {
+		BlitFillDirect(dst, width, 0);
+		dst -= dstLineOffset;
+		width += XStep;
+	}
+	src += 272;
+	dst -= 16 * dstLineOffset;
+}
+
 template <LightType Light, bool Transparent>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleUpper(uint8_t *DVL_RESTRICT dst, ptrdiff_t dstLineOffset, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
 {
@@ -513,6 +526,17 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleUpper(uint8_t *DVL_RESTRI
 	RenderLineTransparentOrOpaque<Light, Transparent>(dst - 12 * dstLineOffset, src + 228, 6, tbl);
 	RenderLineTransparentOrOpaque<Light, Transparent>(dst - 13 * dstLineOffset, src + 234, 4, tbl);
 	RenderLineTransparentOrOpaque<Light, Transparent>(dst - 14 * dstLineOffset, src + 238, 2, tbl);
+}
+
+template <>
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleUpper<LightType::FullyDark, /*Transparent=*/false>(uint8_t *DVL_RESTRICT dst, ptrdiff_t dstLineOffset, [[maybe_unused]] const uint8_t *DVL_RESTRICT src, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
+{
+	unsigned width = XStep;
+	for (unsigned i = 0; i < LowerHeight; ++i) {
+		BlitFillDirect(dst, width, 0);
+		dst -= dstLineOffset;
+		width += XStep;
+	}
 }
 
 template <LightType Light, bool Transparent>
