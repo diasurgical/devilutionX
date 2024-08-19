@@ -260,6 +260,13 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 	}
 }
 
+void LoadTrns()
+{
+	LoadFileInMem("plrgfx\\infra.trn", InfravisionTable);
+	LoadFileInMem("plrgfx\\stone.trn", StoneTable);
+	LoadFileInMem("gendata\\pause.trn", PauseTable);
+}
+
 void MakeLightTable()
 {
 	// Generate 16 gradually darker translation tables for doing lighting
@@ -318,10 +325,6 @@ void MakeLightTable()
 	// Verify that fully lit and fully dark light table optimizations are correctly enabled/disabled (nullptr = disabled)
 	assert((FullyLitLightTable != nullptr) == (LightTables[0][0] == 0 && std::adjacent_find(LightTables[0].begin(), LightTables[0].end() - 1, [](auto x, auto y) { return (x + 1) != y; }) == LightTables[0].end() - 1));
 	assert((FullyDarkLightTable != nullptr) == (std::all_of(LightTables[LightsMax].begin(), LightTables[LightsMax].end(), [](auto x) { return x == 0; })));
-
-	LoadFileInMem("plrgfx\\infra.trn", InfravisionTable);
-	LoadFileInMem("plrgfx\\stone.trn", StoneTable);
-	LoadFileInMem("gendata\\pause.trn", PauseTable);
 
 	// Generate light falloffs ranges
 	const float maxDarkness = 15;

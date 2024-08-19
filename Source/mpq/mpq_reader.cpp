@@ -40,6 +40,7 @@ MpqArchive &MpqArchive::operator=(MpqArchive &&other) noexcept
 	if (archive_ != nullptr)
 		libmpq__archive_close(archive_);
 	archive_ = other.archive_;
+	other.archive_ = nullptr;
 	tmp_buf_ = std::move(other.tmp_buf_);
 	return *this;
 }
