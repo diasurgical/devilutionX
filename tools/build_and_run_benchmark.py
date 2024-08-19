@@ -71,6 +71,7 @@ def main():
         nargs="*",
         help="arguments passed to the benchmark binary",
     )
+    parser.add_argument("--run", action=argparse.BooleanOptionalAction, default=True, help="If false, only builds the target")
     args = parser.parse_args()
     build = args.build
     if not build:
@@ -81,9 +82,10 @@ def main():
     try:
         maybe_create_build_dir(build, configure_args)
         build_target(build, args.target)
-        run_benchmark(build, args.target, args.benchmark_args, args.gperf)
-        if args.gperf:
-            run_pprof(build, args.target, args.port)
+        if args.run:
+            run_benchmark(build, args.target, args.benchmark_args, args.gperf)
+            if args.gperf:
+                run_pprof(build, args.target, args.port)
     except subprocess.CalledProcessError as e:
         print("Error:", e.cmd[0], "failed", file=sys.stderr)
         return e.returncode
