@@ -505,7 +505,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleLower<LightType::FullyDar
 		width += XStep;
 	}
 	src += 272;
-	dst -= 16 * dstLineOffset;
 }
 
 template <LightType Light, bool Transparent>
@@ -531,11 +530,11 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleUpper(uint8_t *DVL_RESTRI
 template <>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTriangleUpper<LightType::FullyDark, /*Transparent=*/false>(uint8_t *DVL_RESTRICT dst, ptrdiff_t dstLineOffset, [[maybe_unused]] const uint8_t *DVL_RESTRICT src, [[maybe_unused]] const uint8_t *DVL_RESTRICT tbl)
 {
-	unsigned width = XStep;
-	for (unsigned i = 0; i < LowerHeight; ++i) {
+	unsigned width = Width - XStep;
+	for (unsigned i = 0; i < TriangleUpperHeight; ++i) {
 		BlitFillDirect(dst, width, 0);
 		dst -= dstLineOffset;
-		width += XStep;
+		width -= XStep;
 	}
 }
 
