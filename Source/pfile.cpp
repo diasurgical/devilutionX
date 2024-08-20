@@ -36,6 +36,7 @@
 #include <kos/fs_ramdisk.h>
 #include <kos/fs.h>
 #include <libgen.h>
+#include <dc/vmu_pkg.h>
 #endif
 
 #ifdef UNPACKED_SAVES
@@ -607,26 +608,34 @@ void RemoveAllInvalidItems(Player &player)
 std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
 {
 	Log("SaveReader::ReadFile(\"{}\", fileSize, error)", filename);
-	std::unique_ptr<std::byte[]> result;
 	error = 0;
 	const std::string path = dir_ + filename;
 	Log("path = \"{}\"", path);
 	size_t size = 0;
-	FILE* file = OpenFile(path.c_str(), "rb");
-	//first we read the real file size using the prewritten 4 byte header
-	std::fread(&size, sizeof(std::byte), 4, file);
-	Log("size = {}", size);
-	if(size == 0)
+	uint8 *contents;
+	if(fs_load(path.c_str(), &contents) == -1)
 	{
-		app_fatal("SaveReader::ReadFile KO");
-		Log("SaveReader::ReadFile KO");
-		std::fclose(file);
+		error = 1;
+		LogError("fs_load(\"{}\", &contents) = -1", path);
+		app_fatal("SaveReader::ReadFile " + path + " KO");
 		return nullptr;
 	}
-	fileSize = size;
-	result.reset(new std::byte[size]);
-	std::fread(result.get(), sizeof(std::byte), size, file);
-	Log("SaveReader::ReadFile OK");
+	vmu_pkg_t package;
+	if(vmu_pkg_parse(contents, &package) < 0)
+	{
+		error = 1;
+		free(contents);
+		LogError("vmu_pkg_parse = -1");
+		app_fatal("vmu_pkg_parse failed");
+		return nullptr;
+	}
+	Log("Parsed package {} ({})", package.desc_short, package.desc_long);
+	fileSize = package.data_len;
+	std::unique_ptr<std::byte[]> result;
+	result.reset(new std::byte[fileSize]);
+	memcpy(result.get(), package.data, fileSize);
+	//free(package.data);
+	free(contents);
 	return result;
 }
 
@@ -663,38 +672,57 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	Log("path = {}", path);
 	const char* baseName = basename(path.c_str());
 	//vmu code
-	if(!dir_.starts_with("/ram"))
+	if(dir_.starts_with("/vmu"))
 	{
+		vmu_pkg_t package;
+		strcpy(package.app_id, "DevilutionX");
+		strncpy(package.desc_short, filename, 20);
+		strcpy(package.desc_long, "Diablo 1 save data");
+		package.icon_cnt = 0;
+		package.icon_anim_speed = 0;
+		package.eyecatch_type = VMUPKG_EC_NONE;
+		package.data_len = size;
+		package.data = new uint8[size];
+		memcpy(package.data, data, size);
+
+		uint8 *contents;
+		size_t packageSize;
+		if(vmu_pkg_build(&package, &contents, &packageSize) < 0)
+		{
+			delete[] package.data;
+			LogError("vmu_pkg_build failed");
+			app_fatal("vmu_pkg_build failed");
+			return false;
+		}
 		FILE* file = OpenFile(path.c_str(), "wb");
 		if(file == nullptr)
 		{
+			delete[] package.data;
+			free(contents);
 			LogError("fopen(\"{}\", \"wb\") = nullptr", path);
-			app_fatal("SaveReader::ReadFile KO");
+			app_fatal("SaveReader::WriteFile KO");
 			return false;
 		}
-		//32 bit header to store the file size because the VMU adds padding
-		//we will be reading it first in SaveWriter::ReadFile
-		std::byte rawSize[4];
-		memcpy(rawSize, &size, 4);
-		Log("size = {}", size);
-		Log("rawSize = {}, {}, {}, {}", rawSize[0], rawSize[1], rawSize[2], rawSize[3]);
-		size_t written = std::fwrite(rawSize, sizeof(std::byte), 4, file);
-		if(written != 4)
+		size_t written = std::fwrite(contents, sizeof(uint8), packageSize, file);
+		if(written != packageSize)
 		{
-			LogError("fwrite(rawSize, {], 4, file) = {} != 4, file size header", sizeof(std::byte), written);
-			return false;
-		}
-		written = std::fwrite(data, sizeof(std::byte), size, file);
-		if(written != size)
-		{
-			LogError("fwrite(data, {}, {}, file) = {} != -1", sizeof(std::byte), size, written);
+			delete[] package.data;
+			free(contents);
+			std::fclose(file);
+			LogError("fwrite(data, {}, {}, file) = {} != -1", sizeof(uint8), packageSize, written);
+			app_fatal("vmu fwrite call failed");
 			return false;
 		}
 		if(std::fclose(file) != 0)
 		{
+			delete[] package.data;
+			free(contents);
 			LogError("fclose(file) = 0");
+			app_fatal("fclose(file) = 0");
 			return false;
 		}
+		delete[] package.data;
+		free(contents);
 		listdir("/vmu/a1", 0);
 		return true;
 	}
@@ -797,6 +825,7 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	std::unique_ptr<std::byte[]> result = archive.ReadFile(pszName, length, error);
 	if (error != 0) {
 		Log("ReadArchive 0 error = {}", error);
+		app_fatal("ReadArchive 0 = " + error);
 		return nullptr;
 	}
 
@@ -804,6 +833,7 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
 	if (decodedLength == 0) {
 		Log("ReadArchive nullptr");
+		app_fatal("decodedLength = 0");
 		return nullptr;
 	}
 	if(strcmp(pszName, "hero") == 0)
@@ -878,6 +908,7 @@ void sfile_write_stash()
 
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 {
+	Log("pfile_ui_set_hero_infos");
 	memset(hero_names, 0, sizeof(hero_names));
 
 	for (uint32_t i = 0; i < MAX_CHARACTERS; i++) {
@@ -885,9 +916,12 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 		if (archive) {
 			PlayerPack pkplr;
 			if (ReadHero(*archive, &pkplr)) {
+				Log("ReadHero OK");
+				Log("Player {}, HP = {}", pkplr.pName, pkplr.pHPBase);
 				_uiheroinfo uihero;
 				uihero.saveNumber = i;
 				strcpy(hero_names[i], pkplr.pName);
+				Log("hero_names[{}] = {}", i, pkplr.pName);
 				bool hasSaveGame = ArchiveContainsGame(*archive);
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
@@ -902,9 +936,14 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 				Game2UiPlayer(player, &uihero, hasSaveGame);
 				uiAddHeroInfo(&uihero);
 			}
+                        else {
+				Log("ReadHero(*archive, &pkplr) failed");
+				app_fatal("ReadHero(*archive, &pkplr) failed");
+			}
 		}
 	}
 
+	Log("pfile_ui_set_hero_infos OK");
 	return true;
 }
 
@@ -993,6 +1032,7 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	LoadHeroItems(player);
 	RemoveAllInvalidItems(player);
 	CalcPlrInv(player, false);
+	Log("pfile_read_player_from_save OK");
 }
 
 void pfile_save_level()
