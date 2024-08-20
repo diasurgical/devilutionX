@@ -1166,7 +1166,7 @@ void world_draw_black_tile(const Surface &out, int sx, int sy)
 	}
 	if (clipRight.width > 0) {
 		uint8_t *dst = out.at(static_cast<int>(sx + Width + clipRight.left), static_cast<int>(sy - clipRight.bottom));
-		RenderRightTriangle<LightType::FullyDark, /*Transparent=*/false>(dst + Width, dstPitch, nullptr, nullptr, clipRight);
+		RenderRightTriangle<LightType::FullyDark, /*Transparent=*/false>(dst, dstPitch, nullptr, nullptr, clipRight);
 	}
 }
 
