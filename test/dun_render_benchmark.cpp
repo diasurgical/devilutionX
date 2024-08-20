@@ -112,5 +112,20 @@ DEFINE_FOR_TILE_TYPE(Square)
 DEFINE_FOR_TILE_TYPE(LeftTrapezoid)
 DEFINE_FOR_TILE_TYPE(RightTrapezoid)
 
+void BM_RenderBlackTile(benchmark::State &state)
+{
+	InitOnce();
+	Surface out = Surface(SdlSurface.get());
+	size_t numItemsProcessed = 0;
+	for (auto _ : state) {
+		world_draw_black_tile(out, 320, 240);
+		uint8_t color = out[Point { 310, 200 }];
+		benchmark::DoNotOptimize(color);
+		++numItemsProcessed;
+	}
+	state.SetItemsProcessed(numItemsProcessed);
+}
+BENCHMARK(BM_RenderBlackTile);
+
 } // namespace
 } // namespace devilution
