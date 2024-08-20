@@ -1050,96 +1050,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileDispatch(TileType tile, uint8
 	}
 }
 
-// Blit with left and vertical clipping.
-void RenderBlackTileClipLeftAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, int sx, DiamondClipY clipY)
-{
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
-	// Lower triangle (drawn bottom to top):
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = clipY.lowerBottom + 1; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
-		const auto w = 2 * XStep * i;
-		const auto curX = sx + TILE_WIDTH / 2 - XStep * i;
-		if (curX >= 0) {
-			memset(dst, 0, w);
-		} else if (-curX <= w) {
-			memset(dst - curX, 0, w + curX);
-		}
-	}
-	dst += 2 * XStep + XStep * clipY.upperBottom;
-	// Upper triangle (drawn bottom to top):
-	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = clipY.upperBottom; i < upperMax; ++i, dst -= dstPitch - XStep) {
-		const auto w = 2 * XStep * (TriangleUpperHeight - i);
-		const auto curX = sx + TILE_WIDTH / 2 - XStep * (TriangleUpperHeight - i);
-		if (curX >= 0) {
-			memset(dst, 0, w);
-		} else if (-curX <= w) {
-			memset(dst - curX, 0, w + curX);
-		} else {
-			break;
-		}
-	}
-}
-
-// Blit with right and vertical clipping.
-void RenderBlackTileClipRightAndVertical(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, int_fast16_t maxWidth, DiamondClipY clipY)
-{
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
-	// Lower triangle (drawn bottom to top):
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = clipY.lowerBottom + 1; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
-		const auto width = 2 * XStep * i;
-		const auto endX = TILE_WIDTH / 2 + XStep * i;
-		const auto skip = endX > maxWidth ? endX - maxWidth : 0;
-		if (width > skip)
-			memset(dst, 0, width - skip);
-	}
-	dst += 2 * XStep + XStep * clipY.upperBottom;
-	// Upper triangle (drawn bottom to top):
-	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
-		const auto width = TILE_WIDTH - 2 * XStep * i;
-		const auto endX = TILE_WIDTH / 2 + XStep * (TriangleUpperHeight - i + 1);
-		const auto skip = endX > maxWidth ? endX - maxWidth : 0;
-		if (width <= skip)
-			break;
-		memset(dst, 0, width - skip);
-	}
-}
-
-// Blit with vertical clipping only.
-void RenderBlackTileClipY(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, DiamondClipY clipY)
-{
-	dst += XStep * (LowerHeight - clipY.lowerBottom - 1);
-	// Lower triangle (drawn bottom to top):
-	const auto lowerMax = LowerHeight - clipY.lowerTop;
-	for (auto i = 1 + clipY.lowerBottom; i <= lowerMax; ++i, dst -= dstPitch + XStep) {
-		memset(dst, 0, 2 * XStep * i);
-	}
-	dst += 2 * XStep + XStep * clipY.upperBottom;
-	// Upper triangle (drawn bottom to top):
-	const auto upperMax = TriangleUpperHeight - clipY.upperTop;
-	for (auto i = 1 + clipY.upperBottom; i <= upperMax; ++i, dst -= dstPitch - XStep) {
-		memset(dst, 0, TILE_WIDTH - 2 * XStep * i);
-	}
-}
-
-// Blit a black tile without clipping (must be fully in bounds).
-void RenderBlackTileFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch)
-{
-	dst += XStep * (LowerHeight - 1);
-	// Tile is fully in bounds, can use constant loop boundaries.
-	// Lower triangle (drawn bottom to top):
-	for (unsigned i = 1; i <= LowerHeight; ++i, dst -= dstPitch + XStep) {
-		memset(dst, 0, 2 * XStep * i);
-	}
-	dst += 2 * XStep;
-	// Upper triangle (drawn bottom to to top):
-	for (unsigned i = 1; i <= TriangleUpperHeight; ++i, dst -= dstPitch - XStep) {
-		memset(dst, 0, TILE_WIDTH - 2 * XStep * i);
-	}
-}
-
 } // namespace
 
 #ifdef DUN_RENDER_STATS
@@ -1239,24 +1149,24 @@ void world_draw_black_tile(const Surface &out, int sx, int sy)
 #ifdef DEBUG_RENDER_OFFSET_Y
 	sy += DEBUG_RENDER_OFFSET_Y;
 #endif
-	auto clip = CalculateClip(sx, sy, TILE_WIDTH, TriangleHeight, out);
-	if (clip.width <= 0 || clip.height <= 0)
-		return;
+	const Clip clipLeft = CalculateClip(sx, sy, Width, TriangleHeight, out);
+	if (clipLeft.height <= 0) return;
+	Clip clipRight;
+	clipRight.top = clipLeft.top;
+	clipRight.bottom = clipLeft.bottom;
+	clipRight.left = (sx + Width) < 0 ? -(sx + Width) : 0;
+	clipRight.right = sx + Width + Width > out.w() ? sx + Width + Width - out.w() : 0;
+	clipRight.width = Width - clipRight.left - clipRight.right;
+	clipRight.height = clipLeft.height;
 
-	auto clipY = CalculateDiamondClipY(clip);
-	uint8_t *dst = out.at(sx, static_cast<int>(sy - clip.bottom));
-	if (clip.width == TILE_WIDTH) {
-		if (clip.height == TriangleHeight) {
-			RenderBlackTileFull(dst, out.pitch());
-		} else {
-			RenderBlackTileClipY(dst, out.pitch(), clipY);
-		}
-	} else {
-		if (clip.right == 0) {
-			RenderBlackTileClipLeftAndVertical(dst, out.pitch(), sx, clipY);
-		} else {
-			RenderBlackTileClipRightAndVertical(dst, out.pitch(), clip.width, clipY);
-		}
+	const uint16_t dstPitch = out.pitch();
+	if (clipLeft.width > 0) {
+		uint8_t *dst = out.at(static_cast<int>(sx + clipLeft.left), static_cast<int>(sy - clipLeft.bottom));
+		RenderLeftTriangle<LightType::FullyDark, /*Transparent=*/false>(dst, dstPitch, nullptr, nullptr, clipLeft);
+	}
+	if (clipRight.width > 0) {
+		uint8_t *dst = out.at(static_cast<int>(sx + Width + clipRight.left), static_cast<int>(sy - clipRight.bottom));
+		RenderRightTriangle<LightType::FullyDark, /*Transparent=*/false>(dst + Width, dstPitch, nullptr, nullptr, clipRight);
 	}
 }
 
