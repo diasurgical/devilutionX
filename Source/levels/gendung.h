@@ -105,20 +105,6 @@ enum class DungeonFlag : uint8_t {
 };
 use_enum_as_flags(DungeonFlag);
 
-enum class TileProperties : uint8_t {
-	// clang-format off
-	None             = 0,
-	Solid            = 1 << 0,
-	BlockLight       = 1 << 1,
-	BlockMissile     = 1 << 2,
-	Transparent      = 1 << 3,
-	TransparentLeft  = 1 << 4,
-	TransparentRight = 1 << 5,
-	Trap             = 1 << 7,
-	// clang-format on
-};
-use_enum_as_flags(TileProperties);
-
 enum _difficulty : uint8_t {
 	DIFF_NORMAL,
 	DIFF_NIGHTMARE,
@@ -137,10 +123,6 @@ struct MegaTile {
 	uint16_t micro2;
 	uint16_t micro3;
 	uint16_t micro4;
-};
-
-struct MICROS {
-	LevelCelBlock mt[16];
 };
 
 struct ShadowStruct {
@@ -376,5 +358,16 @@ void DRLG_LPass3(int lv);
 bool IsNearThemeRoom(WorldTilePosition position);
 void InitLevels();
 void FloodTransparencyValues(uint8_t floorID);
+
+DVL_ALWAYS_INLINE const uint8_t *GetDunFrame(uint32_t frame)
+{
+	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
+	return reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[frame])]);
+}
+
+DVL_ALWAYS_INLINE const uint8_t *GetDunFrameFoliage(uint32_t frame)
+{
+	return GetDunFrame(frame) + ReencodedTriangleFrameSize;
+}
 
 } // namespace devilution

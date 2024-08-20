@@ -23,6 +23,7 @@
 #include "lighting.h"
 #include "options.h"
 #include "utils/bitset2d.hpp"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -499,22 +500,25 @@ void SetDungeonMicros()
 	size_t tileCount;
 	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
 
-	ankerl::unordered_dense::map<uint16_t, TileType> frameToTypeMap;
+	ankerl::unordered_dense::map<uint16_t, DunFrameInfo> frameToTypeMap;
 	frameToTypeMap.reserve(4096);
-	for (size_t i = 0; i < tileCount / blocks; i++) {
-		uint16_t *pieces = &levelPieces[blocks * i];
-		for (size_t block = 0; block < blocks; block++) {
+	for (size_t levelPieceId = 0; levelPieceId < tileCount / blocks; levelPieceId++) {
+		uint16_t *pieces = &levelPieces[blocks * levelPieceId];
+		for (uint32_t block = 0; block < blocks; block++) {
 			const LevelCelBlock levelCelBlock { SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]) };
-			DPieceMicros[i].mt[block] = levelCelBlock;
+			DPieceMicros[levelPieceId].mt[block] = levelCelBlock;
 			if (levelCelBlock.hasValue()) {
 				if (const auto it = frameToTypeMap.find(levelCelBlock.frame()); it == frameToTypeMap.end()) {
-					frameToTypeMap.emplace_hint(it, levelCelBlock.frame(), levelCelBlock.type());
+					frameToTypeMap.emplace_hint(it, levelCelBlock.frame(),
+					    DunFrameInfo { static_cast<uint8_t>(block), levelCelBlock.type(), SOLData[levelPieceId] });
 				}
 			}
 		}
 	}
-	std::vector<std::pair<uint16_t, TileType>> frameToTypeList = std::move(frameToTypeMap).extract();
-	c_sort(frameToTypeList);
+	std::vector<std::pair<uint16_t, DunFrameInfo>> frameToTypeList = std::move(frameToTypeMap).extract();
+	c_sort(frameToTypeList, [](const std::pair<uint16_t, DunFrameInfo> &a, const std::pair<uint16_t, DunFrameInfo> &b) {
+		return a.first < b.first;
+	});
 	ReencodeDungeonCels(pDungeonCels, frameToTypeList);
 }
 

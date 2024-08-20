@@ -2857,6 +2857,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 	LoadTrns();
 	MakeLightTable();
+	LoadLevelSOLData();
+	IncProgress();
 	LoadLvlGFX();
 	SetDungeonMicros();
 	ClearClxDrawCache();
@@ -2911,7 +2913,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	if (!setlevel) {
 		CreateLevel(lvldir);
 		IncProgress();
-		LoadLevelSOLData();
 		SetRndSeed(DungeonSeeds[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
@@ -3038,8 +3039,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			IncProgress();
 		}
 		InitCorpses();
-		IncProgress();
-		LoadLevelSOLData();
 		IncProgress();
 
 		if (lvldir == ENTRY_WARPLVL)
