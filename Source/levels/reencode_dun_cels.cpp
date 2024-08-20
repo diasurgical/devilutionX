@@ -18,9 +18,6 @@
 namespace devilution {
 namespace {
 
-constexpr size_t LowerTriangleBloat = 16;
-constexpr size_t TriangleBloat = 32;
-
 DVL_ALWAYS_INLINE void ReencodeDungeonCelsLeftTriangleLower(uint8_t *&dst, const uint8_t *&src)
 {
 	unsigned width = 0;
@@ -106,28 +103,131 @@ DVL_ALWAYS_INLINE void ReencodeDungeonCelsRightTrapezoid(uint8_t *&dst, const ui
 	dst += DunFrameWidth * 16;
 }
 
-size_t GetReencodedSize(const uint8_t *dungeonCels, std::span<std::pair<uint16_t, TileType>> frames)
+DVL_ALWAYS_INLINE void RenderTransparentSquare(uint8_t *dst, const uint8_t *src)
+{
+	for (unsigned i = 0; i < DunFrameHeight; ++i, dst -= 2 * DunFrameWidth) {
+		uint_fast8_t drawWidth = DunFrameWidth;
+		while (drawWidth > 0) {
+			auto v = static_cast<int8_t>(*src++);
+			if (v > 0) {
+				std::memcpy(dst, src, v);
+				src += v;
+			} else {
+				v = static_cast<int8_t>(-v);
+			}
+			dst += v;
+			drawWidth -= v;
+		}
+	}
+}
+
+DVL_ALWAYS_INLINE void ExtractFoliageLeftTriangle(uint8_t *&dst, uint8_t *src)
+{
+	for (int w = 2, y = 31; y >= 16; --y, w += 2, src -= DunFrameWidth) {
+		std::memcpy(dst, src + (DunFrameWidth - w), w);
+		std::memset(src + (DunFrameWidth - w), 0, w);
+		dst += w;
+	}
+	for (int w = 30, y = 15; y > 0; --y, w -= 2, src -= DunFrameWidth) {
+		std::memcpy(dst, src + (DunFrameWidth - w), w);
+		std::memset(src + (DunFrameWidth - w), 0, w);
+		dst += w;
+	}
+}
+
+DVL_ALWAYS_INLINE void ExtractFoliageRightTriangle(uint8_t *&dst, uint8_t *src)
+{
+	for (int w = 2, y = 31; y >= 16; --y, w += 2, src -= DunFrameWidth) {
+		std::memcpy(dst, src, w);
+		std::memset(src, 0, w);
+		dst += w;
+	}
+	for (int w = 30, y = 15; y > 0; --y, w -= 2, src -= DunFrameWidth) {
+		std::memcpy(dst, src, w);
+		std::memset(src, 0, w);
+		dst += w;
+	}
+}
+
+DVL_ALWAYS_INLINE void ExtractFoliageTransparentSquare(uint8_t *&dst, const uint8_t *src)
+{
+	// The bottom 16 lines are always transparent, foliage only
+	// applies to the upper half of the tile.
+	src -= DunFrameHeight * 16;
+	for (int y = 16; y > 0; --y, src -= 2 * DunFrameWidth) {
+		unsigned transparentRun = 0;
+		unsigned solidRun = 0;
+		for (int x = 0; x < DunFrameWidth; ++x) {
+			if (*src++ != 0) {
+				if (transparentRun != 0) {
+					*dst++ = static_cast<uint8_t>(-static_cast<int8_t>(transparentRun));
+					transparentRun = 0;
+				}
+				++solidRun;
+			} else {
+				if (solidRun != 0) {
+					*dst++ = solidRun;
+					std::memcpy(dst, src - solidRun, solidRun);
+					dst += solidRun;
+					solidRun = 0;
+				}
+				++transparentRun;
+			}
+		}
+		if (transparentRun != 0) {
+			*dst++ = static_cast<uint8_t>(-static_cast<int8_t>(transparentRun));
+		} else if (solidRun != 0) {
+			*dst++ = solidRun;
+			std::memcpy(dst, src - solidRun, solidRun);
+			dst += solidRun;
+		}
+	}
+}
+
+DVL_ALWAYS_INLINE void ReencodeFloorWithFoliage(uint8_t *&dst, const uint8_t *&src, TileType tileType)
+{
+	uint8_t surface[DunFrameWidth * DunFrameHeight] {};
+	uint8_t *surfaceLastLine = &surface[DunFrameWidth * (DunFrameHeight - 1)];
+	RenderTransparentSquare(surfaceLastLine, src);
+	if (tileType == TileType::LeftTriangle) {
+		ExtractFoliageLeftTriangle(dst, surfaceLastLine);
+	} else {
+		ExtractFoliageRightTriangle(dst, surfaceLastLine);
+	}
+	ExtractFoliageTransparentSquare(dst, surfaceLastLine);
+}
+
+size_t GetReencodedSize(const uint8_t *dungeonCels, std::span<std::pair<uint16_t, DunFrameInfo>> frames)
 {
 	size_t result = (2 + frames.size()) * 4;
 	const auto *srcOffsets = reinterpret_cast<const uint32_t *>(dungeonCels);
-	for (const auto &[frame, type] : frames) {
+	for (const auto &[frame, info] : frames) {
 		size_t frameSize;
-		switch (type) {
+		switch (info.type) {
 		case TileType::TransparentSquare: {
 			const uint32_t srcFrameBegin = SDL_SwapLE32(srcOffsets[frame]);
-			const uint32_t srcFrameEnd = SDL_SwapLE32(srcOffsets[frame + 1]);
-			frameSize = srcFrameEnd - srcFrameBegin;
+			if (info.isFloor()) {
+				uint8_t out[1024];
+				uint8_t *outIt = out;
+				const uint8_t *src = &dungeonCels[srcFrameBegin];
+				const TileType newType = info.isFloorLeft() ? TileType::LeftTriangle : TileType::RightTriangle;
+				ReencodeFloorWithFoliage(outIt, src, newType);
+				frameSize = outIt - out;
+			} else {
+				const uint32_t srcFrameEnd = SDL_SwapLE32(srcOffsets[frame + 1]);
+				frameSize = srcFrameEnd - srcFrameBegin;
+			}
 		} break;
 		case TileType::Square: {
 			frameSize = DunFrameWidth * DunFrameHeight;
 		} break;
 		case TileType::LeftTriangle:
 		case TileType::RightTriangle:
-			frameSize = 544 - TriangleBloat;
+			frameSize = ReencodedTriangleFrameSize;
 			break;
 		case TileType::LeftTrapezoid:
 		case TileType::RightTrapezoid:
-			frameSize = 800 - LowerTriangleBloat;
+			frameSize = ReencodedTrapezoidFrameSize;
 			break;
 		}
 		result += frameSize;
@@ -137,11 +237,12 @@ size_t GetReencodedSize(const uint8_t *dungeonCels, std::span<std::pair<uint16_t
 
 } // namespace
 
-void ReencodeDungeonCels(std::unique_ptr<std::byte[]> &dungeonCels, std::span<std::pair<uint16_t, TileType>> frames)
+void ReencodeDungeonCels(std::unique_ptr<std::byte[]> &dungeonCels, std::span<std::pair<uint16_t, DunFrameInfo>> frames)
 {
 	const auto *srcData = reinterpret_cast<const uint8_t *>(dungeonCels.get());
 	const auto *srcOffsets = reinterpret_cast<const uint32_t *>(srcData);
 
+	int numFoliage = 0;
 	LogVerbose("Re-encoding dungeon CELs: {} frames, {} bytes",
 	    FormatInteger(SDL_SwapLE32(srcOffsets[0])),
 	    FormatInteger(SDL_SwapLE32(srcOffsets[SDL_SwapLE32(srcOffsets[0]) + 1])));
@@ -149,18 +250,24 @@ void ReencodeDungeonCels(std::unique_ptr<std::byte[]> &dungeonCels, std::span<st
 	const size_t outSize = GetReencodedSize(srcData, frames);
 	std::unique_ptr<std::byte[]> result { new std::byte[outSize] };
 	auto *const resultPtr = reinterpret_cast<uint8_t *>(result.get());
-	WriteLE32(resultPtr, frames.size());
+	WriteLE32(resultPtr, static_cast<uint32_t>(frames.size()));
 	uint8_t *out = resultPtr + (2 + frames.size()) * 4; // number of frames, frame offsets, file size
-	for (const auto &[frame, type] : frames) {
-		WriteLE32(&resultPtr[static_cast<size_t>(frame * 4)], out - resultPtr);
+	for (const auto &[frame, info] : frames) {
+		WriteLE32(&resultPtr[static_cast<size_t>(frame * 4)], static_cast<uint32_t>(out - resultPtr));
 		const uint32_t srcFrameBegin = SDL_SwapLE32(srcOffsets[frame]);
 		const uint8_t *src = &srcData[srcFrameBegin];
-		switch (type) {
+		switch (info.type) {
 		case TileType::TransparentSquare: {
-			const uint32_t srcFrameEnd = SDL_SwapLE32(srcOffsets[frame + 1]);
-			const uint32_t size = srcFrameEnd - srcFrameBegin;
-			std::memcpy(out, src, size);
-			out += size;
+			if (info.isFloor()) {
+				const TileType newType = info.isFloorLeft() ? TileType::LeftTriangle : TileType::RightTriangle;
+				ReencodeFloorWithFoliage(out, src, newType);
+				++numFoliage;
+			} else {
+				const uint32_t srcFrameEnd = SDL_SwapLE32(srcOffsets[frame + 1]);
+				const uint32_t size = srcFrameEnd - srcFrameBegin;
+				std::memcpy(out, src, size);
+				out += size;
+			}
 		} break;
 		case TileType::Square:
 			std::memcpy(out, src, DunFrameWidth * DunFrameHeight);
@@ -180,12 +287,13 @@ void ReencodeDungeonCels(std::unique_ptr<std::byte[]> &dungeonCels, std::span<st
 			break;
 		}
 	}
-	WriteLE32(&resultPtr[(1 + frames.size()) * 4], outSize);
+	WriteLE32(&resultPtr[(1 + frames.size()) * 4], static_cast<uint32_t>(outSize));
 
 	const auto *dstOffsets = reinterpret_cast<const uint32_t *>(resultPtr);
-	LogVerbose(" Re-encoded dungeon CELs: {} frames, {} bytes",
+	LogVerbose(" Re-encoded dungeon CELs: {} frames, {} bytes. Extracted {} foliage tiles.",
 	    FormatInteger(SDL_SwapLE32(dstOffsets[0])),
-	    FormatInteger(SDL_SwapLE32(dstOffsets[SDL_SwapLE32(dstOffsets[0]) + 1])));
+	    FormatInteger(SDL_SwapLE32(dstOffsets[SDL_SwapLE32(dstOffsets[0]) + 1])),
+	    FormatInteger(numFoliage));
 
 	dungeonCels = std::move(result);
 }

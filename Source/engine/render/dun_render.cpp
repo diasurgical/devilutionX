@@ -49,17 +49,10 @@ constexpr int_fast16_t TriangleUpperHeight = DunFrameHeight / 2 - 1;
 /** Height of the upper rectangle of a trapezoid tile. */
 constexpr int_fast16_t TrapezoidUpperHeight = DunFrameHeight / 2;
 
-constexpr int_fast16_t TriangleHeight = LowerHeight + TriangleUpperHeight;
+constexpr int_fast16_t TriangleHeight = DunFrameTriangleHeight;
 
 /** For triangles, for each pixel drawn vertically, this many pixels are drawn horizontally. */
 constexpr int_fast16_t XStep = 2;
-
-int_fast16_t GetTileHeight(TileType tile)
-{
-	if (tile == TileType::LeftTriangle || tile == TileType::RightTriangle)
-		return TriangleHeight;
-	return Height;
-}
 
 #ifdef DEBUG_STR
 std::pair<std::string_view, UiFlags> GetTileDebugStr(TileType tile)
@@ -322,10 +315,12 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderSquare(uint8_t *DVL_RESTRICT dst,
 }
 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareFull(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, unsigned height)
 {
 	int8_t prefix = InitPrefix<PrefixIncrement>();
-	for (auto i = 0; i < Height; ++i, dst -= dstPitch + Width) {
+	DVL_ASSUME(height >= 16);
+	DVL_ASSUME(height <= 32);
+	for (unsigned i = 0; i < height; ++i, dst -= dstPitch + Width) {
 		uint_fast8_t drawWidth = Width;
 		while (drawWidth > 0) {
 			auto v = static_cast<int8_t>(*src++);
@@ -427,8 +422,8 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareClipped(uint8_t 
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement = 0>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquare(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
-	if (clip.width == Width && clip.height == Height) {
-		RenderTransparentSquareFull<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl);
+	if (clip.width == Width && clip.bottom == 0 && clip.top == 0) {
+		RenderTransparentSquareFull<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip.height);
 	} else {
 		RenderTransparentSquareClipped<Light, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
 	}
@@ -972,18 +967,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, uint8_t *
 	}
 }
 
-template <bool OpaquePrefix, int8_t PrefixIncrement>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderTransparentSquareDispatch(uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
-{
-	if (IsFullyDark(tbl)) {
-		RenderTransparentSquare<LightType::FullyDark, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
-	} else if (IsFullyLit(tbl)) {
-		RenderTransparentSquare<LightType::FullyLit, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
-	} else {
-		RenderTransparentSquare<LightType::PartiallyLit, OpaquePrefix, PrefixIncrement>(dst, dstPitch, src, tbl, clip);
-	}
-}
-
 template <LightType Light, bool OpaquePrefix, int8_t PrefixIncrement>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLeftTrapezoidOrTransparentSquare(TileType tile, uint8_t *DVL_RESTRICT dst, uint16_t dstPitch, const uint8_t *DVL_RESTRICT src, const uint8_t *DVL_RESTRICT tbl, Clip clip)
 {
@@ -1086,27 +1069,18 @@ std::string_view MaskTypeToString(MaskType maskType)
 }
 #endif
 
-void RenderTile(const Surface &out, Point position,
-    LevelCelBlock levelCelBlock, MaskType maskType, const uint8_t *tbl)
+DVL_ATTRIBUTE_HOT void RenderTileFrame(const Surface &out, const Point &position, TileType tile, const uint8_t *src, int_fast16_t height,
+    MaskType maskType, const uint8_t *tbl)
 {
-	const TileType tile = levelCelBlock.type();
-
 #ifdef DEBUG_RENDER_OFFSET_X
 	position.x += DEBUG_RENDER_OFFSET_X;
 #endif
 #ifdef DEBUG_RENDER_OFFSET_Y
 	position.y += DEBUG_RENDER_OFFSET_Y;
 #endif
-#ifdef DEBUG_RENDER_COLOR
-	DBGCOLOR = GetTileDebugColor(tile);
-#endif
+	const Clip clip = CalculateClip(position.x, position.y, DunFrameWidth, height, out);
+	if (clip.width <= 0 || clip.height <= 0) return;
 
-	const Clip clip = CalculateClip(position.x, position.y, Width, GetTileHeight(tile), out);
-	if (clip.width <= 0 || clip.height <= 0)
-		return;
-
-	const auto *pFrameTable = reinterpret_cast<const uint32_t *>(pDungeonCels.get());
-	const auto *src = reinterpret_cast<const uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[levelCelBlock.frame()])]);
 	uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
 	const uint16_t dstPitch = out.pitch();
 
@@ -1126,12 +1100,6 @@ void RenderTile(const Surface &out, Point position,
 		break;
 	case MaskType::Right:
 		RenderRightTrapezoidOrTransparentSquareDispatch</*OpaquePrefix=*/true, /*PrefixIncrement=*/-2>(tile, dst, dstPitch, src, tbl, clip);
-		break;
-	case MaskType::LeftFoliage:
-		RenderTransparentSquareDispatch</*OpaquePrefix=*/true, /*PrefixIncrement=*/2>(dst, dstPitch, src, tbl, clip);
-		break;
-	case MaskType::RightFoliage:
-		RenderTransparentSquareDispatch</*OpaquePrefix=*/false, /*PrefixIncrement=*/-2>(dst, dstPitch, src, tbl, clip);
 		break;
 	}
 
