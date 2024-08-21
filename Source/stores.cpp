@@ -1537,8 +1537,6 @@ void SmithSellEnter()
  */
 void SmithRepairItem(int price)
 {
-	TakePlrsMoney(price);
-
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iDurability = storehold[idx]._iMaxDur;
 
@@ -1559,6 +1557,7 @@ void SmithRepairItem(int price)
 	}
 
 	myPlayer.InvList[i]._iDurability = myPlayer.InvList[i]._iMaxDur;
+	TakePlrsMoney(price);
 }
 
 void SmithRepairEnter()
@@ -1691,8 +1690,6 @@ void WitchSellEnter()
  */
 void WitchRechargeItem(int price)
 {
-	TakePlrsMoney(price);
-
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
 
@@ -1707,6 +1704,7 @@ void WitchRechargeItem(int price)
 		NetSyncInvItem(myPlayer, i);
 	}
 
+	TakePlrsMoney(price);
 	CalcPlrInv(myPlayer, true);
 }
 
