@@ -412,12 +412,18 @@ protected:
 	const char *description;
 };
 
-struct StartUpOptions : OptionCategoryBase {
-	StartUpOptions();
+struct GameModeOptions : OptionCategoryBase {
+	GameModeOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	OptionEntryEnum<StartUpGameMode> gameMode;
 	OptionEntryBoolean shareware;
+};
+
+struct StartUpOptions : OptionCategoryBase {
+	StartUpOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Play game intro video on diablo startup. */
 	OptionEntryEnum<StartUpIntro> diabloIntro;
 	/** @brief Play game intro video on hellfire startup. */
@@ -798,6 +804,7 @@ private:
 };
 
 struct Options {
+	GameModeOptions GameMode;
 	StartUpOptions StartUp;
 	DiabloOptions Diablo;
 	HellfireOptions Hellfire;
@@ -815,6 +822,7 @@ struct Options {
 	{
 		return {
 			&Language,
+			&GameMode,
 			&StartUp,
 			&Graphics,
 			&Audio,
