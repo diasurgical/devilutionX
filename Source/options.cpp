@@ -310,13 +310,13 @@ void OptionLanguageCodeChanged()
 
 void OptionGameModeChanged()
 {
-	gbIsHellfire = *sgOptions.StartUp.gameMode == StartUpGameMode::Hellfire;
+	gbIsHellfire = *sgOptions.GameMode.gameMode == StartUpGameMode::Hellfire;
 	discord_manager::UpdateMenu(true);
 }
 
 void OptionSharewareChanged()
 {
-	gbIsSpawn = *sgOptions.StartUp.shareware;
+	gbIsSpawn = *sgOptions.GameMode.shareware;
 }
 
 void OptionAudioChanged()
@@ -559,8 +559,8 @@ string_view OptionCategoryBase::GetDescription() const
 	return _(description);
 }
 
-StartUpOptions::StartUpOptions()
-    : OptionCategoryBase("StartUp", N_("Start Up"), N_("Start Up Settings"))
+GameModeOptions::GameModeOptions()
+    : OptionCategoryBase("GameMode", N_("Game Mode"), N_("Game Mode Settings"))
     , gameMode("Game", OptionEntryFlags::NeedHellfireMpq | OptionEntryFlags::RecreateUI, N_("Game Mode"), N_("Play Diablo or Hellfire."), StartUpGameMode::Ask,
           {
               { StartUpGameMode::Diablo, N_("Diablo") },
@@ -568,6 +568,21 @@ StartUpOptions::StartUpOptions()
               { StartUpGameMode::Hellfire, N_("Hellfire") },
           })
     , shareware("Shareware", OptionEntryFlags::NeedDiabloMpq | OptionEntryFlags::RecreateUI, N_("Restrict to Shareware"), N_("Makes the game compatible with the demo. Enables multiplayer with friends who don't own a full copy of Diablo."), false)
+
+{
+	gameMode.SetValueChangedCallback(OptionGameModeChanged);
+	shareware.SetValueChangedCallback(OptionSharewareChanged);
+}
+std::vector<OptionEntryBase *> GameModeOptions::GetEntries()
+{
+	return {
+		&gameMode,
+		&shareware,
+	};
+}
+
+StartUpOptions::StartUpOptions()
+    : OptionCategoryBase("StartUp", N_("Start Up"), N_("Start Up Settings"))
     , diabloIntro("Diablo Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
           {
               { StartUpIntro::Off, N_("OFF") },
@@ -587,14 +602,10 @@ StartUpOptions::StartUpOptions()
               { StartUpSplash::None, N_("None") },
           })
 {
-	gameMode.SetValueChangedCallback(OptionGameModeChanged);
-	shareware.SetValueChangedCallback(OptionSharewareChanged);
 }
 std::vector<OptionEntryBase *> StartUpOptions::GetEntries()
 {
 	return {
-		&gameMode,
-		&shareware,
 		&diabloIntro,
 		&hellfireIntro,
 		&splash,
