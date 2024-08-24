@@ -690,7 +690,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	return true;
 }
 
-bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage, bool skipTile = false)
+bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage, bool skipWall = false)
 {
 	[[maybe_unused]] int dp = dPiece[position.x][position.y];
 	assert(dp <= MAXTILES && dp >= 0);
@@ -699,7 +699,7 @@ bool GrowWall(int id, Point position, Point target, MissileID type, int spellLev
 		return false;
 	}
 
-	if (!skipTile)
+	if (!skipWall)
 		AddMissile(position, position, Direction::South, type, TARGET_BOTH, id, damage, spellLevel);
 	return true;
 }
@@ -3716,12 +3716,12 @@ static void ProcessWallControlLeft(Missile &missile, const int sourceIdx, const 
  * @param dmg The damage of the wall missile.
  * @param skipTile Should the tile be skipped.
  */
-static void ProcessWallControlRight(Missile &missile, const int sourceIdx, const MissileID type, const int dmg, const bool skipTile = false)
+static void ProcessWallControlRight(Missile &missile, const int sourceIdx, const MissileID type, const int dmg, const bool skipWall = false)
 {
 	const Point rightPosition = { missile.var5, missile.var6 };
 	const Point target = rightPosition + static_cast<Direction>(missile.var4);
 
-	if (missile.var7 == 0 && GrowWall(sourceIdx, rightPosition, target, type, missile._mispllvl, dmg, skipTile)) {
+	if (missile.var7 == 0 && GrowWall(sourceIdx, rightPosition, target, type, missile._mispllvl, dmg, skipWall)) {
 		missile.var5 = target.x;
 		missile.var6 = target.y;
 	} else {
