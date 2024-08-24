@@ -123,6 +123,9 @@ std::vector<std::string> GetMPQSearchPaths()
 {
 	std::vector<std::string> paths;
 	paths.push_back(paths::BasePath());
+#if defined(__DREAMCAST__)
+	return paths;
+#endif
 	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
