@@ -24,6 +24,7 @@ char selgame_Label[32];
 char selgame_Ip[129] = "";
 char selgame_Password[16] = "";
 char selgame_Description[512];
+char selgame_Seed[12] = "";
 std::string selgame_Title;
 bool selgame_enteringGame;
 size_t selgame_selectedGame;
@@ -541,12 +542,93 @@ void selgame_Speed_Select(size_t value)
 {
 	nTickRate = vecSelGameDlgItems[value]->m_value;
 
+	selgame_SeedSelection();
+}
+
+void selgame_SeedSelection()
+{
+	selgame_FreeVectors();
+
+	UiAddBackground(&vecSelGameDialog);
+	UiAddLogo(&vecSelGameDialog);
+
+	const Point uiPosition = GetUIRectangle().position;
+
+	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(
+	    _("Create Game").data(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+
+	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 211), 205, 192 };
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Description:").data(), rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
+
+	CopyUtf8(selgame_Description, _("Setting a game seed allows you to start a game with a specific map layout and item drops. Leave it blank for a random seed."), sizeof(selgame_Description));
+	CopyUtf8(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH), sizeof(selgame_Description));
+
+	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 256), DESCRIPTION_WIDTH, 192 };
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Description, rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
+
+	auto currentTime = static_cast<uint32_t>(time(nullptr));
+	std::snprintf(selgame_Seed, sizeof(selgame_Seed), "%d", currentTime);
+
+	SDL_Rect rect4 = { (Sint16)(uiPosition.x + 305), (Sint16)(uiPosition.y + 211), 285, 33 };
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(
+	    _("Enter Game Seed").data(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+
+	SDL_Rect rect5 = { (Sint16)(uiPosition.x + 305), (Sint16)(uiPosition.y + 314), 285, 33 };
+	vecSelGameDialog.push_back(std::make_unique<UiEdit>(
+	    "", selgame_Seed, 11, true, rect5, UiFlags::FontSize24 | UiFlags::ColorUiGold));
+
+	SDL_Rect rect6 = { (Sint16)(uiPosition.x + 299), (Sint16)(uiPosition.y + 427), 140, 35 };
+	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(
+	    _("OK").data(),
+	    UiFocusNavigationSelect,
+	    rect6,
+	    UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
+
+	SDL_Rect rect7 = { (Sint16)(uiPosition.x + 449), (Sint16)(uiPosition.y + 427), 140, 35 };
+	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(
+	    _("CANCEL").data(),
+	    UiFocusNavigationEsc,
+	    rect7,
+	    UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
+
+	UiInitList(nullptr, selgame_Seed_Select, selgame_Seed_Esc, vecSelGameDialog);
+}
+
+void selgame_Seed_Select(size_t /*value*/)
+{
+	// Convert seed input to an integer, ensuring it's valid
+	char *end;
+	long seed = std::strtol(selgame_Seed, &end, 10);
+
+	// Handle edge cases:
+	if (end == selgame_Seed || *end != '\0') {
+		// Invalid input, treat as blank
+		seed = -1;
+	} else if (seed < -1 || seed >= 2147483648) { // Handle the 2038 problem
+		UiSelOkDialog(_("Invalid Seed").data(), _("Please enter a valid seed (0 - 2147483647) or leave it blank.").data(), false);
+		selgame_Init();
+		UiInitGameSelectionList("");
+		return;
+	}
+
+	if (seed == -1) {
+		sgGameInitInfo.dwSeed = static_cast<uint32_t>(time(nullptr));
+	} else {
+		sgGameInitInfo.dwSeed = static_cast<uint32_t>(seed);
+	}
+
 	if (provider == SELCONN_LOOPBACK || selgame_selectedGame == 1) {
 		selgame_Password_Select(0);
 		return;
 	}
 
 	selgame_Password_Init(0);
+}
+
+void selgame_Seed_Esc()
+{
+	selgame_GameSpeedSelection();
 }
 
 void selgame_Password_Init(size_t /*value*/)
@@ -565,6 +647,9 @@ void selgame_Password_Init(size_t /*value*/)
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 211), 205, 192 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Description:").data(), rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
+
+	CopyUtf8(selgame_Description, _("Setting a password hides your game from others, as well as requiring the password to enter your game."), sizeof(selgame_Description));
+	CopyUtf8(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH), sizeof(selgame_Description));
 
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 256), DESCRIPTION_WIDTH, 192 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Description, rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
@@ -680,7 +765,7 @@ void selgame_Password_Esc()
 	if (selgame_selectedGame == 2)
 		selgame_GameSelection_Select(2);
 	else
-		selgame_GameSpeedSelection();
+		selgame_SeedSelection();
 }
 
 void RefreshGameList()
