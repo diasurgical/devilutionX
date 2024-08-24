@@ -9,6 +9,8 @@
 #include <SDL.h>
 #include <expected.hpp>
 
+#include <fmt/format.h>
+
 #include "appfat.h"
 #include "diablo.h"
 #include "mpq/mpq_reader.hpp"
