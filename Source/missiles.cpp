@@ -690,7 +690,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	return true;
 }
 
-bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage, bool skip = false)
+bool GrowWall(int id, Point position, Point target, MissileID type, int spellLevel, int damage, bool skipTile = false)
 {
 	[[maybe_unused]] int dp = dPiece[position.x][position.y];
 	assert(dp <= MAXTILES && dp >= 0);
@@ -699,7 +699,7 @@ bool GrowWall(int id, Point position, Point target, MissileID type, int spellLev
 		return false;
 	}
 
-	if (!skip)
+	if (!skipTile)
 		AddMissile(position, position, Direction::South, type, TARGET_BOTH, id, damage, spellLevel);
 	return true;
 }
@@ -2434,7 +2434,7 @@ void AddIdentify(Missile &missile, AddMissileParameter & /*parameter*/)
 	}
 }
 
-void AddFireWallControl(Missile &missile, AddMissileParameter &parameter)
+void AddWallControl(Missile &missile, AddMissileParameter &parameter)
 {
 	std::optional<Point> spreadPosition = FindClosestValidPosition(
 	    [start = missile.position.start](Point target) {
@@ -2456,6 +2456,7 @@ void AddFireWallControl(Missile &missile, AddMissileParameter &parameter)
 	missile.var3 = static_cast<int>(Left(Left(parameter.midir)));
 	missile.var4 = static_cast<int>(Right(Right(parameter.midir)));
 	missile._mirange = 7;
+	missile._mitype = missile._miAnimType == MissileGraphicID::FireWall ? MissileID::FireWall : MissileID::LightningWall;
 }
 
 void AddInfravision(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -3177,47 +3178,6 @@ void ProcessSearch(Missile &missile)
 		AutoMapShowItems = false;
 }
 
-void ProcessLightningWallControl(Missile &missile)
-{
-	missile._mirange--;
-	if (missile._mirange == 0) {
-		missile._miDelFlag = true;
-		return;
-	}
-
-	int id = missile._misource;
-	int lvl = !missile.IsTrap() ? Players[id].getCharacterLevel() : 0;
-	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
-
-	// Defines the current position of the control missile moving towards var3 direction.
-	// This is used to make sure the opposite side does not create walls where walls have already been created.
-	const Point currentPosition = { missile.var1, missile.var2 };
-
-	{
-		Point position = { missile.var1, missile.var2 };
-		Point target = position + static_cast<Direction>(missile.var3);
-
-		if (!missile.limitReached && GrowWall(id, position, target, MissileID::LightningWall, missile._mispllvl, dmg)) {
-			missile.var1 = target.x;
-			missile.var2 = target.y;
-		} else {
-			missile.limitReached = true;
-		}
-	}
-
-	{
-		Point position = { missile.var5, missile.var6 };
-		Point target = position + static_cast<Direction>(missile.var4);
-
-		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::LightningWall, missile._mispllvl, dmg, position == currentPosition)) {
-			missile.var5 = target.x;
-			missile.var6 = target.y;
-		} else {
-			missile.var7 = 1;
-		}
-	}
-}
-
 void ProcessNovaCommon(Missile &missile, MissileID projectileType)
 {
 	int id = missile._misource;
@@ -3729,7 +3689,48 @@ void ProcessRhino(Missile &missile)
 	PutMissile(missile);
 }
 
-void ProcessFireWallControl(Missile &missile)
+/*
+ * @brief Moves the control missile towards the right and grows walls.
+ * @param missile The control missile.
+ * @param sourceIdx The source index of the wall missile.
+ * @param type The missile ID of the wall missile.
+ * @param dmg The damage of the wall missile.
+ */
+static void ProcessWallControlLeft(Missile &missile, const int sourceIdx, const MissileID type, const int dmg)
+{
+	const Point leftPosition = { missile.var1, missile.var2 };
+	const Point target = leftPosition + static_cast<Direction>(missile.var3);
+
+	if (!missile.limitReached && GrowWall(sourceIdx, leftPosition, target, type, missile._mispllvl, dmg)) {
+		missile.var1 = target.x;
+		missile.var2 = target.y;
+	} else {
+		missile.limitReached = true;
+	}
+}
+
+/*
+ * @brief Moves the control missile towards the right and grows walls.
+ * @param missile The control missile.
+ * @param sourceIdx The source index of the wall missile.
+ * @param type The missile ID of the wall missile.
+ * @param dmg The damage of the wall missile.
+ * @param skipTile Should the tile be skipped.
+ */
+static void ProcessWallControlRight(Missile &missile, const int sourceIdx, const MissileID type, const int dmg, const bool skipTile = false)
+{
+	const Point rightPosition = { missile.var5, missile.var6 };
+	const Point target = rightPosition + static_cast<Direction>(missile.var4);
+
+	if (missile.var7 == 0 && GrowWall(sourceIdx, rightPosition, target, type, missile._mispllvl, dmg, skipTile)) {
+		missile.var5 = target.x;
+		missile.var6 = target.y;
+	} else {
+		missile.var7 = 1;
+	}
+}
+
+void ProcessWallControl(Missile &missile)
 {
 	missile._mirange--;
 	if (missile._mirange == 0) {
@@ -3737,35 +3738,23 @@ void ProcessFireWallControl(Missile &missile)
 		return;
 	}
 
-	int id = missile._misource;
+	MissileID type = missile._mitype;
+	type = MissileID::FireWall;
+	const int sourceIdx = missile._misource;
+	int lvl = 0;
+	int dmg = 0;
 
-	// Defines the current position of the control missile moving towards var3 direction.
-	// This is used to make sure the opposite side does not create walls where walls have already been created.
-	Point currentPosition = { missile.var1, missile.var2 };
-
-	{
-		Point position = { missile.var1, missile.var2 };
-		Point target = position + static_cast<Direction>(missile.var3);
-
-		if (!missile.limitReached && GrowWall(id, position, target, MissileID::FireWall, missile._mispllvl, 0)) {
-			missile.var1 = target.x;
-			missile.var2 = target.y;
-		} else {
-			missile.limitReached = true;
-		}
+	if (type == MissileID::LightningWall) {
+		lvl = !missile.IsTrap() ? Players[sourceIdx].getCharacterLevel() : 0;
+		dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	}
 
-	{
-		Point position = { missile.var5, missile.var6 };
-		Point target = position + static_cast<Direction>(missile.var4);
+	ProcessWallControlLeft(missile, sourceIdx, type, dmg);
 
-		if (missile.var7 == 0 && GrowWall(id, position, target, MissileID::FireWall, missile._mispllvl, 0, position == currentPosition)) {
-			missile.var5 = target.x;
-			missile.var6 = target.y;
-		} else {
-			missile.var7 = 1;
-		}
-	}
+	Point leftPosition = { missile.var1, missile.var2 };
+	Point rightPosition = { missile.var3, missile.var4 };
+
+	ProcessWallControlRight(missile, sourceIdx, type, dmg, leftPosition == rightPosition);
 }
 
 void ProcessInfravision(Missile &missile)
