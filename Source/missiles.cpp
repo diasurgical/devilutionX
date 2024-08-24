@@ -2456,7 +2456,6 @@ void AddWallControl(Missile &missile, AddMissileParameter &parameter)
 	missile.var3 = static_cast<int>(Left(Left(parameter.midir)));
 	missile.var4 = static_cast<int>(Right(Right(parameter.midir)));
 	missile._mirange = 7;
-	missile._mitype = missile._miAnimType == MissileGraphicID::FireWall ? MissileID::FireWall : MissileID::LightningWall;
 }
 
 void AddInfravision(Missile &missile, AddMissileParameter & /*parameter*/)
@@ -3738,8 +3737,20 @@ void ProcessWallControl(Missile &missile)
 		return;
 	}
 
-	MissileID type = missile._mitype;
-	type = MissileID::FireWall;
+	MissileID type;
+
+	switch (missile._mitype) {
+	case MissileID::FireWallControl:
+		type = MissileID::FireWall;
+		break;
+	case MissileID::LightningWallControl:
+		type = MissileID::LightningWall;
+		break;
+	default:
+		type = MissileID::Null;
+		break;
+	}
+
 	const int sourceIdx = missile._misource;
 	int lvl = 0;
 	int dmg = 0;
@@ -3749,11 +3760,10 @@ void ProcessWallControl(Missile &missile)
 		dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	}
 
+	const Point leftPosition = { missile.var1, missile.var2 };
+	const Point rightPosition = { missile.var5, missile.var6 };
+
 	ProcessWallControlLeft(missile, sourceIdx, type, dmg);
-
-	Point leftPosition = { missile.var1, missile.var2 };
-	Point rightPosition = { missile.var3, missile.var4 };
-
 	ProcessWallControlRight(missile, sourceIdx, type, dmg, leftPosition == rightPosition);
 }
 
