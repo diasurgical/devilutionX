@@ -3691,16 +3691,15 @@ void ProcessRhino(Missile &missile)
 /*
  * @brief Moves the control missile towards the right and grows walls.
  * @param missile The control missile.
- * @param sourceIdx The source index of the wall missile.
  * @param type The missile ID of the wall missile.
  * @param dmg The damage of the wall missile.
  */
-static void ProcessWallControlLeft(Missile &missile, const int sourceIdx, const MissileID type, const int dmg)
+static void ProcessWallControlLeft(Missile &missile, const MissileID type, const int dmg)
 {
 	const Point leftPosition = { missile.var1, missile.var2 };
 	const Point target = leftPosition + static_cast<Direction>(missile.var3);
 
-	if (!missile.limitReached && GrowWall(sourceIdx, leftPosition, target, type, missile._mispllvl, dmg)) {
+	if (!missile.limitReached && GrowWall(missile._misource, leftPosition, target, type, missile._mispllvl, dmg)) {
 		missile.var1 = target.x;
 		missile.var2 = target.y;
 	} else {
@@ -3711,17 +3710,16 @@ static void ProcessWallControlLeft(Missile &missile, const int sourceIdx, const 
 /*
  * @brief Moves the control missile towards the right and grows walls.
  * @param missile The control missile.
- * @param sourceIdx The source index of the wall missile.
  * @param type The missile ID of the wall missile.
  * @param dmg The damage of the wall missile.
  * @param skipTile Should the tile be skipped.
  */
-static void ProcessWallControlRight(Missile &missile, const int sourceIdx, const MissileID type, const int dmg, const bool skipWall = false)
+static void ProcessWallControlRight(Missile &missile, const MissileID type, const int dmg, const bool skipWall = false)
 {
 	const Point rightPosition = { missile.var5, missile.var6 };
 	const Point target = rightPosition + static_cast<Direction>(missile.var4);
 
-	if (missile.var7 == 0 && GrowWall(sourceIdx, rightPosition, target, type, missile._mispllvl, dmg, skipWall)) {
+	if (missile.var7 == 0 && GrowWall(missile._misource, rightPosition, target, type, missile._mispllvl, dmg, skipWall)) {
 		missile.var5 = target.x;
 		missile.var6 = target.y;
 	} else {
@@ -3762,8 +3760,8 @@ void ProcessWallControl(Missile &missile)
 	const Point leftPosition = { missile.var1, missile.var2 };
 	const Point rightPosition = { missile.var5, missile.var6 };
 
-	ProcessWallControlLeft(missile, sourceIdx, type, dmg);
-	ProcessWallControlRight(missile, sourceIdx, type, dmg, leftPosition == rightPosition);
+	ProcessWallControlLeft(missile, type, dmg);
+	ProcessWallControlRight(missile, type, dmg, leftPosition == rightPosition);
 }
 
 void ProcessInfravision(Missile &missile)
