@@ -3736,6 +3736,9 @@ void ProcessWallControl(Missile &missile)
 	}
 
 	MissileID type;
+	const int sourceIdx = missile._misource;
+	int lvl = 0;
+	int dmg = 0;
 
 	switch (missile._mitype) {
 	case MissileID::FireWallControl:
@@ -3743,18 +3746,11 @@ void ProcessWallControl(Missile &missile)
 		break;
 	case MissileID::LightningWallControl:
 		type = MissileID::LightningWall;
+		lvl = !missile.IsTrap() ? Players[sourceIdx].getCharacterLevel() : 0;
+		dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 		break;
 	default:
 		app_fatal("ProcessWallControl: Invalid missile type for control missile");
-	}
-
-	const int sourceIdx = missile._misource;
-	int lvl = 0;
-	int dmg = 0;
-
-	if (type == MissileID::LightningWall) {
-		lvl = !missile.IsTrap() ? Players[sourceIdx].getCharacterLevel() : 0;
-		dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	}
 
 	const Point leftPosition = { missile.var1, missile.var2 };
