@@ -169,7 +169,7 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 
 	int8_t skippedAnimationFrames = 0;
 	const auto flags = player._pIFlags;
-	
+
 	// If the first frame is not included in vanilla, the skip logic for the first frame will not be executed.
 	// This will result in a different and slower attack speed.
 	if (HasAnyOf(flags, ItemSpecialEffect::FastestAttack)) {
