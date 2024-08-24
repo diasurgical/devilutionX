@@ -3747,8 +3747,7 @@ void ProcessWallControl(Missile &missile)
 		type = MissileID::LightningWall;
 		break;
 	default:
-		type = MissileID::Null;
-		break;
+		app_fatal("ProcessWallControl: Invalid missile type for control missile");
 	}
 
 	const int sourceIdx = missile._misource;
