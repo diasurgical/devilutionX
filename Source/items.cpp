@@ -239,7 +239,7 @@ int8_t ItemAnimLs[] = {
 	13,
 	13,
 	13,
-	10,
+	20,
 	13,
 	13,
 	13,
@@ -1606,6 +1606,7 @@ void SpawnRock()
 	item.selectionRegion = SelectionRegion::Middle;
 	item._iPostDraw = true;
 	item.AnimInfo.currentFrame = 10;
+	item._iAnimFlag = true;
 	item._iCreateInfo |= CF_PREGEN;
 
 	DeltaAddItem(ii);
@@ -3704,19 +3705,44 @@ void SpawnTheodore(Point position, bool sendmsg)
 	SpawnRewardItem(IDI_THEODORE, position, sendmsg);
 }
 
+static bool IsStandAtPosition(const Point &position)
+{
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		const Object &object = Objects[ActiveObjects[i]];
+		if (object._otype == OBJ_STAND && object.position == position) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void RespawnItem(Item &item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item._iCurs];
 	item.setNewAnimation(flipFlag);
-	item._iRequest = false;
+	item._iRequest = false; // Item isn't being picked up by a player
 
-	if (IsAnyOf(item._iCurs, ICURS_MAGIC_ROCK, ICURS_TAVERN_SIGN, ICURS_ANVIL_OF_FURY))
+	switch (item._iCurs) {
+	case ICURS_TAVERN_SIGN:
+	case ICURS_ANVIL_OF_FURY:
 		item.selectionRegion = SelectionRegion::Bottom;
-	else if (IsAnyOf(item._iCurs, ICURS_MAP_OF_THE_STARS, ICURS_RUNE_BOMB, ICURS_THEODORE, ICURS_AURIC_AMULET))
-		item.selectionRegion = SelectionRegion::Middle;
-
-	if (item._iCurs == ICURS_MAGIC_ROCK) {
-		PlaySfxLoc(ItemDropSnds[it], item.position);
+		break;
+	case ICURS_MAP_OF_THE_STARS:
+	case ICURS_RUNE_BOMB:
+	case ICURS_THEODORE:
+	case ICURS_AURIC_AMULET:
+		item.selectionRegion = SelectionRegion::Middle; // Item is selectable at elevated level
+		break;
+	case ICURS_MAGIC_ROCK:
+		if (IsStandAtPosition(item.position)) {
+			item.selectionRegion = SelectionRegion::Middle;              // Item is selectable at elevated level and renders at elevated level
+			item._iPostDraw = true;          // Draw in front of stand
+			item.AnimInfo.currentFrame = 10; // Frame 10 is the start of the elevated frames in the cel
+		} else {
+			item.selectionRegion = SelectionRegion::Bottom; // Item is selectable at floor level and renders at floor level
+		}
+		PlaySfxLoc(ItemDropSnds[it], item.position); // Play the drop sound (this item is perpetually in a dropping state, but can always be picked up)
+		break;
 	}
 }
 
@@ -3741,14 +3767,14 @@ void ProcessItems()
 	for (int i = 0; i < ActiveItemCount; i++) {
 		int ii = ActiveItems[i];
 		auto &item = Items[ii];
-		if (!item._iAnimFlag)
+		if (!item._iAnimFlag) // Item isn't being dropped, so don't animate frames
 			continue;
 		item.AnimInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item.selectionRegion == SelectionRegion::Bottom && item.AnimInfo.currentFrame == 10)
-				item.AnimInfo.currentFrame = 0;
-			if (item.selectionRegion == SelectionRegion::Middle && item.AnimInfo.currentFrame == 20)
-				item.AnimInfo.currentFrame = 10;
+			if (item.selectionRegion == SelectionRegion::Bottom && item.AnimInfo.currentFrame == 10) // Reached end of floor frames + 1, cycle back
+				item.AnimInfo.currentFrame = 0;                          // Beginning of floor frames
+			if (item.selectionRegion == SelectionRegion::Middle && item.AnimInfo.currentFrame == 19) // Reached end of elevated frames, cycle back
+				item.AnimInfo.currentFrame = 10;                         // Beginning of elevated frames
 		} else {
 			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
