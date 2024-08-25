@@ -24,6 +24,7 @@ set(tests
   drlg_l4_test
   effects_test
   inv_test
+  items_test
   math_test
   missiles_test
   pack_test

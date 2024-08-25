@@ -1419,19 +1419,25 @@ _item_indexes RndTypeItems(ItemType itemType, int imid, int lvl)
 	});
 }
 
+std::vector<uint8_t> GetValidUniques(int lvl, unique_base_item baseItemId)
+{
+	std::vector<uint8_t> validUniques;
+	for (int j = 0; j < static_cast<int>(UniqueItems.size()); ++j) {
+		if (!IsUniqueAvailable(j))
+			break;
+		if (UniqueItems[j].UIItemId == baseItemId && lvl >= UniqueItems[j].UIMinLvl) {
+			validUniques.push_back(j);
+		}
+	}
+	return validUniques;
+}
+
 _unique_items CheckUnique(Item &item, int lvl, int uper, int uidOffset = 0)
 {
 	if (GenerateRnd(100) > uper)
 		return UITEM_INVALID;
 
-	std::vector<uint8_t> validUniques;
-	for (int j = 0; j < static_cast<int>(UniqueItems.size()); ++j) {
-		if (!IsUniqueAvailable(j))
-			break;
-		if (UniqueItems[j].UIItemId == AllItemsList[item.IDidx].iItemId && lvl >= UniqueItems[j].UIMinLvl) {
-			validUniques.push_back(j);
-		}
-	}
+	auto validUniques = GetValidUniques(lvl, AllItemsList[item.IDidx].iItemId);
 
 	if (validUniques.empty())
 		return UITEM_INVALID;
@@ -3284,22 +3290,21 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 	if ((item._iCreateInfo & CF_UNIQUE) == 0 || item._iMiscId == IMISC_UNIQUE)
 		return;
 
-	std::vector<int> uids;
+	SetRndSeed(item._iSeed);
+
+	// Get item base level, which is used in CheckUnique to get the correct valid uniques for the base item.
+	DiscardRandomValues(1); // GetItemAttrs
+	int blvl = GetItemBLevel(mLevel, item._iMiscId, onlygood, uper == 15);
 
 	// Gather all potential unique items. uid is the index into UniqueItems.
-	for (size_t i = 0; i < UniqueItems.size(); ++i) {
-		const UniqueItem &uniqueItem = UniqueItems[i];
-		// Verify the unique item base item matches idx.
-		bool isMatchingItemId = uniqueItem.UIItemId == AllItemsList[static_cast<size_t>(idx)].iItemId;
-		// Verify itemLvl is at least the unique's minimum required level.
-		// mLevel remains unadjusted when arriving in this function, and there is no call to set iblvl until CheckUnique(), so we adjust here.
-		bool meetsLevelRequirement = ((uper == 15) ? mLevel + 4 : mLevel) >= uniqueItem.UIMinLvl;
+	auto validUniques = GetValidUniques(blvl, AllItemsList[static_cast<size_t>(idx)].iItemId);
+	assert(!validUniques.empty());
+	std::vector<int> uids;
+	for (auto &possibleUid : validUniques) {
 		// Verify item hasn't been dropped yet. We set this to true in MP, since uniques previously dropping shouldn't prevent further identical uniques from dropping.
-		bool uniqueNotDroppedAlready = !UniqueItemFlags[i] || gbIsMultiplayer;
-
-		int uid = static_cast<int>(i);
-		if (IsUniqueAvailable(uid) && isMatchingItemId && meetsLevelRequirement && uniqueNotDroppedAlready)
-			uids.emplace_back(uid);
+		if (!UniqueItemFlags[possibleUid] || gbIsMultiplayer) {
+			uids.emplace_back(possibleUid);
+		}
 	}
 
 	// If we find at least one unique in uids that hasn't been obtained yet, we can proceed getting a random unique.
@@ -3324,45 +3329,66 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 	int32_t uidsIdx = std::max<int32_t>(0, GenerateRnd(static_cast<int32_t>(uids.size()))); // Index into uids, used to get a random uid from the uids vector.
 	int uid = uids[uidsIdx];                                                                // Actual unique id.
+	const UniqueItem &uniqueItem = UniqueItems[uid];
 
 	// If the selected unique was already generated, there is no need to fiddle with its parameters.
 	if (item._iUid == uid) {
-		UniqueItemFlags[uid] = true;
+		if (!gbIsMultiplayer) {
+			UniqueItemFlags[uid] = true;
+		}
 		return;
 	}
 
-	const UniqueItem &uniqueItem = UniqueItems[uid];
-	int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
-
-	// Set target level. Ideally we use uper 15 to have a 16% chance of generating a unique item.
-	if (uniqueItem.UIMinLvl - 4 > 0) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
-		uper = 15;
-		targetLvl = uniqueItem.UIMinLvl - 4;
-	} else {
-		uper = 1;
-		targetLvl = uniqueItem.UIMinLvl;
+	// Find our own id to calculate the offset in validUniques and check if we can generate a reverse-compatible version of the item.
+	int uidOffset = -1;
+	bool canGenerateReverseCompatible = true;
+	for (size_t i = 0; i < validUniques.size(); i++) {
+		if (validUniques[i] == uid) {
+			// Vanilla always picks the last unique, so the offset is calculated from the back of the valid unique list.
+			uidOffset = static_cast<int>(validUniques.size() - i - 1);
+		} else if (uidOffset != -1 && UniqueItems[validUniques[i]].UIMinLvl <= uniqueItem.UIMinLvl) {
+			// Found an item with same or lower level as our desired unique after our unique.
+			// This means that we cannot possibly generate the item in reverse compatible mode and must rely on an offset.
+			canGenerateReverseCompatible = false;
+		}
 	}
+	assert(uidOffset != -1);
 
-	// Amount to decrease the final uid by in CheckUnique() to get the desired unique.
-	const auto uidOffset = static_cast<int>(std::count_if(UniqueItems.begin() + uid + 1, UniqueItems.end(), [&uniqueItem](UniqueItem &potentialMatch) {
-		return uniqueItem.UIItemId == potentialMatch.UIItemId && uniqueItem.UIMinLvl == potentialMatch.UIMinLvl;
-	}));
+	const Point itemPos = item.position;
+	if (canGenerateReverseCompatible) {
+		int targetLvl = 1; // Target level for reverse compatibility, since vanilla always takes the last applicable uid in the list.
 
-	Point itemPos = item.position;
+		// Set target level. Ideally we use uper 15 to have a 16% chance of generating a unique item.
+		if (uniqueItem.UIMinLvl - 4 > 0) { // Negative level will underflow. Lvl 0 items may have unintended consequences.
+			uper = 15;
+			targetLvl = uniqueItem.UIMinLvl - 4;
+		} else {
+			uper = 1;
+			targetLvl = uniqueItem.UIMinLvl;
+		}
 
-	// Force generate items until we find a uid match.
-	DiabloGenerator itemGenerator(item._iSeed);
-	do {
+		// Force generate items until we find a uid match.
+		DiabloGenerator itemGenerator(item._iSeed);
+		do {
+			item = {}; // Reset item data
+			item.position = itemPos;
+			// Set onlygood = true, to always get the required item base level for the unique.
+			SetupAllItems(*MyPlayer, item, idx, itemGenerator.advanceRndSeed(), targetLvl, uper, true, pregen);
+		} while (item._iUid != uid);
+	} else {
+		// Recreate the item with new offset, this creates the desired unique item but is not reverse compatible.
+		const int seed = item._iSeed;
 		item = {}; // Reset item data
 		item.position = itemPos;
-		SetupAllItems(*MyPlayer, item, idx, itemGenerator.advanceRndSeed(), targetLvl, uper, onlygood, pregen, uidOffset);
-	} while (item._iUid != uid);
+		SetupAllItems(*MyPlayer, item, idx, seed, mLevel, uper, onlygood, pregen, uidOffset);
+		item.dwBuff |= (uidOffset << 1) & CF_UIDOFFSET;
+		assert(item._iUid == uid);
+	}
 
 	// Set item as obtained to prevent it from being dropped again in SP.
 	if (!gbIsMultiplayer) {
 		UniqueItemFlags[uid] = true;
 	}
-	item.dwBuff |= (uidOffset << 1) & CF_UIDOFFSET;
 }
 
 void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= false*/)
