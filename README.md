@@ -9,7 +9,7 @@
 [![Codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
 
 <p align="center">
-<img width="838" src="">
+<img width="838" src="https://private-user-images.githubusercontent.com/68359262/361181715-db6e94b1-a98b-413d-a109-1fb77dda34bd.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjQ1NTUxNDYsIm5iZiI6MTcyNDU1NDg0NiwicGF0aCI6Ii82ODM1OTI2Mi8zNjExODE3MTUtZGI2ZTk0YjEtYTk4Yi00MTNkLWExMDktMWZiNzdkZGEzNGJkLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA4MjUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwODI1VDAzMDA0NlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWEwNmE2NGQyZDhlYjg1OTc1ZmMxMmM0ODc4Mzk1MjBkNWRjNmE4NGY3ZTA4YzJlMDgyODAxMTcwODY3ZWNjN2EmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.3Rn5VgsLCRs55IWPspUeZJRYViFdWPpo5_CK3GDfe0M">
 </p>
 
 <sub>*(The health-bar and XP-bar are off by default, but can be enabled in the [game settings](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide). Widescreen can also be disabled if preferred)*</sub>
