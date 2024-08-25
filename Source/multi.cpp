@@ -486,6 +486,8 @@ bool InitMulti(GameData *gameData)
 void InitGameInfo()
 {
 	sgGameInitInfo.size = sizeof(sgGameInitInfo);
+	if (!gbIsMultiplayer)
+		sgGameInitInfo.dwSeed = static_cast<uint32_t>(time(nullptr));
 	sgGameInitInfo.programid = GAME_ID;
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
