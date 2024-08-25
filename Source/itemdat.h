@@ -645,10 +645,10 @@ struct UniqueItem {
 	ItemPower powers[6];
 };
 
-extern std::vector<ItemData> AllItemsList;
+extern DVL_API_FOR_TEST std::vector<ItemData> AllItemsList;
 extern std::vector<PLStruct> ItemPrefixes;
 extern std::vector<PLStruct> ItemSuffixes;
-extern std::vector<UniqueItem> UniqueItems;
+extern DVL_API_FOR_TEST std::vector<UniqueItem> UniqueItems;
 
 void LoadItemData();
 
