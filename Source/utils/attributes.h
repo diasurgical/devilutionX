@@ -32,6 +32,14 @@
 #define DVL_ALWAYS_INLINE inline
 #endif
 
+#if DVL_HAVE_ATTRIBUTE(noinline)
+#define DVL_NO_INLINE __attribute__((noinline))
+#elif defined(_MSC_VER)
+#define DVL_NO_INLINE __declspec(noinline)
+#else
+#define DVL_NO_INLINE
+#endif
+
 #if DVL_HAVE_ATTRIBUTE(hot)
 #define DVL_ATTRIBUTE_HOT __attribute__((hot))
 #else

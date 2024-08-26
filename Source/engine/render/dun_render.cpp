@@ -443,7 +443,7 @@ struct DiamondClipY {
 };
 
 template <int_fast16_t UpperHeight = TriangleUpperHeight>
-DVL_ALWAYS_INLINE DiamondClipY CalculateDiamondClipY(const Clip &clip)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT DiamondClipY CalculateDiamondClipY(const Clip &clip)
 {
 	DiamondClipY result;
 	if (clip.bottom > LowerHeight) {
@@ -462,12 +462,12 @@ DVL_ALWAYS_INLINE DiamondClipY CalculateDiamondClipY(const Clip &clip)
 	return result;
 }
 
-DVL_ALWAYS_INLINE std::size_t CalculateTriangleSourceSkipLowerBottom(int_fast16_t numLines)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT std::size_t CalculateTriangleSourceSkipLowerBottom(int_fast16_t numLines)
 {
 	return XStep * numLines * (numLines + 1) / 2;
 }
 
-DVL_ALWAYS_INLINE std::size_t CalculateTriangleSourceSkipUpperBottom(int_fast16_t numLines)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT std::size_t CalculateTriangleSourceSkipUpperBottom(int_fast16_t numLines)
 {
 	return 2 * TriangleUpperHeight * numLines - numLines * (numLines - 1);
 }
