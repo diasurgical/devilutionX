@@ -18,7 +18,9 @@
 #include "diablo_msg.hpp"
 #include "doom.h"
 #include "engine/backbuffer_state.hpp"
+#include "engine/displacement.hpp"
 #include "engine/dx.h"
+#include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/dun_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -29,6 +31,7 @@
 #include "hwcursor.hpp"
 #include "init.h"
 #include "inv.h"
+#include "levels/dun_tile.hpp"
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "lua/lua.hpp"
@@ -75,6 +78,8 @@ extern void DrawControllerModifierHints(const Surface &out);
 bool frameflag;
 
 namespace {
+
+constexpr auto RightFrameDisplacement = Displacement { DunFrameWidth, 0 };
 
 [[nodiscard]] DVL_ALWAYS_INLINE bool IsFloor(Point tilePosition)
 {
@@ -542,7 +547,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			if (levelCelBlock.hasValue()) {
 				if (transparency || !foliage || levelCelBlock.type() == TileType::TransparentSquare) {
 					if (maskType != MaskType::RightFoliage || tileType == TileType::TransparentSquare) {
-						RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+						RenderTile(out, targetBufferPosition + RightFrameDisplacement,
 						    levelCelBlock, maskType, tbl);
 					}
 				}
@@ -563,7 +568,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		{
 			const LevelCelBlock levelCelBlock { pMap->mt[i + 1] };
 			if (levelCelBlock.hasValue()) {
-				RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+				RenderTile(out, targetBufferPosition + RightFrameDisplacement,
 				    levelCelBlock,
 				    transparency ? MaskType::Transparent : MaskType::Solid, tbl);
 			}
@@ -599,7 +604,7 @@ void DrawFloorTile(const Surface &out, Point tilePosition, Point targetBufferPos
 	{
 		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
 		if (levelCelBlock.hasValue()) {
-			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 },
+			RenderTile(out, targetBufferPosition + RightFrameDisplacement,
 			    levelCelBlock, MaskType::Solid, tbl);
 		}
 	}
@@ -844,16 +849,14 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition, int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < columns; j++) {
-			if (InDungeonBounds(tilePosition)) {
-				if (IsFloor(tilePosition)) {
-					DrawFloorTile(out, tilePosition, targetBufferPosition);
-				}
-			} else {
+		for (int j = 0; j < columns; j++, tilePosition += Direction::East, targetBufferPosition.x += TILE_WIDTH) {
+			if (!InDungeonBounds(tilePosition)) {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
+				continue;
 			}
-			tilePosition += Direction::East;
-			targetBufferPosition.x += TILE_WIDTH;
+			if (IsFloor(tilePosition)) {
+				DrawFloorTile(out, tilePosition, targetBufferPosition);
+			}
 		}
 		// Return to start of row
 		tilePosition += Displacement(Direction::West) * columns;
@@ -874,7 +877,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 }
 
 /**
- * @brief Render a row of tile
+ * @brief Renders the floor tiles
  * @param out Output buffer
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Buffer coordinates
@@ -993,7 +996,7 @@ void Zoom(const Surface &out)
 
 Displacement tileOffset;
 Displacement tileShift;
-int tileColums;
+int tileColumns;
 int tileRows;
 
 void CalcFirstTilePosition(Point &position, Displacement &offset)
@@ -1054,7 +1057,7 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 	    ? fullOut.subregionY(0, gnViewportHeight)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
-	int columns = tileColums;
+	int columns = tileColumns;
 	int rows = tileRows;
 
 	// Skip rendering parts covered by the panels
@@ -1517,7 +1520,7 @@ void CalcViewportGeometry()
 	const int viewportHeight = GetViewportHeight() / zoomFactor;
 	const Point renderStart = startPosition - Displacement { TILE_WIDTH / 2, TILE_HEIGHT / 2 };
 	tileRows = (viewportHeight - renderStart.y + TILE_HEIGHT / 2 - 1) / (TILE_HEIGHT / 2);
-	tileColums = (screenWidth - renderStart.x + TILE_WIDTH - 1) / TILE_WIDTH;
+	tileColumns = (screenWidth - renderStart.x + TILE_WIDTH - 1) / TILE_WIDTH;
 }
 
 Point GetScreenPosition(Point tile)
