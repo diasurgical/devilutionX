@@ -3345,7 +3345,7 @@ void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper,
 
 	// Amount to decrease the final uid by in CheckUnique() to get the desired unique.
 	const auto uidOffset = static_cast<int>(std::count_if(UniqueItems.begin() + uid + 1, UniqueItems.end(), [&uniqueItem](UniqueItem &potentialMatch) {
-		return uniqueItem.UIItemId == potentialMatch.UIItemId && uniqueItem.UIMinLvl == potentialMatch.UIMinLvl;
+		return uniqueItem.UIItemId == potentialMatch.UIItemId && uniqueItem.UIMinLvl >= potentialMatch.UIMinLvl;
 	}));
 
 	Point itemPos = item.position;
