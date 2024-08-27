@@ -8,6 +8,32 @@
 
 namespace devilution {
 
+std::u32string ConvertUtf8ToUtf32(std::string_view input)
+{
+    std::u32string result;
+    std::size_t len = 0;
+
+    while (!input.empty()) {
+        char32_t codepoint = DecodeFirstUtf8CodePoint(input, &len);
+        if (codepoint == Utf8DecodeError) {
+            break;
+        }
+        result.push_back(codepoint);
+        input.remove_prefix(len);
+    }
+
+    return result;
+}
+
+std::string ConvertUtf32ToUtf8(std::u32string_view input)
+{
+    std::string result;
+    for (char32_t codepoint : input) {
+        AppendUtf8(codepoint, result);
+    }
+    return result;
+}
+
 char32_t DecodeFirstUtf8CodePoint(std::string_view input, std::size_t *len)
 {
 	uint32_t codepoint = 0;

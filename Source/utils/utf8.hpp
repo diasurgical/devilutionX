@@ -9,6 +9,16 @@ namespace devilution {
 constexpr char32_t Utf8DecodeError = 0xD83F;
 
 /**
+ * Converts UTF8-encoded string to UTF32-encoded string.
+ */
+std::u32string ConvertUtf8ToUtf32(std::string_view input);
+
+/**
+ * Converts UTF32-encoded string to UTF8-encoded string.
+ */
+std::string ConvertUtf32ToUtf8(std::u32string_view input);
+
+/**
  * Decodes the first code point from UTF8-encoded input.
  *
  * Sets `len` to the length of the code point in bytes.
