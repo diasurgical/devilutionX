@@ -284,3 +284,5 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
   message("INFO: ${GPERFTOOLS_LIBRARIES}")
 endif()
+
+find_package(FRIBIDI REQUIRED)

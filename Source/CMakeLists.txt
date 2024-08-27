@@ -384,11 +384,15 @@ target_link_libraries(libdevilutionx_parse_int PUBLIC
 )
 
 add_devilutionx_object_library(libdevilutionx_utf8
+  utils/unicode-bidi.cpp
   utils/utf8.cpp
 )
 target_link_libraries(libdevilutionx_utf8 PRIVATE
   hoehrmann_utf8
 )
+
+target_link_libraries(libdevilutionx_utf8 PRIVATE ${FRIBIDI_LIBRARY})
+
 
 add_devilutionx_object_library(libdevilutionx_strings
   utils/str_cat.cpp
