@@ -390,9 +390,9 @@ add_devilutionx_object_library(libdevilutionx_utf8
 target_link_libraries(libdevilutionx_utf8 PRIVATE
   hoehrmann_utf8
 )
-
-target_link_libraries(libdevilutionx_utf8 PRIVATE ${FRIBIDI_LIBRARY})
-
+if(USE_FRIBIDI)
+  target_link_libraries(libdevilutionx_utf8 PRIVATE ${FRIBIDI_LIBRARY})
+endif()
 
 add_devilutionx_object_library(libdevilutionx_strings
   utils/str_cat.cpp

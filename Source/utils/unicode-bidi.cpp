@@ -1,13 +1,17 @@
-#include <fribidi/fribidi.h>
-
 #include <string>
 #include <string_view>
+
+#ifdef USE_FRIBIDI
+#include <fribidi/fribidi.h>
+#endif
 
 namespace devilution {
 
 std::u32string ConvertLogicalToVisual(std::u32string_view input)
 {
-	// return std::u32string(input);
+#ifndef USE_FRIBIDI
+    return std::u32string(input);
+#else
 	FriBidiChar *logical = new FriBidiChar[input.size()];
 	FriBidiChar *visual = new FriBidiChar[input.size()];
 
@@ -24,6 +28,7 @@ std::u32string ConvertLogicalToVisual(std::u32string_view input)
     delete[] visual;
 
     return result;
+#endif
 }
 
 } // namespace devilution
