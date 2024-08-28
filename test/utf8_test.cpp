@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "utils/utf8.hpp"
+#include "utils/unicode-bidi.hpp"
 
 namespace devilution {
 namespace {
@@ -80,6 +81,92 @@ TEST(Utf8CodeUnits, BasicLatin)
 	}
 	EXPECT_FALSE(IsBasicLatin('\xFF')) << "Multibyte Utf8 code units are not Basic Latin symbols";
 }
+
+TEST(ConvertUtf8ToUtf32Test, EmptyString)
+{
+	std::string_view input;
+	auto result = ConvertUtf8ToUtf32(input);
+	EXPECT_TRUE(result.empty());
+}
+
+TEST(ConvertUtf8ToUtf32Test, BasicLatin)
+{
+	std::string_view input = "Hello, world!";
+	auto result = ConvertUtf8ToUtf32(input);
+	EXPECT_EQ(result, U"Hello, world!");
+}
+
+TEST(ConvertUtf8ToUtf32Test, MultibyteUtf8)
+{
+	std::string_view input = "こんにちは、世界！";
+	auto result = ConvertUtf8ToUtf32(input);
+	EXPECT_EQ(result, U"こんにちは、世界！");
+}
+
+TEST(ConvertUtf32ToUtf8Test, EmptyString)
+{
+	std::u32string_view input;
+	auto result = ConvertUtf32ToUtf8(input);
+	EXPECT_TRUE(result.empty());
+}
+
+TEST(ConvertUtf32ToUtf8Test, BasicLatin)
+{
+	std::u32string_view input = U"Hello, world!";
+	auto result = ConvertUtf32ToUtf8(input);
+	EXPECT_EQ(result, "Hello, world!");
+}
+
+TEST(ConvertUtf32ToUtf8Test, MultibyteUtf8)
+{
+	std::u32string_view input = U"こんにちは、世界！";
+	auto result = ConvertUtf32ToUtf8(input);
+	EXPECT_EQ(result, "こんにちは、世界！");
+}
+
+TEST(ConvertUtf32ToUtf8Test, Inverse)
+{
+	std::u32string_view input = U"こんにちは、世界！";
+	auto utf8 = ConvertUtf32ToUtf8(input);
+	auto utf32 = ConvertUtf8ToUtf32(utf8);
+	EXPECT_EQ(input, utf32);
+}
+
+TEST(ConvertUtf32ToUtf8Test, InverseInverse)
+{
+	std::string_view input = "こんにちは、世界！";
+	auto utf32 = ConvertUtf8ToUtf32(input);
+	auto utf8 = ConvertUtf32ToUtf8(utf32);
+	EXPECT_EQ(input, utf8);
+}
+
+TEST(ConvertLogicalToVisualTest, EmptyString)
+{
+	std::u32string_view input;
+	auto result = ConvertLogicalToVisual(input);
+	EXPECT_TRUE(result.empty());
+}
+
+TEST(ConvertLogicalToVisualTest, BasicLatin)
+{
+	std::u32string_view input = U"Hello, world!";
+	auto result = ConvertLogicalToVisual(input);
+	EXPECT_EQ(result, U"Hello, world!");
+}
+
+TEST(ConvertLogicalToVisualTest, Hebrew)
+{
+	std::u32string_view input = U"שלום, עולם!";
+	auto result = ConvertLogicalToVisual(input);
+	EXPECT_EQ(result, U"!םלוע ,םולש");
+}
+
+// TEST(ConvertLogicalToVisualTest, MultiLineString)
+// {
+// 	std::u32string_view input = U"שלום\nכיתה א!";
+// 	auto result = ConvertLogicalToVisual(input);
+// 	EXPECT_EQ(ConvertUtf32ToUtf8(result), "םולש\n!א התיכ");
+// }
 
 } // namespace
 } // namespace devilution

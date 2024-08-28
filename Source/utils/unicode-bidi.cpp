@@ -7,8 +7,9 @@ namespace devilution {
 
 std::u32string ConvertLogicalToVisual(std::u32string_view input)
 {
-    FriBidiChar *logical = new FriBidiChar[input.size()];
-    FriBidiChar *visual = new FriBidiChar[input.size()];
+	// return std::u32string(input);
+	FriBidiChar *logical = new FriBidiChar[input.size()];
+	FriBidiChar *visual = new FriBidiChar[input.size()];
 
     for (size_t i = 0; i < input.size(); i++) {
         logical[i] = input[i];

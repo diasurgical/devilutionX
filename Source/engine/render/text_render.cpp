@@ -421,8 +421,9 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		}
 	};
 
-	std::u32string_view remaining32 = ConvertLogicalToVisual(ConvertUtf8ToUtf32(remaining));
-	remaining = ConvertUtf32ToUtf8(remaining32);
+	std::u32string remaining32 = ConvertLogicalToVisual(ConvertUtf8ToUtf32(remaining));
+	std::string line = ConvertUtf32ToUtf8(remaining32);
+	remaining = line;
 
 	for (; !remaining.empty() && remaining[0] != '\0'
 	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
