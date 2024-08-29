@@ -168,7 +168,7 @@ OptionalClxSpriteList LoadFont(GameFontTables size, text_color color, uint16_t r
 	const std::string_view language_code = GetLanguageCode();
 	const std::string_view language_tag = language_code.substr(0, 2);
 	if (language_tag == "zh" || language_tag == "ja" || language_tag == "ko"
-	    || (language_tag == "tr" && row == 0)) {
+		|| (language_tag == "tr" && row == 0)) {
 		GetFontPath(language_code, size, row, ".clx", &path[0]);
 		font = LoadOptionalClx(path);
 	}
@@ -260,13 +260,13 @@ std::size_t CountNewlines(std::string_view fmt, const DrawStringFormatArg *args,
 class FmtArgParser {
 public:
 	FmtArgParser(std::string_view fmt,
-	    DrawStringFormatArg *args,
-	    size_t len,
-	    size_t offset = 0)
-	    : fmt_(fmt)
-	    , args_(args)
-	    , len_(len)
-	    , next_(offset)
+		DrawStringFormatArg *args,
+		size_t len,
+		size_t offset = 0)
+		: fmt_(fmt)
+		, args_(args)
+		, len_(len)
+		, next_(offset)
 	{
 	}
 
@@ -375,8 +375,8 @@ Surface ClipSurface(const Surface &out, Rectangle rect)
 		return out.subregion(0, 0, std::min(rect.position.x + rect.size.width, out.w()), out.h());
 	}
 	return out.subregion(0, 0,
-	    std::min(rect.position.x + rect.size.width, out.w()),
-	    std::min(rect.position.y + rect.size.height, out.h()));
+		std::min(rect.position.x + rect.size.width, out.w()),
+		std::min(rect.position.y + rect.size.height, out.h()));
 }
 
 void MaybeWrap(Point &characterPosition, int characterWidth, int rightMargin, int initialX, int lineHeight)
@@ -397,14 +397,16 @@ int GetLineStartX(UiFlags flags, const Rectangle &rect, int lineWidth)
 }
 
 uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect, Point &characterPosition,
-    int lineWidth, int rightMargin, int bottomMargin, GameFontTables size, text_color color, bool outline,
-    TextRenderOptions &opts)
+	int lineWidth, int rightMargin, int bottomMargin, GameFontTables size, text_color color, bool outline,
+	TextRenderOptions &opts)
 {
 	CurrentFont currentFont;
 
 	char32_t next;
-	std::string_view remaining = text;
-	size_t cpLen;
+
+	std::u32string text32 = ConvertUtf8ToUtf32(text);
+	std::u32string_view remaining = text32;
+	uint32_t bytesDrawn = 0;
 
 	const auto maybeDrawCursor = [&]() {
 		if (opts.cursorPosition == static_cast<int>(text.size() - remaining.size())) {
@@ -421,13 +423,10 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		}
 	};
 
-	std::u32string remaining32 = ConvertLogicalToVisual(ConvertUtf8ToUtf32(remaining));
-	std::string line = ConvertUtf32ToUtf8(remaining32);
-	remaining = line;
+	for (size_t i = 0; i < remaining.size() && remaining[i] != U'\0'; i++) {
+		char32_t next = remaining[i];
+		bytesDrawn += ConvertUtf32ToUtf8(remaining.substr(i, i + 1)).size();
 
-	for (; !remaining.empty() && remaining[0] != '\0'
-	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
-	     remaining.remove_prefix(cpLen)) {
 		if (next == ZWSP)
 			continue;
 
@@ -450,8 +449,8 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 
 			if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = width;
-				if (remaining.size() > cpLen)
-					lineWidth += opts.spacing + GetLineWidth(remaining.substr(cpLen), size, opts.spacing);
+				if (remaining.substr(i).size() > 1)
+					lineWidth += opts.spacing + GetLineWidth(ConvertUtf32ToUtf8(remaining.substr(i + 1)), size, opts.spacing);
 			}
 			characterPosition.x = GetLineStartX(opts.flags, rect, lineWidth);
 
@@ -460,14 +459,14 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		}
 
 		const ClxSprite glyph = (*currentFont.sprite)[frame];
-		const auto byteIndex = static_cast<int>(text.size() - remaining.size());
+		const auto byteIndex = static_cast<int>(text.size() - ConvertUtf32ToUtf8(remaining.substr(i)).size());
 
 		// Draw highlight
 		if (byteIndex >= opts.highlightRange.begin && byteIndex < opts.highlightRange.end) {
-			const bool lastInRange = static_cast<int>(byteIndex + cpLen) == opts.highlightRange.end;
+			const bool lastInRange = static_cast<int>(byteIndex + 1) == opts.highlightRange.end;
 			FillRect(out, characterPosition.x, characterPosition.y,
-			    glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
-			    opts.highlightColor);
+				glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
+				opts.highlightColor);
 		}
 
 		DrawFont(out, characterPosition, glyph, color, outline);
@@ -475,7 +474,7 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		characterPosition.x += width + opts.spacing;
 	}
 	maybeDrawCursor();
-	return static_cast<uint32_t>(remaining.data() - text.data());
+	return bytesDrawn;
 }
 
 } // namespace
@@ -610,7 +609,7 @@ std::string WordWrapString(std::string_view text, unsigned width, GameFontTables
 	CurrentFont currentFont;
 
 	char32_t codepoint = U'\0'; // the current codepoint
-	char32_t nextCodepoint;     // the next codepoint
+	char32_t nextCodepoint;	 // the next codepoint
 	std::size_t nextCodepointLen;
 	std::string_view remaining = text;
 	nextCodepoint = DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen);
@@ -721,7 +720,7 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 	}
 
 	const uint32_t bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition,
-	    lineWidth, rightMargin, bottomMargin, size, color, outlined, opts);
+		lineWidth, rightMargin, bottomMargin, size, color, outlined, opts);
 
 	if (HasAnyOf(opts.flags, UiFlags::PentaCursor)) {
 		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
@@ -774,16 +773,16 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 	FmtArgParser fmtArgParser { fmt, args, argsLen };
 	size_t cpLen;
 	for (; !remaining.empty() && remaining[0] != '\0'
-	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
-	     remaining.remove_prefix(cpLen), prev = next) {
+		 && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
+		 remaining.remove_prefix(cpLen), prev = next) {
 		if (((prev == U'{' || prev == U'}') && prev == next)
-		    || next == ZWSP)
+			|| next == ZWSP)
 			continue;
 
 		const std::optional<std::size_t> fmtArgPos = fmtArgParser(remaining);
 		if (fmtArgPos) {
 			DoDrawString(clippedOut, args[*fmtArgPos].GetFormatted(), rect, characterPosition, lineWidth, rightMargin, bottomMargin, size,
-			    GetColorFromFlags(args[*fmtArgPos].GetFlags()), outlined, opts);
+				GetColorFromFlags(args[*fmtArgPos].GetFlags()), outlined, opts);
 			// `fmtArgParser` has already consumed `remaining`. Ensure the loop doesn't consume any more.
 			cpLen = 0;
 			// The loop assigns `prev = next`. We want `prev` to be `\0` after this.
