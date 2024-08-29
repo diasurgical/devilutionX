@@ -8,14 +8,14 @@ if (buildAsApplication) {
 
 android {
 	ndkVersion '26.1.10909125'
-	compileSdk 33
+	compileSdk 35
 	defaultConfig {
 		if (buildAsApplication) {
 			applicationId "org.diasurgical.devilutionx"
 		}
 		minSdkVersion 21
-		targetSdkVersion 33
-		versionCode 28
+		targetSdkVersion 35
+		versionCode 29
 		versionName project.file('../../VERSION').text.trim()
 		externalNativeBuild {
 			cmake {
