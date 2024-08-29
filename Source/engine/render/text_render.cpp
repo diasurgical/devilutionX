@@ -427,12 +427,12 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 
 	const auto drawSingleLine = [&]() {
 
-		line = text32.substr(lineStart, currPos - lineStart);
+		line = ConvertLogicalToVisual(text32.substr(lineStart, currPos - lineStart));
 
 		for (uint16_t j = lineStart; j < currPos; j++) {
 			remaining = text32.substr(j + 1);
 
-			char32_t cnext = text32[j];
+			char32_t cnext = line[j - lineStart];
 
 			if (cnext == ZWSP)
 				continue;
