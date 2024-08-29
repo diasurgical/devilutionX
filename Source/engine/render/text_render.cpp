@@ -402,11 +402,13 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 {
 	CurrentFont currentFont;
 
-	char32_t next;
-
 	std::u32string text32 = ConvertUtf8ToUtf32(text);
 	std::u32string_view remaining = text32;
 	uint32_t bytesDrawn = 0;
+
+	size_t lineStart = 0;
+	size_t currPos = 0;
+	std::u32string line;
 
 	const auto maybeDrawCursor = [&]() {
 		if (opts.cursorPosition == static_cast<int>(text.size() - remaining.size())) {
@@ -423,9 +425,50 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		}
 	};
 
-	for (size_t i = 0; i < remaining.size() && remaining[i] != U'\0'; i++) {
-		char32_t next = remaining[i];
-		bytesDrawn += ConvertUtf32ToUtf8(remaining.substr(i, i + 1)).size();
+	const auto drawSingleLine = [&]() {
+
+		line = text32.substr(lineStart, currPos - lineStart);
+
+		for (uint16_t j = lineStart; j < currPos; j++) {
+			remaining = text32.substr(j + 1);
+
+			char32_t cnext = text32[j];
+
+			if (cnext == ZWSP)
+				continue;
+
+			if (!currentFont.load(size, color, cnext)) {
+				cnext = U'?';
+				if (!currentFont.load(size, color, cnext)) {
+					app_fatal("Missing fonts");
+				}
+			}
+
+			const uint8_t frame = cnext & 0xFF;
+			const ClxSprite glyph = (*currentFont.sprite)[frame];
+			const int w = glyph.width();
+			const auto byteIndex = static_cast<int>(text.size() - ConvertUtf32ToUtf8(text32.substr(j)).size());
+
+			// Draw highlight
+			if (byteIndex >= opts.highlightRange.begin && byteIndex < opts.highlightRange.end) {
+				const bool lastInRange = static_cast<int>(byteIndex + 1) == opts.highlightRange.end;
+				FillRect(out, characterPosition.x, characterPosition.y,
+					glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
+					opts.highlightColor);
+			}
+
+			DrawFont(out, characterPosition, glyph, color, outline);
+			maybeDrawCursor();
+			characterPosition.x += w + opts.spacing;
+		}
+	};
+
+	int16_t lineX = characterPosition.x;
+
+
+	for (currPos = 0; currPos < remaining.size() && text32[currPos] != U'\0'; currPos++) {
+		char32_t next = text32[currPos];
+		bytesDrawn += ConvertUtf32ToUtf8(text32.substr(currPos, currPos + 1)).size();
 
 		if (next == ZWSP)
 			continue;
@@ -437,11 +480,15 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 			}
 		}
 
-		const uint8_t frame = next & 0xFF;
-		const uint16_t width = (*currentFont.sprite)[frame].width();
+		const uint8_t cframe = next & 0xFF;
+		const uint16_t width = (*currentFont.sprite)[cframe].width();
 		if (next == U'\n' || characterPosition.x + width > rightMargin) {
 			if (next == '\n')
 				maybeDrawCursor();
+			drawSingleLine();
+
+			lineStart = currPos + 1;
+
 			const int nextLineY = characterPosition.y + opts.lineHeight;
 			if (nextLineY >= bottomMargin)
 				break;
@@ -449,30 +496,20 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 
 			if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = width;
-				if (remaining.substr(i).size() > 1)
-					lineWidth += opts.spacing + GetLineWidth(ConvertUtf32ToUtf8(remaining.substr(i + 1)), size, opts.spacing);
+				if (text32.substr(currPos).size() > 1)
+					lineWidth += opts.spacing + GetLineWidth(ConvertUtf32ToUtf8(text32.substr(currPos + 1)), size, opts.spacing);
 			}
 			characterPosition.x = GetLineStartX(opts.flags, rect, lineWidth);
+			lineX = characterPosition.x;
 
 			if (next == U'\n')
 				continue;
 		}
 
-		const ClxSprite glyph = (*currentFont.sprite)[frame];
-		const auto byteIndex = static_cast<int>(text.size() - ConvertUtf32ToUtf8(remaining.substr(i)).size());
-
-		// Draw highlight
-		if (byteIndex >= opts.highlightRange.begin && byteIndex < opts.highlightRange.end) {
-			const bool lastInRange = static_cast<int>(byteIndex + 1) == opts.highlightRange.end;
-			FillRect(out, characterPosition.x, characterPosition.y,
-				glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
-				opts.highlightColor);
-		}
-
-		DrawFont(out, characterPosition, glyph, color, outline);
-		maybeDrawCursor();
-		characterPosition.x += width + opts.spacing;
+		lineX += width + opts.spacing;
 	}
+
+	drawSingleLine();
 	maybeDrawCursor();
 	return bytesDrawn;
 }
