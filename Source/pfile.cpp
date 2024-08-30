@@ -187,7 +187,7 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 	}
 	Log("{} == sizeof(*pPack) ({}) = {}", read, sizeof(*pPack), read == sizeof(*pPack));
 	Log("Read player {}", pPack->pName);
-	Log("\tpHPBase = {}", pPack->pHPBase);
+	//Log("\tpHPBase = {}", pPack->pHPBase);
 
 	listdir("/ram", 0);
         listdir("/vmu/a1", 0);
@@ -204,7 +204,7 @@ void EncodeHero(SaveWriter &saveWriter, const PlayerPack *pack)
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
 	Log("Saving player {}", pack->pName);
-	Log("\tpHPBase = {}", pack->pHPBase);
+	//Log("\tpHPBase = {}", pack->pHPBase);
 	bool result = saveWriter.WriteFile("hero", packed.get(), packedLen /* sizeof(*pack) */);
 	Log("saveWriter.WriteFile(\"hero\", packed.get(), {}) = {}", packedLen, result);
 }
@@ -841,7 +841,7 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 		PlayerPack pPack;
 		memcpy(&pPack, result.get(), decodedLength);
 		Log("ReadArchive player {}", pPack.pName);
-		Log("\tpHPBase = {}", pPack.pHPBase);
+		//Log("\tpHPBase = {}", pPack.pHPBase);
 	}
 
 	Log("ReadArchive 2");
@@ -917,7 +917,8 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 			PlayerPack pkplr;
 			if (ReadHero(*archive, &pkplr)) {
 				Log("ReadHero OK");
-				Log("Player {}, HP = {}", pkplr.pName, pkplr.pHPBase);
+				Log("Player {}", pkplr.pName);
+				//Log("Player {}, HP = {}", pkplr.pName, pkplr.pHPBase);
 				_uiheroinfo uihero;
 				uihero.saveNumber = i;
 				strcpy(hero_names[i], pkplr.pName);
