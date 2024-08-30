@@ -34,7 +34,7 @@ jobs:
 
       - name: Download spawn.mpq
         run: |
-          curl -LO https://raw.githubusercontent.com/d07RiV/diabloweb/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq
+          curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/spawn.mpq
 
       - name: Download fonts.mpq
         run: |
@@ -48,7 +48,7 @@ jobs:
           export CMAKE_PREFIX_PATH=/opt/toolchains/dc/kos-ports/libbz2/inst/:/opt/toolchains/dc/kos-ports/zlib/inst/ && \
           kos-cmake \
             -S . \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_BUILD_TYPE=Release \
             -B build
 
       - name: Build DevilutionX
