@@ -409,6 +409,8 @@ Object *ObjectUnderCursor;
 const Player *PlayerUnderCursor;
 /** Current highlighted tile position */
 Point cursPosition;
+/** Current absolute tile position */
+Point cursPositionAbs;
 /** Previously highlighted monster */
 int pcurstemp;
 /** Index of current cursor image */
@@ -725,6 +727,8 @@ void CheckCursMove()
 	my = std::clamp(my, 0, MAXDUNY - 1);
 
 	const Point currentTile { mx, my };
+
+	cursPositionAbs = currentTile;
 
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
 	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {

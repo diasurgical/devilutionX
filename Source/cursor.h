@@ -42,6 +42,7 @@ extern Object *ObjectUnderCursor;
 struct Player; // Defined in player.h
 extern const Player *PlayerUnderCursor;
 extern Point cursPosition;
+extern Point cursPositionAbs;
 extern DVL_API_FOR_TEST int pcurs;
 
 void InitCursor();
