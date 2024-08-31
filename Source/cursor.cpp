@@ -592,6 +592,7 @@ void InitLevelCursor()
 {
 	NewCursor(CURSOR_HAND);
 	cursPosition = ViewPosition;
+	cursPositionAbs = ViewPosition;
 	pcurstemp = -1;
 	pcursmonst = -1;
 	ObjectUnderCursor = nullptr;
