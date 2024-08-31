@@ -1759,7 +1759,7 @@ void AddPhasing(Missile &missile, AddMissileParameter &parameter)
 		return;
 	}
 
-	missile.position.tile = parameter.dst; // Target is the valid destination calculated in CheckPhasingTarget().
+	missile.position.tile = parameter.dst; // Target is a valid destination calculated in CheckPhasingTarget() by the caster.
 }
 
 void AddFirebolt(Missile &missile, AddMissileParameter &parameter)
