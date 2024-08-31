@@ -1754,29 +1754,12 @@ void AddPhasing(Missile &missile, AddMissileParameter &parameter)
 		return;
 	}
 
-	std::array<Point, 4 * 9> targets;
-
-	int count = 0;
-	for (int y = -6; y <= 6; y++) {
-		for (int x = -6; x <= 6; x++) {
-			if ((x >= -3 && x <= 3) || (y >= -3 && y <= 3))
-				continue; // Skip center
-
-			Point target = missile.position.start + Displacement { x, y };
-			if (!PosOkPlayer(player, target))
-				continue;
-
-			targets[count] = target;
-			count++;
-		}
-	}
-
-	if (count == 0) {
+	if (parameter.dst == player.position.tile) { // Target is the player location; Spell failed.
 		missile._miDelFlag = true;
 		return;
 	}
 
-	missile.position.tile = targets[std::max<int32_t>(GenerateRnd(count), 0)];
+	missile.position.tile = parameter.dst; // Target is the valid destination calculated in CheckPhasingTarget().
 }
 
 void AddFirebolt(Missile &missile, AddMissileParameter &parameter)
