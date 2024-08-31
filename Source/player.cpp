@@ -3183,14 +3183,15 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 
 	const int spellLevel = myPlayer.GetSpellLevel(spellID);
 	const int spellFrom = 0;
+	const bool isTeleport = spellID == SpellID::Teleport;
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 		NetSendCmdLocParam5(true, CMD_SPELLXYD, cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), static_cast<uint16_t>(sd), spellLevel, spellFrom);
-	} else if (pcursmonst != -1 && !isShiftHeld) {
+	} else if (pcursmonst != -1 && !isShiftHeld && !isTeleport) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		NetSendCmdParam5(true, CMD_SPELLID, pcursmonst, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
-	} else if (PlayerUnderCursor != nullptr && !isShiftHeld && !myPlayer.friendlyMode) {
+	} else if (PlayerUnderCursor != nullptr && !isShiftHeld && !myPlayer.friendlyMode && !isTeleport) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	} else {
