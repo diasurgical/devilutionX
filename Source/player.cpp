@@ -3119,7 +3119,7 @@ static Point CheckPhasingTarget(Player &myPlayer)
 
 	for (int y = -6; y <= 6; y++) {
 		for (int x = -6; x <= 6; x++) {
-			if ((x >= -3 && x <= 3) || (y >= -3 && y <= 3)) {
+			if (std::abs(x) <= 3 && std::abs(y) <= 3) {
 				continue; // Skip center
 			}
 
