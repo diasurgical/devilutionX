@@ -71,6 +71,20 @@
 		</screenshot>
 	</screenshots>
 	<releases>
+		<release version="1.5.3" date="2024-08-30">
+			<description>
+				<p>This release includes the following updates:</p>
+				<ul>
+					<li>Resolved validation multiplayer errors</li>
+					<li>Added Hungarian translation</li>
+					<li>Added Turkish translation</li>
+					<li>Fixed issue where a line is repeated in the info panel</li>
+					<li>Fixed errors when converting Hellfire saved games</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.3</url>
+		</release>
 		<release version="1.5.2" date="2024-02-04">
 			<description>
 				<p>This release includes the following updates:</p>
