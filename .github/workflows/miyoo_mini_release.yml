@@ -21,11 +21,14 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name:  Install toolchain
+    - name: Install smpq
+      run: sudo apt-get update && sudo apt-get install -y smpq
+
+    - name: Install toolchain
       working-directory: ${{github.workspace}}
       run: sudo Packaging/miyoo_mini/setup_toolchain.sh
 
-    - name:  Build
+    - name: Build
       working-directory: ${{github.workspace}}
       run: Packaging/miyoo_mini/build.sh
 
