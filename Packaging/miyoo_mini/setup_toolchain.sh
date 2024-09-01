@@ -41,6 +41,7 @@ install_dependencies() {
 		make \
 		rsync \
 		scons \
+  		smpq \
 		tree \
 		unzip \
 		wget \
