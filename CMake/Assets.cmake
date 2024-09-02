@@ -125,6 +125,10 @@ set(devilutionx_assets
   fonts/orange.trn
   fonts/red.trn
   fonts/tr/12-00.clx
+  fonts/tr/24-00.clx
+  fonts/tr/30-00.clx
+  fonts/tr/42-00.clx
+  fonts/tr/46-00.clx
   fonts/whitegold.trn
   fonts/white.trn
   fonts/yellow.trn
