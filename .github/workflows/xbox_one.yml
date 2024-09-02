@@ -42,6 +42,14 @@ jobs:
         git config --global core.filemode false
         git config --global core.autocrlf false
 
+    - name: Install gettext
+      run: >
+        New-Item -Path . -Name tools-gettext -ItemType Directory -Force &&
+        Invoke-WebRequest -Uri "https://github.com/vslavik/gettext-tools-windows/releases/download/v0.22.5/gettext-tools-windows-0.22.5.zip" -OutFile tools-gettext.zip -Resume &&
+        Expand-Archive tools-gettext.zip &&
+        Remove-Item tools-gettext.zip &&
+        Add-Content $env:GITHUB_PATH "$((Get-Item tools-gettext).FullName)\bin"
+
     - name: Build
       shell: cmd
       run: |
