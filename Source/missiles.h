@@ -363,7 +363,7 @@ void AddIdentify(Missile &missile, AddMissileParameter &parameter);
  * var5: X coordinate of the second wave
  * var6: Y coordinate of the second wave
  */
-void AddFireWallControl(Missile &missile, AddMissileParameter &parameter);
+void AddWallControl(Missile &missile, AddMissileParameter &parameter);
 void AddInfravision(Missile &missile, AddMissileParameter &parameter);
 
 /**
@@ -421,7 +421,6 @@ void ProcessBigExplosion(Missile &missile);
 void ProcessLightningBow(Missile &missile);
 void ProcessRingOfFire(Missile &missile);
 void ProcessSearch(Missile &missile);
-void ProcessLightningWallControl(Missile &missile);
 void ProcessImmolation(Missile &missile);
 void ProcessSpectralArrow(Missile &missile);
 void ProcessLightningControl(Missile &missile);
@@ -439,7 +438,7 @@ void ProcessTeleport(Missile &missile);
 void ProcessStoneCurse(Missile &missile);
 void ProcessApocalypseBoom(Missile &missile);
 void ProcessRhino(Missile &missile);
-void ProcessFireWallControl(Missile &missile);
+void ProcessWallControl(Missile &missile);
 void ProcessInfravision(Missile &missile);
 void ProcessApocalypse(Missile &missile);
 void ProcessFlameWaveControl(Missile &missile);

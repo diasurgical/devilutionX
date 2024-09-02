@@ -37,7 +37,7 @@ Etherealize			SpellEtherealize		Etherealize	Physical
 Spurt					Spurt	Physical	
 ApocalypseBoom	AddApocalypseBoom	ProcessApocalypseBoom			ApocalypseBoom	Physical	
 Healing	AddHealing					Physical,Invisible	
-FireWallControl	AddFireWallControl	ProcessFireWallControl			FireWall	Fire,Invisible	
+FireWallControl	AddWallControl	ProcessWallControl			FireWall	Fire,Invisible	
 Infravision	AddInfravision	ProcessInfravision	SpellInfravision			Physical,Invisible	
 Identify	AddIdentify					Physical,Invisible	
 FlameWaveControl	AddFlameWaveControl	ProcessFlameWaveControl	SpellFlameWave		FireWall	Fire	
@@ -70,7 +70,7 @@ DiabloApocalypse	AddDiabloApocalypse					Physical,Invisible
 Mana	AddMana					Physical,Invisible	
 Magi	AddMagi					Physical,Invisible	
 LightningWall	AddLightningWall	ProcessLightningWall	SpellLightningWall	SpellLightningHit	Lightning	Lightning	
-LightningWallControl	AddFireWallControl	ProcessLightningWallControl			Lightning	Lightning,Invisible	
+LightningWallControl	AddWallControl	ProcessWallControl			Lightning	Lightning,Invisible	
 Immolation	AddNova	ProcessImmolation	SpellFirebolt	SpellFireHit	Fireball	Fire	
 SpectralArrow	AddSpectralArrow	ProcessSpectralArrow			Arrow	Physical,Arrow	
 FireballBow	AddImmolation	ProcessFireball	ShootFireballBow	SpellFireHit	Fireball	Fire	Blockable

@@ -225,7 +225,7 @@ tl::expected<MissileData::AddFn, std::string> ParseMissileAddFn(std::string_view
 	if (value == "AddHealOther") return AddHealOther;
 	if (value == "AddElemental") return AddElemental;
 	if (value == "AddIdentify") return AddIdentify;
-	if (value == "AddFireWallControl") return AddFireWallControl;
+	if (value == "AddWallControl") return AddWallControl;
 	if (value == "AddInfravision") return AddInfravision;
 	if (value == "AddFlameWaveControl") return AddFlameWaveControl;
 	if (value == "AddNova") return AddNova;
@@ -265,7 +265,6 @@ tl::expected<MissileData::ProcessFn, std::string> ParseMissileProcessFn(std::str
 	if (value == "ProcessLightningBow") return ProcessLightningBow;
 	if (value == "ProcessRingOfFire") return ProcessRingOfFire;
 	if (value == "ProcessSearch") return ProcessSearch;
-	if (value == "ProcessLightningWallControl") return ProcessLightningWallControl;
 	if (value == "ProcessImmolation") return ProcessImmolation;
 	if (value == "ProcessSpectralArrow") return ProcessSpectralArrow;
 	if (value == "ProcessLightningControl") return ProcessLightningControl;
@@ -283,7 +282,7 @@ tl::expected<MissileData::ProcessFn, std::string> ParseMissileProcessFn(std::str
 	if (value == "ProcessStoneCurse") return ProcessStoneCurse;
 	if (value == "ProcessApocalypseBoom") return ProcessApocalypseBoom;
 	if (value == "ProcessRhino") return ProcessRhino;
-	if (value == "ProcessFireWallControl") return ProcessFireWallControl;
+	if (value == "ProcessWallControl") return ProcessWallControl;
 	if (value == "ProcessInfravision") return ProcessInfravision;
 	if (value == "ProcessApocalypse") return ProcessApocalypse;
 	if (value == "ProcessFlameWaveControl") return ProcessFlameWaveControl;
