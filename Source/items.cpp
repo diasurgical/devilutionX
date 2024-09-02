@@ -2428,6 +2428,7 @@ std::string GetTranslatedItemNameMagical(const Item &item, bool hellfireItem, bo
 		if (forceNameLengthCheck ? *forceNameLengthCheck : !StringInPanel(identifiedName.c_str())) {
 			identifiedName = GenerateMagicItemName(_(baseItemData.iSName), pPrefix, pSufix, translate);
 		}
+		affixDataCache[item._iSeed] = {pPrefix, pSufix};
 	}
 
 	SetRndSeed(currentSeed);
@@ -3819,7 +3820,7 @@ bool DoOil(Player &player, int cii)
 	return true;
 }
 
-[[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item)
+[[nodiscard]] StringOrView PrintItemPowerRaw(char plidx, const Item &item)
 {
 	switch (plidx) {
 	case IPL_TOHIT:
@@ -4024,6 +4025,24 @@ bool DoOil(Player &player, int cii)
 	default:
 		return _("Another ability (NW)");
 	}
+}
+
+[[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item)
+{
+	if (showDetailedAffixData && item._iMagical == ITEM_QUALITY_MAGIC && item._iIdentified) {
+		if (auto cache = affixDataCache.find(item._iSeed); cache != affixDataCache.end()) {
+			const auto &[prefix, suffix] = cache->second;
+			const PLStruct *affix = prefix != nullptr && prefix->power.type == plidx ? prefix : suffix;
+			std::stringstream rolls;
+			if (affix->power.param1 != affix->power.param2 && affix->power.param2 != 0)
+			rolls << "stat range [" << affix->power.param1 << "/" << affix->power.param2 << "] ";
+
+			std::stringstream tier;
+			tier << "| tier [" << static_cast<unsigned>(affix->currentTier) << "/" << static_cast<unsigned>(affix->maxTier) << "]";
+			return rolls.str() + tier.str();
+		}
+	}
+	return PrintItemPowerRaw(plidx, item);
 }
 
 void DrawUniqueInfo(const Surface &out)

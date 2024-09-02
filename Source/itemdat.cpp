@@ -31,6 +31,9 @@ std::vector<PLStruct> ItemPrefixes;
 /** Contains the data related to each item suffix. */
 std::vector<PLStruct> ItemSuffixes;
 
+std::unordered_map<uint32_t, std::pair<const PLStruct *, const PLStruct *>> affixDataCache;
+bool showDetailedAffixData = false;
+
 namespace {
 
 tl::expected<item_drop_rate, std::string> ParseItemDropRate(std::string_view value)
@@ -619,6 +622,52 @@ void LoadItemAffixesDat(std::string_view filename, std::vector<PLStruct> &out)
 	out.shrink_to_fit();
 }
 
+
+
+void generateAffixDataMap()
+{
+	struct AffixMinMaxRolls {
+		std::string name;
+		int minRoll;
+		int maxRoll;
+	};
+
+	std::unordered_map<item_effect_type, std::vector<AffixMinMaxRolls>> m;
+	std::unordered_map<std::string, std::pair<uint8_t, uint8_t>> m2;
+	auto fillAffixDataMap = [&m](std::vector<PLStruct> &out) {
+		for (const auto &affix : out) {
+			m[affix.power.type].push_back({ affix.PLName, affix.power.param1, affix.power.param2 });
+		}
+	};
+
+	fillAffixDataMap(ItemPrefixes);
+	fillAffixDataMap(ItemSuffixes);
+
+	for (auto &[key, val] : m) {
+		std::sort(val.begin(), val.end(), [](const auto &lhs, const auto &rhs) {
+			return std::abs(lhs.minRoll) < std::abs(rhs.minRoll);
+		});
+
+		uint8_t num = 0;
+		for (const auto& affix : val) {
+			auto &affixData = m2[affix.name];
+			affixData = {
+				++num, static_cast<uint8_t>(val.size())
+			};
+		}
+	}
+
+	auto addAffixTierData = [&m, &m2](auto& affixVector) {
+		for (auto &affix : affixVector) {
+			auto &affixData = m[affix.power.type];
+			const auto &data = m2[affix.PLName];
+			affix.currentTier = data.first;
+			affix.maxTier = data.second;
+		}
+	};
+	addAffixTierData(ItemPrefixes);
+	addAffixTierData(ItemSuffixes);
+}
 } // namespace
 
 void LoadItemData()
@@ -627,6 +676,8 @@ void LoadItemData()
 	LoadUniqueItemDat();
 	LoadItemAffixesDat("txtdata\\items\\item_prefixes.tsv", ItemPrefixes);
 	LoadItemAffixesDat("txtdata\\items\\item_suffixes.tsv", ItemSuffixes);
+
+	generateAffixDataMap();
 }
 
 std::string_view ItemTypeToString(ItemType itemType)
