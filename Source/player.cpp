@@ -3252,11 +3252,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	} else {
-		Point targetPosition = cursPosition;
-		if (isPhasing) {
-			targetPosition = CheckPhasingTarget(myPlayer); // Override target position with Phasing target position.
-		}
-		NetSendCmdLocParam4(true, CMD_SPELLXY, targetPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
+		NetSendCmdLocParam4(true, CMD_SPELLXY, isPhasing ? CheckPhasingTarget(myPlayer) : cursPosition, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	}
 }
 
