@@ -576,6 +576,12 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
  */
 void DrawFloorTile(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
+	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
+
+	// Floor tiles always come in pairs. If the left triangle (mt[0]) exists, so does the right one.
+	assert(DPieceMicros[levelPieceId].mt[0].hasValue() == DPieceMicros[levelPieceId].mt[1].hasValue());
+	if (!DPieceMicros[levelPieceId].mt[0].hasValue()) return;
+
 	const int lightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
 	const uint8_t *tbl = LightTables[lightTableIndex].data();
@@ -584,21 +590,10 @@ void DrawFloorTile(const Surface &out, Point tilePosition, Point targetBufferPos
 		tbl = GetPauseTRN();
 #endif
 
-	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
-	{
-		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
-		if (levelCelBlock.hasValue()) {
-			RenderTileFrame(out, targetBufferPosition, TileType::LeftTriangle,
-			    GetDunFrame(levelCelBlock.frame()), DunFrameTriangleHeight, MaskType::Solid, tbl);
-		}
-	}
-	{
-		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
-		if (levelCelBlock.hasValue()) {
-			RenderTileFrame(out, targetBufferPosition + RightFrameDisplacement, TileType::RightTriangle,
-			    GetDunFrame(levelCelBlock.frame()), DunFrameTriangleHeight, MaskType::Solid, tbl);
-		}
-	}
+	RenderTileFrame(out, targetBufferPosition, TileType::LeftTriangle,
+	    GetDunFrame(DPieceMicros[levelPieceId].mt[0].frame()), DunFrameTriangleHeight, MaskType::Solid, tbl);
+	RenderTileFrame(out, targetBufferPosition + RightFrameDisplacement, TileType::RightTriangle,
+	    GetDunFrame(DPieceMicros[levelPieceId].mt[1].frame()), DunFrameTriangleHeight, MaskType::Solid, tbl);
 }
 
 /**
@@ -845,9 +840,8 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 				continue;
 			}
-			if (IsFloor(tilePosition)) {
-				DrawFloorTile(out, tilePosition, targetBufferPosition);
-			}
+			if (!IsFloor(tilePosition)) continue;
+			DrawFloorTile(out, tilePosition, targetBufferPosition);
 		}
 		// Return to start of row
 		tilePosition += Displacement(Direction::West) * columns;
