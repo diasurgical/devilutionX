@@ -2562,6 +2562,7 @@ int DiabloMain(int argc, char **argv)
 
 	ApplicationInit();
 	LuaInitialize();
+
 	SaveOptions();
 
 	// Finally load game data
@@ -2578,6 +2579,7 @@ int DiabloMain(int argc, char **argv)
 	LoadObjectData();
 
 	DiabloInit();
+	LoadLuaMods();
 #ifdef __UWP__
 	onInitialized();
 #endif

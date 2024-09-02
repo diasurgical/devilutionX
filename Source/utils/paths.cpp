@@ -31,6 +31,7 @@ std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
 std::optional<std::string> assetsPath;
+std::optional<std::string> modsPath;
 
 void AddTrailingSlash(std::string &path)
 {
@@ -127,6 +128,21 @@ const std::string &AssetsPath()
 	return *assetsPath;
 }
 
+const std::string &ModsPath()
+{
+	if (!modsPath) {
+#if defined(__IPHONEOS__)
+		modsPath = FromSDL(IOSGetPrefPath()) + "mods" + DIRECTORY_SEPARATOR_STR;
+#elif defined(NXDK)
+		modsPath = NxdkGetPrefPath() + "mods" + DIRECTORY_SEPARATOR_STR;
+#else
+		modsPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution")) + "mods" + DIRECTORY_SEPARATOR_STR;
+#endif
+		AddTrailingSlash(*modsPath);
+	}
+	return *modsPath;
+}
+
 void SetBasePath(const std::string &path)
 {
 	basePath = path;
@@ -149,6 +165,12 @@ void SetAssetsPath(const std::string &path)
 {
 	assetsPath = path;
 	AddTrailingSlash(*assetsPath);
+}
+
+void SetModsPath(const std::string &path)
+{
+	modsPath = path;
+	AddTrailingSlash(*modsPath);
 }
 
 } // namespace paths

@@ -31,6 +31,7 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "loadsave.h"
+#include "lua/lua.hpp"
 #include "minitext.h"
 #include "missiles.h"
 #include "nthread.h"
@@ -205,6 +206,11 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 
 void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord cy, bool includesFirstFrame)
 {
+	if (LuaPreHook("StartRangeAttack", player, d, cx, cy, includesFirstFrame)) {
+		return;
+	}
+
+	// Original C++ logic for Diablo
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, DeathReason::Unknown);
 		return;
@@ -213,13 +219,11 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	int8_t skippedAnimationFrames = 0;
 	const auto flags = player._pIFlags;
 
-	if (!gbIsHellfire) {
-		if (includesFirstFrame && HasAnyOf(flags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
-			skippedAnimationFrames += 1;
-		}
-		if (HasAnyOf(flags, ItemSpecialEffect::FastAttack)) {
-			skippedAnimationFrames += 1;
-		}
+	if (includesFirstFrame && HasAnyOf(flags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
+		skippedAnimationFrames += 1;
+	}
+	if (HasAnyOf(flags, ItemSpecialEffect::FastAttack)) {
+		skippedAnimationFrames += 1;
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
@@ -231,6 +235,8 @@ void StartRangeAttack(Player &player, Direction d, WorldTileCoord cx, WorldTileC
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 	player.position.temp = WorldTilePosition { cx, cy };
+
+	LuaPostHook("StartRangeAttack", player, d, cx, cy, includesFirstFrame);
 }
 
 player_graphic GetPlayerGraphicForSpell(SpellID spellId)

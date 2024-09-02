@@ -144,6 +144,7 @@ set(devilutionx_assets
   levels/towndata/automap.amp
   lua_internal/get_lua_function_signature.lua
   lua/devilutionx/events.lua
+  lua/hellfire/player.lua
   lua/inspect.lua
   lua/repl_prelude.lua
   nlevels/cutl5w.clx

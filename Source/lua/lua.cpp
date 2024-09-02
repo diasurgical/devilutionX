@@ -1,10 +1,8 @@
 #include "lua/lua.hpp"
 
+#include <filesystem>
 #include <optional>
 #include <string_view>
-
-#include <ankerl/unordered_dense.h>
-#include <sol/sol.hpp>
 
 #include <config.h>
 
@@ -16,6 +14,7 @@
 #include "plrmsg.h"
 #include "utils/console.h"
 #include "utils/log.hpp"
+#include "utils/paths.h"
 #include "utils/str_cat.hpp"
 
 #ifdef _DEBUG
@@ -25,17 +24,9 @@
 
 namespace devilution {
 
-namespace {
-
-struct LuaState {
-	sol::state sol = {};
-	sol::table commonPackages = {};
-	ankerl::unordered_dense::segmented_map<std::string, sol::bytecode> compiledScripts = {};
-	sol::environment sandbox = {};
-	sol::table events = {};
-};
-
 std::optional<LuaState> CurrentLuaState;
+
+namespace {
 
 // A Lua function that we use to generate a `require` implementation.
 constexpr std::string_view RequireGenSrc = R"lua(
@@ -169,7 +160,6 @@ sol::environment CreateLuaSandbox()
 	         "assert", "warn", "error", "ipairs", "next", "pairs", "pcall",
 	         "select", "tonumber", "tostring", "type", "xpcall",
 	         "rawequal", "rawget", "rawset", "setmetatable",
-	// Built-in packages:
 #ifdef _DEBUG
 	         "debug",
 #endif
@@ -188,33 +178,160 @@ sol::environment CreateLuaSandbox()
 	    "difftime", os["difftime"],
 	    "time", os["time"]);
 
+	// Add RegisterFunctionOverride, RegisterPreHook, and RegisterPostHook to the sandbox
+	sandbox["RegisterFunctionOverride"] = lua["RegisterFunctionOverride"];
+	sandbox["RegisterPreHook"] = lua["RegisterPreHook"];
+	sandbox["RegisterPostHook"] = lua["RegisterPostHook"];
+
 	sandbox["require"] = lua["requireGen"](sandbox, CurrentLuaState->commonPackages, LuaLoadScriptFromAssets);
 
 	return sandbox;
+}
+
+void RegisterPlayerStruct(sol::state &lua)
+{
+
+	lua.new_usertype<Player>("Player",
+	    // Constructors
+	    sol::constructors<Player()>(),
+
+	    // Member variables
+	    "_pName", &Player::_pName,
+	    "InvBody", &Player::InvBody,
+	    "InvList", &Player::InvList,
+	    "SpdList", &Player::SpdList,
+	    "HoldItem", &Player::HoldItem,
+	    "lightId", &Player::lightId,
+	    "_pNumInv", &Player::_pNumInv,
+	    "_pStrength", &Player::_pStrength,
+	    "_pBaseStr", &Player::_pBaseStr,
+	    "_pMagic", &Player::_pMagic,
+	    "_pBaseMag", &Player::_pBaseMag,
+	    "_pDexterity", &Player::_pDexterity,
+	    "_pBaseDex", &Player::_pBaseDex,
+	    "_pVitality", &Player::_pVitality,
+	    "_pBaseVit", &Player::_pBaseVit,
+	    "_pStatPts", &Player::_pStatPts,
+	    "_pDamageMod", &Player::_pDamageMod,
+	    "_pHPBase", &Player::_pHPBase,
+	    "_pMaxHPBase", &Player::_pMaxHPBase,
+	    "_pHitPoints", &Player::_pHitPoints,
+	    "_pMaxHP", &Player::_pMaxHP,
+	    "_pHPPer", &Player::_pHPPer,
+	    "_pManaBase", &Player::_pManaBase,
+	    "_pMaxManaBase", &Player::_pMaxManaBase,
+	    "_pMana", &Player::_pMana,
+	    "_pMaxMana", &Player::_pMaxMana,
+	    "_pManaPer", &Player::_pManaPer,
+	    "_pIMinDam", &Player::_pIMinDam,
+	    "_pIMaxDam", &Player::_pIMaxDam,
+	    "_pIAC", &Player::_pIAC,
+	    "_pIBonusDam", &Player::_pIBonusDam,
+	    "_pIBonusToHit", &Player::_pIBonusToHit,
+	    "_pIBonusAC", &Player::_pIBonusAC,
+	    "_pIBonusDamMod", &Player::_pIBonusDamMod,
+	    "_pIGetHit", &Player::_pIGetHit,
+	    "_pIEnAc", &Player::_pIEnAc,
+	    "_pIFMinDam", &Player::_pIFMinDam,
+	    "_pIFMaxDam", &Player::_pIFMaxDam,
+	    "_pILMinDam", &Player::_pILMinDam,
+	    "_pILMaxDam", &Player::_pILMaxDam,
+	    "_pExperience", &Player::_pExperience,
+	    "_pmode", &Player::_pmode,
+	    "walkpath", &Player::walkpath,
+	    "plractive", &Player::plractive,
+	    "destAction", &Player::destAction,
+	    "destParam1", &Player::destParam1,
+	    "destParam2", &Player::destParam2,
+	    "destParam3", &Player::destParam3,
+	    "destParam4", &Player::destParam4,
+	    "_pGold", &Player::_pGold,
+
+	    // Member methods
+	    "getClassAttributes", &Player::getClassAttributes,
+	    "getPlayerCombatData", &Player::getPlayerCombatData,
+	    "getPlayerData", &Player::getPlayerData,
+	    "getClassName", &Player::getClassName,
+	    "getBaseToBlock", &Player::getBaseToBlock,
+	    "CalcScrolls", &Player::CalcScrolls,
+	    "CanUseItem", &Player::CanUseItem,
+	    "CanCleave", &Player::CanCleave,
+	    "isEquipped", &Player::isEquipped,
+	    "RemoveInvItem", &Player::RemoveInvItem,
+	    "getId", &Player::getId,
+	    "RemoveSpdBarItem", &Player::RemoveSpdBarItem,
+	    "GetMostValuableItem", &Player::GetMostValuableItem,
+	    "GetBaseAttributeValue", &Player::GetBaseAttributeValue,
+	    "GetCurrentAttributeValue", &Player::GetCurrentAttributeValue,
+	    "GetMaximumAttributeValue", &Player::GetMaximumAttributeValue,
+	    "GetTargetPosition", &Player::GetTargetPosition,
+	    "IsPositionInPath", &Player::IsPositionInPath,
+	    "Say", sol::overload(static_cast<void (Player::*)(HeroSpeech) const>(&Player::Say), static_cast<void (Player::*)(HeroSpeech, int) const>(&Player::Say), static_cast<void (Player::*)(HeroSpeech) const>(&Player::SaySpecific)),
+	    "Stop", &Player::Stop,
+	    "isWalking", &Player::isWalking,
+	    "GetItemLocation", &Player::GetItemLocation,
+	    "GetArmor", &Player::GetArmor,
+	    "GetMeleeToHit", &Player::GetMeleeToHit,
+	    "GetMeleePiercingToHit", &Player::GetMeleePiercingToHit,
+	    "GetRangedToHit", &Player::GetRangedToHit,
+	    "GetRangedPiercingToHit", &Player::GetRangedPiercingToHit,
+	    "GetMagicToHit", &Player::GetMagicToHit,
+	    "GetBlockChance", &Player::GetBlockChance,
+	    "GetManaShieldDamageReduction", &Player::GetManaShieldDamageReduction,
+	    "GetSpellLevel", &Player::GetSpellLevel,
+	    "CalculateArmorPierce", &Player::CalculateArmorPierce,
+	    "UpdateHitPointPercentage", &Player::UpdateHitPointPercentage,
+	    "UpdateManaPercentage", &Player::UpdateManaPercentage,
+	    "RestorePartialLife", &Player::RestorePartialLife,
+	    "RestoreFullLife", &Player::RestoreFullLife,
+	    "RestorePartialMana", &Player::RestorePartialMana,
+	    "RestoreFullMana", &Player::RestoreFullMana,
+	    "ReadySpellFromEquipment", &Player::ReadySpellFromEquipment,
+	    "UsesRangedWeapon", &Player::UsesRangedWeapon,
+	    "CanChangeAction", &Player::CanChangeAction,
+	    "getGraphic", &Player::getGraphic,
+	    "getSpriteWidth", &Player::getSpriteWidth,
+	    "getAnimationFramesAndTicksPerFrame", &Player::getAnimationFramesAndTicksPerFrame,
+	    "currentSprite", &Player::currentSprite,
+	    "getRenderingOffset", &Player::getRenderingOffset,
+	    "UpdatePreviewCelSprite", &Player::UpdatePreviewCelSprite,
+	    "getCharacterLevel", &Player::getCharacterLevel,
+	    "setCharacterLevel", &Player::setCharacterLevel,
+	    "getMaxCharacterLevel", &Player::getMaxCharacterLevel,
+	    "isMaxCharacterLevel", &Player::isMaxCharacterLevel,
+	    "addExperience", sol::overload(static_cast<void (Player::*)(uint32_t)>(&Player::addExperience), static_cast<void (Player::*)(uint32_t, int)>(&Player::addExperience)),
+	    "getNextExperienceThreshold", &Player::getNextExperienceThreshold,
+	    "isOnActiveLevel", &Player::isOnActiveLevel,
+	    "isOnLevel", sol::overload(static_cast<bool (Player::*)(uint8_t) const>(&Player::isOnLevel), static_cast<bool (Player::*)(_setlevels) const>(&Player::isOnLevel)),
+	    "isOnArenaLevel", &Player::isOnArenaLevel,
+	    "setLevel", sol::overload(static_cast<void (Player::*)(uint8_t)>(&Player::setLevel), static_cast<void (Player::*)(_setlevels)>(&Player::setLevel)),
+	    "calculateBaseLife", &Player::calculateBaseLife,
+	    "calculateBaseMana", &Player::calculateBaseMana,
+	    "occupyTile", &Player::occupyTile,
+	    "isLevelOwnedByLocalClient", &Player::isLevelOwnedByLocalClient,
+	    "isHoldingItem", &Player::isHoldingItem);
 }
 
 void LuaInitialize()
 {
 	CurrentLuaState.emplace(LuaState { .sol = { sol::c_call<decltype(&LuaPanic), &LuaPanic> } });
 	sol::state &lua = CurrentLuaState->sol;
-	lua_setwarnf(lua.lua_state(), LuaWarn, /*ud=*/nullptr);
-	lua.open_libraries(
-	    sol::lib::base,
-	    sol::lib::coroutine,
-	    sol::lib::debug,
-	    sol::lib::math,
-	    sol::lib::os,
-	    sol::lib::package,
-	    sol::lib::string,
-	    sol::lib::table,
-	    sol::lib::utf8);
 
-	// Registering devilutionx object table
+	lua_setwarnf(lua.lua_state(), LuaWarn, /*ud=*/nullptr);
+	lua.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::debug, sol::lib::math, sol::lib::os, sol::lib::package, sol::lib::string, sol::lib::table, sol::lib::utf8);
+
 	SafeCallResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
 
-	// Loaded without a sandbox.
-	CurrentLuaState->events = RunScript(/*env=*/std::nullopt, "devilutionx.events", /*optional=*/false);
+	RegisterPlayerStruct(lua);
 
+	lua["RegisterFunctionOverride"] = &RegisterFunctionOverride;
+	lua["RegisterPreHook"] = &RegisterPreHook;
+	lua["RegisterPostHook"] = &RegisterPostHook;
+	lua["print"] = [](const std::string &msg) {
+		SDL_Log("%s", msg.c_str());
+	};
+
+	CurrentLuaState->events = RunScript(/*env=*/std::nullopt, "devilutionx.events", /*optional=*/false);
 	CurrentLuaState->commonPackages = lua.create_table_with(
 #ifdef _DEBUG
 	    "devilutionx.dev", LuaDevModule(lua),
@@ -224,15 +341,12 @@ void LuaInitialize()
 	    "devilutionx.audio", LuaAudioModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); },
-	    // These packages are loaded without a sandbox:
 	    "devilutionx.events", CurrentLuaState->events,
 	    "inspect", RunScript(/*env=*/std::nullopt, "inspect", /*optional=*/false));
 
-	// Used by the custom require implementation.
 	lua["setEnvironment"] = [](const sol::environment &env, const sol::function &fn) { sol::set_environment(env, fn); };
 
 	RunScript(CreateLuaSandbox(), "user", /*optional=*/true);
-
 	LuaEvent("GameBoot");
 }
 
@@ -272,6 +386,49 @@ sol::object SafeCallResult(sol::protected_function_result result, bool optional)
 		LogError(error);
 	}
 	return result;
+}
+
+void RegisterPreHook(std::string_view functionName, sol::function hook)
+{
+	CurrentLuaState->preHooks[std::string(functionName)] = hook;
+}
+
+void RegisterPostHook(std::string_view functionName, sol::function hook)
+{
+	CurrentLuaState->postHooks[std::string(functionName)] = hook;
+}
+
+void RegisterFunctionOverride(std::string_view functionName, sol::function overrideFunction)
+{
+	CurrentLuaState->functionOverrides[std::string(functionName)] = overrideFunction;
+	// Disable hooks for this function
+	CurrentLuaState->preHooks.erase(std::string(functionName));
+	CurrentLuaState->postHooks.erase(std::string(functionName));
+}
+
+void LoadLuaMods()
+{
+	if (gbIsHellfire) {
+		// Load Hellfire-specific Lua scripts
+		RunScript(CreateLuaSandbox(), "hellfire/player", /*optional=*/false); // player.cpp
+	}
+
+	const std::string &modsDir = paths::ModsPath();
+
+	if (!std::filesystem::exists(modsDir) || !std::filesystem::is_directory(modsDir)) {
+		LogError("Mods directory does not exist or is not a directory: {}", modsDir);
+		return;
+	}
+
+	// List all files in the mods directory
+	for (const auto &entry : std::filesystem::directory_iterator(modsDir)) {
+		if (entry.is_regular_file() && entry.path().extension() == ".lua") {
+			// Load the Lua script
+			std::string scriptPath = entry.path().string();
+			RunScript(CreateLuaSandbox(), scriptPath, /*optional=*/false);
+			Log("Loaded Lua mod: {}", scriptPath);
+		}
+	}
 }
 
 } // namespace devilution
