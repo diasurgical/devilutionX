@@ -3112,10 +3112,35 @@ void CalcPlrStaff(Player &player)
 /*
  * @brief Get a target location for the Phasing spell.
  */
-static Point CheckPhasingTarget(Player &myPlayer)
+static Point CheckPhasingTarget(const Player &myPlayer)
 {
+	/*
+	 * Grid representation for the Phasing spell
+	 * The '[P]' marks the player position.
+	 * The '[ ]' marks the tiles that are skipped.
+	 * The '[x]' marks the valid tiles that can be targeted.
+	 *
+	 *  -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6
+	 *  ---------------------------------------
+	 *  [x][x][x][x][x][x][x][x][x][x][x][x][x]  // -6
+	 *  [x][x][x][x][x][x][x][x][x][x][x][x][x]  // -5
+	 *  [x][x][x][x][x][x][x][x][x][x][x][x][x]  // -4
+	 *  [x][x][x][ ][ ][ ][ ][ ][ ][ ][x][x][x]  // -3
+	 *  [x][x][x][ ][ ][ ][ ][ ][ ][ ][x][x][x]  // -2
+	 *  [x][x][x][ ][ ][ ][ ][ ][ ][ ][x][x][x]  // -1
+	 *  [x][x][x][ ][ ][ ][P][ ][ ][ ][x][x][x]  //  0
+	 *  [x][x][x][ ][ ][ ][ ][ ][ ][ ][x][x][x]  //  1
+	 *  [x][x][x][ ][ ][ ][ ][ ][ ][ ][x][x][x]  //  2
+	 *  [x][x][x][ ][ ][ ][ ][ ][ ][ ][x][x][x]  //  3
+	 *  [x][x][x][x][x][x][x][x][x][x][x][x][x]  //  4
+	 *  [x][x][x][x][x][x][x][x][x][x][x][x][x]  //  5
+	 *  [x][x][x][x][x][x][x][x][x][x][x][x][x]  //  6
+	 */
+
 	std::vector<Point> targets;
 	targets.reserve(36);
+
+	const WorldTilePosition position = myPlayer.position.tile;
 
 	for (int y = -6; y <= 6; y++) {
 		for (int x = -6; x <= 6; x++) {
@@ -3123,7 +3148,7 @@ static Point CheckPhasingTarget(Player &myPlayer)
 				continue; // Skip center
 			}
 
-			Point target = myPlayer.position.tile + Displacement { x, y };
+			Point target = position + Displacement { x, y };
 			if (PosOkPlayer(myPlayer, target)) {
 				targets.push_back(target);
 			}
@@ -3131,7 +3156,7 @@ static Point CheckPhasingTarget(Player &myPlayer)
 	}
 
 	if (targets.empty()) {
-		return myPlayer.position.tile; // No valid targets. No position change will be recognized in the missile function to make spell fail.
+		return position; // No valid targets. No position change will be recognized in the missile function to make spell fail.
 	}
 
 	return targets[std::max<int32_t>(GenerateRnd(targets.size()), 0)];
