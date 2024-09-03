@@ -204,13 +204,13 @@ struct PlayerAnimationData {
 };
 
 class SpellCastInfo {
-private:
+public: // TODO: Make private when all direct usage of members variables are removed.
 	SpellID spellId;
 	SpellType spellType;
 	int8_t spellFrom;
 	int spellLevel;
 
-public:
+	// TODO: Set public here when all direct usage of members variables are removed.
 	SpellID getSpellId() const { return spellId; }
 	void setSpellId(SpellID id) { spellId = id; }
 
