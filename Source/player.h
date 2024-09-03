@@ -203,20 +203,29 @@ struct PlayerAnimationData {
 	}
 };
 
-struct SpellCastInfo {
+class SpellCastInfo {
+private:
 	SpellID spellId;
 	SpellType spellType;
-	/* @brief Inventory location for scrolls */
 	int8_t spellFrom;
-	/* @brief Used for spell level */
 	int spellLevel;
+
+public:
+	SpellID getSpellId() const { return spellId; }
+	void setSpellId(SpellID id) { spellId = id; }
+
+	SpellType getSpellType() const { return spellType; }
+	void setSpellType(SpellType type) { spellType = type; }
+
+	int8_t getSpellFrom() const { return spellFrom; }
+	void setSpellFrom(int8_t from) { spellFrom = from; }
+
+	int getSpellLevel() const { return spellLevel; }
+	void setSpellLevel(int level) { spellLevel = level; }
 };
 
-struct Player {
-	Player() = default;
-	Player(Player &&) noexcept = default;
-	Player &operator=(Player &&) noexcept = default;
-
+class Player {
+public: // TODO: Make private when all direct usage of members variables are removed.
 	char _pName[PlayerNameLength];
 	Item InvBody[NUM_INVLOC];
 	Item InvList[InventoryGridCells];
@@ -304,12 +313,8 @@ struct Player {
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	HeroClass _pClass;
-
-private:
 	uint8_t _pLevel = 1; // Use get/setCharacterLevel to ensure this attribute stays within the accepted range
-
-public:
-	uint8_t _pgfxnum; // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
+	uint8_t _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. The 3 lower bits define weapon (PlayerWeaponGraphic) and the higher bits define armour (starting with PlayerArmorGraphic)
 	int8_t _pISplLvlAdd;
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
@@ -364,6 +369,380 @@ public:
 	uint8_t pDiabloKillLevel;
 	uint16_t wReflections;
 	ItemSpecialEffectHf pDamAcFlags;
+
+private:
+	void _addExperience(uint32_t experience, int levelDelta);
+
+public:
+	Player() = default;
+	Player(Player &&) noexcept = default;
+	Player &operator=(Player &&) noexcept = default;
+
+	const bool isMyPlayer() const { return this == MyPlayer; }
+
+	// Name
+	const char *getName() const { return _pName; }
+	void setName(const char *name) { strncpy(_pName, name, PlayerNameLength); }
+
+	// Inventory and items
+	const Item &getInvBody(int index) const { return InvBody[index]; }
+	void setInvBody(int index, const Item &item) { InvBody[index] = item; }
+
+	const Item &getInvList(int index) const { return InvList[index]; }
+	void setInvList(int index, const Item &item) { InvList[index] = item; }
+
+	const Item &getSpdList(int index) const { return SpdList[index]; }
+	void setSpdList(int index, const Item &item) { SpdList[index] = item; }
+
+	const Item &getHoldItem() const { return HoldItem; }
+	void setHoldItem(const Item &item) { HoldItem = item; }
+
+	// Light ID
+	int getLightId() const { return lightId; }
+	void setLightId(int id) { lightId = id; }
+
+	// Stats
+	int getStrength() const { return _pStrength; }
+	void setStrength(int strength) { _pStrength = strength; }
+
+	int getBaseStrength() const { return _pBaseStr; }
+	void setBaseStrength(int strength) { _pBaseStr = strength; }
+
+	int getMagic() const { return _pMagic; }
+	void setMagic(int magic) { _pMagic = magic; }
+
+	int getBaseMagic() const { return _pBaseMag; }
+	void setBaseMagic(int magic) { _pBaseMag = magic; }
+
+	int getDexterity() const { return _pDexterity; }
+	void setDexterity(int dexterity) { _pDexterity = dexterity; }
+
+	int getBaseDexterity() const { return _pBaseDex; }
+	void setBaseDexterity(int dexterity) { _pBaseDex = dexterity; }
+
+	int getVitality() const { return _pVitality; }
+	void setVitality(int vitality) { _pVitality = vitality; }
+
+	int getBaseVitality() const { return _pBaseVit; }
+	void setBaseVitality(int vitality) { _pBaseVit = vitality; }
+
+	int getStatPoints() const { return _pStatPts; }
+	void setStatPoints(int points) { _pStatPts = points; }
+
+	int getDamageMod() const { return _pDamageMod; }
+	void setDamageMod(int mod) { _pDamageMod = mod; }
+
+	int getHPBase() const { return _pHPBase; }
+	void setHPBase(int hp) { _pHPBase = hp; }
+
+	int getMaxHPBase() const { return _pMaxHPBase; }
+	void setMaxHPBase(int maxHP) { _pMaxHPBase = maxHP; }
+
+	int getHitPoints() const { return _pHitPoints; }
+	void setHitPoints(int hp) { _pHitPoints = hp; }
+
+	int getMaxHitPoints() const { return _pMaxHP; }
+	void setMaxHitPoints(int maxHP) { _pMaxHP = maxHP; }
+
+	int getHPPer() const { return _pHPPer; }
+	void setHPPer(int hpPer) { _pHPPer = hpPer; }
+
+	int getManaBase() const { return _pManaBase; }
+	void setManaBase(int mana) { _pManaBase = mana; }
+
+	int getMaxManaBase() const { return _pMaxManaBase; }
+	void setMaxManaBase(int maxMana) { _pMaxManaBase = maxMana; }
+
+	int getMana() const { return _pMana; }
+	void setMana(int mana) { _pMana = mana; }
+
+	int getMaxMana() const { return _pMaxMana; }
+	void setMaxMana(int maxMana) { _pMaxMana = maxMana; }
+
+	int getManaPer() const { return _pManaPer; }
+	void setManaPer(int manaPer) { _pManaPer = manaPer; }
+
+	int getIMinDam() const { return _pIMinDam; }
+	void setIMinDam(int minDam) { _pIMinDam = minDam; }
+
+	int getIMaxDam() const { return _pIMaxDam; }
+	void setIMaxDam(int maxDam) { _pIMaxDam = maxDam; }
+
+	int getIAC() const { return _pIAC; }
+	void setIAC(int ac) { _pIAC = ac; }
+
+	int getIBonusDam() const { return _pIBonusDam; }
+	void setIBonusDam(int bonusDam) { _pIBonusDam = bonusDam; }
+
+	int getIBonusToHit() const { return _pIBonusToHit; }
+	void setIBonusToHit(int bonusToHit) { _pIBonusToHit = bonusToHit; }
+
+	int getIBonusAC() const { return _pIBonusAC; }
+	void setIBonusAC(int bonusAC) { _pIBonusAC = bonusAC; }
+
+	int getIBonusDamMod() const { return _pIBonusDamMod; }
+	void setIBonusDamMod(int bonusDamMod) { _pIBonusDamMod = bonusDamMod; }
+
+	int getIGetHit() const { return _pIGetHit; }
+	void setIGetHit(int getHit) { _pIGetHit = getHit; }
+
+	int getIEnAc() const { return _pIEnAc; }
+	void setIEnAc(int enAc) { _pIEnAc = enAc; }
+
+	int getIFMinDam() const { return _pIFMinDam; }
+	void setIFMinDam(int minDam) { _pIFMinDam = minDam; }
+
+	int getIFMaxDam() const { return _pIFMaxDam; }
+	void setIFMaxDam(int maxDam) { _pIFMaxDam = maxDam; }
+
+	int getILMinDam() const { return _pILMinDam; }
+	void setILMinDam(int minDam) { _pILMinDam = minDam; }
+
+	int getILMaxDam() const { return _pILMaxDam; }
+	void setILMaxDam(int maxDam) { _pILMaxDam = maxDam; }
+
+	uint32_t getExperience() const { return _pExperience; }
+	void setExperience(uint32_t experience) { _pExperience = experience; }
+
+	PLR_MODE getMode() const { return _pmode; }
+	void setMode(PLR_MODE mode) { _pmode = mode; }
+
+	const int8_t *getWalkPath() const { return walkpath; }
+	void setWalkPath(const int8_t path[MaxPathLength]) const { std::copy(path, path + MaxPathLength, walkpath); }
+
+	bool isActive() const { return plractive; }
+	void setActive(bool active) { plractive = active; }
+
+	action_id getDestAction() const { return destAction; }
+	void setDestAction(action_id action) { destAction = action; }
+
+	int getDestParam1() const { return destParam1; }
+	void setDestParam1(int param) { destParam1 = param; }
+
+	int getDestParam2() const { return destParam2; }
+	void setDestParam2(int param) { destParam2 = param; }
+
+	int getDestParam3() const { return destParam3; }
+	void setDestParam3(int param) { destParam3 = param; }
+
+	int getDestParam4() const { return destParam4; }
+	void setDestParam4(int param) { destParam4 = param; }
+
+	int getGold() const { return _pGold; }
+	void setGold(int gold) { _pGold = gold; }
+
+	// AnimationInfo
+	const AnimationInfo &getAnimInfo() const { return AnimInfo; }
+	void setAnimInfo(const AnimationInfo &animInfo) { AnimInfo = animInfo; }
+
+	// Preview Sprite
+	const OptionalClxSprite &getPreviewCelSprite() const { return previewCelSprite; }
+	void setPreviewCelSprite(const OptionalClxSprite &sprite) { previewCelSprite = sprite; }
+
+	// Progress to Next Game Tick
+	int8_t getProgressToNextGameTickWhenPreviewWasSet() const { return progressToNextGameTickWhenPreviewWasSet; }
+	void setProgressToNextGameTickWhenPreviewWasSet(int8_t progress) { progressToNextGameTickWhenPreviewWasSet = progress; }
+
+	// Flags
+	ItemSpecialEffect getIFlags() const { return _pIFlags; }
+	void setIFlags(ItemSpecialEffect flags) { _pIFlags = flags; }
+
+	// Animation Data
+	const std::array<PlayerAnimationData, enum_size<player_graphic>::value> &getAnimationData() const { return AnimationData; }
+	void setAnimationData(std::array<PlayerAnimationData, enum_size<player_graphic>::value> &&data)
+	{
+		AnimationData = std::move(data);
+	}
+
+	// Frames
+	int8_t getNFrames() const { return _pNFrames; }
+	void setNFrames(int8_t nFrames) { _pNFrames = nFrames; }
+
+	int8_t getWFrames() const { return _pWFrames; }
+	void setWFrames(int8_t wFrames) { _pWFrames = wFrames; }
+
+	int8_t getAFrames() const { return _pAFrames; }
+	void setAFrames(int8_t aFrames) { _pAFrames = aFrames; }
+
+	int8_t getAFNum() const { return _pAFNum; }
+	void setAFNum(int8_t afNum) { _pAFNum = afNum; }
+
+	int8_t getSFrames() const { return _pSFrames; }
+	void setSFrames(int8_t sFrames) { _pSFrames = sFrames; }
+
+	int8_t getSFNum() const { return _pSFNum; }
+	void setSFNum(int8_t sfNum) { _pSFNum = sfNum; }
+
+	int8_t getHFrames() const { return _pHFrames; }
+	void setHFrames(int8_t hFrames) { _pHFrames = hFrames; }
+
+	int8_t getDFrames() const { return _pDFrames; }
+	void setDFrames(int8_t dFrames) { _pDFrames = dFrames; }
+
+	int8_t getBFrames() const { return _pBFrames; }
+	void setBFrames(int8_t bFrames) { _pBFrames = bFrames; }
+
+	// Inventory Grid
+	const int8_t *getInvGrid() const { return InvGrid; }
+	void setInvGrid(const int8_t grid[InventoryGridCells]) const { std::copy(grid, grid + InventoryGridCells, InvGrid); }
+
+	// Player Level
+	uint8_t getPlayerLevel() const { return plrlevel; }
+	void setPlayerLevel(uint8_t level) { plrlevel = level; }
+
+	bool isOnSetLevel() const { return plrIsOnSetLevel; }
+	void setOnSetLevel(bool onSetLevel) { plrIsOnSetLevel = onSetLevel; }
+
+	// Player Position
+	ActorPosition &getPosition() { return position; }
+	const ActorPosition &getPosition() const { return position; }
+	void setPosition(const ActorPosition &pos) { position = pos; }
+
+	// Player Direction
+	Direction getDirection() const { return _pdir; }
+	void setDirection(Direction dir) { _pdir = dir; }
+
+	// Player Class
+	HeroClass getPlayerClass() const { return _pClass; }
+	void setPlayerClass(HeroClass playerClass) { _pClass = playerClass; }
+
+	// GFX Number
+	uint8_t getGfxNum() const { return _pgfxnum; }
+	void setGfxNum(uint8_t gfxNum) { _pgfxnum = gfxNum; }
+
+	// Spell Level Addition
+	int8_t getSpellLevelAdd() const { return _pISplLvlAdd; }
+	void setSpellLevelAdd(int8_t spellLevelAdd) { _pISplLvlAdd = spellLevelAdd; }
+
+	// Friendly Mode
+	bool isFriendlyMode() const { return friendlyMode; }
+	void setFriendlyMode(bool friendly) { friendlyMode = friendly; }
+
+	// Queued Spell
+	SpellCastInfo &getQueuedSpell() { return queuedSpell; }
+	const SpellCastInfo &getQueuedSpell() const { return queuedSpell; }
+	void setQueuedSpell(const SpellCastInfo &spell) { queuedSpell = spell; }
+
+	// Executed Spell
+	const SpellCastInfo &getExecutedSpell() const { return executedSpell; }
+	void setExecutedSpell(const SpellCastInfo &spell) { executedSpell = spell; }
+
+	// Inventory Spell
+	SpellID getInventorySpell() const { return inventorySpell; }
+	void setInventorySpell(SpellID spell) { inventorySpell = spell; }
+
+	// Spell From
+	int8_t getSpellFrom() const { return spellFrom; }
+	void setSpellFrom(int8_t from) { spellFrom = from; }
+
+	// Ready Spell
+	SpellID getReadySpell() const { return _pRSpell; }
+	void setReadySpell(SpellID spell) { _pRSpell = spell; }
+
+	// Ready Spell Type
+	SpellType getReadySpellType() const { return _pRSplType; }
+	void setReadySpellType(SpellType type) { _pRSplType = type; }
+
+	// Spell Book Spell
+	SpellID getSpellBookSpell() const { return _pSBkSpell; }
+	void setSpellBookSpell(SpellID spell) { _pSBkSpell = spell; }
+
+	// Spell Levels
+	const uint8_t *getSpellLevels() const { return _pSplLvl; }
+	void setSpellLevels(const uint8_t levels[64]) { std::copy(levels, levels + 64, _pSplLvl); }
+
+	// Spell Flags
+	SpellFlag getSpellFlags() const { return _pSpellFlags; }
+	void setSpellFlags(SpellFlag flags) { _pSpellFlags = flags; }
+
+	// Hotkeys
+	const SpellID *getSpellHotKeys() const { return _pSplHotKey; }
+	void setSpellHotKeys(const SpellID hotKeys[NumHotkeys]) const { std::copy(hotKeys, hotKeys + NumHotkeys, _pSplHotKey); }
+
+	const SpellType *getSpellHotKeyTypes() const { return _pSplTHotKey; }
+	void setSpellHotKeyTypes(const SpellType hotKeyTypes[NumHotkeys]) const { std::copy(hotKeyTypes, hotKeyTypes + NumHotkeys, _pSplTHotKey); }
+
+	// Block Flag
+	bool hasBlockFlag() const { return _pBlockFlag; }
+	void setBlockFlag(bool blockFlag) { _pBlockFlag = blockFlag; }
+
+	// Invincible Flag
+	bool isInvincible() const { return _pInvincible; }
+	void setInvincible(bool invincible) { _pInvincible = invincible; }
+
+	// Light Radius
+	int8_t getLightRadius() const { return _pLightRad; }
+	void setLightRadius(int8_t lightRad) { _pLightRad = lightRad; }
+
+	// Level Changing Flag
+	bool isLevelChanging() const { return _pLvlChanging; }
+	void setLevelChanging(bool levelChanging) { _pLvlChanging = levelChanging; }
+
+	// Armor Class
+	int8_t getArmorClass() const { return _pArmorClass; }
+	void setArmorClass(int8_t armorClass) { _pArmorClass = armorClass; }
+
+	// Magic Resistance
+	int8_t getMagicResist() const { return _pMagResist; }
+	void setMagicResist(int8_t resist) { _pMagResist = resist; }
+
+	// Fire Resistance
+	int8_t getFireResist() const { return _pFireResist; }
+	void setFireResist(int8_t resist) { _pFireResist = resist; }
+
+	// Lightning Resistance
+	int8_t getLightningResist() const { return _pLghtResist; }
+	void setLightningResist(int8_t resist) { _pLghtResist = resist; }
+
+	// Infrared Flag
+	bool hasInfraFlag() const { return _pInfraFlag; }
+	void setInfraFlag(bool infraFlag) { _pInfraFlag = infraFlag; }
+
+	// Temporary Direction
+	Direction getTempDirection() const { return tempDirection; }
+	void setTempDirection(Direction dir) { tempDirection = dir; }
+
+	// Level Visited Flags
+	const bool *getLevelVisited() const { return _pLvlVisited; }
+	void setLevelVisited(const bool visited[NUMLEVELS]) const { std::copy(visited, visited + NUMLEVELS, _pLvlVisited); }
+
+	const bool *getSetLevelVisited() const { return _pSLvlVisited; }
+	void setSetLevelVisited(const bool visited[NUMLEVELS]) const { std::copy(visited, visited + NUMLEVELS, _pSLvlVisited); }
+
+	// Oil Type
+	item_misc_id getOilType() const { return _pOilType; }
+	void setOilType(item_misc_id oilType) { _pOilType = oilType; }
+
+	// Town Warps
+	uint8_t getTownWarps() const { return pTownWarps; }
+	void setTownWarps(uint8_t warps) { pTownWarps = warps; }
+
+	// Dungeon Messages
+	uint8_t getDungeonMessages() const { return pDungMsgs; }
+	void setDungeonMessages(uint8_t msgs) { pDungMsgs = msgs; }
+
+	uint8_t getLevelLoad() const { return pLvlLoad; }
+	void setLevelLoad(uint8_t load) { pLvlLoad = load; }
+
+	// Mana Shield
+	bool hasManaShield() const { return pManaShield; }
+	void setManaShield(bool manaShield) { pManaShield = manaShield; }
+
+	// Original Cathedral
+	bool hasOriginalCathedral() const { return pOriginalCathedral; }
+	void setOriginalCathedral(bool originalCathedral) { pOriginalCathedral = originalCathedral; }
+
+	// Diablo Kill Level
+	uint8_t getDiabloKillLevel() const { return pDiabloKillLevel; }
+	void setDiabloKillLevel(uint8_t level) { pDiabloKillLevel = level; }
+
+	// Reflections
+	uint16_t getReflections() const { return wReflections; }
+	void setReflections(uint16_t reflections) { wReflections = reflections; }
+
+	// Damage & Armor Class Flags
+	ItemSpecialEffectHf getDamageArmorClassFlags() const { return pDamAcFlags; }
+	void setDamageArmorClassFlags(ItemSpecialEffectHf flags) { pDamAcFlags = flags; }
 
 	/**
 	 * @brief Convenience function to get the base stats/bonuses for this player's class
@@ -819,10 +1198,6 @@ public:
 		return getCharacterLevel() >= getMaxCharacterLevel();
 	}
 
-private:
-	void _addExperience(uint32_t experience, int levelDelta);
-
-public:
 	/**
 	 * @brief Adds experience to the local player based on the current game mode
 	 * @param experience base value to add, this will be adjusted to prevent power leveling in multiplayer games
@@ -968,7 +1343,7 @@ void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
 void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
-void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->_pRSpell, SpellType spellType = MyPlayer->_pRSplType);
+void CheckPlrSpell(bool isShiftHeld, SpellID spellID = MyPlayer->getReadySpell(), SpellType spellType = MyPlayer->getReadySpellType());
 void SyncPlrAnim(Player &player);
 void SyncInitPlrPos(Player &player);
 void SyncInitPlr(Player &player);
