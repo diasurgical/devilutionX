@@ -37,6 +37,8 @@ constexpr int PlayerNameLength = 32;
 
 constexpr size_t NumHotkeys = 12;
 
+extern DVL_API_FOR_TEST Player *MyPlayer;
+
 /** Walking directions */
 enum {
 	// clang-format off
@@ -508,7 +510,7 @@ public:
 	void setMode(PLR_MODE mode) { _pmode = mode; }
 
 	const int8_t *getWalkPath() const { return walkpath; }
-	void setWalkPath(const int8_t path[MaxPathLength]) const { std::copy(path, path + MaxPathLength, walkpath); }
+	void setWalkPath(const int8_t path[MaxPathLength]) { std::copy(path, path + MaxPathLength, walkpath); }
 
 	bool isActive() const { return plractive; }
 	void setActive(bool active) { plractive = active; }
@@ -584,7 +586,7 @@ public:
 
 	// Inventory Grid
 	const int8_t *getInvGrid() const { return InvGrid; }
-	void setInvGrid(const int8_t grid[InventoryGridCells]) const { std::copy(grid, grid + InventoryGridCells, InvGrid); }
+	void setInvGrid(const int8_t grid[InventoryGridCells]) { std::copy(grid, grid + InventoryGridCells, InvGrid); }
 
 	// Player Level
 	uint8_t getPlayerLevel() const { return plrlevel; }
@@ -657,10 +659,10 @@ public:
 
 	// Hotkeys
 	const SpellID *getSpellHotKeys() const { return _pSplHotKey; }
-	void setSpellHotKeys(const SpellID hotKeys[NumHotkeys]) const { std::copy(hotKeys, hotKeys + NumHotkeys, _pSplHotKey); }
+	void setSpellHotKeys(const SpellID hotKeys[NumHotkeys]) { std::copy(hotKeys, hotKeys + NumHotkeys, _pSplHotKey); }
 
 	const SpellType *getSpellHotKeyTypes() const { return _pSplTHotKey; }
-	void setSpellHotKeyTypes(const SpellType hotKeyTypes[NumHotkeys]) const { std::copy(hotKeyTypes, hotKeyTypes + NumHotkeys, _pSplTHotKey); }
+	void setSpellHotKeyTypes(const SpellType hotKeyTypes[NumHotkeys]) { std::copy(hotKeyTypes, hotKeyTypes + NumHotkeys, _pSplTHotKey); }
 
 	// Block Flag
 	bool hasBlockFlag() const { return _pBlockFlag; }
@@ -704,10 +706,10 @@ public:
 
 	// Level Visited Flags
 	const bool *getLevelVisited() const { return _pLvlVisited; }
-	void setLevelVisited(const bool visited[NUMLEVELS]) const { std::copy(visited, visited + NUMLEVELS, _pLvlVisited); }
+	void setLevelVisited(const bool visited[NUMLEVELS]) { std::copy(visited, visited + NUMLEVELS, _pLvlVisited); }
 
 	const bool *getSetLevelVisited() const { return _pSLvlVisited; }
-	void setSetLevelVisited(const bool visited[NUMLEVELS]) const { std::copy(visited, visited + NUMLEVELS, _pSLvlVisited); }
+	void setSetLevelVisited(const bool visited[NUMLEVELS]) { std::copy(visited, visited + NUMLEVELS, _pSLvlVisited); }
 
 	// Oil Type
 	item_misc_id getOilType() const { return _pOilType; }
@@ -1281,7 +1283,6 @@ public:
 };
 
 extern DVL_API_FOR_TEST uint8_t MyPlayerId;
-extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST std::vector<Player> Players;
 /** @brief What Player items and stats should be displayed? Normally this is identical to MyPlayer but can differ when /inspect was used. */
 extern Player *InspectPlayer;
