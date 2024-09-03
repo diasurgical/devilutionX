@@ -151,6 +151,7 @@ set(libdevilutionx_SRCS
   lua/modules/dev/towners.cpp
   lua/modules/log.cpp
   lua/modules/render.cpp
+  lua/register.cpp
   lua/repl.cpp
 
   panels/charpanel.cpp
