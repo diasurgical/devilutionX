@@ -13,6 +13,7 @@
 #include "lua/modules/render.hpp"
 #include "plrmsg.h"
 #include "utils/console.h"
+#include "utils/enum_traits.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/str_cat.hpp"
@@ -188,7 +189,7 @@ sol::environment CreateLuaSandbox()
 	return sandbox;
 }
 
-void RegisterPlayerStruct(sol::state &lua)
+static void RegisterPlayerStruct(sol::state &lua)
 {
 
 	lua.new_usertype<Player>("Player",
@@ -260,7 +261,7 @@ void RegisterPlayerStruct(sol::state &lua)
 	    "RemoveInvItem", &Player::RemoveInvItem,
 	    "getId", &Player::getId,
 	    "RemoveSpdBarItem", &Player::RemoveSpdBarItem,
-	    "GetMostValuableItem", &Player::GetMostValuableItem,
+	    //"GetMostValuableItem", &Player::GetMostValuableItem,
 	    "GetBaseAttributeValue", &Player::GetBaseAttributeValue,
 	    "GetCurrentAttributeValue", &Player::GetCurrentAttributeValue,
 	    "GetMaximumAttributeValue", &Player::GetMaximumAttributeValue,
@@ -312,6 +313,68 @@ void RegisterPlayerStruct(sol::state &lua)
 	    "isHoldingItem", &Player::isHoldingItem);
 }
 
+static void RegisterPlayerGlobals(sol::state &lua)
+{
+	lua["MyPlayer"] = &MyPlayer;
+}
+
+static void RegisterPlayerFunctions(sol::state &lua)
+{
+	lua.set_function("NewPlrAnim", &NewPlrAnim);
+	lua.set_function("FixPlayerLocation", &FixPlayerLocation);
+	lua.set_function("SetPlayerOld", &SetPlayerOld);
+	lua.set_function("SyncPlrKill", &SyncPlrKill);
+}
+
+static void RegisterEnums(sol::state &lua)
+{
+	lua.new_enum<DeathReason>("DeathReason",
+	    { { "MonsterOrTrap", DeathReason::MonsterOrTrap },
+	        { "Player", DeathReason::Player },
+	        { "Unknown", DeathReason::Unknown } });
+
+	lua.new_enum<PLR_MODE>("PLR_MODE",
+	    { { "PM_STAND", PM_STAND },
+	        { "PM_WALK_NORTHWARDS", PM_WALK_NORTHWARDS },
+	        { "PM_WALK_SOUTHWARDS", PM_WALK_SOUTHWARDS },
+	        { "PM_WALK_SIDEWAYS", PM_WALK_SIDEWAYS },
+	        { "PM_ATTACK", PM_ATTACK },
+	        { "PM_RATTACK", PM_RATTACK },
+	        { "PM_BLOCK", PM_BLOCK },
+	        { "PM_GOTHIT", PM_GOTHIT },
+	        { "PM_DEATH", PM_DEATH },
+	        { "PM_SPELL", PM_SPELL },
+	        { "PM_NEWLVL", PM_NEWLVL },
+	        { "PM_QUIT", PM_QUIT } });
+}
+
+static void RegisterActorPosition(sol::state &lua)
+{
+	lua.new_usertype<ActorPosition>("ActorPosition",
+	    "tile", &ActorPosition::tile,
+	    "future", &ActorPosition::future,
+	    "old", &ActorPosition::old,
+	    "temp", &ActorPosition::temp);
+}
+
+static void RegisterPoint(sol::state &lua)
+{
+	lua.new_usertype<Point>("Point",
+	    sol::constructors<Point(int, int)>(),
+	    "x", &Point::x,
+	    "y", &Point::y);
+}
+
+static void RegisterAllPlayerBindings(sol::state &lua)
+{
+	RegisterPlayerStruct(lua);    // Register Player struct and its member functions
+	RegisterPlayerGlobals(lua);   // Register global variables like MyPlayer
+	RegisterPlayerFunctions(lua); // Register standalone functions related to Player
+	RegisterEnums(lua);           // Register the necessary enums
+	RegisterPoint(lua);           // Register the Point struct
+	RegisterActorPosition(lua);   // Register the ActorPosition struct
+}
+
 void LuaInitialize()
 {
 	CurrentLuaState.emplace(LuaState { .sol = { sol::c_call<decltype(&LuaPanic), &LuaPanic> } });
@@ -322,7 +385,7 @@ void LuaInitialize()
 
 	SafeCallResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
 
-	RegisterPlayerStruct(lua);
+	RegisterAllPlayerBindings(lua);
 
 	lua["RegisterFunctionOverride"] = &RegisterFunctionOverride;
 	lua["RegisterPreHook"] = &RegisterPreHook;
