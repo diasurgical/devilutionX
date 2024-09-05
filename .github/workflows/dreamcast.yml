@@ -32,6 +32,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Uninstall kos-ports SDL 1.2
+        run: |
+          source /opt/toolchains/dc/kos/environ.sh && \
+          cd /opt/toolchains/dc/kos-ports/SDL && \
+          make uninstall || echo 'SDL 1.2 uninstall finished with non zero status, proceding anyway'
+
+      - name: Install GPF SDL 1.2
+        run: |
+          git clone -b SDL-dreamhal--GLDC https://github.com/GPF/SDL-1.2 && \
+          cd SDL-1.2 && \
+          source /opt/toolchains/dc/kos/environ.sh && \
+          make -f Makefile.dc && \
+          cp /opt/toolchains/dc/kos/addons/lib/dreamcast/libSDL.a /usr/lib/ && \
+          cp include/* /usr/include/SDL/
+
       - name: Download spawn.mpq
         run: |
           curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/spawn.mpq
