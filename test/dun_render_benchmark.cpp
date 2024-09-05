@@ -49,6 +49,11 @@ void InitOnce()
 		for (size_t i = 0; i < 700; ++i) {
 			for (size_t j = 0; j < 10; ++j) {
 				if (const LevelCelBlock levelCelBlock = DPieceMicros[i].mt[j]; levelCelBlock.hasValue()) {
+					if ((j == 0 || j == 1) && levelCelBlock.type() == TileType::TransparentSquare) {
+						// This could actually be re-encoded foliage, which is a triangle followed by TransparentSquare.
+						// Simply skip it.
+						continue;
+					}
 					Tiles[levelCelBlock.type()].push_back(levelCelBlock);
 				}
 			}
