@@ -38,6 +38,9 @@ jobs:
           cd /opt/toolchains/dc/kos-ports/SDL && \
           make uninstall || echo 'SDL 1.2 uninstall finished with non zero status, proceding anyway'
 
+      #- name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
+
       - name: Install GPF SDL 1.2
         run: |
           git clone -b SDL-dreamhal--GLDC https://github.com/GPF/SDL-1.2 && \
@@ -45,7 +48,8 @@ jobs:
           source /opt/toolchains/dc/kos/environ.sh && \
           make -f Makefile.dc && \
           cp /opt/toolchains/dc/kos/addons/lib/dreamcast/libSDL.a /usr/lib/ && \
-          cp include/* /usr/include/SDL/
+          cp include/* /usr/include/SDL/ && \
+          patch /usr/include/SDL/SDL_stdinc.h -l -p0 < ../SDL_stdinc.h.patch
 
       - name: Download spawn.mpq
         run: |
