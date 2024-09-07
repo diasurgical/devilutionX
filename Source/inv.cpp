@@ -774,23 +774,31 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						}
 						break;
 					case ILOC_TWOHAND:
-						// Moving a two-hand item from inventory to InvBody requires emptying both hands
-						if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-							holdItem = player.InvBody[INVLOC_HAND_RIGHT];
-							if (!AutoPlaceItemInInventory(player, holdItem, true)) {
-								// No space to  move right hand item to inventory, abort.
+						// Moving a two-hand item from inventory to InvBody requires emptying both hands.
+						if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
+							// If the right hand is empty then we can simply try equipping this item in the left hand,
+							// we'll let the common code take care of unequipping anything held there.
+							invloc = INVLOC_HAND_LEFT;
+						} else if (player.InvBody[INVLOC_HAND_LEFT].isEmpty()) {
+							// We have an item in the right hand but nothing in the left, so let the common code
+							// take care of unequipping whatever is held in the right hand. The auto-equip code
+							// picks the most appropriate location for the item type (which in this case will be
+							// the left hand), invloc isn't used there.
+							invloc = INVLOC_HAND_RIGHT;
+						} else {
+							// Both hands are holding items, we must unequip the right hand item and check that there's
+							// space for the left before trying to auto-equip
+							if (!AutoPlaceItemInInventory(player, player.InvBody[INVLOC_HAND_RIGHT], true)) {
+								// No space to move right hand item to inventory, abort.
 								break;
 							}
-							holdItem = player.InvBody[INVLOC_HAND_LEFT];
-							if (!AutoPlaceItemInInventory(player, holdItem, false)) {
+							if (!AutoPlaceItemInInventory(player, player.InvBody[INVLOC_HAND_LEFT], false)) {
 								// No space for left item. Move back right item to right hand and abort.
 								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
 								player.RemoveInvItem(player._pNumInv - 1, false);
 								break;
 							}
 							RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
-							invloc = INVLOC_HAND_LEFT;
-						} else {
 							invloc = INVLOC_HAND_LEFT;
 						}
 						break;
