@@ -54,5 +54,3 @@ set(JOY_BUTTON_TRIGGERRIGHT 9)
 #GPF SDL files
 set(SDL_INCLUDE_DIR /usr/include/SDL/)
 set(SDL_LIBRARY /usr/lib/libSDL.a)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
