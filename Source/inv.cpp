@@ -730,12 +730,10 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	}
 
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		int ig = r - SLOTXY_INV_FIRST;
-		int8_t ii = player.InvGrid[ig];
-		if (ii != 0) {
-			int iv = (ii < 0) ? -ii : ii;
-
-			holdItem = player.InvList[iv - 1];
+		unsigned ig = r - SLOTXY_INV_FIRST;
+		int iv = std::abs(player.InvGrid[ig]) - 1;
+		if (iv >= 0) {
+			holdItem = player.InvList[iv];
 			if (automaticMove) {
 				if (CanBePlacedOnBelt(player, holdItem)) {
 					automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true, &player == MyPlayer);
@@ -819,7 +817,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				player.RemoveInvItem(iv - 1, false);
+				player.RemoveInvItem(iv, false);
 			}
 		}
 	}
