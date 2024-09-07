@@ -759,13 +759,13 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						break;
 					case ILOC_ONEHAND:
 						// User is attempting to move a weapon (left hand)
-						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
-						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT])) {
+						if (holdItem._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
+						    && player.GetItemLocation(holdItem) == player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT])) {
 							invloc = INVLOC_HAND_LEFT;
 						}
 						// User is attempting to move a shield (right hand)
-						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass
-						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT])) {
+						if (holdItem._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass
+						    && player.GetItemLocation(holdItem) == player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT])) {
 							invloc = INVLOC_HAND_RIGHT;
 						}
 						// A two-hand item can always be replaced with a one-hand item
@@ -808,14 +808,12 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 					}
 					// Empty the identified InvBody slot (invloc) and hand over to AutoEquip
 					if (invloc != NUM_INVLOC) {
-						holdItem = player.InvBody[invloc];
-						if (player.InvBody[invloc]._itype != ItemType::None) {
-							if (AutoPlaceItemInInventory(player, holdItem, true)) {
+						if (!player.InvBody[invloc].isEmpty()) {
+							if (AutoPlaceItemInInventory(player, player.InvBody[invloc], true)) {
 								player.InvBody[invloc].clear();
 							}
 						}
 					}
-					holdItem = player.InvList[iv - 1];
 					automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem, true, &player == MyPlayer);
 				}
 			}
