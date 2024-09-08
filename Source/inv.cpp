@@ -603,6 +603,14 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	}
 }
 
+namespace {
+inv_body_loc MapSlotToInvBodyLoc(inv_xy_slot slot)
+{
+	assert(slot <= SLOTXY_CHEST);
+	return static_cast<inv_body_loc>(slot);
+}
+} // namespace
+
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
 	if (player._pmode > PM_WALK_SIDEWAYS) {
@@ -638,94 +646,18 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	bool automaticallyEquipped = false;
 	bool automaticallyUnequip = false;
 
-	Item &headItem = player.InvBody[INVLOC_HEAD];
-	if (r == SLOTXY_HEAD && !headItem.isEmpty()) {
-		holdItem = headItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
+	if (r >= SLOTXY_HEAD && r <= SLOTXY_CHEST) {
+		inv_body_loc invloc = MapSlotToInvBodyLoc(static_cast<inv_xy_slot>(r));
+		if (!player.InvBody[invloc].isEmpty()) {
+			holdItem = player.InvBody[invloc];
+			if (automaticMove) {
+				automaticallyUnequip = true;
+				automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
+			}
 
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_HEAD, false);
-		}
-	}
-
-	Item &leftRingItem = player.InvBody[INVLOC_RING_LEFT];
-	if (r == SLOTXY_RING_LEFT && !leftRingItem.isEmpty()) {
-		holdItem = leftRingItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_RING_LEFT, false);
-		}
-	}
-
-	Item &rightRingItem = player.InvBody[INVLOC_RING_RIGHT];
-	if (r == SLOTXY_RING_RIGHT && !rightRingItem.isEmpty()) {
-		holdItem = rightRingItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_RING_RIGHT, false);
-		}
-	}
-
-	Item &amuletItem = player.InvBody[INVLOC_AMULET];
-	if (r == SLOTXY_AMULET && !amuletItem.isEmpty()) {
-		holdItem = amuletItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_AMULET, false);
-		}
-	}
-
-	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	if (r == SLOTXY_HAND_LEFT && !leftHandItem.isEmpty()) {
-		holdItem = leftHandItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_HAND_LEFT, false);
-		}
-	}
-
-	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
-	if (r == SLOTXY_HAND_RIGHT && !rightHandItem.isEmpty()) {
-		holdItem = rightHandItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
-		}
-	}
-
-	Item &chestItem = player.InvBody[INVLOC_CHEST];
-	if (r == SLOTXY_CHEST && !chestItem.isEmpty()) {
-		holdItem = chestItem;
-		if (automaticMove) {
-			automaticallyUnequip = true;
-			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			RemoveEquipment(player, INVLOC_CHEST, false);
+			if (!automaticMove || automaticallyMoved) {
+				RemoveEquipment(player, invloc, false);
+			}
 		}
 	}
 
