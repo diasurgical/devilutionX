@@ -6,6 +6,7 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
       - dreamcast
+      - dreamcast-sdl
     paths-ignore:
       - '*.md'
       - 'docs/**'

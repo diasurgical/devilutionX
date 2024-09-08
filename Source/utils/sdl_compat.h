@@ -77,9 +77,10 @@ inline int SDLC_SetSurfaceAndPaletteColors(SDL_Surface *surface, SDL_Palette *pa
 	// When the video surface is 8bit, we need to set the output palette as well.
 	SDL_SetColors(SDL_GetVideoSurface(), colors, firstcolor, ncolors);
 #endif
+
 #ifdef __DREAMCAST__
-	// todo figure out why - 1 crashes on dreamcast
-	return SDL_SetPalette(surface, SDL_PHYSPAL, colors, firstcolor, ncolors);
+	// todo figure out why the SDL_SetPalette call crashes on dreamcast
+	return 0;
 #else
 	// In SDL1, the surface always has its own distinct palette, so we need to
 	// update it as well.
