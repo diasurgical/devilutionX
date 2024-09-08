@@ -756,20 +756,18 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						invloc = INVLOC_AMULET;
 						break;
 					case ILOC_ONEHAND:
-						// User is attempting to move a weapon (left hand)
-						if (holdItem._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
-						    && player.GetItemLocation(holdItem) == player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT])) {
+						if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
+						    && (holdItem._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
+						        || player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) == ILOC_TWOHAND)) {
+							// The left hand is not empty and we're either trying to equip the same type of item or
+							// it's holding a two handed weapon, so it must be unequipped
 							invloc = INVLOC_HAND_LEFT;
-						}
-						// User is attempting to move a shield (right hand)
-						if (holdItem._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass
-						    && player.GetItemLocation(holdItem) == player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT])) {
+						} else if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && holdItem._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass) {
+							// The right hand is not empty and we're trying to equip the same type of item, so we need
+							// to unequip that item
 							invloc = INVLOC_HAND_RIGHT;
 						}
-						// A two-hand item can always be replaced with a one-hand item
-						if (player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) == ILOC_TWOHAND) {
-							invloc = INVLOC_HAND_LEFT;
-						}
+						// otherwise one hand is empty so we can let the auto-equip code put the target item into that hand.
 						break;
 					case ILOC_TWOHAND:
 						// Moving a two-hand item from inventory to InvBody requires emptying both hands.
