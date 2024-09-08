@@ -80,12 +80,17 @@ jobs:
           mv fonts.mpq build/data/fonts/ && \
           mkdcdisc -e build/devilutionx.elf -o build/devilutionx.cdi --name 'Diablo 1' -d build/data/
 
+      - name: Prepare elf package
+        run: rm build/data/spawn.mpq && rm build/data/fonts/fonts.mpq
+
       - name: Upload .elf Package
         if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v4
         with:
-          name: devilutionx.elf
-          path: ./build/devilutionx.elf
+          name: devilutionx.zip
+          path: |
+            build/data
+            build/devilutionx.elf
 
       - name: Upload .cdi Package
         if: ${{ !env.ACT }}
