@@ -47,14 +47,10 @@ include(VcPkgManifestFeatures)
 # 1. Properties such as `TARGET_SUPPORTS_SHARED_LIBS` are defined.
 # 2. Toolchain file is evaluated, required for `Platforms.cmake`,
 #    which can override the options.
-if(NOT VERSION_NUM)
-  file(STRINGS "VERSION" VERSION_STR)
-  if(NOT "${VERSION_STR}" STREQUAL "")
-    string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+).*" VERSION_PREFIX ${VERSION_STR})
-    set(VERSION_NUM ${CMAKE_MATCH_1})
-  endif()
-else()
-  string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+.*" VERSION_PREFIX ${VERSION_NUM})
+file(STRINGS "VERSION" VERSION_STR)
+if(NOT "${VERSION_STR}" STREQUAL "")
+  string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+).*" VERSION_PREFIX ${VERSION_STR})
+  set(VERSION_NUM ${CMAKE_MATCH_1})
 endif()
 
 if(NOT VERSION_SUFFIX)
