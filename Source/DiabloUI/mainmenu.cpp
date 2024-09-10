@@ -35,7 +35,11 @@ void MainmenuEsc()
 
 void MainmenuLoad(const char *name)
 {
+#ifndef __DREAMCAST__
+	//single player save files are too big for the VMU
+	//todo reactivate when SD card saving is implemented
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Single Player"), MAINMENU_SINGLE_PLAYER));
+#endif
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Settings"), MAINMENU_SETTINGS));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
