@@ -4,6 +4,19 @@ RUN echo "Cloning project..."
 WORKDIR /opt/toolchains/dc/kos/
 RUN git clone -b dreamcast https://github.com/azihassan/devilutionX.git
 
+RUN echo "Uninstall kos-ports SDL 1.2..."
+RUN source /opt/toolchains/dc/kos/environ.sh && \
+    cd /opt/toolchains/dc/kos-ports/SDL && \
+    make uninstall || echo 'SDL 1.2 uninstall finished with non zero status, proceding anyway'
+
+RUN echo "Install GPF SDL 1.2..."
+RUN git clone -b SDL-dreamhal--GLDC https://github.com/GPF/SDL-1.2 && \
+    cd SDL-1.2 && \
+    source /opt/toolchains/dc/kos/environ.sh && \
+    make -f Makefile.dc && \
+    cp /opt/toolchains/dc/kos/addons/lib/dreamcast/libSDL.a /usr/lib/ && \
+    cp include/* /usr/include/SDL/
+
 WORKDIR /opt/toolchains/dc/kos/devilutionX
 RUN echo "Downloading spawn.mpq..."
 RUN curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/spawn.mpq
