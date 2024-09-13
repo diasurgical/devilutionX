@@ -24,12 +24,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/threads-stub")
 list(APPEND DEVILUTIONX_PLATFORM_COMPILE_DEFINITIONS __DREAMCAST__)
 add_compile_options(-fpermissive)
 
-#SDL Joystick axis mapping (circle-pad/C-stick)
-set(JOY_AXIS_LEFTX 11)
-set(JOY_AXIS_LEFTY 9)
-set(JOY_AXIS_RIGHTX 12)
-set(JOY_AXIS_RIGHTY 10)
-
 #SDL Joystick hat mapping (D-pad)
 set(JOY_HAT_DPAD_UP_HAT 0)
 set(JOY_HAT_DPAD_RIGHT_HAT 0)
@@ -39,17 +33,14 @@ set(JOY_HAT_DPAD_UP 1)
 set(JOY_HAT_DPAD_RIGHT 2)
 set(JOY_HAT_DPAD_DOWN 4)
 set(JOY_HAT_DPAD_LEFT 8)
-#SDL Joystick button mapping (A / B and X / Y inverted)
+
+#SDL Joystick button mapping
 set(JOY_BUTTON_A 2)
 set(JOY_BUTTON_B 1)
 set(JOY_BUTTON_X 5)
 set(JOY_BUTTON_Y 6)
-#set(JOY_BUTTON_LEFTSHOULDER 5)
-#set(JOY_BUTTON_RIGHTSHOULDER 6)
-set(JOY_BUTTON_BACK 7)
+
 set(JOY_BUTTON_START 3)
-set(JOY_BUTTON_TRIGGERLEFT 8)
-set(JOY_BUTTON_TRIGGERRIGHT 9)
 
 #GPF SDL files
 set(SDL_INCLUDE_DIR /usr/include/SDL/)

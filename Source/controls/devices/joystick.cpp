@@ -46,8 +46,10 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 			return { ControllerButtonEvent { ControllerButton_BUTTON_RIGHTSTICK, up } };
 #endif
 #ifdef JOY_BUTTON_LEFTSHOULDER
-		case JOY_BUTTON_LEFTSHOULDER:
+		case JOY_BUTTON_LEFTSHOULDER: {
+			Log("ToControllerButtonEvents JOY_BUTTON_LEFTSHOULDER pressed");
 			return { ControllerButtonEvent { ControllerButton_BUTTON_LEFTSHOULDER, up } };
+		}
 #endif
 #ifdef JOY_BUTTON_RIGHTSHOULDER
 		case JOY_BUTTON_RIGHTSHOULDER:
@@ -101,6 +103,20 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 	}
 	case SDL_JOYAXISMOTION:
 	case SDL_JOYBALLMOTION:
+#ifdef __DREAMCAST__
+	if(event.jaxis.axis == 3) {
+		Log("BUTTON_LEFTSHOULDER detected");
+		Log("event.jbutton.button = {}", event.jbutton.button);
+		Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
+		return { ControllerButtonEvent { ControllerButton_BUTTON_LEFTSHOULDER, event.jaxis.value < 255 } };
+	}
+	if(event.jaxis.axis == 2) {
+		Log("BUTTON_RIGHTSHOULDER detected");
+		Log("event.jbutton.button = {}", event.jbutton.button);
+		Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
+		return { ControllerButtonEvent { ControllerButton_BUTTON_RIGHTSHOULDER, event.jaxis.value < 255 } };
+	}
+#endif
 		// ProcessAxisMotion() requires a ControllerButtonEvent parameter
 		// so provide one here using ControllerButton_NONE
 		return { ControllerButtonEvent { ControllerButton_NONE, false } };
@@ -211,8 +227,10 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 		return JOY_BUTTON_RIGHTSTICK;
 #endif
 #ifdef JOY_BUTTON_LEFTSHOULDER
-	case ControllerButton_BUTTON_LEFTSHOULDER:
+	case ControllerButton_BUTTON_LEFTSHOULDER: {
+		Log("ToSdlJoyButton JOY_BUTTON_LEFTSHOULDER pressed");
 		return JOY_BUTTON_LEFTSHOULDER;
+	}
 #endif
 #ifdef JOY_BUTTON_RIGHTSHOULDER
 	case ControllerButton_BUTTON_RIGHTSHOULDER:
@@ -292,6 +310,31 @@ bool Joystick::IsPressed(ControllerButton button) const
 	return joyButton < numButtons && SDL_JoystickGetButton(sdl_joystick_, joyButton) != 0;
 }
 
+#ifdef __DREAMCAST__
+bool Joystick::ProcessAxisMotion(const SDL_Event &event)
+{
+	if (event.type != SDL_JOYAXISMOTION)
+		return false;
+
+	Log("ProcessAxisMotion event.jaxis.axis = {}", event.jaxis.axis);
+	Log("ProcessAxisMotion event.jaxis.value = {}", event.jaxis.value);
+	Log("ProcessAxisMotion event.jbutton.button = {}", event.jbutton.button);
+	Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
+
+	switch (event.jaxis.axis) {
+	case 0: //horizontal
+		leftStickXUnscaled = event.jaxis.value;
+		leftStickNeedsScaling = true;
+		return true;
+	case 1: //vertical
+		leftStickYUnscaled = event.jaxis.value;
+		leftStickNeedsScaling = true;
+		return true;
+	default:
+		return false;
+	}
+}
+#else //!ifdef __DREAMCAST__
 bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 {
 	if (event.type != SDL_JOYAXISMOTION)
@@ -330,6 +373,7 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 	return false;
 #endif
 }
+#endif
 
 void Joystick::Add(int deviceIndex)
 {
