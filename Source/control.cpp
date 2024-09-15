@@ -114,8 +114,6 @@ bool IsRightPanelOpen()
 	return invflag || sbookflag;
 }
 
-constexpr int SdlRectYAdjustment = 16;
-
 constexpr Size IncrementAttributeButtonSize { 41, 22 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle CharButtonRect[4] = {
@@ -935,7 +933,7 @@ void InitControlPan()
 
 void DrawCtrlPan(const Surface &out)
 {
-	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + SdlRectYAdjustment, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
+	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + 16, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
 	DrawInfoBox(out);
 }
 
@@ -944,7 +942,7 @@ void DrawCtrlBtns(const Surface &out)
 	const Point mainPanelPosition = GetMainPanel().position;
 	for (int i = 0; i < 6; i++) {
 		if (!PanelButtons[i]) {
-			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + SdlRectYAdjustment, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
+			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + 16, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
 		} else {
 			Point position = mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y };
 			RenderClxSprite(out, (*pPanelButtons)[i], position);
