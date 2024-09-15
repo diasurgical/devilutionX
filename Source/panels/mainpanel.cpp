@@ -48,7 +48,7 @@ void DrawButtonOnPanel(Point position, std::string_view text, int frame)
 
 void RenderMainButton(const Surface &out, int buttonId, std::string_view text, int frame)
 {
-	Point panelPosition { PanBtnPos[buttonId].x + 4, PanBtnPos[buttonId].y + 17 };
+	Point panelPosition { PanelButtonRect[buttonId].position.x + 4, PanelButtonRect[buttonId].position.y + 17 };
 	DrawButtonOnPanel(panelPosition, text, frame);
 	if (IsChatAvailable())
 		DrawButtonOnPanel(panelPosition + Displacement { 0, GetMainPanel().size.height + 16 }, text, frame);

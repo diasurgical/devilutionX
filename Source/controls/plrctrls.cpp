@@ -562,7 +562,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	int slot = 0;
 	Rectangle button;
 	for (int i = 0; i < 4; i++) {
-		button = ChrBtnsRect[i];
+		button = CharButtonRect[i];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.contains(MousePosition)) {
 			slot = i;
@@ -579,7 +579,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	}
 
 	// move cursor to our new location
-	button = ChrBtnsRect[slot];
+	button = CharButtonRect[slot];
 	button.position = GetPanelPosition(UiPanels::Character, button.position);
 	SetCursorPos(button.Center());
 }

@@ -1332,7 +1332,8 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 				// When chat input is displayed, the belt is hidden and the chat moves up.
 				DoBlitScreen({ mainPanelPosition + Displacement { 171, 6 }, { 298, 116 } });
 			} else {
-				DoBlitScreen({ mainPanelPosition + InfoBoxTopLeft, InfoBoxSize });
+				DoBlitScreen(mainPanelPosition.x + InfoBoxRect.position.x, mainPanelPosition.y + InfoBoxRect.position.y,
+				    InfoBoxRect.size.width, InfoBoxRect.size.height);
 			}
 		}
 		if (drawMana) {
