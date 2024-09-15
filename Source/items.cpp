@@ -855,7 +855,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		RedrawComponent(PanelDrawComponent::Mana);
 		break;
 	case IPL_DUR: {
-		int bonus = std::min(r * item._iMaxDur / 100, DUR_INDESTRUCTIBLE - item._iMaxDur);
+		int bonus = std::min(r * item._iMaxDur / 100, DUR_INDESTRUCTIBLE - item._iMaxDur - 1);
 		item._iMaxDur += bonus;
 		item._iDurability += bonus;
 	} break;
