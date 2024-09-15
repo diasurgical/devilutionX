@@ -9,6 +9,7 @@
 #include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
+#include "cursor.h"
 #include "engine.h"
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"
@@ -188,7 +189,7 @@ struct Item {
 	 */
 	AnimationInfo AnimInfo;
 	bool _iDelFlag = false; // set when item is flagged for deletion, deprecated in 1.02
-	uint8_t _iSelFlag = 0;
+	SelectionRegion selectionRegion = SelectionRegion::None;
 	bool _iPostDraw = false;
 	bool _iIdentified = false;
 	item_quality _iMagical = ITEM_QUALITY_NORMAL;
@@ -525,7 +526,7 @@ void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t 
 void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, std::string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg);
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, SelectionRegion selectionRegion, bool sendmsg);
 void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg);
 void SpawnMapOfDoom(Point position, bool sendmsg);
 void SpawnRuneBomb(Point position, bool sendmsg);

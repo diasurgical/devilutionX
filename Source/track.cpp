@@ -46,7 +46,7 @@ void InvalidateTargets()
 		}
 	}
 
-	if (ObjectUnderCursor != nullptr && ObjectUnderCursor->_oSelFlag < 1)
+	if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->canInteractWith())
 		ObjectUnderCursor = nullptr;
 
 	if (PlayerUnderCursor != nullptr) {

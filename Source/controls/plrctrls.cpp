@@ -166,7 +166,7 @@ void FindItemOrObject()
 			continue;
 		}
 		Item &item = Items[itemId];
-		if (item.isEmpty() || item._iSelFlag == 0) {
+		if (item.isEmpty() || item.selectionRegion == SelectionRegion::None) {
 			continue;
 		}
 
@@ -189,7 +189,7 @@ void FindItemOrObject()
 
 	for (WorldTilePosition targetPosition : searchArea) {
 		Object *object = FindObjectAtPosition(targetPosition);
-		if (object == nullptr || object->_oSelFlag == 0) {
+		if (object == nullptr || !object->canInteractWith()) {
 			// No object or non-interactive object
 			continue;
 		}

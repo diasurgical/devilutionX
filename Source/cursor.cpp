@@ -69,29 +69,29 @@ bool IsValidMonsterForSelection(const Monster &monster)
 
 bool TrySelectMonster(bool flipflag, Point tile, tl::function_ref<bool(const Monster &)> isValidMonster)
 {
-	auto checkPosition = [&](int8_t selectionType, Displacement displacement) {
+	auto checkPosition = [&](SelectionRegion selectionRegion, Displacement displacement) {
 		Point posToCheck = tile + displacement;
 		if (!InDungeonBounds(posToCheck) || dMonster[posToCheck.x][posToCheck.y] == 0)
 			return;
 		const uint16_t monsterId = std::abs(dMonster[posToCheck.x][posToCheck.y]) - 1;
 		const Monster &monster = Monsters[monsterId];
-		if (IsTileLit(posToCheck) && (monster.data().selectionType & selectionType) != 0 && isValidMonster(monster)) {
+		if (IsTileLit(posToCheck) && HasAnyOf(monster.data().selectionRegion, selectionRegion) && isValidMonster(monster)) {
 			cursPosition = posToCheck;
 			pcursmonst = monsterId;
 		}
 	};
 
 	if (!flipflag)
-		checkPosition(4, { 2, 1 });
+		checkPosition(SelectionRegion::Top, { 2, 1 });
 	if (flipflag)
-		checkPosition(4, { 1, 2 });
-	checkPosition(4, { 2, 2 });
+		checkPosition(SelectionRegion::Top, { 1, 2 });
+	checkPosition(SelectionRegion::Top, { 2, 2 });
 	if (!flipflag)
-		checkPosition(2, { 1, 0 });
+		checkPosition(SelectionRegion::Middle, { 1, 0 });
 	if (flipflag)
-		checkPosition(2, { 0, 1 });
-	checkPosition(1, { 0, 0 });
-	checkPosition(2, { 1, 1 });
+		checkPosition(SelectionRegion::Middle, { 0, 1 });
+	checkPosition(SelectionRegion::Bottom, { 0, 0 });
+	checkPosition(SelectionRegion::Middle, { 1, 1 });
 	return pcursmonst != -1;
 }
 
@@ -181,18 +181,18 @@ bool TrySelectObject(bool flipflag, Point tile)
 	Point testPosition = tile + Direction::South;
 	Object *object = FindObjectAtPosition(testPosition);
 
-	if (object == nullptr || object->_oSelFlag < 2) {
+	if (object == nullptr || HasNoneOf(object->selectionRegion, SelectionRegion::Middle)) {
 		// Either no object or can't interact from the test position, try the current tile
 		testPosition = tile;
 		object = FindObjectAtPosition(testPosition);
 
-		if (object == nullptr || IsNoneOf(object->_oSelFlag, 1, 3)) {
+		if (object == nullptr || HasNoneOf(object->selectionRegion, SelectionRegion::Bottom)) {
 			// Still no object (that could be activated from this position), try the tile to the bottom left or right
 			//  (whichever is closest to the cursor as determined when we set flipflag earlier)
 			testPosition = tile + (flipflag ? Direction::SouthWest : Direction::SouthEast);
 			object = FindObjectAtPosition(testPosition);
 
-			if (object != nullptr && object->_oSelFlag < 2) {
+			if (object != nullptr && HasNoneOf(object->selectionRegion, SelectionRegion::Middle)) {
 				// Found an object but it's not in range, clear the pointer
 				object = nullptr;
 			}
@@ -211,28 +211,28 @@ bool TrySelectItem(bool flipflag, int mx, int my)
 {
 	if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
 		const uint8_t itemId = dItem[mx + 1][my] - 1;
-		if (Items[itemId]._iSelFlag >= 2) {
+		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Middle)) {
 			cursPosition = Point { mx, my } + Displacement { 1, 0 };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
 	if (flipflag && my + 1 < MAXDUNY && dItem[mx][my + 1] > 0) {
 		const uint8_t itemId = dItem[mx][my + 1] - 1;
-		if (Items[itemId]._iSelFlag >= 2) {
+		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Middle)) {
 			cursPosition = Point { mx, my } + Displacement { 0, 1 };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
 	if (dItem[mx][my] > 0) {
 		const uint8_t itemId = dItem[mx][my] - 1;
-		if (Items[itemId]._iSelFlag == 1 || Items[itemId]._iSelFlag == 3) {
+		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Bottom)) {
 			cursPosition = { mx, my };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
 	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dItem[mx + 1][my + 1] > 0) {
 		const uint8_t itemId = dItem[mx + 1][my + 1] - 1;
-		if (Items[itemId]._iSelFlag >= 2) {
+		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Middle)) {
 			cursPosition = Point { mx, my } + Displacement { 1, 1 };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
@@ -341,7 +341,7 @@ bool TrySelectPixelBased(Point tile)
 		}
 
 		Object *object = FindObjectAtPosition(adjacentTile);
-		if (object != nullptr && object->_oSelFlag != 0) {
+		if (object != nullptr && object->canInteractWith()) {
 			const ClxSprite sprite = object->currentSprite();
 			Displacement renderingOffset = object->getRenderingOffset(sprite, adjacentTile);
 			if (checkSprite(adjacentTile, sprite, renderingOffset)) {

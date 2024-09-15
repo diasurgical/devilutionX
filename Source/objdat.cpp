@@ -12,6 +12,7 @@
 #include <ankerl/unordered_dense.h>
 #include <expected.hpp>
 
+#include "cursor.h"
 #include "data/file.hpp"
 #include "data/iterators.hpp"
 #include "data/record_reader.hpp"
@@ -242,6 +243,15 @@ tl::expected<ObjectDataFlags, std::string> ParseObjectDataFlags(std::string_view
 	return tl::make_unexpected("Unknown enum value");
 }
 
+tl::expected<SelectionRegion, std::string> ParseSelectionRegion(std::string_view value)
+{
+	if (value.empty()) return SelectionRegion::None;
+	if (value == "Bottom") return SelectionRegion::Bottom;
+	if (value == "Middle") return SelectionRegion::Middle;
+	if (value == "Top") return SelectionRegion::Top;
+	return tl::make_unexpected("Unknown enum value");
+}
+
 } // namespace
 
 void LoadObjectData()
@@ -281,7 +291,7 @@ void LoadObjectData()
 		reader.readInt("animDelay", item.animDelay);
 		reader.readInt("animLen", item.animLen);
 		reader.readInt("animWidth", item.animWidth);
-		reader.readInt("selFlag", item.selFlag);
+		reader.readEnumList("selectionRegion", item.selectionRegion, ParseSelectionRegion);
 	}
 
 	// Sanity check because we do not actually parse the IDs yet.
