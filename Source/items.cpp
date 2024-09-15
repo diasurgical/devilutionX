@@ -3705,17 +3705,6 @@ void SpawnTheodore(Point position, bool sendmsg)
 	SpawnRewardItem(IDI_THEODORE, position, sendmsg);
 }
 
-static bool IsStandAtPosition(const Point &position)
-{
-	for (int i = 0; i < ActiveObjectCount; i++) {
-		const Object &object = Objects[ActiveObjects[i]];
-		if (object._otype == OBJ_STAND && object.position == position) {
-			return true;
-		}
-	}
-	return false;
-}
-
 void RespawnItem(Item &item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item._iCurs];
