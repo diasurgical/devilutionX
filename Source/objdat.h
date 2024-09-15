@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "cursor.h"
 #include "levels/gendung.h"
 #include "utils/enum_traits.h"
 
@@ -202,7 +203,7 @@ struct ObjectData {
 	uint8_t animDelay; // Tick length of each frame in the current animation
 	uint8_t animLen;   // Number of frames in current animation
 	uint8_t animWidth;
-	int8_t selFlag; // TODO Create enum
+	SelectionRegion selectionRegion;
 
 	[[nodiscard]] bool isAnimated() const
 	{

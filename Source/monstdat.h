@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "cursor.h"
 #include "textdat.h"
 
 namespace devilution {
@@ -126,7 +127,7 @@ struct MonsterData {
 	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
 	uint8_t resistanceHell;
-	int8_t selectionType; // TODO Create enum
+	SelectionRegion selectionRegion;
 	/** Using monster_treasure */
 	uint16_t treasure;
 	uint16_t exp;

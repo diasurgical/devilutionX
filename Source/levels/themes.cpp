@@ -573,7 +573,7 @@ void Theme_Library(int t)
 				Object *bookstand = AddObject(OBJ_BOOKSTAND, { xp, yp });
 				if (!FlipCoin(2 * librnd[leveltype - 1])) {
 					if (bookstand != nullptr) {
-						bookstand->_oSelFlag = 0;
+						bookstand->selectionRegion = SelectionRegion::None;
 						bookstand->_oAnimFrame += 2;
 					}
 				}

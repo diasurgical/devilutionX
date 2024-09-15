@@ -256,7 +256,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item.AnimInfo.currentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip(8); // Skip _iAnimWidth and _iAnimWidth2
 	file.Skip(4); // Unused since 1.02
-	item._iSelFlag = file.NextLE<uint8_t>();
+	item.selectionRegion = static_cast<SelectionRegion>(file.NextLE<uint8_t>());
 	file.Skip(3); // Alignment
 	item._iPostDraw = file.NextBool32();
 	item._iIdentified = file.NextBool32();
@@ -842,7 +842,7 @@ void LoadObject(LoadHelper &file, Object &object)
 	object._oSolidFlag = file.NextBool32();
 	object._oMissFlag = file.NextBool32();
 
-	object._oSelFlag = file.NextLE<int8_t>();
+	object.selectionRegion = static_cast<SelectionRegion>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	object._oPreFlag = file.NextBool32();
 	object._oTrapFlag = file.NextBool32();
@@ -1094,7 +1094,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	// write _iAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(ItemAnimWidth));
 	file.Skip<uint32_t>(); // _delFlag, unused since 1.02
-	file.WriteLE<uint8_t>(item._iSelFlag);
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(item.selectionRegion));
 	file.Skip(3); // Alignment
 	file.WriteLE<uint32_t>(item._iPostDraw ? 1 : 0);
 	file.WriteLE<uint32_t>(item._iIdentified ? 1 : 0);
@@ -1626,7 +1626,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<uint32_t>(object._oSolidFlag ? 1 : 0);
 	file.WriteLE<uint32_t>(object._oMissFlag ? 1 : 0);
 
-	file.WriteLE<int8_t>(object._oSelFlag);
+	file.WriteLE<int8_t>(static_cast<uint8_t>(object.selectionRegion));
 	file.Skip(3); // Alignment
 	file.WriteLE<uint32_t>(object._oPreFlag ? 1 : 0);
 	file.WriteLE<uint32_t>(object._oTrapFlag ? 1 : 0);

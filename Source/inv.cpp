@@ -899,7 +899,7 @@ void CleanupItems(int ii)
 
 	if (CornerStone.isAvailable() && item.position == CornerStone.position) {
 		CornerStone.item.clear();
-		CornerStone.item._iSelFlag = 0;
+		CornerStone.item.selectionRegion = SelectionRegion::None;
 		CornerStone.item.position = { 0, 0 };
 		CornerStone.item._iAnimFlag = false;
 		CornerStone.item._iIdentified = false;

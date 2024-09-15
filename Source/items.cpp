@@ -463,7 +463,7 @@ void AddInitItems()
 		SetupItem(item);
 		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
-		item._iSelFlag = 1;
+		item.selectionRegion = SelectionRegion::Bottom;
 		DeltaAddItem(ii);
 	}
 }
@@ -485,7 +485,7 @@ void SpawnNote()
 	}
 
 	Point position = GetRandomAvailableItemPosition();
-	SpawnQuestItem(id, position, 0, 1, false);
+	SpawnQuestItem(id, position, 0, SelectionRegion::Bottom, false);
 }
 
 void CalcSelfItems(Player &player)
@@ -1603,7 +1603,7 @@ void SpawnRock()
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(item, IDI_ROCK, curlv);
 	SetupItem(item);
-	item._iSelFlag = 2;
+	item.selectionRegion = SelectionRegion::Middle;
 	item._iPostDraw = true;
 	item.AnimInfo.currentFrame = 10;
 	item._iCreateInfo |= CF_PREGEN;
@@ -2433,7 +2433,7 @@ void InitItems()
 		item.clear();
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
-		item._iSelFlag = 0;
+		item.selectionRegion = SelectionRegion::None;
 		item._iIdentified = false;
 		item._iPostDraw = false;
 	}
@@ -2447,17 +2447,17 @@ void InitItems()
 		if (Quests[Q_ROCK].IsAvailable())
 			SpawnRock();
 		if (Quests[Q_ANVIL].IsAvailable())
-			SpawnQuestItem(IDI_ANVIL, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, 1, false);
+			SpawnQuestItem(IDI_ANVIL, SetPiece.position.megaToWorld() + Displacement { 11, 11 }, 0, SelectionRegion::Bottom, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 20)
-			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1, false);
+			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, SelectionRegion::Bottom, false);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
-			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1, false);
+			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, SelectionRegion::Bottom, false);
 		// In multiplayer items spawn during level generation to avoid desyncs
 		if (gbIsMultiplayer) {
 			if (Quests[Q_MUSHROOM].IsAvailable())
-				SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1, false);
+				SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, SelectionRegion::Bottom, false);
 			if (currlevel == Quests[Q_VEIL]._qlevel + 1 && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL)
-				SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1, false);
+				SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, SelectionRegion::Bottom, false);
 		}
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
@@ -3420,7 +3420,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn /*= fa
 			// Drop the brain as extra item to ensure that all clients see the brain drop
 			// When executing SpawnItem is not reliable, because another client can already have the quest state updated before SpawnItem is executed
 			Point posBrain = GetSuperItemLoc(position);
-			SpawnQuestItem(IDI_BRAIN, posBrain, 0, 0, true);
+			SpawnQuestItem(IDI_BRAIN, posBrain, 0, SelectionRegion::None, true);
 		}
 		// Normal monster
 		if ((monster.data().treasure & T_NODROP) != 0)
@@ -3612,7 +3612,7 @@ void CornerstoneLoad(Point position)
 	CornerStone.item = item;
 }
 
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg)
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, SelectionRegion selectionRegion, bool sendmsg)
 {
 	if (randarea > 0) {
 		int tries = 0;
@@ -3652,8 +3652,8 @@ void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int self
 	item._iSeed = AdvanceRndSeed();
 	SetRndSeed(item._iSeed);
 	item._iPostDraw = true;
-	if (selflag != 0) {
-		item._iSelFlag = selflag;
+	if (selectionRegion != SelectionRegion::None) {
+		item.selectionRegion = selectionRegion;
 		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
@@ -3679,7 +3679,7 @@ void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg)
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(item, itemid, curlv);
 	item.setNewAnimation(true);
-	item._iSelFlag = 2;
+	item.selectionRegion = SelectionRegion::Middle;
 	item._iPostDraw = true;
 	item._iIdentified = true;
 	GenerateNewSeed(item);
@@ -3711,9 +3711,9 @@ void RespawnItem(Item &item, bool flipFlag)
 	item._iRequest = false;
 
 	if (IsAnyOf(item._iCurs, ICURS_MAGIC_ROCK, ICURS_TAVERN_SIGN, ICURS_ANVIL_OF_FURY))
-		item._iSelFlag = 1;
+		item.selectionRegion = SelectionRegion::Bottom;
 	else if (IsAnyOf(item._iCurs, ICURS_MAP_OF_THE_STARS, ICURS_RUNE_BOMB, ICURS_THEODORE, ICURS_AURIC_AMULET))
-		item._iSelFlag = 2;
+		item.selectionRegion = SelectionRegion::Middle;
 
 	if (item._iCurs == ICURS_MAGIC_ROCK) {
 		PlaySfxLoc(ItemDropSnds[it], item.position);
@@ -3745,9 +3745,9 @@ void ProcessItems()
 			continue;
 		item.AnimInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.currentFrame == 10)
+			if (item.selectionRegion == SelectionRegion::Bottom && item.AnimInfo.currentFrame == 10)
 				item.AnimInfo.currentFrame = 0;
-			if (item._iSelFlag == 2 && item.AnimInfo.currentFrame == 20)
+			if (item.selectionRegion == SelectionRegion::Middle && item.AnimInfo.currentFrame == 20)
 				item.AnimInfo.currentFrame = 10;
 		} else {
 			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
@@ -3756,7 +3756,7 @@ void ProcessItems()
 			if (item.AnimInfo.isLastFrame()) {
 				item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 				item._iAnimFlag = false;
-				item._iSelFlag = 1;
+				item.selectionRegion = SelectionRegion::Bottom;
 			}
 		}
 	}
@@ -4639,7 +4639,7 @@ int ItemNoFlippy()
 	int r = ActiveItems[ActiveItemCount - 1];
 	Items[r].AnimInfo.currentFrame = Items[r].AnimInfo.numberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
-	Items[r]._iSelFlag = 1;
+	Items[r].selectionRegion = SelectionRegion::Bottom;
 
 	return r;
 }
@@ -4766,11 +4766,11 @@ void Item::setNewAnimation(bool showAnimation)
 	_iRequest = false;
 	if (showAnimation) {
 		_iAnimFlag = true;
-		_iSelFlag = 0;
+		selectionRegion = SelectionRegion::None;
 	} else {
 		AnimInfo.currentFrame = AnimInfo.numberOfFrames - 1;
 		_iAnimFlag = false;
-		_iSelFlag = 1;
+		selectionRegion = SelectionRegion::Bottom;
 	}
 }
 
