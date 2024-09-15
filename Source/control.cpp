@@ -948,7 +948,7 @@ void DrawCtrlBtns(const Surface &out)
 		} else {
 			Point position = mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y };
 			RenderClxSprite(out, (*pPanelButtons)[i], position); // FIXME
-			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, -18 });
+			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, 0 });
 		}
 	}
 
