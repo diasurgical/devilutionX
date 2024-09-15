@@ -3757,7 +3757,7 @@ void ProcessItems()
 	for (int i = 0; i < ActiveItemCount; i++) {
 		int ii = ActiveItems[i];
 		auto &item = Items[ii];
-		if (!item._iAnimFlag) // Item isn't being dropped, so don't animate frames
+		if (!item._iAnimFlag) 
 			continue;
 		item.AnimInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
