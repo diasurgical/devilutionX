@@ -1285,23 +1285,19 @@ void DrawFPS(const Surface &out)
 
 /**
  * @brief Update part of the screen from the back buffer
- * @param x Back buffer coordinate
- * @param y Back buffer coordinate
- * @param w Back buffer coordinate
- * @param h Back buffer coordinate
  */
-void DoBlitScreen(int x, int y, int w, int h)
+void DoBlitScreen(Rectangle area)
 {
 #ifdef DEBUG_DO_BLIT_SCREEN
 	const Surface &out = GlobalBackBuffer();
 	const uint8_t debugColor = PAL8_RED;
-	DrawHorizontalLine(out, Point(x, y), w, debugColor);
-	DrawHorizontalLine(out, Point(x, y + h - 1), w, debugColor);
-	DrawVerticalLine(out, Point(x, y), h, debugColor);
-	DrawVerticalLine(out, Point(x + w - 1, y), h, debugColor);
+	DrawHorizontalLine(out, area.position, area.size.width, debugColor);
+	DrawHorizontalLine(out, area.position + Displacement { 0, area.size.height - 1 }, area.size.width, debugColor);
+	DrawVerticalLine(out, area.position, area.size.height, debugColor);
+	DrawVerticalLine(out, area.position + Displacement { area.size.width - 1, 0 }, area.size.height, debugColor);
 #endif
-	SDL_Rect srcRect = MakeSdlRect(x, y, w, h);
-	SDL_Rect dstRect = MakeSdlRect(x, y, w, h);
+	SDL_Rect srcRect = MakeSdlRect(area);
+	SDL_Rect dstRect = MakeSdlRect(area);
 	BltFast(&srcRect, &dstRect);
 }
 
@@ -1324,43 +1320,42 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 	assert(dwHgt >= 0 && dwHgt <= gnScreenHeight);
 
 	if (dwHgt > 0) {
-		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
+		DoBlitScreen({ { 0, 0 }, { gnScreenWidth, dwHgt } });
 	}
 	if (dwHgt < gnScreenHeight) {
 		const Point mainPanelPosition = GetMainPanel().position;
 		if (drawSbar) {
-			DoBlitScreen(mainPanelPosition.x + 204, mainPanelPosition.y + 5, 232, 28);
+			DoBlitScreen({ mainPanelPosition + Displacement { 204, 5 }, { 232, 28 } });
 		}
 		if (drawDesc) {
 			if (talkflag) {
 				// When chat input is displayed, the belt is hidden and the chat moves up.
-				DoBlitScreen(mainPanelPosition.x + 171, mainPanelPosition.y + 6, 298, 116);
+				DoBlitScreen({ mainPanelPosition + Displacement { 171, 6 }, { 298, 116 } });
 			} else {
-				DoBlitScreen(mainPanelPosition.x + InfoBoxTopLeft.deltaX, mainPanelPosition.y + InfoBoxTopLeft.deltaY,
-				    InfoBoxSize.width, InfoBoxSize.height);
+				DoBlitScreen({ mainPanelPosition + InfoBoxTopLeft, InfoBoxSize });
 			}
 		}
 		if (drawMana) {
-			DoBlitScreen(mainPanelPosition.x + 460, mainPanelPosition.y, 88, 72);
-			DoBlitScreen(mainPanelPosition.x + 564, mainPanelPosition.y + 64, 56, 56);
+			DoBlitScreen({ mainPanelPosition + Displacement { 460, 0 }, { 88, 72 } });
+			DoBlitScreen({ mainPanelPosition + Displacement { 564, 64 }, { 56, 56 } });
 		}
 		if (drawHp) {
-			DoBlitScreen(mainPanelPosition.x + 96, mainPanelPosition.y, 88, 72);
+			DoBlitScreen({ mainPanelPosition + Displacement { 96, 0 }, { 88, 72 } });
 		}
 		if (drawBtn) {
-			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 7, 74, 114);
-			DoBlitScreen(mainPanelPosition.x + 559, mainPanelPosition.y + 7, 74, 48);
+			DoBlitScreen({ mainPanelPosition + Displacement { 8, 7 }, { 74, 114 } });
+			DoBlitScreen({ mainPanelPosition + Displacement { 559, 7 }, { 74, 48 } });
 			if (gbIsMultiplayer) {
-				DoBlitScreen(mainPanelPosition.x + 86, mainPanelPosition.y + 91, 34, 32);
-				DoBlitScreen(mainPanelPosition.x + 526, mainPanelPosition.y + 91, 34, 32);
+				DoBlitScreen({ mainPanelPosition + Displacement { 86, 91 }, { 34, 32 } });
+				DoBlitScreen({ mainPanelPosition + Displacement { 526, 91 }, { 34, 32 } });
 			}
 		}
 		if (PrevCursorRect.size.width != 0 && PrevCursorRect.size.height != 0) {
-			DoBlitScreen(PrevCursorRect.position.x, PrevCursorRect.position.y, PrevCursorRect.size.width, PrevCursorRect.size.height);
+			DoBlitScreen(PrevCursorRect);
 		}
 		Rectangle &cursorRect = GetDrawnCursor().rect;
 		if (cursorRect.size.width != 0 && cursorRect.size.height != 0) {
-			DoBlitScreen(cursorRect.position.x, cursorRect.position.y, cursorRect.size.width, cursorRect.size.height);
+			DoBlitScreen(cursorRect);
 		}
 	}
 }
