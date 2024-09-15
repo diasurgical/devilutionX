@@ -123,7 +123,7 @@ Rectangle CharButtonRect[4] = {
 	{ { 137, 223 }, IncrementAttributeButtonSize }
 };
 
-constexpr Size WidePanelButtonSize { 71, 19 };
+constexpr Size WidePanelButtonSize { 71, 20 };
 constexpr Size PanelButtonSize { 33, 32 };
 /** Positions of panel buttons. */
 Rectangle PanelButtonRect[8] = {
@@ -139,7 +139,12 @@ Rectangle PanelButtonRect[8] = {
 	// clang-format on
 };
 
-Rectangle SpellButtonRect({ 565, 64 }, { 56, 56 });
+int beltItems = 8;
+Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
+Rectangle BeltRect({ 205, 5 }, BeltSize);
+
+constexpr Size SpellButtonSize { 56, 56 };
+Rectangle SpellButtonRect({ 565, 64 }, SpellButtonSize);
 
 namespace {
 
@@ -149,19 +154,6 @@ OptionalOwnedClxSpriteList talkButtons;
 OptionalOwnedClxSpriteList pDurIcons;
 OptionalOwnedClxSpriteList multiButtons;
 OptionalOwnedClxSpriteList pPanelButtons;
-
-bool PanelButtons[8];
-int PanelButtonIndex;
-char TalkSave[8][MAX_SEND_STR_LEN];
-uint8_t TalkSaveIndex;
-uint8_t NextTalkSave;
-char TalkMessage[MAX_SEND_STR_LEN];
-bool TalkButtonsDown[3];
-int sgbPlrTalkTbl;
-bool WhisperList[MAX_PLRS];
-
-TextInputCursorState ChatCursor;
-std::optional<TextInputState> ChatInputState;
 
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
@@ -175,6 +167,18 @@ enum panel_button_id : uint8_t {
 	PanelButtonFriendly,
 	PanelButtonLast = PanelButtonFriendly,
 };
+
+bool PanelButtons[PanelButtonLast + 1];
+char TalkSave[8][MAX_SEND_STR_LEN];
+uint8_t TalkSaveIndex;
+uint8_t NextTalkSave;
+char TalkMessage[MAX_SEND_STR_LEN];
+bool TalkButtonsDown[3];
+int sgbPlrTalkTbl;
+bool WhisperList[MAX_PLRS];
+
+TextInputCursorState ChatCursor;
+std::optional<TextInputState> ChatInputState;
 
 /** Maps from panel_button_id to hotkey name. */
 const char *const PanBtnHotKey[8] = { "'c'", "'q'", N_("Tab"), N_("Esc"), "'i'", "'b'", N_("Enter"), nullptr };
@@ -902,10 +906,6 @@ void InitControlPan()
 		pChrButtons = LoadCel("data\\charbut", CharButtonsFrameWidths);
 	}
 	ClearPanBtn();
-	if (!IsChatAvailable())
-		PanelButtonIndex = 6;
-	else
-		PanelButtonIndex = 8;
 	if (!HeadlessMode)
 		pDurIcons = LoadCel("items\\duricons", 32);
 	for (bool &buttonEnabled : chrbtn)
@@ -950,12 +950,12 @@ void DrawCtrlBtns(const Surface &out)
 		}
 	}
 
-	if (PanelButtonIndex == 8) {
-		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[6] ? 1 : 0]);
+	if (IsChatAvailable()) {
+		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[PanelButtonSendmsg] ? 1 : 0]);
 		if (MyPlayer->friendlyMode)
-			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 3 : 2]);
+			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 3 : 2]);
 		else
-			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 5 : 4]);
+			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 5 : 4]);
 	}
 }
 
@@ -971,7 +971,9 @@ void DoPanBtn()
 {
 	const Point mainPanelPosition = GetMainPanel().position;
 
-	for (int i = 0; i < PanelButtonIndex; i++) {
+	int totalButtons = IsChatAvailable() ? 8 : 6;
+
+	for (int i = 0; i < totalButtons; i++) {
 		Rectangle button = PanelButtonRect[i];
 
 		button.position = GetPanelPosition(UiPanels::Main, button.position);
@@ -1047,7 +1049,9 @@ void CheckPanelInfo()
 	panelflag = false;
 	InfoString = StringOrView {};
 
-	for (int i = 0; i < PanelButtonIndex; i++) {
+	int totalButtons = IsChatAvailable() ? 8 : 6;
+
+	for (int i = 0; i < totalButtons; i++) {
 		Rectangle button = PanelButtonRect[i];
 
 		button.position = GetPanelPosition(UiPanels::Main, button.position);
@@ -1107,7 +1111,7 @@ void CheckPanelInfo()
 		}
 	}
 
-	Rectangle belt({ 191, 5 }, { 246, 28 });
+	Rectangle belt = BeltRect;
 
 	belt.position = GetPanelPosition(UiPanels::Main, belt.position);
 
