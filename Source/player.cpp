@@ -168,30 +168,19 @@ void StartAttack(Player &player, Direction d, bool includesFirstFrame)
 	}
 
 	int8_t skippedAnimationFrames = 0;
-	if (includesFirstFrame) {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack) && HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack | ItemSpecialEffect::FastAttack)) {
-			// Combining Fastest Attack with any other attack speed modifier skips over the fourth frame, reducing the effectiveness of Fastest Attack.
-			// Faster Attack makes up for this by also skipping the sixth frame so this case only applies when using Quick or Fast Attack modifiers.
-			skippedAnimationFrames = 3;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
-			skippedAnimationFrames = 4;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
-			skippedAnimationFrames = 3;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
-			skippedAnimationFrames = 2;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack)) {
-			skippedAnimationFrames = 1;
-		}
-	} else {
-		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
-			// The combination of Faster and Fast Attack doesn't result in more skipped frames, because the second frame skip of Faster Attack is not triggered.
-			skippedAnimationFrames = 2;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
-			skippedAnimationFrames = 1;
-		} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
-			// Fastest Attack is skipped if Fast or Faster Attack is also specified, because both skip the frame that triggers Fastest Attack skipping.
-			skippedAnimationFrames = 2;
-		}
+	const auto flags = player._pIFlags;
+
+	// If the first frame is not included in vanilla, the skip logic for the first frame will not be executed.
+	// This will result in a different and slower attack speed.
+	if (HasAnyOf(flags, ItemSpecialEffect::FastestAttack)) {
+		// If the fastest attack logic is trigger frames in vanilla two frames are skipped, so missing the first frame reduces the skip logic by two frames.
+		skippedAnimationFrames = includesFirstFrame ? 4 : 2;
+	} else if (HasAnyOf(flags, ItemSpecialEffect::FasterAttack)) {
+		skippedAnimationFrames = includesFirstFrame ? 3 : 2;
+	} else if (HasAnyOf(flags, ItemSpecialEffect::FastAttack)) {
+		skippedAnimationFrames = includesFirstFrame ? 2 : 1;
+	} else if (HasAnyOf(flags, ItemSpecialEffect::QuickAttack)) {
+		skippedAnimationFrames = includesFirstFrame ? 1 : 0;
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
