@@ -3734,10 +3734,11 @@ void RespawnItem(Item &item, bool flipFlag)
 		item.selectionRegion = SelectionRegion::Middle; // Item is selectable at elevated level
 		break;
 	case ICURS_MAGIC_ROCK:
-		if (IsStandAtPosition(item.position)) {
-			item.selectionRegion = SelectionRegion::Middle;              // Item is selectable at elevated level and renders at elevated level
-			item._iPostDraw = true;          // Draw in front of stand
-			item.AnimInfo.currentFrame = 10; // Frame 10 is the start of the elevated frames in the cel
+		Object *stand = FindObjectAtPosition(item.position);
+		if (stand != nullptr && stand->_otype == OBJ_STAND) {
+			item.selectionRegion = SelectionRegion::Middle; // Item is selectable at elevated level and renders at elevated level
+			item._iPostDraw = true;                         // Draw in front of stand
+			item.AnimInfo.currentFrame = 10;                // Frame 10 is the start of the elevated frames in the cel
 		} else {
 			item.selectionRegion = SelectionRegion::Bottom; // Item is selectable at floor level and renders at floor level
 		}
@@ -3772,9 +3773,9 @@ void ProcessItems()
 		item.AnimInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
 			if (item.selectionRegion == SelectionRegion::Bottom && item.AnimInfo.currentFrame == 10) // Reached end of floor frames + 1, cycle back
-				item.AnimInfo.currentFrame = 0;                          // Beginning of floor frames
+				item.AnimInfo.currentFrame = 0;                                                      // Beginning of floor frames
 			if (item.selectionRegion == SelectionRegion::Middle && item.AnimInfo.currentFrame == 19) // Reached end of elevated frames, cycle back
-				item.AnimInfo.currentFrame = 10;                         // Beginning of elevated frames
+				item.AnimInfo.currentFrame = 10;                                                     // Beginning of elevated frames
 		} else {
 			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
