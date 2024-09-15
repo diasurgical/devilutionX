@@ -947,7 +947,7 @@ void DrawCtrlBtns(const Surface &out)
 			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + SdlRectYAdjustment, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
 		} else {
 			Point position = mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y };
-			RenderClxSprite(out, (*pPanelButtons)[i], position); // FIXME
+			RenderClxSprite(out, (*pPanelButtons)[i], position);
 			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, 0 });
 		}
 	}
