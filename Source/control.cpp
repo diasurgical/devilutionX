@@ -148,8 +148,7 @@ Rectangle BeltRect { { 205, 5 }, BeltSize };
 Rectangle SpellButtonRect { { 565, 64 }, { 56, 56 } };
 
 Rectangle FlaskTopRect = { { 13, 3 }, { 60, 13 } };
-constexpr Size FlaskBottomSize = { 84, 69 };
-Rectangle FlaskBottomRect = { { 0, 16 }, FlaskBottomSize };
+Rectangle FlaskBottomRect = { { 0, 16 }, { 84, 69 } };
 
 namespace {
 
@@ -264,9 +263,9 @@ void DrawFlaskOnPanel(const Surface &out, Point position, const Surface &celBuf,
  */
 void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	int filled = std::clamp(fillPer, 0, FlaskBottomSize.height);
+	int filled = std::clamp(fillPer, 0, FlaskBottomRect.size.height);
 
-	if (filled < FlaskBottomSize.height)
+	if (filled < FlaskBottomRect.size.height)
 		DrawFlaskOnPanel(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, FlaskBottomRect.position.y, FlaskBottomRect.position.y + FlaskBottomRect.size.height - filled);
 }
 
@@ -277,6 +276,11 @@ void SetButtonStateDown(int btnId)
 	panbtndown = true;
 }
 
+Point SetPanelObjectPosition(UiPanels panel, Rectangle &button)
+{
+	button.position = GetPanelPosition(panel, button.position);
+}
+
 void PrintInfo(const Surface &out)
 {
 	if (talkflag)
@@ -285,7 +289,7 @@ void PrintInfo(const Surface &out)
 	const int space[] = { 18, 12, 6, 3, 0 };
 	Rectangle infoBox = InfoBoxRect;
 
-	infoBox.position = GetPanelPosition(UiPanels::Main, infoBox.position);
+	SetPanelObjectPosition(UiPanels::Main, infoBox);
 
 	const auto newLineCount = static_cast<int>(c_count(InfoString.str(), '\n'));
 	const int spaceIndex = std::min(4, newLineCount);
@@ -985,7 +989,7 @@ void DoPanBtn()
 	for (int i = 0; i < totalButtons; i++) {
 		Rectangle button = PanelButtonRect[i];
 
-		button.position = GetPanelPosition(UiPanels::Main, button.position);
+		SetPanelObjectPosition(UiPanels::Main, button);
 
 		if (button.contains(MousePosition)) {
 			PanelButtons[i] = true;
@@ -996,7 +1000,7 @@ void DoPanBtn()
 
 	Rectangle spellSelectButton = SpellButtonRect;
 
-	spellSelectButton.position = GetPanelPosition(UiPanels::Main, spellSelectButton.position);
+	SetPanelObjectPosition(UiPanels::Main, spellSelectButton);
 
 	if (!spselflag && spellSelectButton.contains(MousePosition)) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
@@ -1015,7 +1019,7 @@ void control_check_btn_press()
 {
 	Rectangle menuButton = PanelButtonRect[PanelButtonMainmenu];
 
-	menuButton.position = GetPanelPosition(UiPanels::Main, menuButton.position);
+	SetPanelObjectPosition(UiPanels::Main, menuButton);
 
 	if (menuButton.contains(MousePosition)) {
 		SetButtonStateDown(PanelButtonMainmenu);
@@ -1024,7 +1028,7 @@ void control_check_btn_press()
 
 	Rectangle chatButton = PanelButtonRect[PanelButtonSendmsg];
 
-	chatButton.position = GetPanelPosition(UiPanels::Main, chatButton.position);
+	SetPanelObjectPosition(UiPanels::Main, chatButton);
 
 	if (chatButton.contains(MousePosition)) {
 		SetButtonStateDown(PanelButtonSendmsg);
@@ -1063,7 +1067,7 @@ void CheckPanelInfo()
 	for (int i = 0; i < totalButtons; i++) {
 		Rectangle button = PanelButtonRect[i];
 
-		button.position = GetPanelPosition(UiPanels::Main, button.position);
+		SetPanelObjectPosition(UiPanels::Main, button);
 
 		if (button.contains(MousePosition)) {
 			if (i != 7) {
@@ -1084,7 +1088,7 @@ void CheckPanelInfo()
 
 	Rectangle spellSelectButton = SpellButtonRect;
 
-	spellSelectButton.position = GetPanelPosition(UiPanels::Main, spellSelectButton.position);
+	SetPanelObjectPosition(UiPanels::Main, spellSelectButton);
 
 	if (!spselflag && spellSelectButton.contains(MousePosition)) {
 		InfoString = _("Select current spell button");
@@ -1122,7 +1126,7 @@ void CheckPanelInfo()
 
 	Rectangle belt = BeltRect;
 
-	belt.position = GetPanelPosition(UiPanels::Main, belt.position);
+	SetPanelObjectPosition(UiPanels::Main, belt);
 
 	if (belt.contains(MousePosition))
 		pcursinvitem = CheckInvHLight();
@@ -1146,7 +1150,7 @@ void CheckBtnUp()
 
 		Rectangle button = PanelButtonRect[i];
 
-		button.position = GetPanelPosition(UiPanels::Main, button.position);
+		SetPanelObjectPosition(UiPanels::Main, button);
 
 		if (!button.contains(MousePosition))
 			continue;
@@ -1281,7 +1285,7 @@ void CheckLvlBtn()
 	const Point mainPanelPosition = GetMainPanel().position;
 	Rectangle button = LevelButtonRect;
 
-	button.position = GetPanelPosition(UiPanels::Main, button.position);
+	SetPanelObjectPosition(UiPanels::Main, button);
 
 	if (!lvlbtndown && button.contains(MousePosition))
 		lvlbtndown = true;
@@ -1292,7 +1296,7 @@ void ReleaseLvlBtn()
 	const Point mainPanelPosition = GetMainPanel().position;
 	Rectangle button = LevelButtonRect;
 
-	button.position = GetPanelPosition(UiPanels::Main, button.position);
+	SetPanelObjectPosition(UiPanels::Main, button);
 
 	if (button.contains(MousePosition)) {
 		OpenCharPanel();
@@ -1322,7 +1326,7 @@ void CheckChrBtns()
 			continue;
 		auto buttonId = static_cast<size_t>(attribute);
 		Rectangle button = CharButtonRect[buttonId];
-		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		SetPanelObjectPosition(UiPanels::Character, button);
 		if (button.contains(MousePosition)) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
@@ -1340,7 +1344,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 
 		chrbtn[buttonId] = false;
 		Rectangle button = CharButtonRect[buttonId];
-		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		SetPanelObjectPosition(UiPanels::Character, button);
 		if (button.contains(MousePosition)) {
 			Player &myPlayer = *MyPlayer;
 			int statPointsToAdd = 1;
@@ -1625,9 +1629,25 @@ bool IsTalkActive()
 	return true;
 }
 
+template <typename InputStateType>
+bool HandleInputEvent(const SDL_Event &event, std::optional<InputStateType> &inputState)
+{
+	if (!inputState) {
+		return false; // No input state to handle
+	}
+
+	if constexpr (std::is_same_v<InputStateType, TextInputState>) {
+		return HandleTextInputEvent(event, *inputState);
+	} else if constexpr (std::is_same_v<InputStateType, NumberInputState>) {
+		return HandleNumberInputEvent(event, *inputState);
+	}
+
+	return false; // Unknown input state type
+}
+
 bool HandleTalkTextInputEvent(const SDL_Event &event)
 {
-	return HandleTextInputEvent(event, *ChatInputState);
+	return HandleInputEvent(event, ChatInputState);
 }
 
 bool control_presskeys(SDL_Keycode vkey)
@@ -1713,7 +1733,7 @@ int GetGoldDropMax()
 
 bool HandleGoldDropTextInputEvent(const SDL_Event &event)
 {
-	return HandleNumberInputEvent(event, *GoldDropInputState);
+	return HandleInputEvent(event, GoldDropInputState);
 }
 
 } // namespace devilution
