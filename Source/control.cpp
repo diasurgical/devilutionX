@@ -116,26 +116,40 @@ bool IsRightPanelOpen()
 
 constexpr Size IncrementAttributeButtonSize { 41, 22 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
-Rectangle ChrBtnsRect[4] = {
+Rectangle CharButtonRect[4] = {
 	{ { 137, 138 }, IncrementAttributeButtonSize },
 	{ { 137, 166 }, IncrementAttributeButtonSize },
 	{ { 137, 195 }, IncrementAttributeButtonSize },
 	{ { 137, 223 }, IncrementAttributeButtonSize }
 };
 
+constexpr Size WidePanelButtonSize { 71, 20 };
+constexpr Size PanelButtonSize { 33, 32 };
 /** Positions of panel buttons. */
-SDL_Rect PanBtnPos[8] = {
+Rectangle PanelButtonRect[8] = {
 	// clang-format off
-	{   9,   9, 71, 19 }, // char button
-	{   9,  35, 71, 19 }, // quests button
-	{   9,  75, 71, 19 }, // map button
-	{   9, 101, 71, 19 }, // menu button
-	{ 560,   9, 71, 19 }, // inv button
-	{ 560,  35, 71, 19 }, // spells button
-	{  87,  91, 33, 32 }, // chat button
-	{ 527,  91, 33, 32 }, // friendly fire button
+	{ {   9,   9 }, WidePanelButtonSize }, // char button
+	{ {   9,  35 }, WidePanelButtonSize }, // quests button
+	{ {   9,  75 }, WidePanelButtonSize }, // map button
+	{ {   9, 101 }, WidePanelButtonSize }, // menu button
+	{ { 560,   9 }, WidePanelButtonSize }, // inv button
+	{ { 560,  35 }, WidePanelButtonSize }, // spells button
+	{ {  87,  91 }, PanelButtonSize     }, // chat button
+	{ { 527,  91 }, PanelButtonSize     }, // friendly fire button
 	// clang-format on
 };
+
+Rectangle LevelButtonRect = { { 40, -39 }, { 41, 22 } };
+
+int beltItems = 8;
+Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
+Rectangle BeltRect { { 205, 5 }, BeltSize };
+
+Rectangle SpellButtonRect { { 565, 64 }, { 56, 56 } };
+
+Rectangle FlaskTopRect = { { 13, 3 }, { 60, 13 } };
+constexpr Size FlaskBottomSize = { 84, 69 };
+Rectangle FlaskBottomRect = { { 0, 16 }, FlaskBottomSize };
 
 namespace {
 
@@ -146,21 +160,9 @@ OptionalOwnedClxSpriteList pDurIcons;
 OptionalOwnedClxSpriteList multiButtons;
 OptionalOwnedClxSpriteList pPanelButtons;
 
-bool PanelButtons[8];
-int PanelButtonIndex;
-char TalkSave[8][MAX_SEND_STR_LEN];
-uint8_t TalkSaveIndex;
-uint8_t NextTalkSave;
-char TalkMessage[MAX_SEND_STR_LEN];
-bool TalkButtonsDown[3];
-int sgbPlrTalkTbl;
-bool WhisperList[MAX_PLRS];
-
-TextInputCursorState ChatCursor;
-std::optional<TextInputState> ChatInputState;
-
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
+	PanelButtonFirst = PanelButtonCharinfo,
 	PanelButtonQlog,
 	PanelButtonAutomap,
 	PanelButtonMainmenu,
@@ -168,7 +170,23 @@ enum panel_button_id : uint8_t {
 	PanelButtonSpellbook,
 	PanelButtonSendmsg,
 	PanelButtonFriendly,
+	PanelButtonLast = PanelButtonFriendly,
 };
+
+bool PanelButtons[PanelButtonLast + 1];
+int TotalSpButtons = 6;
+int TotalMpButtons = 8;
+char TalkSave[8][MAX_SEND_STR_LEN];
+uint8_t TalkSaveIndex;
+uint8_t NextTalkSave;
+char TalkMessage[MAX_SEND_STR_LEN];
+bool TalkButtonsDown[3];
+int sgbPlrTalkTbl;
+bool WhisperList[MAX_PLRS];
+int PanelPaddingHeight = 16;
+
+TextInputCursorState ChatCursor;
+std::optional<TextInputState> ChatInputState;
 
 /** Maps from panel_button_id to hotkey name. */
 const char *const PanBtnHotKey[8] = { "'c'", "'q'", N_("Tab"), N_("Esc"), "'i'", "'b'", N_("Enter"), nullptr };
@@ -185,21 +203,6 @@ const char *const PanBtnStr[8] = {
 };
 
 /**
- * Draws a section of the empty flask cel on top of the panel to create the illusion
- * of the flask getting empty. This function takes a cel and draws a
- * horizontal stripe of height (max-min) onto the given buffer.
- * @param out Target buffer.
- * @param position Buffer coordinate.
- * @param celBuf Buffer of the empty flask cel.
- * @param y0 Top of the flask cel section to draw.
- * @param y1 Bottom of the flask cel section to draw.
- */
-void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
-{
-	out.BlitFrom(celBuf, MakeSdlRect(0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0), position);
-}
-
-/**
  * Draws the dome of the flask that protrudes above the panel top line.
  * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
  * into the target buffer.
@@ -209,10 +212,9 @@ void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int
  * @param targetPosition Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
+void DrawFlaskAbovePanel(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
-	constexpr int FlaskWidth = 59;
-	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
+	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskTopRect.size.width, h), targetPosition);
 }
 
 /**
@@ -221,18 +223,35 @@ void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, 
  * @param out The display region to draw to
  * @param sourceBuffer A sprite representing the appropriate background/empty flask style
  * @param offset X coordinate offset for where the flask should be drawn
- * @param fillPer How full the flask is (a value from 0 to 80)
+ * @param fillPer How full the flask is (a value from 0 to 81)
  */
 void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	// clamping because this function only draws the top 12% of the flask display
-	int emptyPortion = std::clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
+	int emptyRows = std::clamp(81 - fillPer, 0, FlaskTopRect.size.height);
+	int filledRows = FlaskTopRect.size.height - emptyRows;
 
 	// Draw the empty part of the flask
-	DrawFlask(out, sourceBuffer, { 13, 3 }, GetMainPanel().position + Displacement { offset, -13 }, emptyPortion);
-	if (emptyPortion < 13)
-		// Draw the filled part of the flask
-		DrawFlask(out, *pBtmBuff, { offset, emptyPortion + 3 }, GetMainPanel().position + Displacement { offset, -13 + emptyPortion }, 13 - emptyPortion);
+	DrawFlaskAbovePanel(out, sourceBuffer, FlaskTopRect.position, GetMainPanel().position + Displacement { offset, -FlaskTopRect.size.height }, FlaskTopRect.size.height);
+
+	// Draw the filled part of the flask over the empty part
+	if (filledRows > 0) {
+		DrawFlaskAbovePanel(out, *pBtmBuff, { offset, FlaskTopRect.position.y + emptyRows }, GetMainPanel().position + Displacement { offset, -FlaskTopRect.size.height + emptyRows }, filledRows);
+	}
+}
+
+/**
+ * Draws a section of the empty flask cel on top of the panel to create the illusion
+ * of the flask getting empty. This function takes a cel and draws a
+ * horizontal stripe of height (max-min) onto the given buffer.
+ * @param out Target buffer.
+ * @param position Buffer coordinate.
+ * @param celBuf Buffer of the empty flask cel.
+ * @param y0 Top of the flask cel section to draw.
+ * @param y1 Bottom of the flask cel section to draw.
+ */
+void DrawFlaskOnPanel(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
+{
+	out.BlitFrom(celBuf, MakeSdlRect(0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0), position);
 }
 
 /**
@@ -245,15 +264,10 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
  */
 void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	int filled = std::clamp(fillPer, 0, 69);
+	int filled = std::clamp(fillPer, 0, FlaskBottomSize.height);
 
-	if (filled < 69)
-		DrawFlaskTop(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, 16, 85 - filled);
-
-	// It appears that the panel defaults to having a filled flask and DrawFlaskTop only overlays the appropriate amount of empty space.
-	// This draw might not be necessary?
-	if (filled > 0)
-		DrawPanelBox(out, MakeSdlRect(offset, 85 - filled, 88, filled), GetMainPanel().position + Displacement { offset, 69 - filled });
+	if (filled < FlaskBottomSize.height)
+		DrawFlaskOnPanel(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, FlaskBottomRect.position.y, FlaskBottomRect.position.y + FlaskBottomRect.size.height - filled);
 }
 
 void SetButtonStateDown(int btnId)
@@ -269,7 +283,9 @@ void PrintInfo(const Surface &out)
 		return;
 
 	const int space[] = { 18, 12, 6, 3, 0 };
-	Rectangle infoArea { GetMainPanel().position + InfoBoxTopLeft, InfoBoxSize };
+	Rectangle infoBox = InfoBoxRect;
+
+	infoBox.position = GetPanelPosition(UiPanels::Main, infoBox.position);
 
 	const auto newLineCount = static_cast<int>(c_count(InfoString.str(), '\n'));
 	const int spaceIndex = std::min(4, newLineCount);
@@ -279,11 +295,11 @@ void PrintInfo(const Surface &out)
 	// Adjusting the line height to add spacing between lines
 	// will also add additional space beneath the last line
 	// which throws off the vertical centering
-	infoArea.position.y += spacing / 2;
+	infoBox.position.y += spacing / 2;
 
 	SpeakText(InfoString);
 
-	DrawString(out, InfoString, infoArea,
+	DrawString(out, InfoString, infoBox,
 	    {
 	        .flags = InfoColor | UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::KerningFitSpacing,
 	        .spacing = 2,
@@ -730,7 +746,7 @@ void FocusOnCharInfo()
 	if (stat == -1)
 		return;
 
-	SetCursorPos(ChrBtnsRect[stat].Center());
+	SetCursorPos(CharButtonRect[stat].Center());
 }
 
 void OpenCharPanel()
@@ -849,7 +865,7 @@ void control_update_life_mana()
 void InitControlPan()
 {
 	if (!HeadlessMode) {
-		pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + 16) * (IsChatAvailable() ? 2 : 1));
+		pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + PanelPaddingHeight) * (IsChatAvailable() ? 2 : 1));
 		pManaBuff.emplace(88, 88);
 		pLifeBuff.emplace(88, 88);
 
@@ -857,7 +873,7 @@ void InitControlPan()
 		LoadLargeSpellIcons();
 		{
 			const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\panel8", GetMainPanel().size.width);
-			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, sprite[0]);
+			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + PanelPaddingHeight) - 1 }, sprite[0]);
 		}
 		{
 			const Point bulbsPosition { 0, 87 };
@@ -872,7 +888,7 @@ void InitControlPan()
 		if (!HeadlessMode) {
 			{
 				const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\talkpanl", GetMainPanel().size.width);
-				ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, sprite[0]);
+				ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + PanelPaddingHeight) * 2 - 1 }, sprite[0]);
 			}
 			multiButtons = LoadCel("ctrlpan\\p8but2", 33);
 			talkButtons = LoadCel("ctrlpan\\talkbutt", 61);
@@ -894,10 +910,6 @@ void InitControlPan()
 		pChrButtons = LoadCel("data\\charbut", CharButtonsFrameWidths);
 	}
 	ClearPanBtn();
-	if (!IsChatAvailable())
-		PanelButtonIndex = 6;
-	else
-		PanelButtonIndex = 8;
 	if (!HeadlessMode)
 		pDurIcons = LoadCel("items\\duricons", 32);
 	for (bool &buttonEnabled : chrbtn)
@@ -925,29 +937,34 @@ void InitControlPan()
 
 void DrawCtrlPan(const Surface &out)
 {
-	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + 16, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
+	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + PanelPaddingHeight, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
 	DrawInfoBox(out);
 }
 
 void DrawCtrlBtns(const Surface &out)
 {
 	const Point mainPanelPosition = GetMainPanel().position;
-	for (int i = 0; i < 6; i++) {
+	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
+
+	for (int i = 0; i < TotalSpButtons; i++) {
 		if (!PanelButtons[i]) {
-			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y });
+			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + PanelPaddingHeight, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
 		} else {
-			Point position = mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y + 18 };
-			ClxDraw(out, position, (*pPanelButtons)[i]);
-			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, -18 });
+			Point position = mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y };
+			RenderClxSprite(out, (*pPanelButtons)[i], position);
+			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, 0 });
 		}
 	}
 
-	if (PanelButtonIndex == 8) {
-		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[6] ? 1 : 0]);
+	if (IsChatAvailable()) {
+		RenderClxSprite(out, (*multiButtons)[PanelButtons[PanelButtonSendmsg] ? 1 : 0], mainPanelPosition + Displacement { PanelButtonRect[PanelButtonSendmsg].position.x, PanelButtonRect[PanelButtonSendmsg].position.y });
+
+		Point friendlyButtonPosition = mainPanelPosition + Displacement { PanelButtonRect[PanelButtonFriendly].position.x, PanelButtonRect[PanelButtonFriendly].position.y };
+
 		if (MyPlayer->friendlyMode)
-			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 3 : 2]);
+			RenderClxSprite(out, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 3 : 2], friendlyButtonPosition);
 		else
-			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[7] ? 5 : 4]);
+			RenderClxSprite(out, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 5 : 4], friendlyButtonPosition);
 	}
 }
 
@@ -963,18 +980,25 @@ void DoPanBtn()
 {
 	const Point mainPanelPosition = GetMainPanel().position;
 
-	for (int i = 0; i < PanelButtonIndex; i++) {
-		int x = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
-		int y = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
-		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= x) {
-			if (MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= y) {
-				PanelButtons[i] = true;
-				RedrawComponent(PanelDrawComponent::ControlButtons);
-				panbtndown = true;
-			}
+	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
+
+	for (int i = 0; i < totalButtons; i++) {
+		Rectangle button = PanelButtonRect[i];
+
+		button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+		if (button.contains(MousePosition)) {
+			PanelButtons[i] = true;
+			RedrawComponent(PanelDrawComponent::ControlButtons);
+			panbtndown = true;
 		}
 	}
-	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
+
+	Rectangle spellSelectButton = SpellButtonRect;
+
+	spellSelectButton.position = GetPanelPosition(UiPanels::Main, spellSelectButton.position);
+
+	if (!spselflag && spellSelectButton.contains(MousePosition)) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SpellID::Invalid;
@@ -989,22 +1013,21 @@ void DoPanBtn()
 
 void control_check_btn_press()
 {
-	const Point mainPanelPosition = GetMainPanel().position;
-	int x = PanBtnPos[3].x + mainPanelPosition.x + PanBtnPos[3].w;
-	int y = PanBtnPos[3].y + mainPanelPosition.y + PanBtnPos[3].h;
-	if (MousePosition.x >= PanBtnPos[3].x + mainPanelPosition.x
-	    && MousePosition.x <= x
-	    && MousePosition.y >= PanBtnPos[3].y + mainPanelPosition.y
-	    && MousePosition.y <= y) {
-		SetButtonStateDown(3);
+	Rectangle menuButton = PanelButtonRect[PanelButtonMainmenu];
+
+	menuButton.position = GetPanelPosition(UiPanels::Main, menuButton.position);
+
+	if (menuButton.contains(MousePosition)) {
+		SetButtonStateDown(PanelButtonMainmenu);
+		return;
 	}
-	x = PanBtnPos[6].x + mainPanelPosition.x + PanBtnPos[6].w;
-	y = PanBtnPos[6].y + mainPanelPosition.y + PanBtnPos[6].h;
-	if (MousePosition.x >= PanBtnPos[6].x + mainPanelPosition.x
-	    && MousePosition.x <= x
-	    && MousePosition.y >= PanBtnPos[6].y + mainPanelPosition.y
-	    && MousePosition.y <= y) {
-		SetButtonStateDown(6);
+
+	Rectangle chatButton = PanelButtonRect[PanelButtonSendmsg];
+
+	chatButton.position = GetPanelPosition(UiPanels::Main, chatButton.position);
+
+	if (chatButton.contains(MousePosition)) {
+		SetButtonStateDown(PanelButtonSendmsg);
 	}
 }
 
@@ -1034,11 +1057,15 @@ void CheckPanelInfo()
 {
 	panelflag = false;
 	InfoString = StringOrView {};
-	const Point mainPanelPosition = GetMainPanel().position;
-	for (int i = 0; i < PanelButtonIndex; i++) {
-		int xend = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
-		int yend = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
-		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= yend) {
+
+	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
+
+	for (int i = 0; i < totalButtons; i++) {
+		Rectangle button = PanelButtonRect[i];
+
+		button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+		if (button.contains(MousePosition)) {
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
@@ -1054,7 +1081,12 @@ void CheckPanelInfo()
 			panelflag = true;
 		}
 	}
-	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
+
+	Rectangle spellSelectButton = SpellButtonRect;
+
+	spellSelectButton.position = GetPanelPosition(UiPanels::Main, spellSelectButton.position);
+
+	if (!spselflag && spellSelectButton.contains(MousePosition)) {
 		InfoString = _("Select current spell button");
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
@@ -1087,35 +1119,37 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x && MousePosition.y > 4 + mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y)
+
+	Rectangle belt = BeltRect;
+
+	belt.position = GetPanelPosition(UiPanels::Main, belt.position);
+
+	if (belt.contains(MousePosition))
 		pcursinvitem = CheckInvHLight();
 
-	if (CheckXPBarInfo()) {
+	if (CheckXPBarInfo())
 		panelflag = true;
-	}
 }
 
 void CheckBtnUp()
 {
 	bool gamemenuOff = true;
-	const Point mainPanelPosition = GetMainPanel().position;
 
 	RedrawComponent(PanelDrawComponent::ControlButtons);
 	panbtndown = false;
 
-	for (int i = 0; i < 8; i++) {
-		if (!PanelButtons[i]) {
+	for (int i = PanelButtonFirst; i <= PanelButtonLast; i++) {
+		if (!PanelButtons[i])
 			continue;
-		}
 
 		PanelButtons[i] = false;
 
-		if (MousePosition.x < PanBtnPos[i].x + mainPanelPosition.x
-		    || MousePosition.x > PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w
-		    || MousePosition.y < PanBtnPos[i].y + mainPanelPosition.y
-		    || MousePosition.y > PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h) {
+		Rectangle button = PanelButtonRect[i];
+
+		button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+		if (!button.contains(MousePosition))
 			continue;
-		}
 
 		switch (i) {
 		case PanelButtonCharinfo:
@@ -1188,7 +1222,7 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, InfoBoxSize.width, InfoBoxSize.height }, GetMainPanel().position + InfoBoxTopLeft);
+	DrawPanelBox(out, { InfoBoxRect.position.x, InfoBoxRect.position.y + PanelPaddingHeight, InfoBoxRect.size.width, InfoBoxRect.size.height }, GetMainPanel().position + Displacement { InfoBoxRect.position.x, InfoBoxRect.position.y });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag && pcurs != CURSOR_HOURGLASS) {
 		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
@@ -1245,14 +1279,22 @@ void CheckLvlBtn()
 	}
 
 	const Point mainPanelPosition = GetMainPanel().position;
-	if (!lvlbtndown && MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y)
+	Rectangle button = LevelButtonRect;
+
+	button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+	if (!lvlbtndown && button.contains(MousePosition))
 		lvlbtndown = true;
 }
 
 void ReleaseLvlBtn()
 {
 	const Point mainPanelPosition = GetMainPanel().position;
-	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
+	Rectangle button = LevelButtonRect;
+
+	button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+	if (button.contains(MousePosition)) {
 		OpenCharPanel();
 	}
 	lvlbtndown = false;
@@ -1262,9 +1304,9 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
-		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } },
+		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, LevelButtonRect.position.y - 23 }, { 120, 0 } },
 		    { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter | UiFlags::KerningFitSpacing });
-		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
+		RenderClxSprite(out, (*pChrButtons)[nCel], GetMainPanel().position + Displacement { LevelButtonRect.position.x, LevelButtonRect.position.y });
 	}
 }
 
@@ -1279,7 +1321,7 @@ void CheckChrBtns()
 		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
 			continue;
 		auto buttonId = static_cast<size_t>(attribute);
-		Rectangle button = ChrBtnsRect[buttonId];
+		Rectangle button = CharButtonRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.contains(MousePosition)) {
 			chrbtn[buttonId] = true;
@@ -1297,7 +1339,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			continue;
 
 		chrbtn[buttonId] = false;
-		Rectangle button = ChrBtnsRect[buttonId];
+		Rectangle button = CharButtonRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.contains(MousePosition)) {
 			Player &myPlayer = *MyPlayer;
@@ -1557,7 +1599,7 @@ void control_type_message()
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
-	sgbPlrTalkTbl = GetMainPanel().size.height + 16;
+	sgbPlrTalkTbl = GetMainPanel().size.height + PanelPaddingHeight;
 	RedrawEverything();
 	TalkSaveIndex = NextTalkSave;
 	SDL_StartTextInput();

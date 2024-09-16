@@ -166,7 +166,7 @@ bool InteractsWithCharButton(Point point)
 		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
 			continue;
 		auto buttonId = static_cast<size_t>(attribute);
-		Rectangle button = ChrBtnsRect[buttonId];
+		Rectangle button = CharButtonRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.contains(point)) {
 			return true;

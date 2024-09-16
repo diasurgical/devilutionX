@@ -35,9 +35,7 @@ namespace devilution {
 
 constexpr Size SidePanelSize { 320, 352 };
 
-// Info box displacement of the top-left corner relative to GetMainPanel().position.
-constexpr Displacement InfoBoxTopLeft { 177, 46 };
-constexpr Size InfoBoxSize { 288, 64 };
+constexpr Rectangle InfoBoxRect = { { 177, 46 }, { 288, 64 } };
 
 extern bool dropGoldFlag;
 extern TextInputCursorState GoldDropCursor;
@@ -62,7 +60,7 @@ bool IsLeftPanelOpen();
 bool IsRightPanelOpen();
 extern std::optional<OwnedSurface> pBtmBuff;
 extern OptionalOwnedClxSpriteList pGBoxBuff;
-extern SDL_Rect PanBtnPos[8];
+extern Rectangle PanelButtonRect[8];
 
 void CalculatePanelAreas();
 bool IsChatAvailable();
@@ -123,7 +121,7 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 /**
  * @brief calls on the active player object to update HP/Mana percentage variables
  *
- * This is used to ensure that DrawFlask routines display an accurate representation of the players health/mana
+ * This is used to ensure that DrawFlaskAbovePanel routines display an accurate representation of the players health/mana
  *
  * @see Player::UpdateHitPointPercentage() and Player::UpdateManaPercentage()
  */
@@ -192,6 +190,6 @@ void OpenGoldDrop(int8_t invIndex, int max);
 void CloseGoldDrop();
 int GetGoldDropMax();
 bool HandleGoldDropTextInputEvent(const SDL_Event &event);
-extern Rectangle ChrBtnsRect[4];
+extern Rectangle CharButtonRect[4];
 
 } // namespace devilution
