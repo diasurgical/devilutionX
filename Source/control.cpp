@@ -1309,7 +1309,7 @@ void DrawLevelUpIcon(const Surface &out)
 		int nCel = lvlbtndown ? 2 : 1;
 		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, LevelButtonRect.position.y - 23 }, { 120, 0 } },
 		    { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter | UiFlags::KerningFitSpacing });
-		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
+		RenderClxSprite(out, (*pChrButtons)[nCel], GetMainPanel().position + Displacement { LevelButtonRect.position.x, LevelButtonRect.position.y });
 	}
 }
 
