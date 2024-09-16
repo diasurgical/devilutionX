@@ -174,6 +174,8 @@ enum panel_button_id : uint8_t {
 };
 
 bool PanelButtons[PanelButtonLast + 1];
+int TotalSpButtons = 6;
+int TotalMpButtons = 8;
 char TalkSave[8][MAX_SEND_STR_LEN];
 uint8_t TalkSaveIndex;
 uint8_t NextTalkSave;
@@ -941,6 +943,8 @@ void DrawCtrlPan(const Surface &out)
 void DrawCtrlBtns(const Surface &out)
 {
 	const Point mainPanelPosition = GetMainPanel().position;
+	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
+
 	for (int i = 0; i < 6; i++) {
 		if (!PanelButtons[i]) {
 			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + 16, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
@@ -972,7 +976,7 @@ void DoPanBtn()
 {
 	const Point mainPanelPosition = GetMainPanel().position;
 
-	int totalButtons = IsChatAvailable() ? 8 : 6;
+	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
 
 	for (int i = 0; i < totalButtons; i++) {
 		Rectangle button = PanelButtonRect[i];
@@ -1050,7 +1054,7 @@ void CheckPanelInfo()
 	panelflag = false;
 	InfoString = StringOrView {};
 
-	int totalButtons = IsChatAvailable() ? 8 : 6;
+	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
 
 	for (int i = 0; i < totalButtons; i++) {
 		Rectangle button = PanelButtonRect[i];
