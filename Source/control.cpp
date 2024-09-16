@@ -141,10 +141,15 @@ Rectangle PanelButtonRect[8] = {
 
 int beltItems = 8;
 Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
-Rectangle BeltRect({ 205, 5 }, BeltSize);
+Rectangle BeltRect { { 205, 5 }, BeltSize };
 
 constexpr Size SpellButtonSize { 56, 56 };
-Rectangle SpellButtonRect({ 565, 64 }, SpellButtonSize);
+Rectangle SpellButtonRect { { 565, 64 }, SpellButtonSize };
+
+constexpr Size FlaskTopSize = { 60, 13 };
+Rectangle FlaskTopRect = { { 13, 3 }, FlaskTopSize };
+constexpr Size FlaskBottomSize = { 84, 69 };
+Rectangle FlaskBottomRect = { { 0, 16 }, FlaskBottomSize };
 
 namespace {
 
@@ -195,21 +200,6 @@ const char *const PanBtnStr[8] = {
 };
 
 /**
- * Draws a section of the empty flask cel on top of the panel to create the illusion
- * of the flask getting empty. This function takes a cel and draws a
- * horizontal stripe of height (max-min) onto the given buffer.
- * @param out Target buffer.
- * @param position Buffer coordinate.
- * @param celBuf Buffer of the empty flask cel.
- * @param y0 Top of the flask cel section to draw.
- * @param y1 Bottom of the flask cel section to draw.
- */
-void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
-{
-	out.BlitFrom(celBuf, MakeSdlRect(0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0), position);
-}
-
-/**
  * Draws the dome of the flask that protrudes above the panel top line.
  * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
  * into the target buffer.
@@ -219,10 +209,9 @@ void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int
  * @param targetPosition Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
+void DrawFlaskAbovePanel(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
-	constexpr int FlaskWidth = 59;
-	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
+	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskTopRect.size.width, h), targetPosition);
 }
 
 /**
@@ -231,18 +220,35 @@ void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, 
  * @param out The display region to draw to
  * @param sourceBuffer A sprite representing the appropriate background/empty flask style
  * @param offset X coordinate offset for where the flask should be drawn
- * @param fillPer How full the flask is (a value from 0 to 80)
+ * @param fillPer How full the flask is (a value from 0 to 81)
  */
 void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	// clamping because this function only draws the top 12% of the flask display
-	int emptyPortion = std::clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
+	int emptyRows = std::clamp(81 - fillPer, 0, FlaskTopRect.size.height);
+	int filledRows = FlaskTopRect.size.height - emptyRows;
 
 	// Draw the empty part of the flask
-	DrawFlask(out, sourceBuffer, { 13, 3 }, GetMainPanel().position + Displacement { offset, -13 }, emptyPortion);
-	if (emptyPortion < 13)
-		// Draw the filled part of the flask
-		DrawFlask(out, *pBtmBuff, { offset, emptyPortion + 3 }, GetMainPanel().position + Displacement { offset, -13 + emptyPortion }, 13 - emptyPortion);
+	DrawFlaskAbovePanel(out, sourceBuffer, FlaskTopRect.position, GetMainPanel().position + Displacement { offset, -FlaskTopRect.size.height }, FlaskTopRect.size.height);
+
+	// Draw the filled part of the flask over the empty part
+	if (filledRows > 0) {
+		DrawFlaskAbovePanel(out, *pBtmBuff, { offset, FlaskTopRect.position.y + emptyRows }, GetMainPanel().position + Displacement { offset, -FlaskTopRect.size.height + emptyRows }, filledRows);
+	}
+}
+
+/**
+ * Draws a section of the empty flask cel on top of the panel to create the illusion
+ * of the flask getting empty. This function takes a cel and draws a
+ * horizontal stripe of height (max-min) onto the given buffer.
+ * @param out Target buffer.
+ * @param position Buffer coordinate.
+ * @param celBuf Buffer of the empty flask cel.
+ * @param y0 Top of the flask cel section to draw.
+ * @param y1 Bottom of the flask cel section to draw.
+ */
+void DrawFlaskOnPanel(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
+{
+	out.BlitFrom(celBuf, MakeSdlRect(0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0), position);
 }
 
 /**
@@ -255,15 +261,10 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
  */
 void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	int filled = std::clamp(fillPer, 0, 69);
+	int filled = std::clamp(fillPer, 0, FlaskBottomSize.height);
 
-	if (filled < 69)
-		DrawFlaskTop(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, 16, 85 - filled);
-
-	// It appears that the panel defaults to having a filled flask and DrawFlaskTop only overlays the appropriate amount of empty space.
-	// This draw might not be necessary?
-	if (filled > 0)
-		DrawPanelBox(out, MakeSdlRect(offset, 85 - filled, 88, filled), GetMainPanel().position + Displacement { offset, 69 - filled });
+	if (filled < FlaskBottomSize.height)
+		DrawFlaskOnPanel(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, FlaskBottomRect.position.y, FlaskBottomRect.position.y + FlaskBottomRect.size.height - filled);
 }
 
 void SetButtonStateDown(int btnId)

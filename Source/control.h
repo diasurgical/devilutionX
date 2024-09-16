@@ -121,7 +121,7 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 /**
  * @brief calls on the active player object to update HP/Mana percentage variables
  *
- * This is used to ensure that DrawFlask routines display an accurate representation of the players health/mana
+ * This is used to ensure that DrawFlaskAbovePanel routines display an accurate representation of the players health/mana
  *
  * @see Player::UpdateHitPointPercentage() and Player::UpdateManaPercentage()
  */
