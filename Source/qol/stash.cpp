@@ -586,7 +586,7 @@ void StartGoldWithdraw()
 {
 	CloseGoldDrop();
 
-	if (talkflag)
+	if (ChatFlag)
 		control_reset_talk();
 
 	Point start = GetPanelPosition(UiPanels::Stash, { 67, 128 });
@@ -644,7 +644,7 @@ void DrawGoldWithdraw(const Surface &out)
 
 	const int dialogX = 30;
 
-	ClxDraw(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), (*pGBoxBuff)[0]);
+	ClxDraw(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), (*GoldBoxBuffer)[0]);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);

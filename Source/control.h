@@ -37,30 +37,30 @@ constexpr Size SidePanelSize { 320, 352 };
 
 constexpr Rectangle InfoBoxRect = { { 177, 46 }, { 288, 64 } };
 
-extern bool dropGoldFlag;
+extern bool DropGoldFlag;
 extern TextInputCursorState GoldDropCursor;
 extern char GoldDropText[21];
 
-extern bool chrbtn[4];
-extern bool lvlbtndown;
-extern bool chrbtnactive;
+extern bool CharPanelButton[4];
+extern bool LevelButtonDown;
+extern bool CharPanelButtonActive;
 extern UiFlags InfoColor;
-extern int sbooktab;
-extern bool talkflag;
-extern bool sbookflag;
-extern bool chrflag;
+extern int SpellbookTab;
+extern bool ChatFlag;
+extern bool SpellbookFlag;
+extern bool CharFlag;
 extern StringOrView InfoString;
-extern bool panelflag;
-extern bool panbtndown;
-extern bool spselflag;
+extern bool MainPanelFlag;
+extern bool MainPanelButtonDown;
+extern bool SpellSelectFlag;
 const Rectangle &GetMainPanel();
 const Rectangle &GetLeftPanel();
 const Rectangle &GetRightPanel();
 bool IsLeftPanelOpen();
 bool IsRightPanelOpen();
-extern std::optional<OwnedSurface> pBtmBuff;
-extern OptionalOwnedClxSpriteList pGBoxBuff;
-extern Rectangle PanelButtonRect[8];
+extern std::optional<OwnedSurface> BottomBuffer;
+extern OptionalOwnedClxSpriteList GoldBoxBuffer;
+extern Rectangle MainPanelButtonRect[8];
 
 void CalculatePanelAreas();
 bool IsChatAvailable();
@@ -82,8 +82,8 @@ inline bool CanPanelsCoverView()
 	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SidePanelSize.height + mainPanel.size.height;
 }
 
-void AddPanelString(std::string_view str);
-void AddPanelString(std::string &&str);
+void AddInfoBoxString(std::string_view str);
+void AddInfoBoxString(std::string &&str);
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
 
@@ -125,28 +125,28 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
  *
  * @see Player::UpdateHitPointPercentage() and Player::UpdateManaPercentage()
  */
-void control_update_life_mana();
+void UpdateLifeManaPercent();
 
-void InitControlPan();
-void DrawCtrlPan(const Surface &out);
+void InitMainPanel();
+void DrawMainPanel(const Surface &out);
 
 /**
  * Draws the control panel buttons in their current state. If the button is in the default
  * state draw it from the panel cel(extract its sub-rect). Else draw it from the buttons cel.
  */
-void DrawCtrlBtns(const Surface &out);
+void DrawMainMainPanelButtons(const Surface &out);
 
 /**
  * Clears panel button flags.
  */
-void ClearPanBtn();
+void ResetMainMainPanelButtons();
 
 /**
  * Checks if the mouse cursor is within any of the panel buttons and flag it if so.
  */
-void DoPanBtn();
+void CheckMainPanelButton();
 
-void control_check_btn_press();
+void CheckMainPanelButtonDead();
 void DoAutoMap();
 void CycleAutomapType();
 
@@ -160,16 +160,16 @@ void CheckPanelInfo();
  * Check if the mouse is within a control panel button that's flagged.
  * Takes appropriate action if so.
  */
-void CheckBtnUp();
+void CheckMainPanelButtonUp();
 void FreeControlPan();
 
 /**
  * Sets a string to be drawn in the info box and then draws it.
  */
 void DrawInfoBox(const Surface &out);
-void CheckLvlBtn();
-void ReleaseLvlBtn();
-void DrawLevelUpIcon(const Surface &out);
+void CheckLevelButton();
+void CheckLevelButtonUp();
+void DrawLevelButton(const Surface &out);
 void CheckChrBtns();
 void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const Surface &out);
@@ -177,7 +177,7 @@ void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
 void DrawGoldSplit(const Surface &out);
 void control_drop_gold(SDL_Keycode vkey);
-void DrawTalkPan(const Surface &out);
+void DrawChatBox(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
 void control_type_message();
@@ -190,6 +190,6 @@ void OpenGoldDrop(int8_t invIndex, int max);
 void CloseGoldDrop();
 int GetGoldDropMax();
 bool HandleGoldDropTextInputEvent(const SDL_Event &event);
-extern Rectangle CharButtonRect[4];
+extern Rectangle CharPanelButtonRect[4];
 
 } // namespace devilution

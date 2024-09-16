@@ -2423,8 +2423,8 @@ void AddIdentify(Missile &missile, AddMissileParameter & /*parameter*/)
 
 	missile._miDelFlag = true;
 	if (&player == MyPlayer) {
-		if (sbookflag)
-			sbookflag = false;
+		if (SpellbookFlag)
+			SpellbookFlag = false;
 		if (!invflag) {
 			invflag = true;
 			if (ControlMode != ControlTypes::KeyboardAndMouse)
@@ -2514,8 +2514,8 @@ void AddItemRepair(Missile &missile, AddMissileParameter & /*parameter*/)
 
 	missile._miDelFlag = true;
 	if (&player == MyPlayer) {
-		if (sbookflag)
-			sbookflag = false;
+		if (SpellbookFlag)
+			SpellbookFlag = false;
 		if (!invflag) {
 			invflag = true;
 			if (ControlMode != ControlTypes::KeyboardAndMouse)
@@ -2531,8 +2531,8 @@ void AddStaffRecharge(Missile &missile, AddMissileParameter & /*parameter*/)
 
 	missile._miDelFlag = true;
 	if (&player == MyPlayer) {
-		if (sbookflag)
-			sbookflag = false;
+		if (SpellbookFlag)
+			SpellbookFlag = false;
 		if (!invflag) {
 			invflag = true;
 			if (ControlMode != ControlTypes::KeyboardAndMouse)
