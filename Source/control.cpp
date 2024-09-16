@@ -183,6 +183,7 @@ char TalkMessage[MAX_SEND_STR_LEN];
 bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
+int PanelPaddingHeight = 16;
 
 TextInputCursorState ChatCursor;
 std::optional<TextInputState> ChatInputState;
@@ -864,7 +865,7 @@ void control_update_life_mana()
 void InitControlPan()
 {
 	if (!HeadlessMode) {
-		pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + 16) * (IsChatAvailable() ? 2 : 1));
+		pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + PanelPaddingHeight) * (IsChatAvailable() ? 2 : 1));
 		pManaBuff.emplace(88, 88);
 		pLifeBuff.emplace(88, 88);
 
@@ -872,7 +873,7 @@ void InitControlPan()
 		LoadLargeSpellIcons();
 		{
 			const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\panel8", GetMainPanel().size.width);
-			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, sprite[0]);
+			ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + PanelPaddingHeight) - 1 }, sprite[0]);
 		}
 		{
 			const Point bulbsPosition { 0, 87 };
@@ -887,7 +888,7 @@ void InitControlPan()
 		if (!HeadlessMode) {
 			{
 				const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\talkpanl", GetMainPanel().size.width);
-				ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, sprite[0]);
+				ClxDraw(*pBtmBuff, { 0, (GetMainPanel().size.height + PanelPaddingHeight) * 2 - 1 }, sprite[0]);
 			}
 			multiButtons = LoadCel("ctrlpan\\p8but2", 33);
 			talkButtons = LoadCel("ctrlpan\\talkbutt", 61);
@@ -936,7 +937,7 @@ void InitControlPan()
 
 void DrawCtrlPan(const Surface &out)
 {
-	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + 16, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
+	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + PanelPaddingHeight, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
 	DrawInfoBox(out);
 }
 
@@ -947,7 +948,7 @@ void DrawCtrlBtns(const Surface &out)
 
 	for (int i = 0; i < 6; i++) {
 		if (!PanelButtons[i]) {
-			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + 16, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
+			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + PanelPaddingHeight, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
 		} else {
 			Point position = mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y };
 			RenderClxSprite(out, (*pPanelButtons)[i], position);
@@ -1218,7 +1219,7 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, InfoBoxRect.size.width, InfoBoxRect.size.height }, GetMainPanel().position + Displacement { InfoBoxRect.position.x, InfoBoxRect.position.y });
+	DrawPanelBox(out, { InfoBoxRect.position.x, InfoBoxRect.position.y + PanelPaddingHeight, InfoBoxRect.size.width, InfoBoxRect.size.height }, GetMainPanel().position + Displacement { InfoBoxRect.position.x, InfoBoxRect.position.y });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !spselflag && pcurs != CURSOR_HOURGLASS) {
 		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
@@ -1587,7 +1588,7 @@ void control_type_message()
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
-	sgbPlrTalkTbl = GetMainPanel().size.height + 16;
+	sgbPlrTalkTbl = GetMainPanel().size.height + PanelPaddingHeight;
 	RedrawEverything();
 	TalkSaveIndex = NextTalkSave;
 	SDL_StartTextInput();
