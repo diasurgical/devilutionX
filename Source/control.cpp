@@ -145,11 +145,9 @@ int beltItems = 8;
 Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
 Rectangle BeltRect { { 205, 5 }, BeltSize };
 
-constexpr Size SpellButtonSize { 56, 56 };
-Rectangle SpellButtonRect { { 565, 64 }, SpellButtonSize };
+Rectangle SpellButtonRect { { 565, 64 }, { 56, 56 } };
 
-constexpr Size FlaskTopSize = { 60, 13 };
-Rectangle FlaskTopRect = { { 13, 3 }, FlaskTopSize };
+Rectangle FlaskTopRect = { { 13, 3 }, { 60, 13 } };
 constexpr Size FlaskBottomSize = { 84, 69 };
 Rectangle FlaskBottomRect = { { 0, 16 }, FlaskBottomSize };
 
