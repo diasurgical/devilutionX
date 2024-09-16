@@ -139,6 +139,9 @@ Rectangle PanelButtonRect[8] = {
 	// clang-format on
 };
 
+constexpr Size LevelButtonSize { 41, 22 };
+Rectangle LevelButtonRect = { { 40, -39 }, LevelButtonSize };
+
 int beltItems = 8;
 Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
 Rectangle BeltRect { { 205, 5 }, BeltSize };
@@ -946,7 +949,7 @@ void DrawCtrlBtns(const Surface &out)
 	const Point mainPanelPosition = GetMainPanel().position;
 	int totalButtons = IsChatAvailable() ? TotalMpButtons : TotalSpButtons;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < TotalSpButtons; i++) {
 		if (!PanelButtons[i]) {
 			DrawPanelBox(out, MakeSdlRect(PanelButtonRect[i].position.x, PanelButtonRect[i].position.y + PanelPaddingHeight, PanelButtonRect[i].size.width, PanelButtonRect[i].size.height + 1), mainPanelPosition + Displacement { PanelButtonRect[i].position.x, PanelButtonRect[i].position.y });
 		} else {
@@ -957,11 +960,14 @@ void DrawCtrlBtns(const Surface &out)
 	}
 
 	if (IsChatAvailable()) {
-		ClxDraw(out, mainPanelPosition + Displacement { 87, 122 }, (*multiButtons)[PanelButtons[PanelButtonSendmsg] ? 1 : 0]);
+		RenderClxSprite(out, (*multiButtons)[PanelButtons[PanelButtonSendmsg] ? 1 : 0], mainPanelPosition + Displacement { PanelButtonRect[PanelButtonSendmsg].position.x, PanelButtonRect[PanelButtonSendmsg].position.y });
+
+		Point friendlyButtonPosition = mainPanelPosition + Displacement { PanelButtonRect[PanelButtonFriendly].position.x, PanelButtonRect[PanelButtonFriendly].position.y };
+
 		if (MyPlayer->friendlyMode)
-			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 3 : 2]);
+			RenderClxSprite(out, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 3 : 2], friendlyButtonPosition);
 		else
-			ClxDraw(out, mainPanelPosition + Displacement { 527, 122 }, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 5 : 4]);
+			RenderClxSprite(out, (*multiButtons)[PanelButtons[PanelButtonFriendly] ? 5 : 4], friendlyButtonPosition);
 	}
 }
 
@@ -1276,14 +1282,22 @@ void CheckLvlBtn()
 	}
 
 	const Point mainPanelPosition = GetMainPanel().position;
-	if (!lvlbtndown && MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y)
+	Rectangle button = LevelButtonRect;
+
+	button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+	if (!lvlbtndown && button.contains(MousePosition))
 		lvlbtndown = true;
 }
 
 void ReleaseLvlBtn()
 {
 	const Point mainPanelPosition = GetMainPanel().position;
-	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
+	Rectangle button = LevelButtonRect;
+
+	button.position = GetPanelPosition(UiPanels::Main, button.position);
+
+	if (button.contains(MousePosition)) {
 		OpenCharPanel();
 	}
 	lvlbtndown = false;
@@ -1293,7 +1307,7 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
-		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } },
+		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, LevelButtonRect.position.y - 23 }, { 120, 0 } },
 		    { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter | UiFlags::KerningFitSpacing });
 		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
 	}
