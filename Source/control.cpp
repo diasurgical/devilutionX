@@ -139,8 +139,7 @@ Rectangle PanelButtonRect[8] = {
 	// clang-format on
 };
 
-constexpr Size LevelButtonSize { 41, 22 };
-Rectangle LevelButtonRect = { { 40, -39 }, LevelButtonSize };
+Rectangle LevelButtonRect = { { 40, -39 }, { 41, 22 } };
 
 int beltItems = 8;
 Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
