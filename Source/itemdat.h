@@ -618,8 +618,8 @@ use_enum_as_flags(AffixItemType);
 
 struct ItemPower {
 	item_effect_type type = IPL_INVALID;
-	int param1 = 0;
-	int param2 = 0;
+	int16_t param1 = 0;
+	int16_t param2 = 0;
 };
 
 struct PLStruct {
