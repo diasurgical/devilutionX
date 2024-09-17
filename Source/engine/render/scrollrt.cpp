@@ -1670,7 +1670,7 @@ void DrawAndBlit()
 		DrawSpell(out);
 	}
 	if (drawControlButtons) {
-		DrawMainMainPanelButtons(out);
+		DrawMainPanelButtons(out);
 	}
 	if (drawBelt) {
 		DrawInvBelt(out);

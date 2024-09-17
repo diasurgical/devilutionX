@@ -134,12 +134,12 @@ void DrawMainPanel(const Surface &out);
  * Draws the control panel buttons in their current state. If the button is in the default
  * state draw it from the panel cel(extract its sub-rect). Else draw it from the buttons cel.
  */
-void DrawMainMainPanelButtons(const Surface &out);
+void DrawMainPanelButtons(const Surface &out);
 
 /**
  * Clears panel button flags.
  */
-void ResetMainMainPanelButtons();
+void ResetMainPanelButtons();
 
 /**
  * Checks if the mouse cursor is within any of the panel buttons and flag it if so.

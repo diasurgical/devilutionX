@@ -923,7 +923,7 @@ void InitMainPanel()
 		static const uint16_t CharButtonsFrameWidths[9] { 95, 41, 41, 41, 41, 41, 41, 41, 41 };
 		pChrButtons = LoadCel("data\\charbut", CharButtonsFrameWidths);
 	}
-	ResetMainMainPanelButtons();
+	ResetMainPanelButtons();
 	if (!HeadlessMode)
 		pDurIcons = LoadCel("items\\duricons", 32);
 	for (bool &buttonEnabled : CharPanelButton)
@@ -955,7 +955,7 @@ void DrawMainPanel(const Surface &out)
 	DrawInfoBox(out);
 }
 
-void DrawMainMainPanelButtons(const Surface &out)
+void DrawMainPanelButtons(const Surface &out)
 {
 	const Point mainPanelPosition = GetMainPanel().position;
 	int totalButtons = IsChatAvailable() ? TotalMpMainPanelButtons : TotalSpMainPanelButtons;
@@ -982,7 +982,7 @@ void DrawMainMainPanelButtons(const Surface &out)
 	}
 }
 
-void ResetMainMainPanelButtons()
+void ResetMainPanelButtons()
 {
 	for (bool &panelButton : MainPanelButtons)
 		panelButton = false;

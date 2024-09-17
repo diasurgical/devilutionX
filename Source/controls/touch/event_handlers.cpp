@@ -93,7 +93,7 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 	if (!gbRunGame || !MyPlayer->HoldItem.isEmpty())
 		return;
 
-	ResetMainMainPanelButtons();
+	ResetMainPanelButtons();
 
 	if (event.type != SDL_FINGERUP) {
 		SpellSelectFlag = true;
