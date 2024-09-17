@@ -136,6 +136,162 @@ public:
 	}
 };
 
+// Based on fmix32 implementation from MurmurHash3 created by Austin Appleby in 2008
+// https://github.com/aappleby/smhasher/blob/61a0530f28277f2e850bfc39600ce61d02b518de/src/MurmurHash3.cpp#L68
+// and adapted from https://prng.di.unimi.it/splitmix64.c written in 2015 by Sebastiano Vigna
+//
+// See also:
+//  Guy L. Steele, Doug Lea, and Christine H. Flood. 2014.
+//  Fast splittable pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
+//  https://doi.org/10.1145/2714064.2660195
+class SplitMix32 {
+	uint32_t state;
+
+public:
+	SplitMix32(uint32_t state)
+	    : state(state)
+	{
+	}
+
+	uint32_t next()
+	{
+		uint32_t z = (state += 0x9e3779b9);
+		z = (z ^ (z >> 16)) * 0x85ebca6b;
+		z = (z ^ (z >> 13)) * 0xc2b2ae35;
+		return z ^ (z >> 16);
+	}
+
+	void generate(uint32_t *begin, const uint32_t *end)
+	{
+		while (begin != end) {
+			*begin = next();
+			++begin;
+		}
+	}
+};
+
+// Adapted from https://prng.di.unimi.it/splitmix64.c written in 2015 by Sebastiano Vigna
+//
+// See also:
+//  Guy L. Steele, Doug Lea, and Christine H. Flood. 2014.
+//  Fast splittable pseudorandom number generators. SIGPLAN Not. 49, 10 (October 2014), 453–472.
+//  https://doi.org/10.1145/2714064.2660195
+class SplitMix64 {
+	uint64_t state;
+
+public:
+	SplitMix64(uint64_t state)
+	    : state(state)
+	{
+	}
+
+	uint64_t next()
+	{
+		uint64_t z = (state += 0x9e3779b97f4a7c15);
+		z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
+		z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
+		return z ^ (z >> 31);
+	}
+
+	void generate(uint64_t *begin, const uint64_t *end)
+	{
+		while (begin != end) {
+			*begin = next();
+			++begin;
+		}
+	}
+};
+
+/** Adapted from https://prng.di.unimi.it/xoshiro128plusplus.c written in 2019 by David Blackman and Sebastiano Vigna */
+class xoshiro128plusplus {
+public:
+	typedef uint32_t state[4];
+
+	xoshiro128plusplus() { seed(); }
+	xoshiro128plusplus(const state &s) { copy(this->s, s); }
+	xoshiro128plusplus(uint64_t initialSeed) { seed(initialSeed); }
+	xoshiro128plusplus(uint32_t initialSeed) { seed(initialSeed); }
+
+	uint32_t next();
+
+	/* This is the jump function for the generator. It is equivalent
+	   to 2^64 calls to next(); it can be used to generate 2^64
+	   non-overlapping subsequences for parallel computations. */
+	void jump()
+	{
+		static constexpr uint32_t JUMP[] = { 0x8764000b, 0xf542d2d3, 0x6fa035c3, 0x77f2db5b };
+
+		uint32_t s0 = 0;
+		uint32_t s1 = 0;
+		uint32_t s2 = 0;
+		uint32_t s3 = 0;
+		for (const uint32_t entry : JUMP)
+			for (int b = 0; b < 32; b++) {
+				if (entry & UINT32_C(1) << b) {
+					s0 ^= s[0];
+					s1 ^= s[1];
+					s2 ^= s[2];
+					s3 ^= s[3];
+				}
+				next();
+			}
+
+		s[0] = s0;
+		s[1] = s1;
+		s[2] = s2;
+		s[3] = s3;
+	}
+
+	void save(state &s) const
+	{
+		copy(s, this->s);
+	}
+
+private:
+	state s;
+
+	void seed(uint64_t value)
+	{
+		uint64_t seeds[2];
+		SplitMix64 seedSequence { value };
+		seedSequence.generate(seeds, seeds + 2);
+
+		s[0] = static_cast<uint32_t>(seeds[0] >> 32);
+		s[1] = static_cast<uint32_t>(seeds[0]);
+		s[2] = static_cast<uint32_t>(seeds[1] >> 32);
+		s[3] = static_cast<uint32_t>(seeds[1]);
+	}
+
+	void seed(uint32_t value)
+	{
+		SplitMix32 seedSequence { value };
+		seedSequence.generate(s, s + 4);
+	}
+
+	void seed()
+	{
+		seed(timeSeed());
+
+		static std::random_device rd;
+		std::uniform_int_distribution<uint32_t> dist;
+		for (uint32_t &cell : s)
+			cell ^= dist(rd);
+	}
+
+	static uint64_t timeSeed();
+	static void copy(state &dst, const state &src);
+};
+
+/**
+ * @brief Returns a copy of the global seed generator and fast-forwards the global seed generator to avoid collisions
+ */
+xoshiro128plusplus ReserveSeedSequence();
+
+/**
+ * @brief Advances the global seed generator state and returns the new value
+ */
+uint32_t GenerateSeed();
+
 /**
  * @brief Set the state of the RandomNumberEngine used by the base game to the specific seed
  * @param seed New engine state
@@ -163,7 +319,7 @@ void DiscardRandomValues(unsigned count);
 /**
  * @brief Advances the global RandomNumberEngine state and returns the new value
  */
-uint32_t GenerateSeed();
+uint32_t GenerateRandomNumber();
 
 /**
  * @brief Generates a random non-negative integer (most of the time) using the vanilla RNG

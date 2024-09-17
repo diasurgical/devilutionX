@@ -1839,7 +1839,7 @@ void SaveLevel(SaveWriter &saveWriter, LevelConversionData *levelConversionData)
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
 	if (leveltype == DTYPE_TOWN)
-		DungeonSeeds[0] = AdvanceRndSeed();
+		DungeonSeeds[0] = GenerateSeed();
 
 	char szName[MaxMpqPathSize];
 	GetTempLevelNames(szName);

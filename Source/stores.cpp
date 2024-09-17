@@ -2132,8 +2132,6 @@ void SetupTownStores()
 			if (myPlayer._pLvlVisited[i])
 				l = i;
 		}
-	} else {
-		SetRndSeed(DungeonSeeds[currlevel] * SDL_GetTicks());
 	}
 
 	l = std::clamp(l + 2, 6, 16);
