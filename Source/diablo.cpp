@@ -329,7 +329,7 @@ void LeftMouseDown(uint16_t modState)
 	if (gmenu_left_mouse(true))
 		return;
 
-	if (control_check_talk_btn())
+	if (CheckMuteButton())
 		return;
 
 	if (sgnTimeoutCurs != CURSOR_NONE)
@@ -407,7 +407,7 @@ void LeftMouseDown(uint16_t modState)
 void LeftMouseUp(uint16_t modState)
 {
 	gmenu_left_mouse(false);
-	control_release_talk_btn();
+	CheckMuteButtonUp();
 	if (MainPanelButtonDown)
 		CheckMainPanelButtonUp();
 	CheckStashButtonRelease(MousePosition);
@@ -490,7 +490,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	if (vkey == SDLK_UNKNOWN)
 		return;
 
-	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
+	if (gmenu_presskeys(vkey) || CheckKeypress(vkey)) {
 		return;
 	}
 
@@ -504,7 +504,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 				sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 				SaveOptions();
 			} else {
-				control_type_message();
+				TypeChatMessage();
 			}
 		}
 		if (vkey != SDLK_ESCAPE) {
@@ -581,7 +581,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		} else if (QuestLogIsOpen) {
 			QuestlogEnter();
 		} else {
-			control_type_message();
+			TypeChatMessage();
 		}
 		return;
 	case SDLK_UP:
@@ -718,7 +718,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 	}
 #endif
 
-	if (IsTalkActive() && HandleTalkTextInputEvent(event)) {
+	if (IsChatActive() && HandleTalkTextInputEvent(event)) {
 		return;
 	}
 	if (DropGoldFlag && HandleGoldDropTextInputEvent(event)) {
@@ -2789,7 +2789,7 @@ bool PressEscKey()
 	}
 
 	if (ChatFlag) {
-		control_reset_talk();
+		ResetChat();
 		rv = true;
 	}
 

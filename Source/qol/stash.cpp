@@ -587,7 +587,7 @@ void StartGoldWithdraw()
 	CloseGoldDrop();
 
 	if (ChatFlag)
-		control_reset_talk();
+		ResetChat();
 
 	Point start = GetPanelPosition(UiPanels::Stash, { 67, 128 });
 	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);

@@ -141,14 +141,18 @@ Rectangle MainPanelButtonRect[8] = {
 
 Rectangle LevelButtonRect = { { 40, -39 }, { 41, 22 } };
 
-int beltItems = 8;
-Size BeltSize { (INV_SLOT_SIZE_PX + 1) * beltItems, INV_SLOT_SIZE_PX };
+int BeltItems = 8;
+Size BeltSize { (INV_SLOT_SIZE_PX + 1) * BeltItems, INV_SLOT_SIZE_PX };
 Rectangle BeltRect { { 205, 5 }, BeltSize };
 
 Rectangle SpellButtonRect { { 565, 64 }, { 56, 56 } };
 
-Rectangle FlaskTopRect = { { 13, 3 }, { 60, 13 } };
-Rectangle FlaskBottomRect = { { 0, 16 }, { 84, 69 } };
+Rectangle FlaskTopRect { { 13, 3 }, { 60, 13 } };
+Rectangle FlaskBottomRect { { 0, 16 }, { 84, 69 } };
+
+int MuteButtons = 3;
+int MuteButtonPadding = 2;
+Rectangle MuteButtonRect { { 172, 69 }, { 61, 16 } };
 
 namespace {
 
@@ -274,6 +278,12 @@ void SetMainPanelButtonDown(int btnId)
 	MainPanelButtons[btnId] = true;
 	RedrawComponent(PanelDrawComponent::ControlButtons);
 	MainPanelButtonDown = true;
+}
+
+void SetMainPanelButtonUp()
+{
+	RedrawComponent(PanelDrawComponent::ControlButtons);
+	MainPanelButtonDown = false;
 }
 
 void SetPanelObjectPosition(UiPanels panel, Rectangle &button)
@@ -637,7 +647,7 @@ void ControlPressEnter()
 		TalkMessage[0] = '\0';
 		TalkSaveIndex = NextTalkSave;
 	}
-	control_reset_talk();
+	ResetChat();
 }
 
 void ControlUpDown(int v)
@@ -976,8 +986,7 @@ void ResetMainMainPanelButtons()
 {
 	for (bool &panelButton : MainPanelButtons)
 		panelButton = false;
-	RedrawComponent(PanelDrawComponent::ControlButtons);
-	MainPanelButtonDown = false;
+	SetMainPanelButtonUp();
 }
 
 void CheckMainPanelButton()
@@ -1137,8 +1146,7 @@ void CheckMainPanelButtonUp()
 {
 	bool gamemenuOff = true;
 
-	RedrawComponent(PanelDrawComponent::ControlButtons);
-	MainPanelButtonDown = false;
+	SetMainPanelButtonUp();
 
 	for (int i = PanelButtonFirst; i <= PanelButtonLast; i++) {
 		if (!MainPanelButtons[i])
@@ -1188,9 +1196,9 @@ void CheckMainPanelButtonUp()
 			break;
 		case PanelButtonSendmsg:
 			if (ChatFlag)
-				control_reset_talk();
+				ResetChat();
 			else
-				control_type_message();
+				TypeChatMessage();
 			break;
 		case PanelButtonFriendly:
 			// Toggle friendly Mode
@@ -1536,32 +1544,32 @@ void DrawChatBox(const Surface &out)
 	}
 }
 
-bool control_check_talk_btn()
+bool CheckMuteButton()
 {
 	if (!ChatFlag)
 		return false;
 
-	const Point mainPanelPosition = GetMainPanel().position;
+	Rectangle buttons = MuteButtonRect;
 
-	if (MousePosition.x < 172 + mainPanelPosition.x)
-		return false;
-	if (MousePosition.y < 69 + mainPanelPosition.y)
-		return false;
-	if (MousePosition.x > 233 + mainPanelPosition.x)
-		return false;
-	if (MousePosition.y > 123 + mainPanelPosition.y)
+	SetPanelObjectPosition(UiPanels::Main, buttons);
+
+	buttons.size.height = (MuteButtons * buttons.size.height) + ((MuteButtons - 1) * MuteButtonPadding);
+
+	if (!buttons.contains(MousePosition))
 		return false;
 
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
 
+	const Point mainPanelPosition = GetMainPanel().position;
+
 	TalkButtonsDown[(MousePosition.y - (69 + mainPanelPosition.y)) / 18] = true;
 
 	return true;
 }
 
-void control_release_talk_btn()
+void CheckMuteButtonUp()
 {
 	if (!ChatFlag)
 		return;
@@ -1569,12 +1577,18 @@ void control_release_talk_btn()
 	for (bool &talkButtonDown : TalkButtonsDown)
 		talkButtonDown = false;
 
-	const Point mainPanelPosition = GetMainPanel().position;
+	Rectangle buttons = MuteButtonRect;
 
-	if (MousePosition.x < 172 + mainPanelPosition.x || MousePosition.y < 69 + mainPanelPosition.y || MousePosition.x > 233 + mainPanelPosition.x || MousePosition.y > 123 + mainPanelPosition.y)
+	SetPanelObjectPosition(UiPanels::Main, buttons);
+
+	buttons.size.height = (MuteButtons * buttons.size.height) + ((MuteButtons - 1) * MuteButtonPadding);
+
+	if (!buttons.contains(MousePosition))
 		return;
 
-	int off = (MousePosition.y - (69 + mainPanelPosition.y)) / 18;
+	const Point mainPanelPosition = GetMainPanel().position;
+
+	int off = (MousePosition.y - buttons.position.y) / (MuteButtonRect.size.height + MuteButtonPadding);
 
 	size_t playerId = 0;
 	for (; playerId < Players.size() && off != -1; ++playerId) {
@@ -1585,7 +1599,7 @@ void control_release_talk_btn()
 		WhisperList[playerId - 1] = !WhisperList[playerId - 1];
 }
 
-void control_type_message()
+void TypeChatMessage()
 {
 	if (!IsChatAvailable())
 		return;
@@ -1607,7 +1621,7 @@ void control_type_message()
 	SDL_StartTextInput();
 }
 
-void control_reset_talk()
+void ResetChat()
 {
 	ChatFlag = false;
 	SDL_StopTextInput();
@@ -1616,7 +1630,7 @@ void control_reset_talk()
 	RedrawEverything();
 }
 
-bool IsTalkActive()
+bool IsChatActive()
 {
 	if (!IsChatAvailable())
 		return false;
@@ -1648,7 +1662,7 @@ bool HandleTalkTextInputEvent(const SDL_Event &event)
 	return HandleInputEvent(event, ChatInputState);
 }
 
-bool control_presskeys(SDL_Keycode vkey)
+bool CheckKeypress(SDL_Keycode vkey)
 {
 	if (!IsChatAvailable())
 		return false;
@@ -1657,7 +1671,7 @@ bool control_presskeys(SDL_Keycode vkey)
 
 	switch (vkey) {
 	case SDLK_ESCAPE:
-		control_reset_talk();
+		ResetChat();
 		return true;
 	case SDLK_RETURN:
 	case SDLK_KP_ENTER:
