@@ -35,20 +35,20 @@ void DrawButtonText(const Surface &out, std::string_view text, Rectangle placeme
 
 void DrawButtonOnPanel(Point position, std::string_view text, int frame)
 {
-	RenderClxSprite(*pBtmBuff, (*PanelButton)[frame], position);
+	RenderClxSprite(*BottomBuffer, (*PanelButton)[frame], position);
 	int spacing = 2;
 	int width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	if (width > 38) {
 		spacing = 1;
 		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
-	RenderClxSprite(pBtmBuff->subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 7, width, pBtmBuff->h() - 7), (*PanelButtonGrime)[frame], { 0, 0 });
-	DrawButtonText(*pBtmBuff, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
+	RenderClxSprite(BottomBuffer->subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 7, width, BottomBuffer->h() - 7), (*PanelButtonGrime)[frame], { 0, 0 });
+	DrawButtonText(*BottomBuffer, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
 }
 
 void RenderMainButton(const Surface &out, int buttonId, std::string_view text, int frame)
 {
-	Point panelPosition { PanelButtonRect[buttonId].position + Displacement { 4, 17 } };
+	Point panelPosition { MainPanelButtonRect[buttonId].position + Displacement { 4, 17 } };
 	DrawButtonOnPanel(panelPosition, text, frame);
 	if (IsChatAvailable())
 		DrawButtonOnPanel(panelPosition + Displacement { 0, GetMainPanel().size.height + 16 }, text, frame);
@@ -98,15 +98,15 @@ void LoadMainPanel()
 		const int talkButtonWidth = (*talkButton)[0].width();
 
 		constexpr size_t NumOtherPlayers = 3;
-		// Render the unpressed voice buttons to pBtmBuff.
+		// Render the unpressed voice buttons to BottomBuffer.
 		std::string_view text = _("voice");
 		const int textWidth = GetLineWidth(text, GameFont12, 1);
 		for (size_t i = 0; i < NumOtherPlayers; ++i) {
 			Point position { 176, static_cast<int>(GetMainPanel().size.height + 101 + 18 * i) };
-			RenderClxSprite(*pBtmBuff, (*talkButton)[0], position);
+			RenderClxSprite(*BottomBuffer, (*talkButton)[0], position);
 			int width = std::min<int>(textWidth, (*PanelButton)[0].width());
-			RenderClxSprite(pBtmBuff->subregion(position.x + (talkButtonWidth - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
-			DrawButtonText(*pBtmBuff, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
+			RenderClxSprite(BottomBuffer->subregion(position.x + (talkButtonWidth - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
+			DrawButtonText(*BottomBuffer, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
 		}
 
 		const int talkButtonHeight = (*talkButton)[0].height();

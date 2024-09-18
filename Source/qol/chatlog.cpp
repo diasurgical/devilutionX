@@ -99,8 +99,8 @@ void ToggleChatLog()
 		stextflag = TalkID::None;
 		CloseInventory();
 		CloseCharPanel();
-		sbookflag = false;
-		spselflag = false;
+		SpellbookFlag = false;
+		SpellSelectFlag = false;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = false;
 			stream_stop();

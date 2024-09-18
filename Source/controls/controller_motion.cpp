@@ -92,7 +92,7 @@ bool IsPressedForMovement(ControllerButton button)
 	return !PadMenuNavigatorActive
 	    && IsControllerButtonPressed(button)
 	    && !IsMovementOverriddenByPadmapper(button)
-	    && !(spselflag && TriggersQuickSpellAction(button));
+	    && !(SpellSelectFlag && TriggersQuickSpellAction(button));
 }
 
 void SetSimulatingMouseWithPadmapper(bool value)

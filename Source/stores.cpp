@@ -2252,7 +2252,7 @@ void StartStore(TalkID s)
 	if (*sgOptions.Gameplay.showItemGraphicsInStores) {
 		CreateHalfSizeItemSprites();
 	}
-	sbookflag = false;
+	SpellbookFlag = false;
 	CloseInventory();
 	CloseCharPanel();
 	RenderGold = false;

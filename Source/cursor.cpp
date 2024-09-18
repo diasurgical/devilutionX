@@ -606,7 +606,7 @@ void CheckTown()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				InfoString = _("Town Portal");
-				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -620,7 +620,7 @@ void CheckRportal()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				InfoString = _("Portal to");
-				AddPanelString(!setlevel ? _("The Unholy Altar") : _("level 15"));
+				AddInfoBoxString(!setlevel ? _("The Unholy Altar") : _("level 15"));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -752,13 +752,13 @@ void CheckCursMove()
 	pcursstashitem = StashStruct::EmptyCell;
 	PlayerUnderCursor = nullptr;
 	ShowUniqueItemInfoBox = false;
-	panelflag = false;
+	MainPanelFlag = false;
 	trigflag = false;
 
 	if (myPlayer._pInvincible) {
 		return;
 	}
-	if (!myPlayer.HoldItem.isEmpty() || spselflag) {
+	if (!myPlayer.HoldItem.isEmpty() || SpellSelectFlag) {
 		cursPosition = { mx, my };
 		return;
 	}
@@ -776,7 +776,7 @@ void CheckCursMove()
 	if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 		pcursstashitem = CheckStashHLight(MousePosition);
 	}
-	if (sbookflag && GetRightPanel().contains(MousePosition)) {
+	if (SpellbookFlag && GetRightPanel().contains(MousePosition)) {
 		return;
 	}
 	if (IsLeftPanelOpen() && GetLeftPanel().contains(MousePosition)) {

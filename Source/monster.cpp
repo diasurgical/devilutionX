@@ -4308,9 +4308,9 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
 	} else {
-		AddPanelString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
 	}
 
 	if (MonsterKillCounts[mt] >= 30) {
@@ -4342,12 +4342,12 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
 		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHell;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
-			AddPanelString(_("No magic resistance"));
+			AddInfoBoxString(_("No magic resistance"));
 		} else {
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
 				std::string resists = std::string(_("Resists:"));
@@ -4357,7 +4357,7 @@ void PrintMonstHistory(int mt)
 					resists.append(_(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
 					resists.append(_(" Lightning"));
-				AddPanelString(resists);
+				AddInfoBoxString(resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				std::string immune = std::string(_("Immune:"));
@@ -4367,7 +4367,7 @@ void PrintMonstHistory(int mt)
 					immune.append(_(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
 					immune.append(_(" Lightning"));
-				AddPanelString(immune);
+				AddInfoBoxString(immune);
 			}
 		}
 	}
@@ -4377,22 +4377,22 @@ void PrintUniqueHistory()
 {
 	Monster &monster = Monsters[pcursmonst];
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
 	}
 
 	int res = monster.resistance & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (res == 0) {
-		AddPanelString(_("No resistances"));
-		AddPanelString(_("No Immunities"));
+		AddInfoBoxString(_("No resistances"));
+		AddInfoBoxString(_("No Immunities"));
 	} else {
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0)
-			AddPanelString(_("Some Magic Resistances"));
+			AddInfoBoxString(_("Some Magic Resistances"));
 		else
-			AddPanelString(_("No resistances"));
+			AddInfoBoxString(_("No resistances"));
 		if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
-			AddPanelString(_("Some Magic Immunities"));
+			AddInfoBoxString(_("Some Magic Immunities"));
 		} else {
-			AddPanelString(_("No Immunities"));
+			AddInfoBoxString(_("No Immunities"));
 		}
 	}
 }

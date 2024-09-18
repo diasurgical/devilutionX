@@ -166,14 +166,14 @@ void InitializeVirtualGamepad()
 	healthButtonArea.position.x = directionPad.area.position.x - (padButtonSize + padButtonSpacing) / 2;
 	healthButtonArea.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
 	healthButtonArea.radius = padButtonSize / 2;
-	healthButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
+	healthButton.isUsable = []() { return !CharFlag && !QuestLogIsOpen; };
 
 	VirtualPadButton &manaButton = VirtualGamepadState.manaButton;
 	Circle &manaButtonArea = manaButton.area;
 	manaButtonArea.position.x = directionPad.area.position.x + (padButtonSize + padButtonSpacing) / 2;
 	manaButtonArea.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
 	manaButtonArea.radius = padButtonSize / 2;
-	manaButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
+	manaButton.isUsable = []() { return !CharFlag && !QuestLogIsOpen; };
 }
 
 void ActivateVirtualGamepad()

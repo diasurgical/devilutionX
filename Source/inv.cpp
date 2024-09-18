@@ -938,8 +938,8 @@ void StartGoldDrop()
 	    ? myPlayer.InvList[invIndex - INVITEM_INV_FIRST]._ivalue
 	    : myPlayer.SpdList[invIndex - INVITEM_BELT_FIRST]._ivalue;
 
-	if (talkflag)
-		control_reset_talk();
+	if (ChatFlag)
+		ResetChat();
 
 	Point start = GetPanelPosition(UiPanels::Inventory, { 67, 128 });
 	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
@@ -1124,7 +1124,7 @@ void DrawInv(const Surface &out)
 
 void DrawInvBelt(const Surface &out)
 {
-	if (talkflag) {
+	if (ChatFlag) {
 		return;
 	}
 
@@ -2019,7 +2019,7 @@ bool UseInvItem(int cii)
 		c = cii - INVITEM_INV_FIRST;
 		item = &player.InvList[c];
 	} else {
-		if (talkflag)
+		if (ChatFlag)
 			return true;
 		c = cii - INVITEM_BELT_FIRST;
 

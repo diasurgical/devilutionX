@@ -1500,7 +1500,7 @@ void KeymapperOptions::KeyPressed(uint32_t key) const
 
 	// Check that the action can be triggered and that the chat textbox is not
 	// open.
-	if (!action.actionPressed || (action.enable && !action.enable()) || talkflag)
+	if (!action.actionPressed || (action.enable && !action.enable()) || ChatFlag)
 		return;
 
 	action.actionPressed();
@@ -1519,7 +1519,7 @@ void KeymapperOptions::KeyReleased(SDL_Keycode key) const
 
 	// Check that the action can be triggered and that the chat or gold textbox is not
 	// open. If either of those textboxes are open, only return if the key can be used for entry into the box
-	if (!action.actionReleased || (action.enable && !action.enable()) || ((talkflag && IsTextEntryKey(key)) || (dropGoldFlag && IsNumberEntryKey(key))))
+	if (!action.actionReleased || (action.enable && !action.enable()) || ((ChatFlag && IsTextEntryKey(key)) || (DropGoldFlag && IsNumberEntryKey(key))))
 		return;
 
 	action.actionReleased();
@@ -1874,7 +1874,7 @@ bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
 	if (action.boundInput.modifier != ControllerButton_NONE)
 		return false;
 
-	if (spselflag) {
+	if (SpellSelectFlag) {
 		const std::string_view prefix { "QuickSpell" };
 		const std::string_view key { action.key };
 		if (key.size() >= prefix.size()) {

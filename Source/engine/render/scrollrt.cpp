@@ -207,7 +207,7 @@ bool ShouldShowCursor()
 		return true;
 	if (invflag)
 		return true;
-	if (chrflag && MyPlayer->_pStatPts > 0)
+	if (CharFlag && MyPlayer->_pStatPts > 0)
 		return true;
 
 	return false;
@@ -1201,30 +1201,30 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawSText(out);
 	if (invflag) {
 		DrawInv(out);
-	} else if (sbookflag) {
+	} else if (SpellbookFlag) {
 		DrawSpellBook(out);
 	}
 
 	DrawDurIcon(out);
 
-	if (chrflag) {
+	if (CharFlag) {
 		DrawChr(out);
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
 	} else if (IsStashOpen) {
 		DrawStash(out);
 	}
-	DrawLevelUpIcon(out);
+	DrawLevelButton(out);
 	if (ShowUniqueItemInfoBox) {
 		DrawUniqueInfo(out);
 	}
 	if (qtextflag) {
 		DrawQText(out);
 	}
-	if (spselflag) {
+	if (SpellSelectFlag) {
 		DrawSpellList(out);
 	}
-	if (dropGoldFlag) {
+	if (DropGoldFlag) {
 		DrawGoldSplit(out);
 	}
 	DrawGoldWithdraw(out);
@@ -1248,7 +1248,7 @@ void DrawView(const Surface &out, Point startPosition)
 	gmenu_draw(out);
 	doom_draw(out);
 	DrawInfoBox(out);
-	control_update_life_mana(); // Update life/mana totals before rendering any portion of the flask.
+	UpdateLifeManaPercent(); // Update life/mana totals before rendering any portion of the flask.
 	DrawLifeFlaskUpper(out);
 	DrawManaFlaskUpper(out);
 }
@@ -1328,7 +1328,7 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 			DoBlitScreen({ mainPanelPosition + Displacement { 204, 5 }, { 232, 28 } });
 		}
 		if (drawDesc) {
-			if (talkflag) {
+			if (ChatFlag) {
 				// When chat input is displayed, the belt is hidden and the chat moves up.
 				DoBlitScreen({ mainPanelPosition + Displacement { 171, 6 }, { 298, 116 } });
 			} else {
@@ -1632,7 +1632,7 @@ void DrawAndBlit()
 	bool drawMana = IsRedrawComponent(PanelDrawComponent::Mana);
 	bool drawControlButtons = IsRedrawComponent(PanelDrawComponent::ControlButtons);
 	bool drawBelt = IsRedrawComponent(PanelDrawComponent::Belt);
-	bool drawChatInput = talkflag;
+	bool drawChatInput = ChatFlag;
 	bool drawInfoBox = false;
 	bool drawCtrlPan = false;
 
@@ -1659,7 +1659,7 @@ void DrawAndBlit()
 
 	DrawView(out, ViewPosition);
 	if (drawCtrlPan) {
-		DrawCtrlPan(out);
+		DrawMainPanel(out);
 	}
 	if (drawHealth) {
 		DrawLifeFlaskLower(out);
@@ -1670,13 +1670,13 @@ void DrawAndBlit()
 		DrawSpell(out);
 	}
 	if (drawControlButtons) {
-		DrawCtrlBtns(out);
+		DrawMainPanelButtons(out);
 	}
 	if (drawBelt) {
 		DrawInvBelt(out);
 	}
 	if (drawChatInput) {
-		DrawTalkPan(out);
+		DrawChatBox(out);
 	}
 	DrawXPBar(out);
 	if (*sgOptions.Gameplay.showHealthValues)

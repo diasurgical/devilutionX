@@ -6,7 +6,7 @@ LT 32 leveltype
 R 32 viewX
 R 32 viewY
 R 8 invflag
-R 8 chrflag
+R 8 CharFlag
 LC 32 NumMonsters
 LC 32 ItemCount
 LC 32 NumMissiles
