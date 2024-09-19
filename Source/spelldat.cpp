@@ -127,11 +127,11 @@ tl::expected<MissileID, std::string> ParseMissileId(std::string_view value)
 	if (value == "LightningWall") return MissileID::LightningWall;
 	if (value == "LightningWallControl") return MissileID::LightningWallControl;
 	if (value == "Immolation") return MissileID::Immolation;
-	if (value == "SpectralArrow") return MissileID::SpectralArrow;
-	if (value == "FireballBow") return MissileID::FireballBow;
-	if (value == "LightningBow") return MissileID::LightningBow;
-	if (value == "ChargedBoltBow") return MissileID::ChargedBoltBow;
-	if (value == "HolyBoltBow") return MissileID::HolyBoltBow;
+	if (value == "ItemMissile") return MissileID::ItemMissile;
+	if (value == "ItemFireball") return MissileID::ItemFireball;
+	if (value == "ItemLightning") return MissileID::ItemLightning;
+	if (value == "ItemChargedBolt") return MissileID::ItemChargedBolt;
+	if (value == "ItemHolyBolt") return MissileID::ItemHolyBolt;
 	if (value == "Warp") return MissileID::Warp;
 	if (value == "Reflect") return MissileID::Reflect;
 	if (value == "Berserk") return MissileID::Berserk;

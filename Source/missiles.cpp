@@ -1430,11 +1430,11 @@ end_loop: // Grab the first spectralID we get and proceed
 
 	switch (player._pClass) {
 	case HeroClass::Rogue:
-		spllvl += (player._pLevel - 1) / 4;
+		spllvl += (player.getCharacterLevel() - 1) / 4;
 		break;
 	case HeroClass::Warrior:
 	case HeroClass::Bard:
-		spllvl += (player._pLevel - 1) / 8;
+		spllvl += (player.getCharacterLevel() - 1) / 8;
 		break;
 	default:
 		break;
@@ -2027,7 +2027,7 @@ void AddLightningControl(Missile &missile, AddMissileParameter &parameter)
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
 		const Player &player = *missile.sourcePlayer();
-		missile._midam = (GenerateRnd(2) + GenerateRnd(player._pLevel) + 2) << 6;
+		missile._midam = (GenerateRnd(2) + GenerateRnd(player.getCharacterLevel()) + 2) << 6;
 	} break;
 	case MissileSource::Monster: {
 		const Monster &monster = *missile.sourceMonster();

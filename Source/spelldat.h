@@ -173,7 +173,7 @@ enum class MissileID : int8_t {
 	LightningWall,
 	LightningWallControl,
 	Immolation,
-	SpectralArrow,
+	ItemMissile,
 	ItemFireball,
 	ItemLightning,
 	ItemChargedBolt,
