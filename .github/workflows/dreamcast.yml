@@ -6,7 +6,6 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
       - dreamcast
-      - dreamcast-sdl
     paths-ignore:
       - '*.md'
       - 'docs/**'
@@ -87,7 +86,7 @@ jobs:
         if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v4
         with:
-          name: devilutionx.zip
+          name: devilutionx
           path: |
             build/data
             build/devilutionx.elf
@@ -98,4 +97,26 @@ jobs:
         with:
           name: devilutionx.cdi
           path: ./build/devilutionx.cdi
+
+      - name: Prepare Releases
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        run: |
+          apk add zip && \
+            cd build && \
+            zip -r devilutionx-dreamcast.zip data/ devilutionx.elf && \
+            zip -r devilutionx-dreamcast.cdi.zip devilutionx.cdi
+
+      - name: Update Release .cdi
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: ./build/devilutionx-dreamcast.cdi.zip
+          overwrite: true
+
+      - name: Update Release .elf
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: ./build/devilutionx-dreamcast.zip
+          overwrite: true
 ...
