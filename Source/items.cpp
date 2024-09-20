@@ -1930,7 +1930,7 @@ _item_indexes RndPremiumItem(const Player &player, int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(player, minlvl, maxlvl);
 }
 
-void SpawnOnePremium(Item &PremiumItems, int plvl, const Player &player)
+void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
@@ -1944,20 +1944,20 @@ void SpawnOnePremium(Item &PremiumItems, int plvl, const Player &player)
 	int maxCount = 150;
 	const bool unlimited = !gbIsHellfire; // TODO: This could lead to an infinite loop if a suitable item can never be generated
 	for (int count = 0; unlimited || count < maxCount; count++) {
-		PremiumItems = {};
-		PremiumItems._iSeed = AdvanceRndSeed();
-		SetRndSeed(PremiumItems._iSeed);
+		premiumItem = {};
+		premiumItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(premiumItem._iSeed);
 		_item_indexes itemType = RndPremiumItem(player, plvl / 4, plvl);
-		GetItemAttrs(PremiumItems, itemType, plvl);
-		GetItemBonus(player, PremiumItems, plvl / 2, plvl, true, !gbIsHellfire);
+		GetItemAttrs(premiumItem, itemType, plvl);
+		GetItemBonus(player, premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
-			if (PremiumItems._iIvalue <= 140000) {
+			if (premiumItem._iIvalue <= 140000) {
 				break;
 			}
 		} else {
 			int itemValue = 0;
-			switch (PremiumItems._itype) {
+			switch (premiumItem._itype) {
 			case ItemType::LightArmor:
 			case ItemType::MediumArmor:
 			case ItemType::HeavyArmor: {
@@ -1979,7 +1979,7 @@ void SpawnOnePremium(Item &PremiumItems, int plvl, const Player &player)
 			case ItemType::Ring:
 			case ItemType::Amulet: {
 				const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-				    [filterType = PremiumItems._itype](const Item &item) { return item._itype == filterType; });
+				    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
 
 				itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 				break;
@@ -1989,18 +1989,18 @@ void SpawnOnePremium(Item &PremiumItems, int plvl, const Player &player)
 				break;
 			}
 			itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
-			if (PremiumItems._iIvalue <= 200000
-			    && PremiumItems._iMinStr <= strength
-			    && PremiumItems._iMinMag <= magic
-			    && PremiumItems._iMinDex <= dexterity
-			    && PremiumItems._iIvalue >= itemValue) {
+			if (premiumItem._iIvalue <= 200000
+			    && premiumItem._iMinStr <= strength
+			    && premiumItem._iMinMag <= magic
+			    && premiumItem._iMinDex <= dexterity
+			    && premiumItem._iIvalue >= itemValue) {
 				break;
 			}
 		}
 	}
-	PremiumItems._iCreateInfo = plvl | CF_SMITHPREMIUM;
-	PremiumItems._iIdentified = true;
-	PremiumItems._iStatFlag = player.CanUseItem(PremiumItems);
+	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
+	premiumItem._iIdentified = true;
+	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
 }
 
 bool WitchItemOk(const Player &player, const ItemData &item)
