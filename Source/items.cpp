@@ -4374,7 +4374,7 @@ void SpawnSmith(int lvl)
 
 	int iCnt = RandomIntBetween(10, maxItems);
 	for (int i = 0; i < iCnt; i++) {
-		Item &newItem = smithitem[i];
+		Item &newItem = SmithItems[i];
 
 		do {
 			newItem = {};
@@ -4388,40 +4388,40 @@ void SpawnSmith(int lvl)
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i].clear();
+		SmithItems[i].clear();
 
-	SortVendor(smithitem + PinnedItemCount);
+	SortVendor(SmithItems + PinnedItemCount);
 }
 
 void SpawnPremium(const Player &player)
 {
 	int lvl = player.getCharacterLevel();
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
-	if (numpremium < maxItems) {
+	if (PremiumItemCount < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
-			if (premiumitems[i].isEmpty()) {
-				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(premiumitems[i], plvl, player);
+			if (PremiumItems[i].isEmpty()) {
+				int plvl = PremiumItemLevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
+				SpawnOnePremium(PremiumItems[i], plvl, player);
 			}
 		}
-		numpremium = maxItems;
+		PremiumItemCount = maxItems;
 	}
-	while (premiumlevel < lvl) {
-		premiumlevel++;
+	while (PremiumItemLevel < lvl) {
+		PremiumItemLevel++;
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
-			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], player);
-			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], player);
-			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], player);
+			std::move(&PremiumItems[3], &PremiumItems[12] + 1, &PremiumItems[0]);
+			SpawnOnePremium(PremiumItems[10], PremiumItemLevel + premiumLvlAddHellfire[10], player);
+			PremiumItems[11] = PremiumItems[13];
+			SpawnOnePremium(PremiumItems[12], PremiumItemLevel + premiumLvlAddHellfire[12], player);
+			PremiumItems[13] = PremiumItems[14];
+			SpawnOnePremium(PremiumItems[14], PremiumItemLevel + premiumLvlAddHellfire[14], player);
 		} else {
 			// Discard first 2 items and shift next 3
-			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], player);
-			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], player);
+			std::move(&PremiumItems[2], &PremiumItems[4] + 1, &PremiumItems[0]);
+			SpawnOnePremium(PremiumItems[3], PremiumItemLevel + premiumlvladd[3], player);
+			PremiumItems[4] = PremiumItems[5];
+			SpawnOnePremium(PremiumItems[5], PremiumItemLevel + premiumlvladd[5], player);
 		}
 	}
 }
@@ -4439,7 +4439,7 @@ void SpawnWitch(int lvl)
 	const int maxValue = gbIsHellfire ? 200000 : 140000;
 
 	for (int i = 0; i < WITCH_ITEMS; i++) {
-		Item &item = witchitem[i];
+		Item &item = WitchItems[i];
 		item = {};
 
 		if (i < PinnedItemCount) {
@@ -4490,7 +4490,7 @@ void SpawnWitch(int lvl)
 		item._iIdentified = true;
 	}
 
-	SortVendor(witchitem + PinnedItemCount);
+	SortVendor(WitchItems + PinnedItemCount);
 }
 
 void SpawnBoy(int lvl)
@@ -4509,19 +4509,19 @@ void SpawnBoy(int lvl)
 	dexterity += dexterity / 5;
 	magic += magic / 5;
 
-	if (boylevel >= (lvl / 2) && !boyitem.isEmpty())
+	if (BoyItemLevel >= (lvl / 2) && !BoyItem.isEmpty())
 		return;
 	do {
 		keepgoing = false;
-		boyitem = {};
-		boyitem._iSeed = AdvanceRndSeed();
-		SetRndSeed(boyitem._iSeed);
+		BoyItem = {};
+		BoyItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(BoyItem._iSeed);
 		_item_indexes itype = RndBoyItem(*MyPlayer, lvl);
-		GetItemAttrs(boyitem, itype, lvl);
-		GetItemBonus(*MyPlayer, boyitem, lvl, 2 * lvl, true, true);
+		GetItemAttrs(BoyItem, itype, lvl);
+		GetItemBonus(*MyPlayer, BoyItem, lvl, 2 * lvl, true, true);
 
 		if (!gbIsHellfire) {
-			if (boyitem._iIvalue > 90000) {
+			if (BoyItem._iIvalue > 90000) {
 				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
@@ -4530,7 +4530,7 @@ void SpawnBoy(int lvl)
 
 		ivalue = 0;
 
-		ItemType itemType = boyitem._itype;
+		ItemType itemType = BoyItem._itype;
 
 		switch (itemType) {
 		case ItemType::LightArmor:
@@ -4596,15 +4596,15 @@ void SpawnBoy(int lvl)
 		}
 	} while (keepgoing
 	    || ((
-	            boyitem._iIvalue > 200000
-	            || boyitem._iMinStr > strength
-	            || boyitem._iMinMag > magic
-	            || boyitem._iMinDex > dexterity
-	            || boyitem._iIvalue < ivalue)
+	            BoyItem._iIvalue > 200000
+	            || BoyItem._iMinStr > strength
+	            || BoyItem._iMinMag > magic
+	            || BoyItem._iMinDex > dexterity
+	            || BoyItem._iIvalue < ivalue)
 	        && count < 250));
-	boyitem._iCreateInfo = lvl | CF_BOY;
-	boyitem._iIdentified = true;
-	boylevel = lvl / 2;
+	BoyItem._iCreateInfo = lvl | CF_BOY;
+	BoyItem._iIdentified = true;
+	BoyItemLevel = lvl / 2;
 }
 
 void SpawnHealer(int lvl)
@@ -4613,8 +4613,8 @@ void SpawnHealer(int lvl)
 	constexpr std::array<_item_indexes, PinnedItemCount + 1> PinnedItemTypes = { IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT };
 	const auto itemCount = static_cast<size_t>(RandomIntBetween(10, gbIsHellfire ? 19 : 17));
 
-	for (size_t i = 0; i < sizeof(healitem) / sizeof(healitem[0]); ++i) {
-		Item &item = healitem[i];
+	for (size_t i = 0; i < sizeof(HealerItems) / sizeof(HealerItems[0]); ++i) {
+		Item &item = HealerItems[i];
 		item = {};
 
 		if (i < PinnedItemCount || (gbIsMultiplayer && i == PinnedItemCount)) {
@@ -4638,7 +4638,7 @@ void SpawnHealer(int lvl)
 		item._iIdentified = true;
 	}
 
-	SortVendor(healitem + PinnedItemCount);
+	SortVendor(HealerItems + PinnedItemCount);
 }
 
 void MakeGoldStack(Item &goldItem, int value)
