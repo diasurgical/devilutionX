@@ -132,9 +132,9 @@ void CreditsRenderer::Render()
 	}
 }
 
-bool TextDialog(char const *const *text, std::size_t TextLines)
+bool TextDialog(char const *const *text, std::size_t textLines)
 {
-	CreditsRenderer creditsRenderer(text, TextLines);
+	CreditsRenderer creditsRenderer(text, textLines);
 	bool endMenu = false;
 
 	if (IsHardwareCursor())
