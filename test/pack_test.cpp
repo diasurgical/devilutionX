@@ -1370,13 +1370,13 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 		if ((item._iCreateInfo & CF_TOWN) == 0)
 			continue;
 		uint16_t createInfo = item._iCreateInfo;
-		bool boyItem = (item._iCreateInfo & CF_BOY) != 0;
+		bool BoyItem = (item._iCreateInfo & CF_BOY) != 0;
 		item._iCreateInfo &= ~CF_LEVEL;
-		item._iCreateInfo |= boyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
+		item._iCreateInfo |= BoyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
 		ASSERT_FALSE(TestNetPackValidation());
 		item._iCreateInfo = createInfo;
 
-		size_t &count = boyItem ? boyCount : otherCount;
+		size_t &count = BoyItem ? boyCount : otherCount;
 		count++;
 	}
 	ASSERT_GT(boyCount, 0);

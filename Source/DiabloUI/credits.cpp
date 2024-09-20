@@ -33,9 +33,9 @@ const int LINE_H = 22;
 class CreditsRenderer {
 
 public:
-	CreditsRenderer(char const *const *text, std::size_t textLines)
+	CreditsRenderer(char const *const *text, std::size_t TextLines)
 	{
-		for (size_t i = 0; i < textLines; i++) {
+		for (size_t i = 0; i < TextLines; i++) {
 			std::string_view orgText = _(text[i]);
 
 			uint16_t offset = 0;
@@ -132,9 +132,9 @@ void CreditsRenderer::Render()
 	}
 }
 
-bool TextDialog(char const *const *text, std::size_t textLines)
+bool TextDialog(char const *const *text, std::size_t TextLines)
 {
-	CreditsRenderer creditsRenderer(text, textLines);
+	CreditsRenderer creditsRenderer(text, TextLines);
 	bool endMenu = false;
 
 	if (IsHardwareCursor())

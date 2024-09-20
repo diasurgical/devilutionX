@@ -867,7 +867,7 @@ void LoadItem(LoadHelper &file, Item &item)
 
 void LoadPremium(LoadHelper &file, int i)
 {
-	LoadAndValidateItemData(file, premiumItem[i]);
+	LoadAndValidateItemData(file, PremiumItems[i]);
 }
 
 void LoadQuest(LoadHelper *file, int i)
@@ -2523,8 +2523,8 @@ void LoadGame(bool firstflag)
 		memset(dLight, 0, sizeof(dLight));
 	}
 
-	numPremiumItems = file.NextBE<int32_t>();
-	premiumItemLevel = file.NextBE<int32_t>();
+	PremiumItemCount = file.NextBE<int32_t>();
+	PremiumItemLevel = file.NextBE<int32_t>();
 
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(file, i);
@@ -2786,11 +2786,11 @@ void SaveGameData(SaveWriter &saveWriter)
 		}
 	}
 
-	file.WriteBE<int32_t>(numPremiumItems);
-	file.WriteBE<int32_t>(premiumItemLevel);
+	file.WriteBE<int32_t>(PremiumItemCount);
+	file.WriteBE<int32_t>(PremiumItemLevel);
 
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
-		SaveItem(file, premiumItem[i]);
+		SaveItem(file, PremiumItems[i]);
 
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);
