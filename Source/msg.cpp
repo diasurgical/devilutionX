@@ -1700,12 +1700,12 @@ size_t OnTalkXY(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
 	const Point position { message.x, message.y };
-	const uint16_t TownerIdx = SDL_SwapLE16(message.wParam1);
+	const uint16_t townerIdx = SDL_SwapLE16(message.wParam1);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && InDungeonBounds(position) && TownerIdx < NUM_TOWNERS) {
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && InDungeonBounds(position) && townerIdx < NUM_TOWNERS) {
 		MakePlrPath(player, position, false);
 		player.destAction = ACTION_TALK;
-		player.destParam1 = TownerIdx;
+		player.destParam1 = townerIdx;
 	}
 
 	return sizeof(message);
