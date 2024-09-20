@@ -49,34 +49,34 @@ enum class TalkID : uint8_t {
 };
 
 /** Currently active store */
-extern TalkID stextflag;
+extern TalkID activeStore;
 
-/** Current index into storehidx/storehold */
-extern DVL_API_FOR_TEST int storenumh;
+/** Current index into playerItemIndexes/playerItem */
+extern DVL_API_FOR_TEST int currentItemIndex;
 /** Map of inventory items being presented in the store */
-extern int8_t storehidx[48];
+extern int8_t playerItemIndexes[48];
 /** Copies of the players items as presented in the store */
-extern DVL_API_FOR_TEST Item storehold[48];
+extern DVL_API_FOR_TEST Item playerItem[48];
 
 /** Items sold by Griswold */
-extern Item smithitem[SMITH_ITEMS];
+extern Item smithItem[SMITH_ITEMS];
 /** Number of premium items for sale by Griswold */
-extern int numpremium;
+extern int numPremiumItems;
 /** Base level of current premium items sold by Griswold */
-extern int premiumlevel;
+extern int premiumItemLevel;
 /** Premium items sold by Griswold */
-extern Item premiumitems[SMITH_PREMIUM_ITEMS];
+extern Item premiumItem[SMITH_PREMIUM_ITEMS];
 
 /** Items sold by Pepin */
-extern Item healitem[20];
+extern Item healerItem[20];
 
 /** Items sold by Adria */
-extern Item witchitem[WITCH_ITEMS];
+extern Item witchItem[WITCH_ITEMS];
 
 /** Current level of the item sold by Wirt */
-extern int boylevel;
+extern int boyItemLevel;
 /** Current item sold by Wirt */
-extern Item boyitem;
+extern Item boyItem;
 
 void AddStoreHoldRepair(Item *itm, int8_t i);
 

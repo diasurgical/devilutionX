@@ -430,7 +430,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetTownButtonType()
 {
-	if (stextflag != TalkID::None || pcursmonst != -1)
+	if (activeStore != TalkID::None || pcursmonst != -1)
 		return GetTalkButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }

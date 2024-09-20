@@ -686,7 +686,7 @@ bool IsLevelUpButtonVisible()
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		return false;
 	}
-	if (stextflag != TalkID::None || IsStashOpen) {
+	if (activeStore != TalkID::None || IsStashOpen) {
 		return false;
 	}
 	if (QuestLogIsOpen && GetLeftPanel().contains(GetMainPanel().position + Displacement { 0, -74 })) {

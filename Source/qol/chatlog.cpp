@@ -96,7 +96,7 @@ void ToggleChatLog()
 	if (ChatLogFlag) {
 		ChatLogFlag = false;
 	} else {
-		stextflag = TalkID::None;
+		activeStore = TalkID::None;
 		CloseInventory();
 		CloseCharPanel();
 		SpellbookFlag = false;
