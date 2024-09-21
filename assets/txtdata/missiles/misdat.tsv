@@ -72,11 +72,11 @@ Magi	AddMagi					Physical,Invisible
 LightningWall	AddLightningWall	ProcessLightningWall	SpellLightningWall	SpellLightningHit	Lightning	Lightning	
 LightningWallControl	AddWallControl	ProcessWallControl			Lightning	Lightning,Invisible	
 Immolation	AddNova	ProcessImmolation	SpellFirebolt	SpellFireHit	Fireball	Fire	
-SpectralArrow	AddSpectralArrow	ProcessSpectralArrow			Arrow	Physical,Arrow	
-FireballBow	AddImmolation	ProcessFireball	ShootFireballBow	SpellFireHit	Fireball	Fire	Blockable
-LightningBow	AddLightningBow	ProcessLightningBow	ShootFireballBow		Lightning	Lightning,Invisible	
-ChargedBoltBow	AddChargedBoltBow	ProcessChargedBolt	SpellChargedBolt		ChargedBolt	Lightning	Blockable
-HolyBoltBow	AddHolyBolt	ProcessHolyBolt	SpellHolyBolt	SpellLightningHit	HolyBolt	Physical	Blockable
+ItemMissile	AddItemMissile	ProcessItemMissile			Arrow	Physical,Arrow	
+ItemFireball	AddImmolation	ProcessFireball	ShootFireballBow	SpellFireHit	Fireball	Fire	Blockable
+ItemLightning	AddItemLightning	ProcessItemLightning	ShootFireballBow		Lightning	Lightning,Invisible	
+ItemChargedBolt	AddItemChargedBolt	ProcessChargedBolt	SpellChargedBolt		ChargedBolt	Lightning	Blockable
+ItemHolyBolt	AddHolyBolt	ProcessHolyBolt	SpellHolyBolt	SpellLightningHit	HolyBolt	Physical	Blockable
 Warp	AddWarp	ProcessTeleport	SpellEtherealize			Physical,Invisible	
 Reflect	AddReflect		SpellManaShield		Reflect	Physical,Invisible	
 Berserk	AddBerserk					Physical,Invisible	

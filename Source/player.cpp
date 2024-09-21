@@ -547,7 +547,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 
 	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
-		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
+		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::ItemMissile, TARGET_MONSTERS, player, midam, 0);
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
@@ -867,7 +867,7 @@ bool DoRangeAttack(Player &player)
 		}
 		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
 			dmg = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
-			mistype = MissileID::SpectralArrow;
+			mistype = MissileID::ItemMissile;
 		}
 
 		AddMissile(
@@ -880,7 +880,7 @@ bool DoRangeAttack(Player &player)
 		    dmg,
 		    0);
 
-		if (arrow == 0 && mistype != MissileID::SpectralArrow) {
+		if (arrow == 0 && mistype != MissileID::ItemMissile) {
 			PlaySfxLoc(arrows != 1 ? SfxID::ShootBow2 : SfxID::ShootBow, player.position.tile);
 		}
 
