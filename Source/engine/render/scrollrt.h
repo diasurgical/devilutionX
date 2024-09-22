@@ -32,12 +32,10 @@ void ClearCursor();
 /**
  * @brief Shifting the view area along the logical grid
  *        Note: this won't allow you to shift between even and odd rows
- * @param x X offset
- * @param y Y offset
  * @param horizontal Shift the screen left or right
  * @param vertical Shift the screen up or down
  */
-void ShiftGrid(int *x, int *y, int horizontal, int vertical);
+void ShiftGrid(Point *offset, int horizontal, int vertical);
 
 /**
  * @brief Gets the number of rows covered by the main panel
