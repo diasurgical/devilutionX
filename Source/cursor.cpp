@@ -114,36 +114,36 @@ bool TrySelectTowner(bool flipflag, Point tile)
 	return pcursmonst != -1;
 }
 
-bool TrySelectPlayer(bool flipflag, int mx, int my)
+bool TrySelectPlayer(bool flipflag, const Point tile)
 {
-	if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
-		const uint8_t playerId = std::abs(dPlayer[mx + 1][my]) - 1;
+	if (!flipflag && tile.x + 1 < MAXDUNX && dPlayer[tile.x + 1][tile.y] != 0) {
+		const uint8_t playerId = std::abs(dPlayer[tile.x + 1][tile.y]) - 1;
 		Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
-			cursPosition = Point { mx, my } + Displacement { 1, 0 };
+			cursPosition = tile + Displacement { 1, 0 };
 			PlayerUnderCursor = &player;
 		}
 	}
-	if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
-		const uint8_t playerId = std::abs(dPlayer[mx][my + 1]) - 1;
+	if (flipflag && tile.y + 1 < MAXDUNY && dPlayer[tile.x][tile.y + 1] != 0) {
+		const uint8_t playerId = std::abs(dPlayer[tile.x][tile.y + 1]) - 1;
 		Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
-			cursPosition = Point { mx, my } + Displacement { 0, 1 };
+			cursPosition = tile + Displacement { 0, 1 };
 			PlayerUnderCursor = &player;
 		}
 	}
-	if (dPlayer[mx][my] != 0) {
-		const uint8_t playerId = std::abs(dPlayer[mx][my]) - 1;
+	if (dPlayer[tile.x][tile.y] != 0) {
+		const uint8_t playerId = std::abs(dPlayer[tile.x][tile.y]) - 1;
 		Player &player = Players[playerId];
 		if (&player != MyPlayer) {
-			cursPosition = { mx, my };
+			cursPosition = tile;
 			PlayerUnderCursor = &player;
 		}
 	}
-	if (TileContainsDeadPlayer({ mx, my })) {
+	if (TileContainsDeadPlayer(tile)) {
 		for (const Player &player : Players) {
-			if (player.position.tile == Point { mx, my } && &player != MyPlayer) {
-				cursPosition = { mx, my };
+			if (player.position.tile == tile && &player != MyPlayer) {
+				cursPosition = tile;
 				PlayerUnderCursor = &player;
 			}
 		}
@@ -151,10 +151,10 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	if (pcurs == CURSOR_RESURRECT) {
 		for (int xx = -1; xx < 2; xx++) {
 			for (int yy = -1; yy < 2; yy++) {
-				if (TileContainsDeadPlayer({ mx + xx, my + yy })) {
+				if (TileContainsDeadPlayer(tile + Displacement { xx, yy })) {
 					for (const Player &player : Players) {
-						if (player.position.tile.x == mx + xx && player.position.tile.y == my + yy && &player != MyPlayer) {
-							cursPosition = Point { mx, my } + Displacement { xx, yy };
+						if (player.position.tile == tile + Displacement { xx, yy } && &player != MyPlayer) {
+							cursPosition = tile + Displacement { xx, yy };
 							PlayerUnderCursor = &player;
 						}
 					}
@@ -162,11 +162,11 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 			}
 		}
 	}
-	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
-		const uint8_t playerId = std::abs(dPlayer[mx + 1][my + 1]) - 1;
+	if (tile.x + 1 < MAXDUNX && tile.y + 1 < MAXDUNY && dPlayer[tile.x + 1][tile.y + 1] != 0) {
+		const uint8_t playerId = std::abs(dPlayer[tile.x + 1][tile.y + 1]) - 1;
 		const Player &player = Players[playerId];
 		if (&player != MyPlayer && player._pHitPoints != 0) {
-			cursPosition = Point { mx, my } + Displacement { 1, 1 };
+			cursPosition = tile + Displacement { 1, 1 };
 			PlayerUnderCursor = &player;
 		}
 	}
@@ -174,10 +174,11 @@ bool TrySelectPlayer(bool flipflag, int mx, int my)
 	return PlayerUnderCursor != nullptr;
 }
 
+/**
+ * @brief Try find an object starting with the tile below the current tile (tall objects like doors)
+ */
 bool TrySelectObject(bool flipflag, Point tile)
 {
-	// No monsters or players under the cursor, try find an object starting with the tile below the current tile (tall
-	//  objects like doors)
 	Point testPosition = tile + Direction::South;
 	Object *object = FindObjectAtPosition(testPosition);
 
@@ -207,33 +208,33 @@ bool TrySelectObject(bool flipflag, Point tile)
 	return true;
 }
 
-bool TrySelectItem(bool flipflag, int mx, int my)
+bool TrySelectItem(bool flipflag, Point tile)
 {
-	if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
-		const uint8_t itemId = dItem[mx + 1][my] - 1;
+	if (!flipflag && tile.x + 1 < MAXDUNX && dItem[tile.x + 1][tile.y] > 0) {
+		const uint8_t itemId = dItem[tile.x + 1][tile.y] - 1;
 		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Middle)) {
-			cursPosition = Point { mx, my } + Displacement { 1, 0 };
+			cursPosition = tile + Displacement { 1, 0 };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
-	if (flipflag && my + 1 < MAXDUNY && dItem[mx][my + 1] > 0) {
-		const uint8_t itemId = dItem[mx][my + 1] - 1;
+	if (flipflag && tile.y + 1 < MAXDUNY && dItem[tile.x][tile.y + 1] > 0) {
+		const uint8_t itemId = dItem[tile.x][tile.y + 1] - 1;
 		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Middle)) {
-			cursPosition = Point { mx, my } + Displacement { 0, 1 };
+			cursPosition = tile + Displacement { 0, 1 };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
-	if (dItem[mx][my] > 0) {
-		const uint8_t itemId = dItem[mx][my] - 1;
+	if (dItem[tile.x][tile.y] > 0) {
+		const uint8_t itemId = dItem[tile.x][tile.y] - 1;
 		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Bottom)) {
-			cursPosition = { mx, my };
+			cursPosition = tile;
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
-	if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dItem[mx + 1][my + 1] > 0) {
-		const uint8_t itemId = dItem[mx + 1][my + 1] - 1;
+	if (tile.x + 1 < MAXDUNX && tile.y + 1 < MAXDUNY && dItem[tile.x + 1][tile.y + 1] > 0) {
+		const uint8_t itemId = dItem[tile.x + 1][tile.y + 1] - 1;
 		if (HasAnyOf(Items[itemId].selectionRegion, SelectionRegion::Middle)) {
-			cursPosition = Point { mx, my } + Displacement { 1, 1 };
+			cursPosition = tile + Displacement { 1, 1 };
 			pcursitem = static_cast<int8_t>(itemId);
 		}
 	}
@@ -627,56 +628,64 @@ void CheckRportal()
 	}
 }
 
-void ExitCheck()
+void DisplayTriggerInfo()
 {
 	CheckTrigForce();
 	CheckTown();
 	CheckRportal();
 }
 
-void AlterMousePositionViaPanels(int &sx, int &sy)
+/**
+ * @brief Adjusts mouse position based on panels
+ */
+void AlterMousePositionViaPanels(Point &screenPosition)
 {
-	// Adjusts mouse position based on panels
 	if (CanPanelsCoverView()) {
 		if (IsLeftPanelOpen()) {
-			sx -= GetScreenWidth() / 4;
+			screenPosition.x -= GetScreenWidth() / 4;
 		} else if (IsRightPanelOpen()) {
-			sx += GetScreenWidth() / 4;
+			screenPosition.x += GetScreenWidth() / 4;
 		}
 	}
 }
 
-void AlterMousePositionViaScrolling(int &sy, Rectangle mainPanel)
+/**
+ * @brief If scrolling, offset the mousepos
+ */
+void AlterMousePositionViaScrolling(Point &screenPosition, Rectangle mainPanel)
 {
-	// if scrolling, offset the mousepos
 	if (mainPanel.contains(MousePosition) && track_isscrolling()) {
-		sy = mainPanel.position.y - 1;
+		screenPosition.y = mainPanel.position.y - 1;
 	}
 }
 
-void AlterMousePositionViaZoom(int &sx, int &sy)
+/**
+ * @brief Adjust based on current zoom
+ */
+void AlterMousePositionViaZoom(Point &screenPosition)
 {
-	// Adjust based on current zoom
 	if (*sgOptions.Graphics.zoom) {
-		sx /= 2;
-		sy /= 2;
+		screenPosition.x /= 2;
+		screenPosition.y /= 2;
 	}
 }
 
-void AlterMousePositionViaPlayer(int &sx, int &sy, const Player &myPlayer)
+/**
+ * @brief Adjust by player offset and tile grid alignment
+ */
+void AlterMousePositionViaPlayer(Point &screenPosition, const Player &myPlayer)
 {
-	// Adjust by player offset and tile grid alignment
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
-	sx += xo;
-	sy += yo;
+	screenPosition.x += xo;
+	screenPosition.y += yo;
 
 	// Adjust for player walking
 	if (myPlayer.isWalking()) {
 		Displacement offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-		sx -= offset.deltaX;
-		sy -= offset.deltaY;
+		screenPosition.x -= offset.deltaX;
+		screenPosition.y -= offset.deltaY;
 
 		// Predict the next frame when walking to avoid input jitter
 		DisplacementOf<int16_t> offset2 = myPlayer.position.CalculateWalkingOffsetShifted8(myPlayer._pdir, myPlayer.AnimInfo);
@@ -686,12 +695,12 @@ void AlterMousePositionViaPlayer(int &sx, int &sy, const Player &myPlayer)
 		fx -= (offset2.deltaX + velocity.deltaX) / 256;
 		fy -= (offset2.deltaY + velocity.deltaY) / 256;
 
-		sx -= fx;
-		sy -= fy;
+		screenPosition.x -= fx;
+		screenPosition.y -= fy;
 	}
 }
 
-void ConvertToTileGrid(int &sx, int &sy, int &mx, int &my)
+Point ConvertToTileGrid(Point &screenPosition)
 {
 	int columns = 0;
 	int rows = 0;
@@ -699,56 +708,63 @@ void ConvertToTileGrid(int &sx, int &sy, int &mx, int &my)
 	int lrow = rows - RowsCoveredByPanel();
 
 	// Center player tile on screen
-	mx = ViewPosition.x;
-	my = ViewPosition.y;
-	ShiftGrid(&mx, &my, -columns / 2, -lrow / 2);
+	Point currentTile = ViewPosition;
+	ShiftGrid(&currentTile, -columns / 2, -lrow / 2);
 
 	// Align grid
 	if ((columns % 2) == 0 && (lrow % 2) == 0) {
-		sy += TILE_HEIGHT / 2;
+		screenPosition.y += TILE_HEIGHT / 2;
 	} else if ((columns % 2) != 0 && (lrow % 2) != 0) {
-		sx -= TILE_WIDTH / 2;
+		screenPosition.x -= TILE_WIDTH / 2;
 	} else if ((columns % 2) != 0 && (lrow % 2) == 0) {
-		my++;
+		currentTile.y++;
 	}
 
 	if (*sgOptions.Graphics.zoom) {
-		sy -= TILE_HEIGHT / 4;
+		screenPosition.y -= TILE_HEIGHT / 4;
 	}
 
-	int tx = sx / TILE_WIDTH;
-	int ty = sy / TILE_HEIGHT;
-	ShiftGrid(&mx, &my, tx, ty);
+	int tx = screenPosition.x / TILE_WIDTH;
+	int ty = screenPosition.y / TILE_HEIGHT;
+	ShiftGrid(&currentTile, tx, ty);
+
+	return currentTile;
 }
 
-void ShiftToDiamondGridAlignment(int &sx, int &sy, int &mx, int &my, int &px, int &py, bool &flipx, bool &flipy)
+/**
+ * @brief Shift position to match diamond grid alignment
+ */
+void ShiftToDiamondGridAlignment(Point screenPosition, Point &tile, bool &flipflag)
 {
-	// Shift position to match diamond grid alignment
-	px = sx % TILE_WIDTH;
-	py = sy % TILE_HEIGHT;
+	int px = screenPosition.x % TILE_WIDTH;
+	int py = screenPosition.y % TILE_HEIGHT;
 
-	flipy = py < (px / 2);
+	bool flipy = py < (px / 2);
 	if (flipy) {
-		my--;
+		tile.y--;
 	}
-	flipx = py >= TILE_HEIGHT - (px / 2);
+	bool flipx = py >= TILE_HEIGHT - (px / 2);
 	if (flipx) {
-		mx++;
+		tile.x++;
 	}
 
-	mx = std::clamp(mx, 0, MAXDUNX - 1);
-	my = std::clamp(my, 0, MAXDUNY - 1);
+	tile.x = std::clamp(tile.x, 0, MAXDUNX - 1);
+	tile.y = std::clamp(tile.y, 0, MAXDUNY - 1);
+
+	flipflag = (flipy && flipx) || ((flipy || flipx) && px < TILE_WIDTH / 2);
 }
 
-bool CheckMouseHold(int mx, int my, const Point &currentTile)
+/**
+ * @brief While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
+ */
+bool CheckMouseHold(const Point currentTile)
 {
-	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
 	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
 		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
-			cursPosition = { mx, my };
-			ExitCheck();
+			cursPosition = currentTile;
+			DisplayTriggerInfo();
 		}
 		return true;
 	}
@@ -757,7 +773,6 @@ bool CheckMouseHold(int mx, int my, const Point &currentTile)
 
 void ResetCursorInfo()
 {
-	// Simple reset of namespace values
 	pcurstemp = pcursmonst;
 	pcursmonst = -1;
 	ObjectUnderCursor = nullptr;
@@ -773,13 +788,13 @@ void ResetCursorInfo()
 	trigflag = false;
 }
 
-bool CheckPlayerState(int mx, int my, const Player &myPlayer)
+bool CheckPlayerState(const Point currentTile, const Player &myPlayer)
 {
 	if (myPlayer._pInvincible) {
 		return true;
 	}
 	if (!myPlayer.HoldItem.isEmpty() || SpellSelectFlag) {
-		cursPosition = { mx, my };
+		cursPosition = currentTile;
 		return true;
 	}
 	return false;
@@ -810,13 +825,13 @@ bool CheckPanelsAndFlags(Rectangle mainPanel)
 	return false;
 }
 
-bool CheckCursorActions(int mx, int my, const Point &currentTile, bool flipflag)
+bool CheckCursorActions(const Point currentTile, bool flipflag)
 {
 	if (pcurs == CURSOR_IDENTIFY) {
 		ObjectUnderCursor = nullptr;
 		pcursmonst = -1;
 		pcursitem = -1;
-		cursPosition = { mx, my };
+		cursPosition = currentTile;
 		return true;
 	}
 
@@ -848,66 +863,44 @@ bool CheckCursorActions(int mx, int my, const Point &currentTile, bool flipflag)
 		}
 	}
 
-	if (TrySelectPlayer(flipflag, mx, my)) {
-		// found a player
-		return true;
-	}
-
-	if (TrySelectObject(flipflag, currentTile)) {
-		// found an object
-		return true;
-	}
-
-	if (TrySelectItem(flipflag, mx, my)) {
-		// found an item
-		return true;
-	}
-
-	return false;
+	return TrySelectPlayer(flipflag, currentTile)
+	    || TrySelectObject(flipflag, currentTile)
+	    || TrySelectItem(flipflag, currentTile);
 }
 
+/**
+ * @brief Checks for early return if an item is highlighted
+ */
 void CheckCursMove()
 {
-	// Checks for early return if an item is highlighted
 	if (IsItemLabelHighlighted())
 		return;
 
-	int sx = MousePosition.x;
-	int sy = MousePosition.y;
+	Point screenPosition = MousePosition;
 	const Rectangle &mainPanel = GetMainPanel();
 
-	AlterMousePositionViaPanels(sx, sy);
-	AlterMousePositionViaScrolling(sy, mainPanel);
-	AlterMousePositionViaZoom(sx, sy);
+	AlterMousePositionViaPanels(screenPosition);
+	AlterMousePositionViaScrolling(screenPosition, mainPanel);
+	AlterMousePositionViaZoom(screenPosition);
 
 	const Player &myPlayer = *MyPlayer;
 
-	AlterMousePositionViaPlayer(sx, sy, myPlayer);
+	AlterMousePositionViaPlayer(screenPosition, myPlayer);
 
-	int mx;
-	int my;
-	ConvertToTileGrid(sx, sy, mx, my);
+	bool flipflag = false;
+	Point currentTile = ConvertToTileGrid(screenPosition);
 
-	bool flipx;
-	bool flipy;
-	int px;
-	int py;
+	ShiftToDiamondGridAlignment(screenPosition, currentTile, flipflag);
 
-	ShiftToDiamondGridAlignment(sx, sy, mx, my, px, py, flipx, flipy);
-
-	const Point currentTile { mx, my };
-
-	if (CheckMouseHold(mx, my, currentTile)) return;
-
-	bool flipflag = (flipy && flipx) || ((flipy || flipx) && px < TILE_WIDTH / 2);
+	if (CheckMouseHold(currentTile)) return;
 
 	ResetCursorInfo();
 
-	if (CheckPlayerState(mx, my, myPlayer) || CheckPanelsAndFlags(mainPanel) || CheckCursorActions(mx, my, currentTile, flipflag)) return;
+	if (CheckPlayerState(currentTile, myPlayer) || CheckPanelsAndFlags(mainPanel) || CheckCursorActions(currentTile, flipflag)) return;
 
 	// update cursor position
 	cursPosition = currentTile;
-	ExitCheck();
+	DisplayTriggerInfo();
 }
 
 } // namespace devilution

@@ -1386,10 +1386,10 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 	PrevCursorRect = {};
 }
 
-void ShiftGrid(int *x, int *y, int horizontal, int vertical)
+void ShiftGrid(Point *offset, int horizontal, int vertical)
 {
-	*x += vertical + horizontal;
-	*y += vertical - horizontal;
+	offset->x += vertical + horizontal;
+	offset->y += vertical - horizontal;
 }
 
 int RowsCoveredByPanel()
