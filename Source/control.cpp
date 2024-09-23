@@ -958,7 +958,6 @@ void DrawMainPanel(const Surface &out)
 void DrawMainPanelButtons(const Surface &out)
 {
 	const Point mainPanelPosition = GetMainPanel().position;
-	int totalButtons = IsChatAvailable() ? TotalMpMainPanelButtons : TotalSpMainPanelButtons;
 
 	for (int i = 0; i < TotalSpMainPanelButtons; i++) {
 		if (!MainPanelButtons[i]) {
@@ -991,8 +990,6 @@ void ResetMainPanelButtons()
 
 void CheckMainPanelButton()
 {
-	const Point mainPanelPosition = GetMainPanel().position;
-
 	int totalButtons = IsChatAvailable() ? TotalMpMainPanelButtons : TotalSpMainPanelButtons;
 
 	for (int i = 0; i < totalButtons; i++) {
@@ -1288,7 +1285,6 @@ void CheckLevelButton()
 		return;
 	}
 
-	const Point mainPanelPosition = GetMainPanel().position;
 	Rectangle button = LevelButtonRect;
 
 	SetPanelObjectPosition(UiPanels::Main, button);
@@ -1299,7 +1295,6 @@ void CheckLevelButton()
 
 void CheckLevelButtonUp()
 {
-	const Point mainPanelPosition = GetMainPanel().position;
 	Rectangle button = LevelButtonRect;
 
 	SetPanelObjectPosition(UiPanels::Main, button);
@@ -1585,8 +1580,6 @@ void CheckMuteButtonUp()
 
 	if (!buttons.contains(MousePosition))
 		return;
-
-	const Point mainPanelPosition = GetMainPanel().position;
 
 	int off = (MousePosition.y - buttons.position.y) / (MuteButtonRect.size.height + MuteButtonPadding);
 
