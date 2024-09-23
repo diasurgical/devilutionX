@@ -119,7 +119,8 @@ struct Missile {
 	bool _miLightFlag;
 	bool _miPreFlag;
 	uint32_t _miUniqTrans;
-	int _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
+	/** @brief Time to live for the missile in game ticks; once 0, the missile will be marked for deletion via _miDelFlag */
+	int duration;
 	int _misource;
 	mienemy_type _micaster;
 	int _midam;
