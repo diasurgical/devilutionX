@@ -3734,9 +3734,9 @@ void M_ClearSquares(const Monster &monster)
 	}
 }
 
-void M_GetKnockback(Monster &monster)
+void M_GetKnockback(Monster &monster, WorldTilePosition attackerStartPos)
 {
-	Direction dir = Opposite(monster.direction);
+	Direction dir = GetDirection(attackerStartPos, monster.position.tile);
 	if (!IsRelativeMoveOK(monster, monster.position.old, dir)) {
 		return;
 	}
@@ -4449,7 +4449,7 @@ void MissToMonst(Missile &missile, Point position)
 
 		if (player->_pmode != PM_GOTHIT && player->_pmode != PM_DEATH)
 			StartPlrHit(*player, 0, true);
-		Point newPosition = oldPosition + monster.direction;
+		Point newPosition = oldPosition + GetDirection(missile.position.start, oldPosition);
 		if (PosOkPlayer(*player, newPosition)) {
 			player->position.tile = newPosition;
 			FixPlayerLocation(*player, player->_pdir);
@@ -4470,7 +4470,7 @@ void MissToMonst(Missile &missile, Point position)
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
-	Point newPosition = oldPosition + monster.direction;
+	Point newPosition = oldPosition + GetDirection(missile.position.start, oldPosition);
 	if (IsTileAvailable(*target, newPosition)) {
 		monster.occupyTile(newPosition, false);
 		dMonster[oldPosition.x][oldPosition.y] = 0;
