@@ -151,7 +151,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.animInfo.tickCounterOfCurrentFrame = GenerateRnd(monster.animInfo.ticksPerFrame - 1);
 	monster.animInfo.currentFrame = GenerateRnd(monster.animInfo.numberOfFrames - 1);
 
-	int maxhp = monster.data().hitPointsMinimum + GenerateRnd(monster.data().hitPointsMaximum - monster.data().hitPointsMinimum + 1);
+	int maxhp = RandomIntBetween(monster.data().hitPointsMinimum, monster.data().hitPointsMaximum);
 	if (monster.type().type == MT_DIABLO && !gbIsHellfire) {
 		maxhp /= 2;
 	}
@@ -1051,7 +1051,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	if (hit >= hper)
 		return;
 
-	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
+	int dam = RandomIntBetween(mind, maxd) << 6;
 	ApplyMonsterDamage(DamageType::Physical, target, dam);
 
 	if (attacker.isPlayerMinion()) {
@@ -1156,7 +1156,8 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 			}
 		}
 	}
-	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
+	// New method fixes a bug which caused the maximum possible damage value to be 63/64ths too low.
+	int dam = RandomIntBetween(minDam << 6, maxDam << 6);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (&player == MyPlayer) {
 		if (player.wReflections > 0) {
@@ -2612,7 +2613,7 @@ void CounselorAi(Monster &monster)
 		if (distanceToEnemy >= 2) {
 			if (v < 5 * (monster.intelligence + 10) && LineClearMissile(monster.position.tile, monster.enemyPosition)) {
 				constexpr MissileID MissileTypes[4] = { MissileID::Firebolt, MissileID::ChargedBolt, MissileID::LightningControl, MissileID::Fireball };
-				StartRangedAttack(monster, MissileTypes[monster.intelligence], monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+				StartRangedAttack(monster, MissileTypes[monster.intelligence], RandomIntBetween(monster.minDamage, monster.maxDamage));
 			} else if (GenerateRnd(100) < 30) {
 				monster.goal = MonsterGoal::Move;
 				monster.goalVar1 = 0;
@@ -3733,9 +3734,9 @@ void M_ClearSquares(const Monster &monster)
 	}
 }
 
-void M_GetKnockback(Monster &monster)
+void M_GetKnockback(Monster &monster, WorldTilePosition attackerStartPos)
 {
-	Direction dir = Opposite(monster.direction);
+	Direction dir = GetDirection(attackerStartPos, monster.position.tile);
 	if (!IsRelativeMoveOK(monster, monster.position.old, dir)) {
 		return;
 	}
@@ -4308,9 +4309,9 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
 	} else {
-		AddPanelString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
 	}
 
 	if (MonsterKillCounts[mt] >= 30) {
@@ -4342,12 +4343,12 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
 		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHell;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
-			AddPanelString(_("No magic resistance"));
+			AddInfoBoxString(_("No magic resistance"));
 		} else {
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
 				std::string resists = std::string(_("Resists:"));
@@ -4357,7 +4358,7 @@ void PrintMonstHistory(int mt)
 					resists.append(_(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
 					resists.append(_(" Lightning"));
-				AddPanelString(resists);
+				AddInfoBoxString(resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				std::string immune = std::string(_("Immune:"));
@@ -4367,7 +4368,7 @@ void PrintMonstHistory(int mt)
 					immune.append(_(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
 					immune.append(_(" Lightning"));
-				AddPanelString(immune);
+				AddInfoBoxString(immune);
 			}
 		}
 	}
@@ -4377,22 +4378,22 @@ void PrintUniqueHistory()
 {
 	Monster &monster = Monsters[pcursmonst];
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
 	}
 
 	int res = monster.resistance & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (res == 0) {
-		AddPanelString(_("No resistances"));
-		AddPanelString(_("No Immunities"));
+		AddInfoBoxString(_("No resistances"));
+		AddInfoBoxString(_("No Immunities"));
 	} else {
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0)
-			AddPanelString(_("Some Magic Resistances"));
+			AddInfoBoxString(_("Some Magic Resistances"));
 		else
-			AddPanelString(_("No resistances"));
+			AddInfoBoxString(_("No resistances"));
 		if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
-			AddPanelString(_("Some Magic Immunities"));
+			AddInfoBoxString(_("Some Magic Immunities"));
 		} else {
-			AddPanelString(_("No Immunities"));
+			AddInfoBoxString(_("No Immunities"));
 		}
 	}
 }
@@ -4448,7 +4449,7 @@ void MissToMonst(Missile &missile, Point position)
 
 		if (player->_pmode != PM_GOTHIT && player->_pmode != PM_DEATH)
 			StartPlrHit(*player, 0, true);
-		Point newPosition = oldPosition + monster.direction;
+		Point newPosition = oldPosition + GetDirection(missile.position.start, oldPosition);
 		if (PosOkPlayer(*player, newPosition)) {
 			player->position.tile = newPosition;
 			FixPlayerLocation(*player, player->_pdir);
@@ -4469,7 +4470,7 @@ void MissToMonst(Missile &missile, Point position)
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
-	Point newPosition = oldPosition + monster.direction;
+	Point newPosition = oldPosition + GetDirection(missile.position.start, oldPosition);
 	if (IsTileAvailable(*target, newPosition)) {
 		monster.occupyTile(newPosition, false);
 		dMonster[oldPosition.x][oldPosition.y] = 0;

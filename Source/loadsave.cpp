@@ -761,7 +761,7 @@ void LoadMissile(LoadHelper *file)
 	missile._miLightFlag = file->NextBool32();
 	missile._miPreFlag = file->NextBool32();
 	missile._miUniqTrans = file->NextLE<uint32_t>();
-	missile._mirange = file->NextLE<int32_t>();
+	missile.duration = file->NextLE<int32_t>();
 	missile._misource = file->NextLE<int32_t>();
 	missile._micaster = static_cast<mienemy_type>(file->NextLE<int32_t>());
 	missile._midam = file->NextLE<int32_t>();
@@ -867,7 +867,7 @@ void LoadItem(LoadHelper &file, Item &item)
 
 void LoadPremium(LoadHelper &file, int i)
 {
-	LoadAndValidateItemData(file, premiumitems[i]);
+	LoadAndValidateItemData(file, PremiumItems[i]);
 }
 
 void LoadQuest(LoadHelper *file, int i)
@@ -1549,7 +1549,7 @@ void SaveMissile(SaveHelper *file, const Missile &missile)
 	file->WriteLE<uint32_t>(missile._miLightFlag ? 1 : 0);
 	file->WriteLE<uint32_t>(missile._miPreFlag ? 1 : 0);
 	file->WriteLE<uint32_t>(missile._miUniqTrans);
-	file->WriteLE<int32_t>(missile._mirange);
+	file->WriteLE<int32_t>(missile.duration);
 	file->WriteLE<int32_t>(missile._misource);
 	file->WriteLE<int32_t>(missile._micaster);
 	file->WriteLE<int32_t>(missile._midam);
@@ -2382,7 +2382,7 @@ void LoadGame(bool firstflag)
 	int viewX = file.NextBE<int32_t>();
 	int viewY = file.NextBE<int32_t>();
 	invflag = file.NextBool8();
-	chrflag = file.NextBool8();
+	CharFlag = file.NextBool8();
 	int tmpNummonsters = file.NextBE<int32_t>();
 	auto savedItemCount = file.NextBE<uint32_t>();
 	int tmpNummissiles = file.NextBE<int32_t>();
@@ -2523,8 +2523,8 @@ void LoadGame(bool firstflag)
 		memset(dLight, 0, sizeof(dLight));
 	}
 
-	numpremium = file.NextBE<int32_t>();
-	premiumlevel = file.NextBE<int32_t>();
+	PremiumItemCount = file.NextBE<int32_t>();
+	PremiumItemLevel = file.NextBE<int32_t>();
 
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(file, i);
@@ -2666,7 +2666,7 @@ void SaveGameData(SaveWriter &saveWriter)
 	file.WriteBE<int32_t>(ViewPosition.x);
 	file.WriteBE<int32_t>(ViewPosition.y);
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
-	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
+	file.WriteLE<uint8_t>(CharFlag ? 1 : 0);
 	file.WriteBE(static_cast<int32_t>(ActiveMonsterCount));
 	file.WriteBE<int32_t>(ActiveItemCount);
 	// ActiveMissileCount will be a value from 0-125 (for vanilla compatibility). Writing an unsigned value here to avoid
@@ -2786,11 +2786,11 @@ void SaveGameData(SaveWriter &saveWriter)
 		}
 	}
 
-	file.WriteBE<int32_t>(numpremium);
-	file.WriteBE<int32_t>(premiumlevel);
+	file.WriteBE<int32_t>(PremiumItemCount);
+	file.WriteBE<int32_t>(PremiumItemLevel);
 
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
-		SaveItem(file, premiumitems[i]);
+		SaveItem(file, PremiumItems[i]);
 
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);

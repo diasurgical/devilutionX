@@ -27,7 +27,7 @@ R 32 _miDrawFlag
 R 32 _miLightFlag
 R 32 _miPreFlag
 R 32 _miUniqTrans
-R 32 _mirange
+R 32 duration
 R 32 _misource
 R 32 _micaster
 R 32 _midam

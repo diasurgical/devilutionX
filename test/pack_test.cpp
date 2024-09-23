@@ -307,6 +307,7 @@ const ItemPack PackedDiabloItems[] = {
 
 constexpr ItemSpecialEffect EmpyreanBandSpecialEffect = ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::HalfTrapDamage;
 constexpr ItemSpecialEffect GrisworldEdgeSpecialEffect = ItemSpecialEffect::FireDamage | ItemSpecialEffect::Knockback | ItemSpecialEffect::FastAttack;
+constexpr ItemSpecialEffect FireArrows = ItemSpecialEffect::FireArrows | ItemSpecialEffect::FireDamage;
 
 const TestItemStruct DiabloItems[] = {
 	// clang-format off
@@ -401,7 +402,7 @@ const TestItemStruct DiabloItems[] = {
 	{ "Soldier's Sword of vigor",     ItemType::Sword,              1,      57,     31600,         6,        15,     0, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            60,        60,       66,         19,       0,        0,        0,        0,       20,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,           4,          25,        50,         0,         0,    127 },
 	{ "Fine Long Bow of the pit",     ItemType::Bow,                1,     102,      2152,         1,         6,     0, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            35,        35,       49,         10,       0,       -2,       -2,       -2,       -2,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,           4,          28,        25,         0,        30,    145 },
 	{ "Sharp Sword of atrophy",       ItemType::Sword,              1,      60,      1958,         2,        10,     0, ItemSpecialEffect::None,                        0, SpellID::Null,                 0,             0,            24,        40,       34,          4,       0,        0,        0,       -1,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,           4,          24,        30,         0,        30,    125 },
-	{ "Emerald Bow of burning",       ItemType::Bow,                1,     120,    107000,         1,        14,     0, ItemSpecialEffect::FireArrows,                  0, SpellID::Null,                 0,             0,            60,        60,        0,          0,       0,        0,        0,        0,        0,      50,      50,      50,         0,       0,           0,           0,          0,            0,      0,          1,         16,          0,          0,          11,          42,        45,         0,        80,    150 },
+	{ "Emerald Bow of burning",       ItemType::Bow,                1,     120,    107000,         1,        14,     0, FireArrows,                                     0, SpellID::Null,                 0,             0,            60,        60,        0,          0,       0,        0,        0,        0,        0,      50,      50,      50,         0,       0,           0,           0,          0,            0,      0,          1,         16,          0,          0,          11,          42,        45,         0,        80,    150 },
 	// clang-format on
 };
 
@@ -660,6 +661,7 @@ const ItemPack PackedHellfireItems[] = {
 constexpr ItemSpecialEffect GnatStingSpecialEffect = ItemSpecialEffect::MultipleArrows | ItemSpecialEffect::QuickAttack;
 constexpr ItemSpecialEffect ThunderclapSpecialEffect = ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage;
 constexpr ItemSpecialEffect ExplosiveArrows = ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows;
+constexpr ItemSpecialEffect LightningArrows = ItemSpecialEffect::LightningArrows | ItemSpecialEffect::LightningDamage;
 
 const TestItemStruct HellfireItems[] = {
 	// clang-format off
@@ -673,7 +675,7 @@ const TestItemStruct HellfireItems[] = {
 	{ "Messerschmidt's Reaver",         ItemType::Axe,                1,     163,     58000,        12,        30,     0, ItemSpecialEffect::FireDamage,                0, SpellID::Null,                 0,             0,            75,        75,      200,          0,       0,        5,        5,        5,        5,       0,       0,       0,         0,   -3200,          15,           0,          0,            0,     44,          2,         12,          0,          0,          -1,          -1,        80,         0,         0,    135 },
 	{ "Vicious Maul of structure",      ItemType::Mace,               1,     122,     10489,         6,        20,     0, ItemSpecialEffect::None,                      0, SpellID::Null,                 0,             0,           127,       128,       72,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,           2,          35,        55,         0,         0,    142 },
 	{ "Short Sword",                    ItemType::Sword,              1,      64,       120,         2,         6,     0, ItemSpecialEffect::None,                      0, SpellID::Null,                 0,             0,            15,        24,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,        18,         0,         0,    119 },
-	{ "Long Battle Bow of shock",       ItemType::Bow,                1,     119,      8000,         1,        10,     0, ItemSpecialEffect::LightningArrows,           0, SpellID::Null,                 0,             0,            18,        50,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          1,          6,          -1,          43,        30,         0,        60,    148 },
+	{ "Long Battle Bow of shock",       ItemType::Bow,                1,     119,      8000,         1,        10,     0, LightningArrows,                              0, SpellID::Null,                 0,             0,            18,        50,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          1,          6,          -1,          43,        30,         0,        60,    148 },
 	{ "Short Bow of magic",             ItemType::Bow,                1,     118,       400,         1,         4,     0, ItemSpecialEffect::None,                      0, SpellID::Null,                 0,             0,            30,        30,        0,          0,       0,        0,        1,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          21,         0,         0,         0,    143 },
 	{ "Red Long Staff of Healing",      ItemType::Staff,              1,     123,      1360,         4,         8,     0, ItemSpecialEffect::None,                     23, SpellID::Healing,             22,            33,            35,        35,        0,          0,       0,        0,        0,        0,        0,      10,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,           8,          -1,         0,        17,         0,    152 },
 	{ "Buckler",                        ItemType::Shield,             2,      83,        30,         0,         0,     5, ItemSpecialEffect::None,                      0, SpellID::Null,                 0,             0,             6,        16,        0,          0,       0,        0,        0,        0,        0,       0,       0,       0,         0,       0,           0,           0,          0,            0,      0,          0,          0,          0,          0,          -1,          -1,         0,         0,         0,     71 },
@@ -1368,13 +1370,13 @@ TEST_F(NetPackTest, UnPackNetPlayer_invalid_townItemLevel)
 		if ((item._iCreateInfo & CF_TOWN) == 0)
 			continue;
 		uint16_t createInfo = item._iCreateInfo;
-		bool boyItem = (item._iCreateInfo & CF_BOY) != 0;
+		bool BoyItem = (item._iCreateInfo & CF_BOY) != 0;
 		item._iCreateInfo &= ~CF_LEVEL;
-		item._iCreateInfo |= boyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
+		item._iCreateInfo |= BoyItem ? MyPlayer->getMaxCharacterLevel() + 1 : 31;
 		ASSERT_FALSE(TestNetPackValidation());
 		item._iCreateInfo = createInfo;
 
-		size_t &count = boyItem ? boyCount : otherCount;
+		size_t &count = BoyItem ? boyCount : otherCount;
 		count++;
 	}
 	ASSERT_GT(boyCount, 0);

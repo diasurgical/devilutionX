@@ -9,10 +9,13 @@
 #include <SDL.h>
 #include <expected.hpp>
 
+#include <fmt/format.h>
+
 #include "appfat.h"
 #include "diablo.h"
 #include "mpq/mpq_reader.hpp"
 #include "utils/file_util.h"
+#include "utils/language.h"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
 
@@ -220,7 +223,7 @@ struct AssetHandle {
 
 [[noreturn]] inline void FailedToOpenFileError(std::string_view path, std::string_view error)
 {
-	app_fatal(StrCat("Failed to open file:\n", path, "\n\n", error));
+	app_fatal(fmt::format(fmt::runtime(_("Failed to open file:\n{:s}\n\n{:s}\n\nThe MPQ file(s) might be damaged. Please check the file integrity.")), path, error));
 }
 
 inline bool ValidatAssetRef(std::string_view path, const AssetRef &ref)

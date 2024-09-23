@@ -1659,7 +1659,7 @@ size_t OnKnockback(const TCmd *pCmd, Player &player)
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
 		Monster &monster = Monsters[monsterIdx];
-		M_GetKnockback(monster);
+		M_GetKnockback(monster, player.position.tile);
 		M_StartHit(monster, player, 0);
 	}
 

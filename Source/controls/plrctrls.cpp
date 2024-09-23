@@ -65,10 +65,10 @@ quest_id pcursquest = Q_INVALID;
  */
 bool InGameMenu()
 {
-	return stextflag != TalkID::None
+	return ActiveStore != TalkID::None
 	    || HelpFlag
 	    || ChatLogFlag
-	    || talkflag
+	    || ChatFlag
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
@@ -555,14 +555,14 @@ void AttrIncBtnSnap(AxisDirection dir)
 	if (dir.y == AxisDirectionY_NONE)
 		return;
 
-	if (chrbtnactive && MyPlayer->_pStatPts <= 0)
+	if (CharPanelButtonActive && MyPlayer->_pStatPts <= 0)
 		return;
 
 	// first, find our cursor location
 	int slot = 0;
 	Rectangle button;
 	for (int i = 0; i < 4; i++) {
-		button = CharButtonRect[i];
+		button = CharPanelButtonRect[i];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.contains(MousePosition)) {
 			slot = i;
@@ -579,7 +579,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	}
 
 	// move cursor to our new location
-	button = CharButtonRect[slot];
+	button = CharPanelButtonRect[slot];
 	button.position = GetPanelPosition(UiPanels::Character, button.position);
 	SetCursorPos(button.Center());
 }
@@ -1054,7 +1054,7 @@ bool BlurInventory()
 	CloseInventory();
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
-	if (chrflag)
+	if (CharFlag)
 		FocusOnCharInfo();
 
 	return true;
@@ -1242,11 +1242,11 @@ void SpellBookMove(AxisDirection dir)
 	dir = repeater.Get(dir);
 
 	if (dir.x == AxisDirectionX_LEFT) {
-		if (sbooktab > 0)
-			sbooktab--;
+		if (SpellbookTab > 0)
+			SpellbookTab--;
 	} else if (dir.x == AxisDirectionX_RIGHT) {
-		if ((gbIsHellfire && sbooktab < 4) || (!gbIsHellfire && sbooktab < 3))
-			sbooktab++;
+		if ((gbIsHellfire && SpellbookTab < 4) || (!gbIsHellfire && SpellbookTab < 3))
+			SpellbookTab++;
 	}
 }
 
@@ -1335,19 +1335,19 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (invflag) {
 		return &CheckInventoryMove;
 	}
-	if (chrflag && MyPlayer->_pStatPts > 0) {
+	if (CharFlag && MyPlayer->_pStatPts > 0) {
 		return &AttrIncBtnSnap;
 	}
-	if (spselflag) {
+	if (SpellSelectFlag) {
 		return &HotSpellMove;
 	}
-	if (sbookflag) {
+	if (SpellbookFlag) {
 		return &SpellBookMove;
 	}
 	if (QuestLogIsOpen) {
 		return &QuestLogMove;
 	}
-	if (stextflag != TalkID::None) {
+	if (ActiveStore != TalkID::None) {
 		return &StoreMove;
 	}
 	return nullptr;
@@ -1587,10 +1587,10 @@ void ProcessGameAction(const GameAction &action)
 	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
-		UseBeltItem(BLT_HEALING);
+		UseBeltItem(BeltItemType::Healing);
 		break;
 	case GameActionType_USE_MANA_POTION:
-		UseBeltItem(BLT_MANA);
+		UseBeltItem(BeltItemType::Mana);
 		break;
 	case GameActionType_PRIMARY_ACTION:
 		PerformPrimaryAction();
@@ -1603,21 +1603,21 @@ void ProcessGameAction(const GameAction &action)
 		break;
 	case GameActionType_TOGGLE_QUICK_SPELL_MENU:
 		if (!invflag || BlurInventory()) {
-			if (!spselflag)
+			if (!SpellSelectFlag)
 				DoSpeedBook();
 			else
-				spselflag = false;
+				SpellSelectFlag = false;
 			CloseCharPanel();
 			QuestLogIsOpen = false;
-			sbookflag = false;
+			SpellbookFlag = false;
 			CloseGoldWithdraw();
 			CloseStash();
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
 		ToggleCharPanel();
-		if (chrflag) {
-			spselflag = false;
+		if (CharFlag) {
+			SpellSelectFlag = false;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
 			FocusOnCharInfo();
@@ -1629,7 +1629,7 @@ void ProcessGameAction(const GameAction &action)
 			CloseCharPanel();
 			CloseGoldWithdraw();
 			CloseStash();
-			spselflag = false;
+			SpellSelectFlag = false;
 		} else {
 			QuestLogIsOpen = false;
 		}
@@ -1638,8 +1638,8 @@ void ProcessGameAction(const GameAction &action)
 		if (invflag) {
 			BlurInventory();
 		} else {
-			sbookflag = false;
-			spselflag = false;
+			SpellbookFlag = false;
+			SpellSelectFlag = false;
 			invflag = true;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
@@ -1649,8 +1649,8 @@ void ProcessGameAction(const GameAction &action)
 	case GameActionType_TOGGLE_SPELL_BOOK:
 		if (BlurInventory()) {
 			CloseInventory();
-			spselflag = false;
-			sbookflag = !sbookflag;
+			SpellSelectFlag = false;
+			SpellbookFlag = !SpellbookFlag;
 		}
 		break;
 	}
@@ -1782,7 +1782,7 @@ void plrctrls_after_game_logic()
 	Movement(*MyPlayer);
 }
 
-void UseBeltItem(int type)
+void UseBeltItem(BeltItemType type)
 {
 	for (int i = 0; i < MaxBeltItems; i++) {
 		Item &item = MyPlayer->SpdList[i];
@@ -1794,7 +1794,7 @@ void UseBeltItem(int type)
 		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SpellID::Healing);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
-		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
+		if ((type == BeltItemType::Healing && isHealing) || (type == BeltItemType::Mana && isMana)) {
 			UseInvItem(INVITEM_BELT_FIRST + i);
 			break;
 		}
@@ -1888,14 +1888,14 @@ void PerformPrimaryAction()
 		return;
 	}
 
-	if (spselflag) {
+	if (SpellSelectFlag) {
 		SetSpell();
 		return;
 	}
 
-	if (chrflag && !chrbtnactive && MyPlayer->_pStatPts > 0) {
+	if (CharFlag && !CharPanelButtonActive && MyPlayer->_pStatPts > 0) {
 		CheckChrBtns();
-		if (chrbtnactive)
+		if (CharPanelButtonActive)
 			ReleaseChrBtns(false);
 		return;
 	}
@@ -1969,7 +1969,7 @@ bool TryDropItem()
 
 void PerformSpellAction()
 {
-	if (InGameMenu() || QuestLogIsOpen || sbookflag)
+	if (InGameMenu() || QuestLogIsOpen || SpellbookFlag)
 		return;
 
 	if (invflag) {
@@ -1994,7 +1994,7 @@ void PerformSpellAction()
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
 
-	if (spselflag) {
+	if (SpellSelectFlag) {
 		SetSpell();
 		return;
 	}

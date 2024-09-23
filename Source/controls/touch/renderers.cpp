@@ -166,7 +166,7 @@ bool InteractsWithCharButton(Point point)
 		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
 			continue;
 		auto buttonId = static_cast<size_t>(attribute);
-		Rectangle button = CharButtonRect[buttonId];
+		Rectangle button = CharPanelButtonRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.contains(point)) {
 			return true;
@@ -382,7 +382,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 			continue;
 		}
 
-		if (potionType == BLT_HEALING) {
+		if (potionType == BeltItemType::Healing) {
 			if (item._iMiscId == IMISC_HEAL)
 				return GAMEPAD_HEALING;
 			if (item._iMiscId == IMISC_FULLHEAL)
@@ -391,7 +391,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 
-		if (potionType == BLT_MANA) {
+		if (potionType == BeltItemType::Mana) {
 			if (item._iMiscId == IMISC_MANA)
 				return GAMEPAD_MANA;
 			if (item._iMiscId == IMISC_FULLMANA)
@@ -419,7 +419,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()
 	// NEED: Confirm surface
 	if (qtextflag)
 		return GetTalkButtonType(virtualPadButton->isHeld);
-	if (chrflag && InteractsWithCharButton(MousePosition))
+	if (CharFlag && InteractsWithCharButton(MousePosition))
 		return GetApplyButtonType(virtualPadButton->isHeld);
 	if (invflag)
 		return GetInventoryButtonType();
@@ -430,7 +430,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetTownButtonType()
 {
-	if (stextflag != TalkID::None || pcursmonst != -1)
+	if (ActiveStore != TalkID::None || pcursmonst != -1)
 		return GetTalkButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
@@ -461,7 +461,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 	if (pcursmissile != nullptr || pcurstrig != -1 || pcursquest != Q_INVALID) {
 		return GetStairsButtonType(virtualPadButton->isHeld);
 	}
-	if (InGameMenu() || QuestLogIsOpen || sbookflag)
+	if (InGameMenu() || QuestLogIsOpen || SpellbookFlag)
 		return GetBlankButtonType(virtualPadButton->isHeld);
 	if (ObjectUnderCursor != nullptr)
 		return GetObjectButtonType(virtualPadButton->isHeld);
@@ -493,7 +493,7 @@ VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 		return GetEquipButtonType(virtualPadButton->isHeld);
 	}
 
-	if (!invflag && !InGameMenu() && !QuestLogIsOpen && !sbookflag)
+	if (!invflag && !InGameMenu() && !QuestLogIsOpen && !SpellbookFlag)
 		return GetCastButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
@@ -502,7 +502,7 @@ VirtualGamepadButtonType CancelButtonRenderer::GetButtonType()
 {
 	if (InGameMenu())
 		return GetBackButtonType(virtualPadButton->isHeld);
-	if (DoomFlag || invflag || sbookflag || QuestLogIsOpen || chrflag)
+	if (DoomFlag || invflag || SpellbookFlag || QuestLogIsOpen || CharFlag)
 		return GetBackButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }

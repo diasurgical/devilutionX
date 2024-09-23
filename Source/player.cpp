@@ -546,12 +546,13 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 	}
 
 	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+		// Fixed off by 1 error from Hellfire
 		int midam = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MissileID::SpectralArrow, TARGET_MONSTERS, player, midam, 0);
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = RandomIntBetween(mind, maxd);
 	dam += dam * player._pIBonusDam / 100;
 	dam += player._pIBonusDamMod;
 	int dam2 = dam << 6;
@@ -678,7 +679,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 		M_StartKill(monster, player);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-			M_GetKnockback(monster);
+			M_GetKnockback(monster, player.position.tile);
 		M_StartHit(monster, player, dam);
 	}
 	return true;
@@ -719,7 +720,7 @@ bool PlrHitPlr(Player &attacker, Player &target)
 
 	int mind = attacker._pIMinDam;
 	int maxd = attacker._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = RandomIntBetween(mind, maxd);
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 
@@ -866,6 +867,7 @@ bool DoRangeAttack(Player &player)
 			mistype = MissileID::LightningArrow;
 		}
 		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
+			// Fixed off by 1 error from Hellfire
 			dmg = RandomIntBetween(player._pIFMinDam, player._pIFMaxDam);
 			mistype = MissileID::SpectralArrow;
 		}
@@ -2771,7 +2773,7 @@ void ApplyPlrDamage(DamageType damageType, Player &player, int dam, int minHP /*
 	if (&player == MyPlayer && player._pHitPoints > 0) {
 		AddFloatingNumber(damageType, player, totalDamage);
 	}
-	if (totalDamage > 0 && player.pManaShield) {
+	if (totalDamage > 0 && player.pManaShield && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		uint8_t manaShieldLevel = player._pSplLvl[static_cast<int8_t>(SpellID::ManaShield)];
 		if (manaShieldLevel > 0) {
 			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
@@ -2982,10 +2984,8 @@ void ProcessPlayers()
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
 					ApplyPlrDamage(DamageType::Physical, player, 0, 0, 4);
 				}
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
-					player._pManaBase -= player._pMana;
-					player._pMana = 0;
-					RedrawComponent(PanelDrawComponent::Mana);
+				if (player.pManaShield && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
+					NetSendCmd(true, CMD_REMSHIELD);
 				}
 			}
 

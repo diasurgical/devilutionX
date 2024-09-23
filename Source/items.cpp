@@ -860,7 +860,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iFlags |= ItemSpecialEffect::MultipleArrows;
 		break;
 	case IPL_FIRE_ARROWS:
-		item._iFlags |= ItemSpecialEffect::FireArrows;
+		item._iFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::FireDamage);
 		item._iFlags &= ~ItemSpecialEffect::LightningArrows;
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
@@ -868,7 +868,7 @@ int SaveItemPower(const Player &player, Item &item, ItemPower &power)
 		item._iLMaxDam = 0;
 		break;
 	case IPL_LIGHT_ARROWS:
-		item._iFlags |= ItemSpecialEffect::LightningArrows;
+		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::LightningDamage);
 		item._iFlags &= ~ItemSpecialEffect::FireArrows;
 		item._iLMinDam = power.param1;
 		item._iLMaxDam = power.param2;
@@ -1636,90 +1636,90 @@ void PrintItemOil(char iDidx)
 {
 	switch (iDidx) {
 	case IMISC_OILACC:
-		AddPanelString(_("increases a weapon's"));
-		AddPanelString(_("chance to hit"));
+		AddInfoBoxString(_("increases a weapon's"));
+		AddInfoBoxString(_("chance to hit"));
 		break;
 	case IMISC_OILMAST:
-		AddPanelString(_("greatly increases a"));
-		AddPanelString(_("weapon's chance to hit"));
+		AddInfoBoxString(_("greatly increases a"));
+		AddInfoBoxString(_("weapon's chance to hit"));
 		break;
 	case IMISC_OILSHARP:
-		AddPanelString(_("increases a weapon's"));
-		AddPanelString(_("damage potential"));
+		AddInfoBoxString(_("increases a weapon's"));
+		AddInfoBoxString(_("damage potential"));
 		break;
 	case IMISC_OILDEATH:
-		AddPanelString(_("greatly increases a weapon's"));
-		AddPanelString(_("damage potential - not bows"));
+		AddInfoBoxString(_("greatly increases a weapon's"));
+		AddInfoBoxString(_("damage potential - not bows"));
 		break;
 	case IMISC_OILSKILL:
-		AddPanelString(_("reduces attributes needed"));
-		AddPanelString(_("to use armor or weapons"));
+		AddInfoBoxString(_("reduces attributes needed"));
+		AddInfoBoxString(_("to use armor or weapons"));
 		break;
 	case IMISC_OILBSMTH:
-		AddPanelString(/*xgettext:no-c-format*/ _("restores 20% of an"));
-		AddPanelString(_("item's durability"));
+		AddInfoBoxString(/*xgettext:no-c-format*/ _("restores 20% of an"));
+		AddInfoBoxString(_("item's durability"));
 		break;
 	case IMISC_OILFORT:
-		AddPanelString(_("increases an item's"));
-		AddPanelString(_("current and max durability"));
+		AddInfoBoxString(_("increases an item's"));
+		AddInfoBoxString(_("current and max durability"));
 		break;
 	case IMISC_OILPERM:
-		AddPanelString(_("makes an item indestructible"));
+		AddInfoBoxString(_("makes an item indestructible"));
 		break;
 	case IMISC_OILHARD:
-		AddPanelString(_("increases the armor class"));
-		AddPanelString(_("of armor and shields"));
+		AddInfoBoxString(_("increases the armor class"));
+		AddInfoBoxString(_("of armor and shields"));
 		break;
 	case IMISC_OILIMP:
-		AddPanelString(_("greatly increases the armor"));
-		AddPanelString(_("class of armor and shields"));
+		AddInfoBoxString(_("greatly increases the armor"));
+		AddInfoBoxString(_("class of armor and shields"));
 		break;
 	case IMISC_RUNEF:
-		AddPanelString(_("sets fire trap"));
+		AddInfoBoxString(_("sets fire trap"));
 		break;
 	case IMISC_RUNEL:
 	case IMISC_GR_RUNEL:
-		AddPanelString(_("sets lightning trap"));
+		AddInfoBoxString(_("sets lightning trap"));
 		break;
 	case IMISC_GR_RUNEF:
-		AddPanelString(_("sets fire trap"));
+		AddInfoBoxString(_("sets fire trap"));
 		break;
 	case IMISC_RUNES:
-		AddPanelString(_("sets petrification trap"));
+		AddInfoBoxString(_("sets petrification trap"));
 		break;
 	case IMISC_FULLHEAL:
-		AddPanelString(_("restore all life"));
+		AddInfoBoxString(_("restore all life"));
 		break;
 	case IMISC_HEAL:
-		AddPanelString(_("restore some life"));
+		AddInfoBoxString(_("restore some life"));
 		break;
 	case IMISC_MANA:
-		AddPanelString(_("restore some mana"));
+		AddInfoBoxString(_("restore some mana"));
 		break;
 	case IMISC_FULLMANA:
-		AddPanelString(_("restore all mana"));
+		AddInfoBoxString(_("restore all mana"));
 		break;
 	case IMISC_ELIXSTR:
-		AddPanelString(_("increase strength"));
+		AddInfoBoxString(_("increase strength"));
 		break;
 	case IMISC_ELIXMAG:
-		AddPanelString(_("increase magic"));
+		AddInfoBoxString(_("increase magic"));
 		break;
 	case IMISC_ELIXDEX:
-		AddPanelString(_("increase dexterity"));
+		AddInfoBoxString(_("increase dexterity"));
 		break;
 	case IMISC_ELIXVIT:
-		AddPanelString(_("increase vitality"));
+		AddInfoBoxString(_("increase vitality"));
 		break;
 	case IMISC_REJUV:
-		AddPanelString(_("restore some life and mana"));
+		AddInfoBoxString(_("restore some life and mana"));
 		break;
 	case IMISC_FULLREJUV:
-		AddPanelString(_("restore all life and mana"));
+		AddInfoBoxString(_("restore all life and mana"));
 		break;
 	case IMISC_ARENAPOT:
-		AddPanelString(_("restore all life and mana"));
-		AddPanelString(_("(works only in arenas)"));
+		AddInfoBoxString(_("restore all life and mana"));
+		AddInfoBoxString(_("(works only in arenas)"));
 		break;
 	}
 }
@@ -1754,32 +1754,32 @@ Point DrawUniqueInfoWindow(const Surface &out)
 void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTarget)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		AddPanelString(_("Right-click to view"));
+		AddInfoBoxString(_("Right-click to view"));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
-		AddPanelString(_("Right-click to use"));
+		AddInfoBoxString(_("Right-click to use"));
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Right-click to read, then\nleft-click to target"));
+		AddInfoBoxString(_("Right-click to read, then\nleft-click to target"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
-		AddPanelString(_("Right-click to read"));
+		AddInfoBoxString(_("Right-click to read"));
 	}
 }
 
 void printItemMiscGenericGamepad(const Item &item, const bool isOil, bool isCastOnTarget)
 {
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		AddPanelString(_("Activate to view"));
+		AddInfoBoxString(_("Activate to view"));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
-			AddPanelString(_("Open inventory to use"));
+			AddInfoBoxString(_("Open inventory to use"));
 		} else {
-			AddPanelString(_("Activate to use"));
+			AddInfoBoxString(_("Activate to use"));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(_("Select from spell book, then\ncast spell to read"));
+		AddInfoBoxString(_("Select from spell book, then\ncast spell to read"));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
-		AddPanelString(_("Activate to read"));
+		AddInfoBoxString(_("Activate to read"));
 	}
 }
 
@@ -1793,29 +1793,29 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 	const std::string_view castButton = ToString(ControllerButton_BUTTON_X);
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		AddPanelString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
 	} else if (isOil) {
 		PrintItemOil(item._iMiscId);
 		if (!invflag) {
-			AddPanelString(_("Open inventory to use"));
+			AddInfoBoxString(_("Open inventory to use"));
 		} else {
-			AddPanelString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("{} to use")), activateButton));
 		}
 	} else if (isCastOnTarget) {
-		AddPanelString(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Select from spell book,\nthen {} to read")), castButton));
 	} else if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE, IMISC_SCROLL, IMISC_SCROLLT)) {
-		AddPanelString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("{} to read")), activateButton));
 	}
 }
 
 void PrintItemMisc(const Item &item)
 {
 	if (item._iMiscId == IMISC_EAR) {
-		AddPanelString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
+		AddInfoBoxString(fmt::format(fmt::runtime(pgettext("player", "Level: {:d}")), item._ivalue));
 		return;
 	}
 	if (item._iMiscId == IMISC_AURIC) {
-		AddPanelString(_("Doubles gold capacity"));
+		AddInfoBoxString(_("Doubles gold capacity"));
 		return;
 	}
 	const bool isOil = (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
@@ -1854,7 +1854,7 @@ void PrintItemInfo(const Item &item)
 			text.append(fmt::format(fmt::runtime(_(" {:d} Mag")), mag));
 		if (dex != 0)
 			text.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
-		AddPanelString(text);
+		AddInfoBoxString(text);
 	}
 }
 
@@ -4098,33 +4098,33 @@ void PrintItemDetails(const Item &item)
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
+				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
 		} else {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
+				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
 		}
 	}
 	if (item._iClass == ICLASS_ARMOR) {
 		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
 		else
-			AddPanelString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
+			AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
 	}
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
-		AddPanelString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
+		AddInfoBoxString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
 	if (item._iPrePower != -1) {
-		AddPanelString(PrintItemPower(item._iPrePower, item));
+		AddInfoBoxString(PrintItemPower(item._iPrePower, item));
 	}
 	if (item._iSufPower != -1) {
-		AddPanelString(PrintItemPower(item._iSufPower, item));
+		AddInfoBoxString(PrintItemPower(item._iSufPower, item));
 	}
 	if (item._iMagical == ITEM_QUALITY_UNIQUE) {
-		AddPanelString(_("unique item"));
+		AddInfoBoxString(_("unique item"));
 		ShowUniqueItemInfoBox = true;
 		curruitem = item;
 	}
@@ -4139,34 +4139,34 @@ void PrintItemDur(const Item &item)
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
 		} else {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
 			else
-				AddPanelString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
 		}
 		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges > 0) {
-			AddPanelString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 		}
 		if (item._iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"));
+			AddInfoBoxString(_("Not Identified"));
 	}
 	if (item._iClass == ICLASS_ARMOR) {
 		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
 		else
-			AddPanelString(fmt::format(fmt::runtime(_("armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
 		if (item._iMagical != ITEM_QUALITY_NORMAL)
-			AddPanelString(_("Not Identified"));
+			AddInfoBoxString(_("Not Identified"));
 		if (item._iMiscId == IMISC_STAFF && item._iMaxCharges > 0) {
-			AddPanelString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 		}
 	}
 	if (IsAnyOf(item._itype, ItemType::Ring, ItemType::Amulet))
-		AddPanelString(_("Not Identified"));
+		AddInfoBoxString(_("Not Identified"));
 	PrintItemInfo(item);
 }
 
@@ -4295,8 +4295,8 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 		if (&player != MyPlayer) {
 			return;
 		}
-		if (sbookflag) {
-			sbookflag = false;
+		if (SpellbookFlag) {
+			SpellbookFlag = false;
 		}
 		if (!invflag) {
 			invflag = true;
@@ -4374,7 +4374,7 @@ void SpawnSmith(int lvl)
 
 	int iCnt = RandomIntBetween(10, maxItems);
 	for (int i = 0; i < iCnt; i++) {
-		Item &newItem = smithitem[i];
+		Item &newItem = SmithItems[i];
 
 		do {
 			newItem = {};
@@ -4388,40 +4388,40 @@ void SpawnSmith(int lvl)
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i].clear();
+		SmithItems[i].clear();
 
-	SortVendor(smithitem + PinnedItemCount);
+	SortVendor(SmithItems + PinnedItemCount);
 }
 
 void SpawnPremium(const Player &player)
 {
 	int lvl = player.getCharacterLevel();
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
-	if (numpremium < maxItems) {
+	if (PremiumItemCount < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
-			if (premiumitems[i].isEmpty()) {
-				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(premiumitems[i], plvl, player);
+			if (PremiumItems[i].isEmpty()) {
+				int plvl = PremiumItemLevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
+				SpawnOnePremium(PremiumItems[i], plvl, player);
 			}
 		}
-		numpremium = maxItems;
+		PremiumItemCount = maxItems;
 	}
-	while (premiumlevel < lvl) {
-		premiumlevel++;
+	while (PremiumItemLevel < lvl) {
+		PremiumItemLevel++;
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
-			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], player);
-			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], player);
-			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], player);
+			std::move(&PremiumItems[3], &PremiumItems[12] + 1, &PremiumItems[0]);
+			SpawnOnePremium(PremiumItems[10], PremiumItemLevel + premiumLvlAddHellfire[10], player);
+			PremiumItems[11] = PremiumItems[13];
+			SpawnOnePremium(PremiumItems[12], PremiumItemLevel + premiumLvlAddHellfire[12], player);
+			PremiumItems[13] = PremiumItems[14];
+			SpawnOnePremium(PremiumItems[14], PremiumItemLevel + premiumLvlAddHellfire[14], player);
 		} else {
 			// Discard first 2 items and shift next 3
-			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], player);
-			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], player);
+			std::move(&PremiumItems[2], &PremiumItems[4] + 1, &PremiumItems[0]);
+			SpawnOnePremium(PremiumItems[3], PremiumItemLevel + premiumlvladd[3], player);
+			PremiumItems[4] = PremiumItems[5];
+			SpawnOnePremium(PremiumItems[5], PremiumItemLevel + premiumlvladd[5], player);
 		}
 	}
 }
@@ -4439,7 +4439,7 @@ void SpawnWitch(int lvl)
 	const int maxValue = gbIsHellfire ? 200000 : 140000;
 
 	for (int i = 0; i < WITCH_ITEMS; i++) {
-		Item &item = witchitem[i];
+		Item &item = WitchItems[i];
 		item = {};
 
 		if (i < PinnedItemCount) {
@@ -4490,7 +4490,7 @@ void SpawnWitch(int lvl)
 		item._iIdentified = true;
 	}
 
-	SortVendor(witchitem + PinnedItemCount);
+	SortVendor(WitchItems + PinnedItemCount);
 }
 
 void SpawnBoy(int lvl)
@@ -4509,19 +4509,19 @@ void SpawnBoy(int lvl)
 	dexterity += dexterity / 5;
 	magic += magic / 5;
 
-	if (boylevel >= (lvl / 2) && !boyitem.isEmpty())
+	if (BoyItemLevel >= (lvl / 2) && !BoyItem.isEmpty())
 		return;
 	do {
 		keepgoing = false;
-		boyitem = {};
-		boyitem._iSeed = AdvanceRndSeed();
-		SetRndSeed(boyitem._iSeed);
+		BoyItem = {};
+		BoyItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(BoyItem._iSeed);
 		_item_indexes itype = RndBoyItem(*MyPlayer, lvl);
-		GetItemAttrs(boyitem, itype, lvl);
-		GetItemBonus(*MyPlayer, boyitem, lvl, 2 * lvl, true, true);
+		GetItemAttrs(BoyItem, itype, lvl);
+		GetItemBonus(*MyPlayer, BoyItem, lvl, 2 * lvl, true, true);
 
 		if (!gbIsHellfire) {
-			if (boyitem._iIvalue > 90000) {
+			if (BoyItem._iIvalue > 90000) {
 				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
@@ -4530,7 +4530,7 @@ void SpawnBoy(int lvl)
 
 		ivalue = 0;
 
-		ItemType itemType = boyitem._itype;
+		ItemType itemType = BoyItem._itype;
 
 		switch (itemType) {
 		case ItemType::LightArmor:
@@ -4596,15 +4596,15 @@ void SpawnBoy(int lvl)
 		}
 	} while (keepgoing
 	    || ((
-	            boyitem._iIvalue > 200000
-	            || boyitem._iMinStr > strength
-	            || boyitem._iMinMag > magic
-	            || boyitem._iMinDex > dexterity
-	            || boyitem._iIvalue < ivalue)
+	            BoyItem._iIvalue > 200000
+	            || BoyItem._iMinStr > strength
+	            || BoyItem._iMinMag > magic
+	            || BoyItem._iMinDex > dexterity
+	            || BoyItem._iIvalue < ivalue)
 	        && count < 250));
-	boyitem._iCreateInfo = lvl | CF_BOY;
-	boyitem._iIdentified = true;
-	boylevel = lvl / 2;
+	BoyItem._iCreateInfo = lvl | CF_BOY;
+	BoyItem._iIdentified = true;
+	BoyItemLevel = lvl / 2;
 }
 
 void SpawnHealer(int lvl)
@@ -4613,8 +4613,8 @@ void SpawnHealer(int lvl)
 	constexpr std::array<_item_indexes, PinnedItemCount + 1> PinnedItemTypes = { IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT };
 	const auto itemCount = static_cast<size_t>(RandomIntBetween(10, gbIsHellfire ? 19 : 17));
 
-	for (size_t i = 0; i < sizeof(healitem) / sizeof(healitem[0]); ++i) {
-		Item &item = healitem[i];
+	for (size_t i = 0; i < sizeof(HealerItems) / sizeof(HealerItems[0]); ++i) {
+		Item &item = HealerItems[i];
 		item = {};
 
 		if (i < PinnedItemCount || (gbIsMultiplayer && i == PinnedItemCount)) {
@@ -4638,7 +4638,7 @@ void SpawnHealer(int lvl)
 		item._iIdentified = true;
 	}
 
-	SortVendor(healitem + PinnedItemCount);
+	SortVendor(HealerItems + PinnedItemCount);
 }
 
 void MakeGoldStack(Item &goldItem, int value)
