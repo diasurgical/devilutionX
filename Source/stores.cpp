@@ -308,8 +308,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags, bool cursIndent = fa
 		if (item._iClass == ICLASS_WEAPON) {
 			std::pair<int, int> realDamage = item.getFinalDamage(showItemBaseStats || !item._iIdentified);
 			productLine = fmt::format(fmt::runtime(_("Damage: {:d}-{:d}  ")), realDamage.first, realDamage.second);
-		}
-		else if (item._iClass == ICLASS_ARMOR) {
+		} else if (item._iClass == ICLASS_ARMOR) {
 			int realAC = item._iAC;
 			if (!showItemBaseStats && item._iIdentified) {
 				realAC += item.getBonusAC();
