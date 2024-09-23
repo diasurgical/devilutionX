@@ -3735,7 +3735,7 @@ void M_ClearSquares(const Monster &monster)
 
 void M_GetKnockback(Monster &monster, WorldTilePosition attackerStartPos)
 {
-	auto dir = GetDirection(attackerStartPos, monster.position.tile);
+	Direction dir = GetDirection(attackerStartPos, monster.position.tile);
 	if (!IsRelativeMoveOK(monster, monster.position.old, dir)) {
 		return;
 	}
