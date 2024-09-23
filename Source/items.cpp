@@ -4108,20 +4108,22 @@ void PrintItemDetails(const Item &item)
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
-	if (item._iIdentified) {
-		if (item._iPrePower != -1) {
-			AddInfoBoxString(PrintItemPower(item._iPrePower, item));
+	if (item._iMagical != ITEM_QUALITY_NORMAL) {
+		if (item._iIdentified) {
+			if (item._iPrePower != -1) {
+				AddInfoBoxString(PrintItemPower(item._iPrePower, item));
+			}
+			if (item._iSufPower != -1) {
+				AddInfoBoxString(PrintItemPower(item._iSufPower, item));
+			}
+			if (item._iMagical == ITEM_QUALITY_UNIQUE) {
+				AddInfoBoxString(_("unique item"));
+				ShowUniqueItemInfoBox = true;
+				curruitem = item;
+			}
+		} else {
+			AddInfoBoxString(_("Not Identified"));
 		}
-		if (item._iSufPower != -1) {
-			AddInfoBoxString(PrintItemPower(item._iSufPower, item));
-		}
-		if (item._iMagical == ITEM_QUALITY_UNIQUE) {
-			AddInfoBoxString(_("unique item"));
-			ShowUniqueItemInfoBox = true;
-			curruitem = item;
-		}
-	} else {
-		AddInfoBoxString(_("Not Identified"));
 	}
 
 	PrintItemInfo(item);
