@@ -1793,6 +1793,13 @@ void InitKeymapActions()
 	    nullptr,
 	    [] { ToggleItemLabelHighlight(); });
 	sgOptions.Keymapper.AddAction(
+	    "Show Base Stats",
+	    N_("Show item base stats"),
+	    N_("Shows item base armor/damage without including bonuses"),
+	    SDLK_LCTRL,
+	    [] { showItemBaseStats = true; },
+	    [] { showItemBaseStats = false; });
+	sgOptions.Keymapper.AddAction(
 	    "Toggle Automap",
 	    N_("Toggle automap"),
 	    N_("Toggles if automap is displayed."),

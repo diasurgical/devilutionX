@@ -58,6 +58,7 @@ bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
 int MaxGold = GOLD_MAX_LIMIT;
+bool showItemBaseStats = false;
 
 /** Maps from item_cursor_graphic to in-memory item type. */
 int8_t ItemCAnimTbl[] = {
@@ -4110,7 +4111,7 @@ void PrintItemDetails(const Item &item)
 	}
 	if (item._iClass == ICLASS_ARMOR) {
 		int realAC = item._iAC;
-		if (item._iIdentified) {
+		if (!showItemBaseStats && item._iIdentified) {
 			realAC += GetBonusAC(item);
 		}
 		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
