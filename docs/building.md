@@ -12,7 +12,7 @@ Note that ```pkg-config``` is an optional dependency for finding libsodium, alth
 ### Installing dependencies on Debian and Ubuntu
 
 ```
-sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev libgmock-dev libsdl2-image-dev libfmt-dev
+sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev libgmock-dev libbenchmark-dev libsdl2-image-dev libfmt-dev
 ```
 
 ### If you want to build the translations (optional)
@@ -30,7 +30,7 @@ sudo apt-get install smpq
 ### Installing dependencies on Fedora
 
 ```
-sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel SDL2_image-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
+sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel SDL2_image-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel google-benchmark-devel libasan libubsan fmt-devel
 ```
 
 ### Compiling
@@ -227,7 +227,7 @@ bootstrap-vcpkg.bat
 vcpkg integrate install
 ~~~
 
-If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
+If you need additional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
 
 ### If you want to build the devilutionX.mpq File (optional)
 
@@ -496,7 +496,7 @@ emrun index.html
 * Windows 10
 * CMake
 * Git
-* Visual Studio 2022 with the foloowing packages installed:
+* Visual Studio 2022 with the following packages installed:
     * C++ (v143) Universal Windows Platform tools
     * Windows 11 SDK (10.0.22000.0)
     * Windows 10 SDK (10.0.18362.0)

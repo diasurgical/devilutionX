@@ -2,6 +2,10 @@
 
 #include <gtest/gtest.h>
 
+#include "cursor.h"
+#include "init.h"
+#include "playerdat.hpp"
+
 using namespace devilution;
 
 namespace devilution {
@@ -14,7 +18,9 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;
-	StartPlrHit(player, 5, false);
+	// StartPlrHit compares damage (a 6 bit fixed point value) to character level to determine if the player shrugs off the hit.
+	// We don't initialise player so this comparison can't be relied on, instead we use forcehit to ensure the player enters hit mode
+	StartPlrHit(player, 0, true);
 
 	int i = 1;
 	for (; i < 100; i++) {
@@ -109,13 +115,13 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pDexterity, 30);
 	ASSERT_EQ(player._pBaseVit, 20);
 	ASSERT_EQ(player._pVitality, 20);
-	ASSERT_EQ(player._pLevel, 1);
+	ASSERT_EQ(player.getCharacterLevel(), 1);
 	ASSERT_EQ(player._pStatPts, 0);
 	ASSERT_EQ(player._pExperience, 0);
 	ASSERT_EQ(player._pGold, 100);
 	ASSERT_EQ(player._pMaxHPBase, 2880);
 	ASSERT_EQ(player._pHPBase, 2880);
-	ASSERT_EQ(player._pBaseToBlk, 20);
+	ASSERT_EQ(player.getBaseToBlock(), 20);
 	ASSERT_EQ(player._pMaxManaBase, 1440);
 	ASSERT_EQ(player._pManaBase, 1440);
 	ASSERT_EQ(player._pMemSpells, 0);
@@ -148,14 +154,15 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pMaxHP, 2880);
 	ASSERT_EQ(player._pMana, 1440);
 	ASSERT_EQ(player._pMaxMana, 1440);
-	ASSERT_EQ(player._pNextExper, 2000);
+	ASSERT_EQ(player.getNextExperienceThreshold(), 2000);
 	ASSERT_EQ(player._pMagResist, 0);
 	ASSERT_EQ(player._pFireResist, 0);
 	ASSERT_EQ(player._pLghtResist, 0);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
+	// This test case uses a Rogue, starting loadout is a short bow with damage 1-4
 	ASSERT_EQ(player._pIMinDam, 1);
-	ASSERT_EQ(player._pIMaxDam, 1);
+	ASSERT_EQ(player._pIMaxDam, 4);
 	ASSERT_EQ(player._pIAC, 0);
 	ASSERT_EQ(player._pIBonusDam, 0);
 	ASSERT_EQ(player._pIBonusToHit, 0);
@@ -174,6 +181,15 @@ static void AssertPlayer(Player &player)
 
 TEST(Player, CreatePlayer)
 {
+	LoadCoreArchives();
+	LoadGameArchives();
+
+	// The tests need spawn.mpq or diabdat.mpq
+	// Please provide them so that the tests can run successfully
+	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
+
+	LoadPlayerDataFiles();
+	LoadItemData();
 	Players.resize(1);
 	CreatePlayer(Players[0], HeroClass::Rogue);
 	AssertPlayer(Players[0]);

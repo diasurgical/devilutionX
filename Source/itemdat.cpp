@@ -5,545 +5,650 @@
  */
 
 #include "itemdat.h"
-#include "utils/language.h"
+
+#include <string_view>
+#include <vector>
+
+#include <expected.hpp>
+
+#include "data/file.hpp"
+#include "data/iterators.hpp"
+#include "data/record_reader.hpp"
+#include "spelldat.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
-string_view ItemTypeToString(ItemType itemType)
+/** Contains the data related to each item ID. */
+std::vector<ItemData> AllItemsList;
+
+/** Contains the data related to each unique item ID. */
+std::vector<UniqueItem> UniqueItems;
+
+/** Contains the data related to each item prefix. */
+std::vector<PLStruct> ItemPrefixes;
+
+/** Contains the data related to each item suffix. */
+std::vector<PLStruct> ItemSuffixes;
+
+namespace {
+
+tl::expected<item_drop_rate, std::string> ParseItemDropRate(std::string_view value)
+{
+	if (value == "Never") return IDROP_NEVER;
+	if (value == "Regular") return IDROP_REGULAR;
+	if (value == "Double") return IDROP_DOUBLE;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<item_class, std::string> ParseItemClass(std::string_view value)
+{
+	if (value == "None") return ICLASS_NONE;
+	if (value == "Weapon") return ICLASS_WEAPON;
+	if (value == "Armor") return ICLASS_ARMOR;
+	if (value == "Misc") return ICLASS_MISC;
+	if (value == "Gold") return ICLASS_GOLD;
+	if (value == "Quest") return ICLASS_QUEST;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<item_equip_type, std::string> ParseItemEquipType(std::string_view value)
+{
+	if (value == "None") return ILOC_NONE;
+	if (value == "One-handed") return ILOC_ONEHAND;
+	if (value == "Two-handed") return ILOC_TWOHAND;
+	if (value == "Armor") return ILOC_ARMOR;
+	if (value == "Helm") return ILOC_HELM;
+	if (value == "Ring") return ILOC_RING;
+	if (value == "Amulet") return ILOC_AMULET;
+	if (value == "Unequippable") return ILOC_UNEQUIPABLE;
+	if (value == "Belt") return ILOC_BELT;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<item_cursor_graphic, std::string> ParseItemCursorGraphic(std::string_view value)
+{
+	if (value == "POTION_OF_FULL_MANA") return ICURS_POTION_OF_FULL_MANA;
+	if (value == "SCROLL_OF") return ICURS_SCROLL_OF;
+	if (value == "GOLD_SMALL") return ICURS_GOLD_SMALL;
+	if (value == "GOLD_MEDIUM") return ICURS_GOLD_MEDIUM;
+	if (value == "GOLD_LARGE") return ICURS_GOLD_LARGE;
+	if (value == "THE_BLEEDER") return ICURS_THE_BLEEDER;
+	if (value == "BRAMBLE") return ICURS_BRAMBLE;
+	if (value == "RING_OF_TRUTH") return ICURS_RING_OF_TRUTH;
+	if (value == "RING_OF_REGHA") return ICURS_RING_OF_REGHA;
+	if (value == "RING") return ICURS_RING;
+	if (value == "RING_OF_ENGAGEMENT") return ICURS_RING_OF_ENGAGEMENT;
+	if (value == "CONSTRICTING_RING") return ICURS_CONSTRICTING_RING;
+	if (value == "SPECTRAL_ELIXIR") return ICURS_SPECTRAL_ELIXIR;
+	if (value == "ARENA_POTION") return ICURS_ARENA_POTION;
+	if (value == "GOLDEN_ELIXIR") return ICURS_GOLDEN_ELIXIR;
+	if (value == "EMPYREAN_BAND") return ICURS_EMPYREAN_BAND;
+	if (value == "EAR_SORCERER") return ICURS_EAR_SORCERER;
+	if (value == "EAR_WARRIOR") return ICURS_EAR_WARRIOR;
+	if (value == "EAR_ROGUE") return ICURS_EAR_ROGUE;
+	if (value == "BLOOD_STONE") return ICURS_BLOOD_STONE;
+	if (value == "OIL") return ICURS_OIL;
+	if (value == "ELIXIR_OF_VITALITY") return ICURS_ELIXIR_OF_VITALITY;
+	if (value == "POTION_OF_HEALING") return ICURS_POTION_OF_HEALING;
+	if (value == "POTION_OF_FULL_REJUVENATION") return ICURS_POTION_OF_FULL_REJUVENATION;
+	if (value == "ELIXIR_OF_MAGIC") return ICURS_ELIXIR_OF_MAGIC;
+	if (value == "POTION_OF_FULL_HEALING") return ICURS_POTION_OF_FULL_HEALING;
+	if (value == "ELIXIR_OF_DEXTERITY") return ICURS_ELIXIR_OF_DEXTERITY;
+	if (value == "POTION_OF_REJUVENATION") return ICURS_POTION_OF_REJUVENATION;
+	if (value == "ELIXIR_OF_STRENGTH") return ICURS_ELIXIR_OF_STRENGTH;
+	if (value == "POTION_OF_MANA") return ICURS_POTION_OF_MANA;
+	if (value == "BRAIN") return ICURS_BRAIN;
+	if (value == "OPTIC_AMULET") return ICURS_OPTIC_AMULET;
+	if (value == "AMULET") return ICURS_AMULET;
+	if (value == "WIZARDSPIKE") return ICURS_WIZARDSPIKE;
+	if (value == "DAGGER") return ICURS_DAGGER;
+	if (value == "BLACK_RAZOR") return ICURS_BLACK_RAZOR;
+	if (value == "GONNAGALS_DIRK") return ICURS_GONNAGALS_DIRK;
+	if (value == "BLADE") return ICURS_BLADE;
+	if (value == "BASTARD_SWORD") return ICURS_BASTARD_SWORD;
+	if (value == "THE_EXECUTIONERS_BLADE") return ICURS_THE_EXECUTIONERS_BLADE;
+	if (value == "MACE") return ICURS_MACE;
+	if (value == "LONG_SWORD") return ICURS_LONG_SWORD;
+	if (value == "BROAD_SWORD") return ICURS_BROAD_SWORD;
+	if (value == "FALCHION") return ICURS_FALCHION;
+	if (value == "MORNING_STAR") return ICURS_MORNING_STAR;
+	if (value == "SHORT_SWORD") return ICURS_SHORT_SWORD;
+	if (value == "CLAYMORE") return ICURS_CLAYMORE;
+	if (value == "CLUB") return ICURS_CLUB;
+	if (value == "SABRE") return ICURS_SABRE;
+	if (value == "GRYPHONS_CLAW") return ICURS_GRYPHONS_CLAW;
+	if (value == "SPIKED_CLUB") return ICURS_SPIKED_CLUB;
+	if (value == "SCIMITAR") return ICURS_SCIMITAR;
+	if (value == "FULL_HELM") return ICURS_FULL_HELM;
+	if (value == "MAGIC_ROCK") return ICURS_MAGIC_ROCK;
+	if (value == "HELM_OF_SPIRITS") return ICURS_HELM_OF_SPIRITS;
+	if (value == "THE_UNDEAD_CROWN") return ICURS_THE_UNDEAD_CROWN;
+	if (value == "ROYAL_CIRCLET") return ICURS_ROYAL_CIRCLET;
+	if (value == "FOOLS_CREST") return ICURS_FOOLS_CREST;
+	if (value == "HARLEQUIN_CREST") return ICURS_HARLEQUIN_CREST;
+	if (value == "HELM") return ICURS_HELM;
+	if (value == "BUCKLER") return ICURS_BUCKLER;
+	if (value == "VEIL_OF_STEEL") return ICURS_VEIL_OF_STEEL;
+	if (value == "BOOK_GREY") return ICURS_BOOK_GREY;
+	if (value == "BOOK_RED") return ICURS_BOOK_RED;
+	if (value == "BOOK_BLUE") return ICURS_BOOK_BLUE;
+	if (value == "BLACK_MUSHROOM") return ICURS_BLACK_MUSHROOM;
+	if (value == "SKULL_CAP") return ICURS_SKULL_CAP;
+	if (value == "CAP") return ICURS_CAP;
+	if (value == "TORN_FLESH_OF_SOULS") return ICURS_TORN_FLESH_OF_SOULS;
+	if (value == "THINKING_CAP") return ICURS_THINKING_CAP;
+	if (value == "CROWN") return ICURS_CROWN;
+	if (value == "MAP_OF_THE_STARS") return ICURS_MAP_OF_THE_STARS;
+	if (value == "FUNGAL_TOME") return ICURS_FUNGAL_TOME;
+	if (value == "GREAT_HELM") return ICURS_GREAT_HELM;
+	if (value == "OVERLORDS_HELM") return ICURS_OVERLORDS_HELM;
+	if (value == "BATTLE_AXE") return ICURS_BATTLE_AXE;
+	if (value == "HUNTERS_BOW") return ICURS_HUNTERS_BOW;
+	if (value == "FIELD_PLATE") return ICURS_FIELD_PLATE;
+	if (value == "STONECLEAVER") return ICURS_STONECLEAVER;
+	if (value == "SMALL_SHIELD") return ICURS_SMALL_SHIELD;
+	if (value == "CLEAVER") return ICURS_CLEAVER;
+	if (value == "STUDDED_LEATHER_ARMOR") return ICURS_STUDDED_LEATHER_ARMOR;
+	if (value == "DEADLY_HUNTER") return ICURS_DEADLY_HUNTER;
+	if (value == "SHORT_STAFF") return ICURS_SHORT_STAFF;
+	if (value == "TWO_HANDED_SWORD") return ICURS_TWO_HANDED_SWORD;
+	if (value == "CHAIN_MAIL") return ICURS_CHAIN_MAIL;
+	if (value == "SMALL_AXE") return ICURS_SMALL_AXE;
+	if (value == "KITE_SHIELD") return ICURS_KITE_SHIELD;
+	if (value == "SCALE_MAIL") return ICURS_SCALE_MAIL;
+	if (value == "SPLIT_SKULL_SHIELD") return ICURS_SPLIT_SKULL_SHIELD;
+	if (value == "DRAGONS_BREACH") return ICURS_DRAGONS_BREACH;
+	if (value == "SHORT_BOW") return ICURS_SHORT_BOW;
+	if (value == "LONG_BATTLE_BOW") return ICURS_LONG_BATTLE_BOW;
+	if (value == "LONG_WAR_BOW") return ICURS_LONG_WAR_BOW;
+	if (value == "WAR_HAMMER") return ICURS_WAR_HAMMER;
+	if (value == "MAUL") return ICURS_MAUL;
+	if (value == "LONG_STAFF") return ICURS_LONG_STAFF;
+	if (value == "WAR_STAFF") return ICURS_WAR_STAFF;
+	if (value == "TAVERN_SIGN") return ICURS_TAVERN_SIGN;
+	if (value == "HARD_LEATHER_ARMOR") return ICURS_HARD_LEATHER_ARMOR;
+	if (value == "RAGS") return ICURS_RAGS;
+	if (value == "QUILTED_ARMOR") return ICURS_QUILTED_ARMOR;
+	if (value == "FLAIL") return ICURS_FLAIL;
+	if (value == "TOWER_SHIELD") return ICURS_TOWER_SHIELD;
+	if (value == "COMPOSITE_BOW") return ICURS_COMPOSITE_BOW;
+	if (value == "GREAT_SWORD") return ICURS_GREAT_SWORD;
+	if (value == "LEATHER_ARMOR") return ICURS_LEATHER_ARMOR;
+	if (value == "SPLINT_MAIL") return ICURS_SPLINT_MAIL;
+	if (value == "ROBE") return ICURS_ROBE;
+	if (value == "THE_RAINBOW_CLOAK") return ICURS_THE_RAINBOW_CLOAK;
+	if (value == "ANVIL_OF_FURY") return ICURS_ANVIL_OF_FURY;
+	if (value == "BROAD_AXE") return ICURS_BROAD_AXE;
+	if (value == "LARGE_AXE") return ICURS_LARGE_AXE;
+	if (value == "GREAT_AXE") return ICURS_GREAT_AXE;
+	if (value == "AXE") return ICURS_AXE;
+	if (value == "BLACKOAK_SHIELD") return ICURS_BLACKOAK_SHIELD;
+	if (value == "LARGE_SHIELD") return ICURS_LARGE_SHIELD;
+	if (value == "GOTHIC_SHIELD") return ICURS_GOTHIC_SHIELD;
+	if (value == "CLOAK") return ICURS_CLOAK;
+	if (value == "CAPE") return ICURS_CAPE;
+	if (value == "FULL_PLATE_MAIL") return ICURS_FULL_PLATE_MAIL;
+	if (value == "GOTHIC_PLATE") return ICURS_GOTHIC_PLATE;
+	if (value == "BREAST_PLATE") return ICURS_BREAST_PLATE;
+	if (value == "RING_MAIL") return ICURS_RING_MAIL;
+	if (value == "STAFF_OF_LAZARUS") return ICURS_STAFF_OF_LAZARUS;
+	if (value == "ARKAINES_VALOR") return ICURS_ARKAINES_VALOR;
+	if (value == "THE_NEEDLER") return ICURS_THE_NEEDLER;
+	if (value == "NAJS_LIGHT_PLATE") return ICURS_NAJS_LIGHT_PLATE;
+	if (value == "THE_GRIZZLY") return ICURS_THE_GRIZZLY;
+	if (value == "THE_GRANDFATHER") return ICURS_THE_GRANDFATHER;
+	if (value == "THE_PROTECTOR") return ICURS_THE_PROTECTOR;
+	if (value == "MESSERSCHMIDTS_REAVER") return ICURS_MESSERSCHMIDTS_REAVER;
+	if (value == "WINDFORCE") return ICURS_WINDFORCE;
+	if (value == "SHORT_WAR_BOW") return ICURS_SHORT_WAR_BOW;
+	if (value == "COMPOSITE_STAFF") return ICURS_COMPOSITE_STAFF;
+	if (value == "SHORT_BATTLE_BOW") return ICURS_SHORT_BATTLE_BOW;
+	if (value == "XORINES_RING") return ICURS_XORINES_RING;
+	if (value == "AMULET_OF_WARDING") return ICURS_AMULET_OF_WARDING;
+	if (value == "KARIKS_RING") return ICURS_KARIKS_RING;
+	if (value == "MERCURIAL_RING") return ICURS_MERCURIAL_RING;
+	if (value == "RING_OF_THUNDER") return ICURS_RING_OF_THUNDER;
+	if (value == "GIANTS_KNUCKLE") return ICURS_GIANTS_KNUCKLE;
+	if (value == "AURIC_AMULET") return ICURS_AURIC_AMULET;
+	if (value == "RING_OF_THE_MYSTICS") return ICURS_RING_OF_THE_MYSTICS;
+	if (value == "ACOLYTES_AMULET") return ICURS_ACOLYTES_AMULET;
+	if (value == "RING_OF_MAGMA") return ICURS_RING_OF_MAGMA;
+	if (value == "GLADIATORS_RING") return ICURS_GLADIATORS_RING;
+	if (value == "RUNE_BOMB") return ICURS_RUNE_BOMB;
+	if (value == "THEODORE") return ICURS_THEODORE;
+	if (value == "TORN_NOTE_1") return ICURS_TORN_NOTE_1;
+	if (value == "TORN_NOTE_2") return ICURS_TORN_NOTE_2;
+	if (value == "TORN_NOTE_3") return ICURS_TORN_NOTE_3;
+	if (value == "RECONSTRUCTED_NOTE") return ICURS_RECONSTRUCTED_NOTE;
+	if (value == "RUNE_OF_FIRE") return ICURS_RUNE_OF_FIRE;
+	if (value == "GREATER_RUNE_OF_FIRE") return ICURS_GREATER_RUNE_OF_FIRE;
+	if (value == "RUNE_OF_LIGHTNING") return ICURS_RUNE_OF_LIGHTNING;
+	if (value == "GREATER_RUNE_OF_LIGHTNING") return ICURS_GREATER_RUNE_OF_LIGHTNING;
+	if (value == "RUNE_OF_STONE") return ICURS_RUNE_OF_STONE;
+	if (value == "GREY_SUIT") return ICURS_GREY_SUIT;
+	if (value == "BROWN_SUIT") return ICURS_BROWN_SUIT;
+	if (value == "EATER_OF_SOULS") return ICURS_EATER_OF_SOULS;
+	if (value == "ARMOR_OF_GLOOM") return ICURS_ARMOR_OF_GLOOM;
+	if (value == "BONE_CHAIN_ARMOR") return ICURS_BONE_CHAIN_ARMOR;
+	if (value == "THUNDERCLAP") return ICURS_THUNDERCLAP;
+	if (value == "DIAMONDEDGE") return ICURS_DIAMONDEDGE;
+	if (value == "FLAMBEAU") return ICURS_FLAMBEAU;
+	if (value == "GNAT_STING") return ICURS_GNAT_STING;
+	if (value == "BLITZEN") return ICURS_BLITZEN;
+	if (value == "DEMON_PLATE_ARMOR") return ICURS_DEMON_PLATE_ARMOR;
+	if (value == "BOVINE") return ICURS_BOVINE;
+	if (value == "") return ICURS_DEFAULT;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<ItemType, std::string> ParseItemType(std::string_view value)
+{
+	if (value == "Misc") return ItemType::Misc;
+	if (value == "Sword") return ItemType::Sword;
+	if (value == "Axe") return ItemType::Axe;
+	if (value == "Bow") return ItemType::Bow;
+	if (value == "Mace") return ItemType::Mace;
+	if (value == "Shield") return ItemType::Shield;
+	if (value == "LightArmor") return ItemType::LightArmor;
+	if (value == "Helm") return ItemType::Helm;
+	if (value == "MediumArmor") return ItemType::MediumArmor;
+	if (value == "HeavyArmor") return ItemType::HeavyArmor;
+	if (value == "Staff") return ItemType::Staff;
+	if (value == "Gold") return ItemType::Gold;
+	if (value == "Ring") return ItemType::Ring;
+	if (value == "Amulet") return ItemType::Amulet;
+	if (value == "None") return ItemType::None;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<unique_base_item, std::string> ParseUniqueBaseItem(std::string_view value)
+{
+	if (value == "NONE") return UITYPE_NONE;
+	if (value == "SHORTBOW") return UITYPE_SHORTBOW;
+	if (value == "LONGBOW") return UITYPE_LONGBOW;
+	if (value == "HUNTBOW") return UITYPE_HUNTBOW;
+	if (value == "COMPBOW") return UITYPE_COMPBOW;
+	if (value == "WARBOW") return UITYPE_WARBOW;
+	if (value == "BATTLEBOW") return UITYPE_BATTLEBOW;
+	if (value == "DAGGER") return UITYPE_DAGGER;
+	if (value == "FALCHION") return UITYPE_FALCHION;
+	if (value == "CLAYMORE") return UITYPE_CLAYMORE;
+	if (value == "BROADSWR") return UITYPE_BROADSWR;
+	if (value == "SABRE") return UITYPE_SABRE;
+	if (value == "SCIMITAR") return UITYPE_SCIMITAR;
+	if (value == "LONGSWR") return UITYPE_LONGSWR;
+	if (value == "BASTARDSWR") return UITYPE_BASTARDSWR;
+	if (value == "TWOHANDSWR") return UITYPE_TWOHANDSWR;
+	if (value == "GREATSWR") return UITYPE_GREATSWR;
+	if (value == "CLEAVER") return UITYPE_CLEAVER;
+	if (value == "LARGEAXE") return UITYPE_LARGEAXE;
+	if (value == "BROADAXE") return UITYPE_BROADAXE;
+	if (value == "SMALLAXE") return UITYPE_SMALLAXE;
+	if (value == "BATTLEAXE") return UITYPE_BATTLEAXE;
+	if (value == "GREATAXE") return UITYPE_GREATAXE;
+	if (value == "MACE") return UITYPE_MACE;
+	if (value == "MORNSTAR") return UITYPE_MORNSTAR;
+	if (value == "SPIKCLUB") return UITYPE_SPIKCLUB;
+	if (value == "MAUL") return UITYPE_MAUL;
+	if (value == "WARHAMMER") return UITYPE_WARHAMMER;
+	if (value == "FLAIL") return UITYPE_FLAIL;
+	if (value == "LONGSTAFF") return UITYPE_LONGSTAFF;
+	if (value == "SHORTSTAFF") return UITYPE_SHORTSTAFF;
+	if (value == "COMPSTAFF") return UITYPE_COMPSTAFF;
+	if (value == "QUARSTAFF") return UITYPE_QUARSTAFF;
+	if (value == "WARSTAFF") return UITYPE_WARSTAFF;
+	if (value == "SKULLCAP") return UITYPE_SKULLCAP;
+	if (value == "HELM") return UITYPE_HELM;
+	if (value == "GREATHELM") return UITYPE_GREATHELM;
+	if (value == "CROWN") return UITYPE_CROWN;
+	if (value == "RAGS") return UITYPE_RAGS;
+	if (value == "STUDARMOR") return UITYPE_STUDARMOR;
+	if (value == "CLOAK") return UITYPE_CLOAK;
+	if (value == "ROBE") return UITYPE_ROBE;
+	if (value == "CHAINMAIL") return UITYPE_CHAINMAIL;
+	if (value == "LEATHARMOR") return UITYPE_LEATHARMOR;
+	if (value == "BREASTPLATE") return UITYPE_BREASTPLATE;
+	if (value == "CAPE") return UITYPE_CAPE;
+	if (value == "PLATEMAIL") return UITYPE_PLATEMAIL;
+	if (value == "FULLPLATE") return UITYPE_FULLPLATE;
+	if (value == "BUCKLER") return UITYPE_BUCKLER;
+	if (value == "SMALLSHIELD") return UITYPE_SMALLSHIELD;
+	if (value == "LARGESHIELD") return UITYPE_LARGESHIELD;
+	if (value == "KITESHIELD") return UITYPE_KITESHIELD;
+	if (value == "GOTHSHIELD") return UITYPE_GOTHSHIELD;
+	if (value == "RING") return UITYPE_RING;
+	if (value == "AMULET") return UITYPE_AMULET;
+	if (value == "SKCROWN") return UITYPE_SKCROWN;
+	if (value == "INFRARING") return UITYPE_INFRARING;
+	if (value == "OPTAMULET") return UITYPE_OPTAMULET;
+	if (value == "TRING") return UITYPE_TRING;
+	if (value == "HARCREST") return UITYPE_HARCREST;
+	if (value == "MAPOFDOOM") return UITYPE_MAPOFDOOM;
+	if (value == "ELIXIR") return UITYPE_ELIXIR;
+	if (value == "ARMOFVAL") return UITYPE_ARMOFVAL;
+	if (value == "STEELVEIL") return UITYPE_STEELVEIL;
+	if (value == "GRISWOLD") return UITYPE_GRISWOLD;
+	if (value == "LGTFORGE") return UITYPE_LGTFORGE;
+	if (value == "LAZSTAFF") return UITYPE_LAZSTAFF;
+	if (value == "BOVINE") return UITYPE_BOVINE;
+	if (value == "INVALID") return UITYPE_INVALID;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<ItemSpecialEffect, std::string> ParseItemSpecialEffect(std::string_view value)
+{
+	if (value == "RandomStealLife") return ItemSpecialEffect::RandomStealLife;
+	if (value == "RandomArrowVelocity") return ItemSpecialEffect::RandomArrowVelocity;
+	if (value == "FireArrows") return ItemSpecialEffect::FireArrows;
+	if (value == "FireDamage") return ItemSpecialEffect::FireDamage;
+	if (value == "LightningDamage") return ItemSpecialEffect::LightningDamage;
+	if (value == "DrainLife") return ItemSpecialEffect::DrainLife;
+	if (value == "MultipleArrows") return ItemSpecialEffect::MultipleArrows;
+	if (value == "Knockback") return ItemSpecialEffect::Knockback;
+	if (value == "StealMana3") return ItemSpecialEffect::StealMana3;
+	if (value == "StealMana5") return ItemSpecialEffect::StealMana5;
+	if (value == "StealLife3") return ItemSpecialEffect::StealLife3;
+	if (value == "StealLife5") return ItemSpecialEffect::StealLife5;
+	if (value == "QuickAttack") return ItemSpecialEffect::QuickAttack;
+	if (value == "FastAttack") return ItemSpecialEffect::FastAttack;
+	if (value == "FasterAttack") return ItemSpecialEffect::FasterAttack;
+	if (value == "FastestAttack") return ItemSpecialEffect::FastestAttack;
+	if (value == "FastHitRecovery") return ItemSpecialEffect::FastHitRecovery;
+	if (value == "FasterHitRecovery") return ItemSpecialEffect::FasterHitRecovery;
+	if (value == "FastestHitRecovery") return ItemSpecialEffect::FastestHitRecovery;
+	if (value == "FastBlock") return ItemSpecialEffect::FastBlock;
+	if (value == "LightningArrows") return ItemSpecialEffect::LightningArrows;
+	if (value == "Thorns") return ItemSpecialEffect::Thorns;
+	if (value == "NoMana") return ItemSpecialEffect::NoMana;
+	if (value == "HalfTrapDamage") return ItemSpecialEffect::HalfTrapDamage;
+	if (value == "TripleDemonDamage") return ItemSpecialEffect::TripleDemonDamage;
+	if (value == "ZeroResistance") return ItemSpecialEffect::ZeroResistance;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<item_misc_id, std::string> ParseItemMiscId(std::string_view value)
+{
+	if (value == "NONE") return IMISC_NONE;
+	if (value == "USEFIRST") return IMISC_USEFIRST;
+	if (value == "FULLHEAL") return IMISC_FULLHEAL;
+	if (value == "HEAL") return IMISC_HEAL;
+	if (value == "MANA") return IMISC_MANA;
+	if (value == "FULLMANA") return IMISC_FULLMANA;
+	if (value == "ELIXSTR") return IMISC_ELIXSTR;
+	if (value == "ELIXMAG") return IMISC_ELIXMAG;
+	if (value == "ELIXDEX") return IMISC_ELIXDEX;
+	if (value == "ELIXVIT") return IMISC_ELIXVIT;
+	if (value == "REJUV") return IMISC_REJUV;
+	if (value == "FULLREJUV") return IMISC_FULLREJUV;
+	if (value == "USELAST") return IMISC_USELAST;
+	if (value == "SCROLL") return IMISC_SCROLL;
+	if (value == "SCROLLT") return IMISC_SCROLLT;
+	if (value == "STAFF") return IMISC_STAFF;
+	if (value == "BOOK") return IMISC_BOOK;
+	if (value == "RING") return IMISC_RING;
+	if (value == "AMULET") return IMISC_AMULET;
+	if (value == "UNIQUE") return IMISC_UNIQUE;
+	if (value == "OILFIRST") return IMISC_OILFIRST;
+	if (value == "OILOF") return IMISC_OILOF;
+	if (value == "OILACC") return IMISC_OILACC;
+	if (value == "OILMAST") return IMISC_OILMAST;
+	if (value == "OILSHARP") return IMISC_OILSHARP;
+	if (value == "OILDEATH") return IMISC_OILDEATH;
+	if (value == "OILSKILL") return IMISC_OILSKILL;
+	if (value == "OILBSMTH") return IMISC_OILBSMTH;
+	if (value == "OILFORT") return IMISC_OILFORT;
+	if (value == "OILPERM") return IMISC_OILPERM;
+	if (value == "OILHARD") return IMISC_OILHARD;
+	if (value == "OILIMP") return IMISC_OILIMP;
+	if (value == "OILLAST") return IMISC_OILLAST;
+	if (value == "MAPOFDOOM") return IMISC_MAPOFDOOM;
+	if (value == "EAR") return IMISC_EAR;
+	if (value == "SPECELIX") return IMISC_SPECELIX;
+	if (value == "RUNEFIRST") return IMISC_RUNEFIRST;
+	if (value == "RUNEF") return IMISC_RUNEF;
+	if (value == "RUNEL") return IMISC_RUNEL;
+	if (value == "GR_RUNEL") return IMISC_GR_RUNEL;
+	if (value == "GR_RUNEF") return IMISC_GR_RUNEF;
+	if (value == "RUNES") return IMISC_RUNES;
+	if (value == "RUNELAST") return IMISC_RUNELAST;
+	if (value == "AURIC") return IMISC_AURIC;
+	if (value == "NOTE") return IMISC_NOTE;
+	if (value == "ARENAPOT") return IMISC_ARENAPOT;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<item_effect_type, std::string> ParseItemEffectType(std::string_view value)
+{
+	if (value == "TOHIT") return IPL_TOHIT;
+	if (value == "TOHIT_CURSE") return IPL_TOHIT_CURSE;
+	if (value == "DAMP") return IPL_DAMP;
+	if (value == "DAMP_CURSE") return IPL_DAMP_CURSE;
+	if (value == "TOHIT_DAMP") return IPL_TOHIT_DAMP;
+	if (value == "TOHIT_DAMP_CURSE") return IPL_TOHIT_DAMP_CURSE;
+	if (value == "ACP") return IPL_ACP;
+	if (value == "ACP_CURSE") return IPL_ACP_CURSE;
+	if (value == "FIRERES") return IPL_FIRERES;
+	if (value == "LIGHTRES") return IPL_LIGHTRES;
+	if (value == "MAGICRES") return IPL_MAGICRES;
+	if (value == "ALLRES") return IPL_ALLRES;
+	if (value == "SPLLVLADD") return IPL_SPLLVLADD;
+	if (value == "CHARGES") return IPL_CHARGES;
+	if (value == "FIREDAM") return IPL_FIREDAM;
+	if (value == "LIGHTDAM") return IPL_LIGHTDAM;
+	if (value == "STR") return IPL_STR;
+	if (value == "STR_CURSE") return IPL_STR_CURSE;
+	if (value == "MAG") return IPL_MAG;
+	if (value == "MAG_CURSE") return IPL_MAG_CURSE;
+	if (value == "DEX") return IPL_DEX;
+	if (value == "DEX_CURSE") return IPL_DEX_CURSE;
+	if (value == "VIT") return IPL_VIT;
+	if (value == "VIT_CURSE") return IPL_VIT_CURSE;
+	if (value == "ATTRIBS") return IPL_ATTRIBS;
+	if (value == "ATTRIBS_CURSE") return IPL_ATTRIBS_CURSE;
+	if (value == "GETHIT_CURSE") return IPL_GETHIT_CURSE;
+	if (value == "GETHIT") return IPL_GETHIT;
+	if (value == "LIFE") return IPL_LIFE;
+	if (value == "LIFE_CURSE") return IPL_LIFE_CURSE;
+	if (value == "MANA") return IPL_MANA;
+	if (value == "MANA_CURSE") return IPL_MANA_CURSE;
+	if (value == "DUR") return IPL_DUR;
+	if (value == "DUR_CURSE") return IPL_DUR_CURSE;
+	if (value == "INDESTRUCTIBLE") return IPL_INDESTRUCTIBLE;
+	if (value == "LIGHT") return IPL_LIGHT;
+	if (value == "LIGHT_CURSE") return IPL_LIGHT_CURSE;
+	if (value == "MULT_ARROWS") return IPL_MULT_ARROWS;
+	if (value == "FIRE_ARROWS") return IPL_FIRE_ARROWS;
+	if (value == "LIGHT_ARROWS") return IPL_LIGHT_ARROWS;
+	if (value == "THORNS") return IPL_THORNS;
+	if (value == "NOMANA") return IPL_NOMANA;
+	if (value == "FIREBALL") return IPL_FIREBALL;
+	if (value == "ABSHALFTRAP") return IPL_ABSHALFTRAP;
+	if (value == "KNOCKBACK") return IPL_KNOCKBACK;
+	if (value == "STEALMANA") return IPL_STEALMANA;
+	if (value == "STEALLIFE") return IPL_STEALLIFE;
+	if (value == "TARGAC") return IPL_TARGAC;
+	if (value == "FASTATTACK") return IPL_FASTATTACK;
+	if (value == "FASTRECOVER") return IPL_FASTRECOVER;
+	if (value == "FASTBLOCK") return IPL_FASTBLOCK;
+	if (value == "DAMMOD") return IPL_DAMMOD;
+	if (value == "RNDARROWVEL") return IPL_RNDARROWVEL;
+	if (value == "SETDAM") return IPL_SETDAM;
+	if (value == "SETDUR") return IPL_SETDUR;
+	if (value == "NOMINSTR") return IPL_NOMINSTR;
+	if (value == "SPELL") return IPL_SPELL;
+	if (value == "ONEHAND") return IPL_ONEHAND;
+	if (value == "3XDAMVDEM") return IPL_3XDAMVDEM;
+	if (value == "ALLRESZERO") return IPL_ALLRESZERO;
+	if (value == "DRAINLIFE") return IPL_DRAINLIFE;
+	if (value == "RNDSTEALLIFE") return IPL_RNDSTEALLIFE;
+	if (value == "SETAC") return IPL_SETAC;
+	if (value == "ADDACLIFE") return IPL_ADDACLIFE;
+	if (value == "ADDMANAAC") return IPL_ADDMANAAC;
+	if (value == "AC_CURSE") return IPL_AC_CURSE;
+	if (value == "LASTDIABLO") return IPL_LASTDIABLO;
+	if (value == "FIRERES_CURSE") return IPL_FIRERES_CURSE;
+	if (value == "LIGHTRES_CURSE") return IPL_LIGHTRES_CURSE;
+	if (value == "MAGICRES_CURSE") return IPL_MAGICRES_CURSE;
+	if (value == "DEVASTATION") return IPL_DEVASTATION;
+	if (value == "DECAY") return IPL_DECAY;
+	if (value == "PERIL") return IPL_PERIL;
+	if (value == "JESTERS") return IPL_JESTERS;
+	if (value == "CRYSTALLINE") return IPL_CRYSTALLINE;
+	if (value == "DOPPELGANGER") return IPL_DOPPELGANGER;
+	if (value == "ACDEMON") return IPL_ACDEMON;
+	if (value == "ACUNDEAD") return IPL_ACUNDEAD;
+	if (value == "MANATOLIFE") return IPL_MANATOLIFE;
+	if (value == "LIFETOMANA") return IPL_LIFETOMANA;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<AffixItemType, std::string> ParseAffixItemType(std::string_view value)
+{
+	if (value == "Misc") return AffixItemType::Misc;
+	if (value == "Bow") return AffixItemType::Bow;
+	if (value == "Staff") return AffixItemType::Staff;
+	if (value == "Weapon") return AffixItemType::Weapon;
+	if (value == "Shield") return AffixItemType::Shield;
+	if (value == "Armor") return AffixItemType::Armor;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+tl::expected<goodorevil, std::string> ParseAffixAlignment(std::string_view value)
+{
+	if (value == "Any") return GOE_ANY;
+	if (value == "Evil") return GOE_EVIL;
+	if (value == "Good") return GOE_GOOD;
+	return tl::make_unexpected("Unknown enum value");
+}
+
+void LoadItemDat()
+{
+	const std::string_view filename = "txtdata\\items\\itemdat.tsv";
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
+
+	AllItemsList.clear();
+	AllItemsList.reserve(dataFile.numRecords());
+	for (DataFileRecord record : dataFile) {
+		RecordReader reader { record, filename };
+		ItemData &item = AllItemsList.emplace_back();
+		reader.advance(); // Skip the first column (item ID).
+		reader.read("dropRate", item.iRnd, ParseItemDropRate);
+		reader.read("class", item.iClass, ParseItemClass);
+		reader.read("equipType", item.iLoc, ParseItemEquipType);
+		reader.read("cursorGraphic", item.iCurs, ParseItemCursorGraphic);
+		reader.read("itemType", item.itype, ParseItemType);
+		reader.read("uniqueBaseItem", item.iItemId, ParseUniqueBaseItem);
+		reader.readString("name", item.iName);
+		reader.readString("shortName", item.iSName);
+		reader.readInt("minMonsterLevel", item.iMinMLvl);
+		reader.readInt("durability", item.iDurability);
+		reader.readInt("minDamage", item.iMinDam);
+		reader.readInt("maxDamage", item.iMaxDam);
+		reader.readInt("minArmor", item.iMinAC);
+		reader.readInt("maxArmor", item.iMaxAC);
+		reader.readInt("minStrength", item.iMinStr);
+		reader.readInt("minMagic", item.iMinMag);
+		reader.readInt("minDexterity", item.iMinDex);
+		reader.readEnumList("specialEffects", item.iFlags, ParseItemSpecialEffect);
+		reader.read("miscId", item.iMiscId, ParseItemMiscId);
+		reader.read("spell", item.iSpell, ParseSpellId);
+		reader.readBool("usable", item.iUsable);
+		reader.readInt("value", item.iValue);
+	}
+	AllItemsList.shrink_to_fit();
+}
+
+void ReadItemPower(RecordReader &reader, std::string_view fieldName, ItemPower &power)
+{
+	reader.read(fieldName, power.type, ParseItemEffectType);
+	reader.readOptionalInt(StrCat(fieldName, ".value1"), power.param1);
+	reader.readOptionalInt(StrCat(fieldName, ".value2"), power.param2);
+}
+
+void LoadUniqueItemDat()
+{
+	const std::string_view filename = "txtdata\\items\\unique_itemdat.tsv";
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
+
+	UniqueItems.clear();
+	UniqueItems.reserve(dataFile.numRecords());
+	for (DataFileRecord record : dataFile) {
+		RecordReader reader { record, filename };
+		UniqueItem &item = UniqueItems.emplace_back();
+		reader.readString("name", item.UIName);
+		reader.read("cursorGraphic", item.UICurs, ParseItemCursorGraphic);
+		reader.read("uniqueBaseItem", item.UIItemId, ParseUniqueBaseItem);
+		reader.readInt("minLevel", item.UIMinLvl);
+		reader.readInt("value", item.UIValue);
+
+		// powers (up to 6)
+		item.UINumPL = 0;
+		for (size_t i = 0; i < 6; ++i) {
+			if (reader.value().empty())
+				break;
+			ReadItemPower(reader, StrCat("power", i), item.powers[item.UINumPL++]);
+		}
+	}
+	UniqueItems.shrink_to_fit();
+}
+
+void LoadItemAffixesDat(std::string_view filename, std::vector<PLStruct> &out)
+{
+	DataFile dataFile = DataFile::loadOrDie(filename);
+	dataFile.skipHeaderOrDie(filename);
+
+	out.clear();
+	out.reserve(dataFile.numRecords());
+	for (DataFileRecord record : dataFile) {
+		RecordReader reader { record, filename };
+		PLStruct &item = out.emplace_back();
+		reader.readString("name", item.PLName);
+		ReadItemPower(reader, "power", item.power);
+		reader.readInt("minLevel", item.PLMinLvl);
+		reader.readEnumList("itemTypes", item.PLIType, ParseAffixItemType);
+		reader.read("alignment", item.PLGOE, ParseAffixAlignment);
+		reader.readBool("doubleChance", item.PLDouble);
+		reader.readBool("useful", item.PLOk);
+		reader.readInt("minVal", item.minVal);
+		reader.readInt("maxVal", item.maxVal);
+		reader.readInt("multVal", item.multVal);
+	}
+	out.shrink_to_fit();
+}
+
+} // namespace
+
+void LoadItemData()
+{
+	LoadItemDat();
+	LoadUniqueItemDat();
+	LoadItemAffixesDat("txtdata\\items\\item_prefixes.tsv", ItemPrefixes);
+	LoadItemAffixesDat("txtdata\\items\\item_suffixes.tsv", ItemSuffixes);
+}
+
+std::string_view ItemTypeToString(ItemType itemType)
 {
 	switch (itemType) {
-	case ItemType::Misc:
-		return "Misc";
-	case ItemType::Sword:
-		return "Sword";
-	case ItemType::Axe:
-		return "Axe";
-	case ItemType::Bow:
-		return "Bow";
-	case ItemType::Mace:
-		return "Mace";
-	case ItemType::Shield:
-		return "Shield";
-	case ItemType::LightArmor:
-		return "LightArmor";
-	case ItemType::Helm:
-		return "Helm";
-	case ItemType::MediumArmor:
-		return "MediumArmor";
-	case ItemType::HeavyArmor:
-		return "HeavyArmor";
-	case ItemType::Staff:
-		return "Staff";
-	case ItemType::Gold:
-		return "Gold";
-	case ItemType::Ring:
-		return "Ring";
-	case ItemType::Amulet:
-		return "Amulet";
-	case ItemType::None:
-		return "None";
+	case ItemType::Misc: return "Misc";
+	case ItemType::Sword: return "Sword";
+	case ItemType::Axe: return "Axe";
+	case ItemType::Bow: return "Bow";
+	case ItemType::Mace: return "Mace";
+	case ItemType::Shield: return "Shield";
+	case ItemType::LightArmor: return "LightArmor";
+	case ItemType::Helm: return "Helm";
+	case ItemType::MediumArmor: return "MediumArmor";
+	case ItemType::HeavyArmor: return "HeavyArmor";
+	case ItemType::Staff: return "Staff";
+	case ItemType::Gold: return "Gold";
+	case ItemType::Ring: return "Ring";
+	case ItemType::Amulet: return "Amulet";
+	case ItemType::None: return "None";
 	}
 	return "";
 }
-
-/** Contains the data related to each item ID. */
-const ItemData AllItemsList[] = {
-	// clang-format off
-// _item_indexes      iRnd,          iClass,        iLoc,             iCurs,                             itype,                 iItemId,            iName,                             iSName,        iMinMLvl,  iDurability,  iMinDam,  iMaxDam,  iMinAC,  iMaxAC,  iMinStr,  iMinMag,  iMinDex, iFlags,                             iMiscId,         iSpell,                  iUsable,   iValue
-/*IDI_GOLD       */ { IDROP_REGULAR, ICLASS_GOLD,   ILOC_UNEQUIPABLE, ICURS_GOLD,                        ItemType::Gold,        UITYPE_NONE,        N_("Gold"),                        nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           true,           0 },
-/*IDI_WARRIOR    */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_SHORT_SWORD,                 ItemType::Sword,       UITYPE_NONE,        N_("Short Sword"),                 nullptr,              2,           20,        2,        6,       0,       0,       18,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         50 },
-/*IDI_WARRSHLD   */ { IDROP_NEVER,   ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_BUCKLER,                     ItemType::Shield,      UITYPE_NONE,        N_("Buckler"),                     nullptr,              2,           10,        0,        0,       3,       3,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         50 },
-/*IDI_WARRCLUB   */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_CLUB,                        ItemType::Mace,        UITYPE_SPIKCLUB,    N_("Club"),                        nullptr,              1,           20,        1,        6,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         20 },
-/*IDI_ROGUE      */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_BOW,                   ItemType::Bow,         UITYPE_NONE,        N_("Short Bow"),                   nullptr,              1,           30,        1,        4,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        100 },
-/*IDI_SORCERER   */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_STAFF,                 ItemType::Staff,       UITYPE_NONE,        N_("Short Staff of Mana"),         nullptr,              1,           25,        2,        4,       0,       0,        0,       20,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::Mana,           false,        520 },
-/*IDI_CLEAVER    */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_CLEAVER,                     ItemType::Axe,         UITYPE_CLEAVER,     N_("Cleaver"),                     nullptr,             10,           10,        4,       24,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,       2000 },
-/*IDI_SKCROWN    */ { IDROP_NEVER,   ICLASS_ARMOR,  ILOC_HELM,        ICURS_THE_UNDEAD_CROWN,            ItemType::Helm,        UITYPE_SKCROWN,     N_("The Undead Crown"),            nullptr,              0,           50,        0,        0,      15,      15,        0,        0,        0, ItemSpecialEffect::RandomStealLife, IMISC_UNIQUE,    SpellID::Null,           false,      10000 },
-/*IDI_INFRARING  */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_RING,        ICURS_EMPYREAN_BAND,               ItemType::Ring,        UITYPE_INFRARING,   N_("Empyrean Band"),               nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,       8000 },
-/*IDI_ROCK       */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_MAGIC_ROCK,                  ItemType::Misc,        UITYPE_NONE,        N_("Magic Rock"),                  nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_OPTAMULET  */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_AMULET,      ICURS_OPTIC_AMULET,                ItemType::Amulet,      UITYPE_OPTAMULET,   N_("Optic Amulet"),                nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,       5000 },
-/*IDI_TRING      */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_RING,        ICURS_RING_OF_TRUTH,               ItemType::Ring,        UITYPE_TRING,       N_("Ring of Truth"),               nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,       1000 },
-/*IDI_BANNER     */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_TAVERN_SIGN,                 ItemType::Misc,        UITYPE_NONE,        N_("Tavern Sign"),                 nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_HARCREST   */ { IDROP_NEVER,   ICLASS_ARMOR,  ILOC_HELM,        ICURS_HARLEQUIN_CREST,             ItemType::Helm,        UITYPE_HARCREST,    N_("Harlequin Crest"),             nullptr,              0,           15,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,         15 },
-/*IDI_STEELVEIL  */ { IDROP_NEVER,   ICLASS_ARMOR,  ILOC_HELM,        ICURS_VIEL_OF_STEEL,               ItemType::Helm,        UITYPE_STEELVEIL,   N_("Veil of Steel"),               nullptr,              0,           60,        0,        0,      18,      18,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,          0 },
-/*IDI_GLDNELIX   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_GOLDEN_ELIXIR,               ItemType::Misc,        UITYPE_ELIXIR,      N_("Golden Elixir"),               nullptr,             15,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_ANVIL      */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_ANVIL_OF_FURY,               ItemType::Misc,        UITYPE_NONE,        N_("Anvil of Fury"),               nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_MUSHROOM   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_BLACK_MUSHROOM,              ItemType::Misc,        UITYPE_NONE,        N_("Black Mushroom"),              nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_BRAIN      */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_BRAIN,                       ItemType::Misc,        UITYPE_NONE,        N_("Brain"),                       nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_FUNGALTM   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_FUNGAL_TOME,                 ItemType::Misc,        UITYPE_NONE,        N_("Fungal Tome"),                 nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_SPECELIX   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SPECTRAL_ELIXIR,             ItemType::Misc,        UITYPE_ELIXIR,      N_("Spectral Elixir"),             nullptr,             15,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SPECELIX,  SpellID::Null,           true,           0 },
-/*IDI_BLDSTONE   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_BLOOD_STONE,                 ItemType::Misc,        UITYPE_NONE,        N_("Blood Stone"),                 nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_MAPOFDOOM  */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_MAP_OF_THE_STARS,            ItemType::Misc,        UITYPE_MAPOFDOOM,   N_("Cathedral Map"),               nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_MAPOFDOOM, SpellID::Null,           true,           0 },
-/*IDI_EAR        */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_EAR_SORCERER,                ItemType::Misc,        UITYPE_NONE,        N_("Heart"),                       nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_EAR,       SpellID::Null,           false,          0 },
-/*IDI_HEAL       */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_HEALING,           ItemType::Misc,        UITYPE_NONE,        N_("Potion of Healing"),           nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_HEAL,      SpellID::Null,           true,          50 },
-/*IDI_MANA       */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_MANA,              ItemType::Misc,        UITYPE_NONE,        N_("Potion of Mana"),              nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_MANA,      SpellID::Null,           true,          50 },
-/*IDI_IDENTIFY   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Identify"),          nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Identify,       true,         200 },
-/*IDI_PORTAL     */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Town Portal"),       nullptr,              4,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::TownPortal,     true,         200 },
-/*IDI_ARMOFVAL   */ { IDROP_NEVER,   ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_ARKAINES_VALOR,              ItemType::MediumArmor, UITYPE_ARMOFVAL,    N_("Arkaine's Valor"),             nullptr,              0,           40,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,          0 },
-/*IDI_FULLHEAL   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_FULL_HEALING,      ItemType::Misc,        UITYPE_NONE,        N_("Potion of Full Healing"),      nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_FULLHEAL,  SpellID::Null,           true,         150 },
-/*IDI_FULLMANA   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_FULL_MANA,         ItemType::Misc,        UITYPE_NONE,        N_("Potion of Full Mana"),         nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_FULLMANA,  SpellID::Null,           true,         150 },
-/*IDI_GRISWOLD   */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_BROAD_SWORD,                 ItemType::Sword,       UITYPE_GRISWOLD,    N_("Griswold's Edge"),             nullptr,              8,           50,        4,       12,       0,       0,       40,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,        750 },
-/*IDI_LGTFORGE   */ { IDROP_NEVER,   ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_BOVINE,                      ItemType::HeavyArmor,  UITYPE_BOVINE,      N_("Bovine Plate"),                nullptr,              0,           40,        0,        0,       0,       0,       50,        0,        0, ItemSpecialEffect::None,            IMISC_UNIQUE,    SpellID::Null,           false,          0 },
-/*IDI_LAZSTAFF   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_STAFF_OF_LAZARUS,            ItemType::Misc,        UITYPE_LAZSTAFF,    N_("Staff of Lazarus"),            nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_RESURRECT  */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Resurrect"),         nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Resurrect,      true,         250 },
-/*IDI_OIL        */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_OIL,                         ItemType::Misc,        UITYPE_NONE,        N_("Blacksmith Oil"),              nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_OILBSMTH,  SpellID::Null,           true,         100 },
-/*IDI_SHORTSTAFF */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_STAFF,                 ItemType::Staff,       UITYPE_NONE,        N_("Short Staff"),                 nullptr,              1,           25,        2,        4,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         20 },
-/*IDI_BARDSWORD  */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_SHORT_SWORD,                 ItemType::Sword,       UITYPE_NONE,        N_("Sword"),                       nullptr,              2,            8,        1,        5,       0,       0,       15,        0,       20, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         20 },
-/*IDI_BARDDAGGER */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_DAGGER,                      ItemType::Sword,       UITYPE_NONE,        N_("Dagger"),                      nullptr,              1,           16,        1,        4,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         20 },
-/*IDI_RUNEBOMB   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_RUNE_BOMB,                   ItemType::Misc,        UITYPE_NONE,        N_("Rune Bomb"),                   nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_THEODORE   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_THEODORE,                    ItemType::Misc,        UITYPE_NONE,        N_("Theodore"),                    nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_AURIC      */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_AMULET,      ICURS_AURIC_AMULET,                ItemType::Misc,        UITYPE_NONE,        N_("Auric Amulet"),                nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_AURIC,     SpellID::Null,           false,        100 },
-/*IDI_NOTE1      */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_TORN_NOTE_1,                 ItemType::Misc,        UITYPE_NONE,        N_("Torn Note 1"),                 nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_NOTE2      */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_TORN_NOTE_2,                 ItemType::Misc,        UITYPE_NONE,        N_("Torn Note 2"),                 nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_NOTE3      */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_TORN_NOTE_3,                 ItemType::Misc,        UITYPE_NONE,        N_("Torn Note 3"),                 nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_FULLNOTE   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_RECONSTRUCTED_NOTE,          ItemType::Misc,        UITYPE_NONE,        N_("Reconstructed Note"),          nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NOTE,      SpellID::Null,           true,           0 },
-/*IDI_BROWNSUIT  */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_BROWN_SUIT,                  ItemType::Misc,        UITYPE_NONE,        N_("Brown Suit"),                  nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*IDI_GREYSUIT   */ { IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_GREY_SUIT,                   ItemType::Misc,        UITYPE_NONE,        N_("Grey Suit"),                   nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_HELM,        ICURS_CAP,                         ItemType::Helm,        UITYPE_NONE,        N_("Cap"),                         N_("Cap"),            1,           15,        0,        0,       1,       3,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         15 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_HELM,        ICURS_SKULL_CAP,                   ItemType::Helm,        UITYPE_SKULLCAP,    N_("Skull Cap"),                   N_("Cap"),            4,           20,        0,        0,       2,       4,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         25 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_HELM,        ICURS_HELM,                        ItemType::Helm,        UITYPE_HELM,        N_("Helm"),                        N_("Helm"),           8,           30,        0,        0,       4,       6,       25,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         40 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_HELM,        ICURS_FULL_HELM,                   ItemType::Helm,        UITYPE_NONE,        N_("Full Helm"),                   N_("Helm"),          12,           35,        0,        0,       6,       8,       35,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         90 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_HELM,        ICURS_CROWN,                       ItemType::Helm,        UITYPE_CROWN,       N_("Crown"),                       N_("Crown"),         16,           40,        0,        0,       8,      12,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        200 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_HELM,        ICURS_GREAT_HELM,                  ItemType::Helm,        UITYPE_GREATHELM,   N_("Great Helm"),                  N_("Helm"),          20,           60,        0,        0,      10,      15,       50,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        400 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_CAPE,                        ItemType::LightArmor,  UITYPE_CAPE,        N_("Cape"),                        N_("Cape"),           1,           12,        0,        0,       1,       5,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         10 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_RAGS,                        ItemType::LightArmor,  UITYPE_RAGS,        N_("Rags"),                        N_("Rags"),           1,            6,        0,        0,       2,       6,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          5 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_CLOAK,                       ItemType::LightArmor,  UITYPE_CLOAK,       N_("Cloak"),                       N_("Cloak"),          2,           18,        0,        0,       3,       7,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         40 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_ROBE,                        ItemType::LightArmor,  UITYPE_ROBE,        N_("Robe"),                        N_("Robe"),           3,           24,        0,        0,       4,       7,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         75 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_QUILTED_ARMOR,               ItemType::LightArmor,  UITYPE_NONE,        N_("Quilted Armor"),               N_("Armor"),          4,           30,        0,        0,       7,      10,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        200 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_LEATHER_ARMOR,               ItemType::LightArmor,  UITYPE_LEATHARMOR,  N_("Leather Armor"),               N_("Armor"),          6,           35,        0,        0,      10,      13,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        300 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_HARD_LEATHER_ARMOR,          ItemType::LightArmor,  UITYPE_NONE,        N_("Hard Leather Armor"),          N_("Armor"),          7,           40,        0,        0,      11,      14,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        450 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_STUDDED_LEATHER_ARMOR,       ItemType::LightArmor,  UITYPE_STUDARMOR,   N_("Studded Leather Armor"),       N_("Armor"),          9,           45,        0,        0,      15,      17,       20,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        700 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_RING_MAIL,                   ItemType::MediumArmor, UITYPE_NONE,        N_("Ring Mail"),                   N_("Mail"),          11,           50,        0,        0,      17,      20,       25,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        900 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_CHAIN_MAIL,                  ItemType::MediumArmor, UITYPE_CHAINMAIL,   N_("Chain Mail"),                  N_("Mail"),          13,           55,        0,        0,      18,      22,       30,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1250 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_SCALE_MAIL,                  ItemType::MediumArmor, UITYPE_NONE,        N_("Scale Mail"),                  N_("Mail"),          15,           60,        0,        0,      23,      28,       35,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       2300 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_BREAST_PLATE,                ItemType::HeavyArmor,  UITYPE_BREASTPLATE, N_("Breast Plate"),                N_("Plate"),         16,           80,        0,        0,      20,      24,       40,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       2800 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_SPLINT_MAIL,                 ItemType::MediumArmor, UITYPE_NONE,        N_("Splint Mail"),                 N_("Mail"),          17,           65,        0,        0,      30,      35,       40,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       3250 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_FIELD_PLATE,                 ItemType::HeavyArmor,  UITYPE_PLATEMAIL,   N_("Plate Mail"),                  N_("Plate"),         19,           75,        0,        0,      42,      50,       60,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       4600 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_FIELD_PLATE,                 ItemType::HeavyArmor,  UITYPE_NONE,        N_("Field Plate"),                 N_("Plate"),         21,           80,        0,        0,      40,      45,       65,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       5800 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_GOTHIC_PLATE,                ItemType::HeavyArmor,  UITYPE_NONE,        N_("Gothic Plate"),                N_("Plate"),         23,          100,        0,        0,      50,      60,       80,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       8000 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ARMOR,       ICURS_FULL_PLATE_MAIL,             ItemType::HeavyArmor,  UITYPE_FULLPLATE,   N_("Full Plate Mail"),             N_("Plate"),         25,           90,        0,        0,      60,      75,       90,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       6500 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_BUCKLER,                     ItemType::Shield,      UITYPE_BUCKLER,     N_("Buckler"),                     N_("Shield"),         1,           16,        0,        0,       1,       5,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         30 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_SMALL_SHIELD,                ItemType::Shield,      UITYPE_SMALLSHIELD, N_("Small Shield"),                N_("Shield"),         5,           24,        0,        0,       3,       8,       25,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         90 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_LARGE_SHIELD,                ItemType::Shield,      UITYPE_LARGESHIELD, N_("Large Shield"),                N_("Shield"),         9,           32,        0,        0,       5,      10,       40,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        200 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_KITE_SHIELD,                 ItemType::Shield,      UITYPE_KITESHIELD,  N_("Kite Shield"),                 N_("Shield"),        14,           40,        0,        0,       8,      15,       50,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        400 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_TOWER_SHIELD,                ItemType::Shield,      UITYPE_GOTHSHIELD,  N_("Tower Shield"),                N_("Shield"),        20,           50,        0,        0,      12,      20,       60,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        850 },
-/*               */ { IDROP_REGULAR, ICLASS_ARMOR,  ILOC_ONEHAND,     ICURS_GOTHIC_SHIELD,               ItemType::Shield,      UITYPE_GOTHSHIELD,  N_("Gothic Shield"),               N_("Shield"),        23,           60,        0,        0,      14,      18,       80,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       2300 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_HEALING,           ItemType::Misc,        UITYPE_NONE,        N_("Potion of Healing"),           nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_HEAL,      SpellID::Null,           true,          50 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_FULL_HEALING,      ItemType::Misc,        UITYPE_NONE,        N_("Potion of Full Healing"),      nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_FULLHEAL,  SpellID::Null,           true,         150 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_MANA,              ItemType::Misc,        UITYPE_NONE,        N_("Potion of Mana"),              nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_MANA,      SpellID::Null,           true,          50 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_FULL_MANA,         ItemType::Misc,        UITYPE_NONE,        N_("Potion of Full Mana"),         nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_FULLMANA,  SpellID::Null,           true,         150 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_REJUVENATION,      ItemType::Misc,        UITYPE_NONE,        N_("Potion of Rejuvenation"),      nullptr,              3,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_REJUV,     SpellID::Null,           true,         120 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_POTION_OF_FULL_REJUVENATION, ItemType::Misc,        UITYPE_NONE,        N_("Potion of Full Rejuvenation"), nullptr,              7,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_FULLREJUV, SpellID::Null,           true,         600 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_OIL,                         ItemType::Misc,        UITYPE_NONE,        N_("Blacksmith Oil"),              nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_OILBSMTH,  SpellID::Null,           true,         100 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_OIL,                         ItemType::Misc,        UITYPE_NONE,        N_("Oil of Accuracy"),             nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_OILACC,    SpellID::Null,           true,         500 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_OIL,                         ItemType::Misc,        UITYPE_NONE,        N_("Oil of Sharpness"),            nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_OILSHARP,  SpellID::Null,           true,         500 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_OIL,                         ItemType::Misc,        UITYPE_NONE,        N_("Oil"),                         nullptr,             10,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_OILOF,     SpellID::Null,           true,           0 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_ELIXIR_OF_STRENGTH,          ItemType::Misc,        UITYPE_NONE,        N_("Elixir of Strength"),          nullptr,             15,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_ELIXSTR,   SpellID::Null,           true,        5000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_ELIXIR_OF_MAGIC,             ItemType::Misc,        UITYPE_NONE,        N_("Elixir of Magic"),             nullptr,             15,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_ELIXMAG,   SpellID::Null,           true,        5000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_ELIXIR_OF_DEXTERITY,         ItemType::Misc,        UITYPE_NONE,        N_("Elixir of Dexterity"),         nullptr,             15,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_ELIXDEX,   SpellID::Null,           true,        5000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_ELIXIR_OF_VITALITY,          ItemType::Misc,        UITYPE_NONE,        N_("Elixir of Vitality"),          nullptr,             20,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_ELIXVIT,   SpellID::Null,           true,        5000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Healing"),           nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Healing,        true,          50 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Search"),            nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Search,         true,          50 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Lightning"),         nullptr,              4,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Lightning,      true,         150 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Identify"),          nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Identify,       true,         100 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Resurrect"),         nullptr,              1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Resurrect,      true,         250 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Fire Wall"),         nullptr,              4,            0,        0,        0,       0,       0,        0,       17,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::FireWall,       true,         400 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Inferno"),           nullptr,              1,            0,        0,        0,       0,       0,        0,       19,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Inferno,        true,         100 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Town Portal"),       nullptr,              4,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::TownPortal,     true,         200 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Flash"),             nullptr,              6,            0,        0,        0,       0,       0,        0,       21,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Flash,          true,         500 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Infravision"),       nullptr,              8,            0,        0,        0,       0,       0,        0,       23,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Infravision,    true,         600 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Phasing"),           nullptr,              6,            0,        0,        0,       0,       0,        0,       25,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Phasing,        true,         200 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Mana Shield"),       nullptr,              8,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::ManaShield,     true,        1200 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Flame Wave"),        nullptr,             10,            0,        0,        0,       0,       0,        0,       29,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::FlameWave,      true,         650 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Fireball"),          nullptr,              8,            0,        0,        0,       0,       0,        0,       31,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Fireball,       true,         300 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Stone Curse"),       nullptr,              6,            0,        0,        0,       0,       0,        0,       33,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::StoneCurse,     true,         800 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Chain Lightning"),   nullptr,             10,            0,        0,        0,       0,       0,        0,       35,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::ChainLightning, true,         750 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Guardian"),          nullptr,             12,            0,        0,        0,       0,       0,        0,       47,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Guardian,       true,         950 },
-/*               */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        "Non Item",                        nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Nova"),              nullptr,             14,            0,        0,        0,       0,       0,        0,       57,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Nova,           true,        1300 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Golem"),             nullptr,             10,            0,        0,        0,       0,       0,        0,       51,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Golem,          true,        1100 },
-/*               */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        "Scroll of None",                  nullptr,             99,            0,        0,        0,       0,       0,        0,       61,        0, ItemSpecialEffect::None,            IMISC_SCROLLT,   SpellID::Null,           true,        1000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Teleport"),          nullptr,             14,            0,        0,        0,       0,       0,        0,       81,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Teleport,       true,        3000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SCROLL_OF,                   ItemType::Misc,        UITYPE_NONE,        N_("Scroll of Apocalypse"),        nullptr,             22,            0,        0,        0,       0,       0,        0,      117,        0, ItemSpecialEffect::None,            IMISC_SCROLL,    SpellID::Apocalypse,     true,        2000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_BOOK_BLUE,                   ItemType::Misc,        UITYPE_NONE,        N_("Book of "),                    nullptr,              2,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_BOOK,      SpellID::Null,           true,           0 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_BOOK_BLUE,                   ItemType::Misc,        UITYPE_NONE,        N_("Book of "),                    nullptr,              8,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_BOOK,      SpellID::Null,           true,           0 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_BOOK_BLUE,                   ItemType::Misc,        UITYPE_NONE,        N_("Book of "),                    nullptr,             14,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_BOOK,      SpellID::Null,           true,           0 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_BOOK_BLUE,                   ItemType::Misc,        UITYPE_NONE,        N_("Book of "),                    nullptr,             20,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_BOOK,      SpellID::Null,           true,           0 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_DAGGER,                      ItemType::Sword,       UITYPE_DAGGER,      N_("Dagger"),                      N_("Dagger"),         1,           16,        1,        4,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         60 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_SHORT_SWORD,                 ItemType::Sword,       UITYPE_NONE,        N_("Short Sword"),                 N_("Sword"),          1,           24,        2,        6,       0,       0,       18,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        120 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_FALCHION,                    ItemType::Sword,       UITYPE_FALCHION,    N_("Falchion"),                    N_("Sword"),          2,           20,        4,        8,       0,       0,       30,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        250 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_SCIMITAR,                    ItemType::Sword,       UITYPE_SCIMITAR,    N_("Scimitar"),                    N_("Sword"),          4,           28,        3,        7,       0,       0,       23,        0,       23, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        200 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_CLAYMORE,                    ItemType::Sword,       UITYPE_CLAYMORE,    N_("Claymore"),                    N_("Sword"),          5,           36,        1,       12,       0,       0,       35,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        450 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_BLADE,                       ItemType::Sword,       UITYPE_NONE,        N_("Blade"),                       N_("Blade"),          4,           30,        3,        8,       0,       0,       25,        0,       30, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        280 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_SABRE,                       ItemType::Sword,       UITYPE_SABRE,       N_("Sabre"),                       N_("Sabre"),          1,           45,        1,        8,       0,       0,       17,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        170 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_LONG_SWORD,                  ItemType::Sword,       UITYPE_LONGSWR,     N_("Long Sword"),                  N_("Sword"),          6,           40,        2,       10,       0,       0,       30,        0,       30, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        350 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_BROAD_SWORD,                 ItemType::Sword,       UITYPE_BROADSWR,    N_("Broad Sword"),                 N_("Sword"),          8,           50,        4,       12,       0,       0,       40,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        750 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_BASTARD_SWORD,               ItemType::Sword,       UITYPE_BASTARDSWR,  N_("Bastard Sword"),               N_("Sword"),         10,           60,        6,       15,       0,       0,       50,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1000 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_TWO_HANDED_SWORD,            ItemType::Sword,       UITYPE_TWOHANDSWR,  N_("Two-Handed Sword"),            N_("Sword"),         14,           75,        8,       16,       0,       0,       65,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1800 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_GREAT_SWORD,                 ItemType::Sword,       UITYPE_GREATSWR,    N_("Great Sword"),                 N_("Sword"),         17,          100,       10,       20,       0,       0,       75,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       3000 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SMALL_AXE,                   ItemType::Axe,         UITYPE_SMALLAXE,    N_("Small Axe"),                   N_("Axe"),            2,           24,        2,       10,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        150 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_AXE,                         ItemType::Axe,         UITYPE_NONE,        N_("Axe"),                         N_("Axe"),            4,           32,        4,       12,       0,       0,       22,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        450 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_LARGE_AXE,                   ItemType::Axe,         UITYPE_LARGEAXE,    N_("Large Axe"),                   N_("Axe"),            6,           40,        6,       16,       0,       0,       30,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        750 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_BROAD_AXE,                   ItemType::Axe,         UITYPE_BROADAXE,    N_("Broad Axe"),                   N_("Axe"),            8,           50,        8,       20,       0,       0,       50,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1000 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_BATTLE_AXE,                  ItemType::Axe,         UITYPE_BATTLEAXE,   N_("Battle Axe"),                  N_("Axe"),           10,           60,       10,       25,       0,       0,       65,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1500 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_GREAT_AXE,                   ItemType::Axe,         UITYPE_GREATAXE,    N_("Great Axe"),                   N_("Axe"),           12,           75,       12,       30,       0,       0,       80,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       2500 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_MACE,                        ItemType::Mace,        UITYPE_MACE,        N_("Mace"),                        N_("Mace"),           2,           32,        1,        8,       0,       0,       16,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        200 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_MORNING_STAR,                ItemType::Mace,        UITYPE_MORNSTAR,    N_("Morning Star"),                N_("Mace"),           3,           40,        1,       10,       0,       0,       26,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        300 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_WAR_HAMMER,                  ItemType::Mace,        UITYPE_WARHAMMER,   N_("War Hammer"),                  N_("Hammer"),         5,           50,        5,        9,       0,       0,       40,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        600 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_SPIKED_CLUB,                 ItemType::Mace,        UITYPE_SPIKCLUB,    N_("Spiked Club"),                 N_("Club"),           4,           20,        3,        6,       0,       0,       18,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        225 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_CLUB,                        ItemType::Mace,        UITYPE_SPIKCLUB,    N_("Club"),                        N_("Club"),           1,           20,        1,        6,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,         20 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_ONEHAND,     ICURS_FLAIL,                       ItemType::Mace,        UITYPE_FLAIL,       N_("Flail"),                       N_("Flail"),          7,           36,        2,       12,       0,       0,       30,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        500 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_MAUL,                        ItemType::Mace,        UITYPE_MAUL,        N_("Maul"),                        N_("Maul"),          10,           50,        6,       20,       0,       0,       55,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        900 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_BOW,                   ItemType::Bow,         UITYPE_SHORTBOW,    N_("Short Bow"),                   N_("Bow"),            1,           30,        1,        4,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        100 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_HUNTERS_BOW,                 ItemType::Bow,         UITYPE_HUNTBOW,     N_("Hunter's Bow"),                N_("Bow"),            3,           40,        2,        5,       0,       0,       20,        0,       35, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        350 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_HUNTERS_BOW,                 ItemType::Bow,         UITYPE_LONGBOW,     N_("Long Bow"),                    N_("Bow"),            5,           35,        1,        6,       0,       0,       25,        0,       30, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        250 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_COMPOSITE_BOW,               ItemType::Bow,         UITYPE_COMPBOW,     N_("Composite Bow"),               N_("Bow"),            7,           45,        3,        6,       0,       0,       25,        0,       40, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        600 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_BATTLE_BOW,            ItemType::Bow,         UITYPE_NONE,        N_("Short Battle Bow"),            N_("Bow"),            9,           45,        3,        7,       0,       0,       30,        0,       50, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,        750 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_LONG_BATTLE_BOW,             ItemType::Bow,         UITYPE_BATTLEBOW,   N_("Long Battle Bow"),             N_("Bow"),           11,           50,        1,       10,       0,       0,       30,        0,       60, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1000 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_WAR_BOW,               ItemType::Bow,         UITYPE_NONE,        N_("Short War Bow"),               N_("Bow"),           15,           55,        4,        8,       0,       0,       35,        0,       70, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       1500 },
-/*               */ { IDROP_DOUBLE,  ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_LONG_WAR_BOW,                ItemType::Bow,         UITYPE_WARBOW,      N_("Long War Bow"),                N_("Bow"),           19,           60,        1,       14,       0,       0,       45,        0,       80, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,       2000 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_STAFF,                 ItemType::Staff,       UITYPE_SHORTSTAFF,  N_("Short Staff"),                 N_("Staff"),          1,           25,        2,        4,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::Null,           false,         30 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_LONG_STAFF,                  ItemType::Staff,       UITYPE_LONGSTAFF,   N_("Long Staff"),                  N_("Staff"),          4,           35,        4,        8,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::Null,           false,        100 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_COMPOSITE_STAFF,             ItemType::Staff,       UITYPE_COMPSTAFF,   N_("Composite Staff"),             N_("Staff"),          6,           45,        5,       10,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::Null,           false,        500 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_STAFF,                 ItemType::Staff,       UITYPE_QUARSTAFF,   N_("Quarter Staff"),               N_("Staff"),          9,           55,        6,       12,       0,       0,       20,        0,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::Null,           false,       1000 },
-/*               */ { IDROP_REGULAR, ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_WAR_STAFF,                   ItemType::Staff,       UITYPE_WARSTAFF,    N_("War Staff"),                   N_("Staff"),         12,           75,        8,       16,       0,       0,       30,        0,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::Null,           false,       1500 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_RING,        ICURS_RING,                        ItemType::Ring,        UITYPE_RING,        N_("Ring"),                        N_("Ring"),           5,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_RING,      SpellID::Null,           false,       1000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_RING,        ICURS_RING,                        ItemType::Ring,        UITYPE_RING,        N_("Ring"),                        N_("Ring"),          10,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_RING,      SpellID::Null,           false,       1000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_RING,        ICURS_RING,                        ItemType::Ring,        UITYPE_RING,        N_("Ring"),                        N_("Ring"),          15,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_RING,      SpellID::Null,           false,       1000 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_AMULET,      ICURS_AMULET,                      ItemType::Amulet,      UITYPE_AMULET,      N_("Amulet"),                      N_("Amulet"),         8,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_AMULET,    SpellID::Null,           false,       1200 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_AMULET,      ICURS_AMULET,                      ItemType::Amulet,      UITYPE_AMULET,      N_("Amulet"),                      N_("Amulet"),        16,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_AMULET,    SpellID::Null,           false,       1200 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_RUNE_OF_FIRE,                ItemType::Misc,        UITYPE_NONE,        N_("Rune of Fire"),                N_("Rune"),           1,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_RUNEF,     SpellID::Null,           true,         100 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_RUNE_OF_LIGHTNING,           ItemType::Misc,        UITYPE_NONE,        N_("Rune of Lightning"),           N_("Rune"),           3,            0,        0,        0,       0,       0,        0,       13,        0, ItemSpecialEffect::None,            IMISC_RUNEL,     SpellID::Null,           true,         200 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_GREATER_RUNE_OF_FIRE,        ItemType::Misc,        UITYPE_NONE,        N_("Greater Rune of Fire"),        N_("Rune"),           7,            0,        0,        0,       0,       0,        0,       42,        0, ItemSpecialEffect::None,            IMISC_GR_RUNEF,  SpellID::Null,           true,         400 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_GREATER_RUNE_OF_LIGHTNING,   ItemType::Misc,        UITYPE_NONE,        N_("Greater Rune of Lightning"),   N_("Rune"),           7,            0,        0,        0,       0,       0,        0,       42,        0, ItemSpecialEffect::None,            IMISC_GR_RUNEL,  SpellID::Null,           true,         500 },
-/*               */ { IDROP_REGULAR, ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_RUNE_OF_STONE,               ItemType::Misc,        UITYPE_NONE,        N_("Rune of Stone"),               N_("Rune"),           7,            0,        0,        0,       0,       0,        0,       25,        0, ItemSpecialEffect::None,            IMISC_RUNES,     SpellID::Null,           true,         300 },
-/*IDI_SORCERER   */ { IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_STAFF,                 ItemType::Staff,       UITYPE_NONE,        N_("Short Staff of Charged Bolt"), nullptr,              1,           25,        2,        4,       0,       0,        0,       20,        0, ItemSpecialEffect::None,            IMISC_STAFF,     SpellID::ChargedBolt,    false,        520 },
-/*IDI_ARENAPOT   */ { IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_ARENA_POTION,                ItemType::Misc,        UITYPE_NONE,        N_("Arena Potion"),                nullptr,              7,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_ARENAPOT,  SpellID::Null,           true,           0 },
-/*               */ { IDROP_NEVER,   ICLASS_NONE,   ILOC_INVALID,     ICURS_POTION_OF_FULL_MANA,         ItemType::Misc,        UITYPE_NONE,        nullptr,                           nullptr,              0,            0,        0,        0,       0,       0,        0,        0,        0, ItemSpecialEffect::None,            IMISC_NONE,      SpellID::Null,           false,          0 },
-	// clang-format on
-};
-
-/** Contains the data related to each item prefix. */
-const PLStruct ItemPrefixes[] = {
-	// clang-format off
-// PLName,              { type,                 param1, param2 }   PLMinLvl, PLIType,                                                                                                                                PLGOE,    PLDouble,  PLOk,   minVal,  maxVal,  multVal
-	// TRANSLATORS: Item prefix section.
-{ N_("Tin"),            { IPL_TOHIT_CURSE,           6,     10 },         3, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_ANY,  true,      false,       0,       0,       -3 },
-{ N_("Brass"),          { IPL_TOHIT_CURSE,           1,      5 },         1, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_ANY,  true,      false,       0,       0,       -2 },
-{ N_("Bronze"),         { IPL_TOHIT,                 1,      5 },         1, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_ANY,  true,      true,      100,     500,        2 },
-{ N_("Iron"),           { IPL_TOHIT,                 6,     10 },         4, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_ANY,  true,      true,      600,    1000,        3 },
-{ N_("Steel"),          { IPL_TOHIT,                11,     15 },         6, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_ANY,  true,      true,     1100,    1500,        5 },
-{ N_("Silver"),         { IPL_TOHIT,                16,     20 },         9, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_GOOD, true,      true,     1600,    2000,        7 },
-{ N_("Gold"),           { IPL_TOHIT,                21,     30 },        12, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_GOOD, true,      true,     2100,    3000,        9 },
-{ N_("Platinum"),       { IPL_TOHIT,                31,     40 },        16, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_GOOD, true,      true,     3100,    4000,       11 },
-{ N_("Mithril"),        { IPL_TOHIT,                41,     60 },        20, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_GOOD, true,      true,     4100,    6000,       13 },
-{ N_("Meteoric"),       { IPL_TOHIT,                61,     80 },        23, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,     6100,   10000,       15 },
-{ N_("Weird"),          { IPL_TOHIT,                81,    100 },        35, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,    10100,   14000,       17 },
-{ N_("Strange"),        { IPL_TOHIT,               101,    150 },        60, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,    14100,   20000,       20 },
-{ N_("Useless"),        { IPL_DAMP_CURSE,          100,    100 },         5, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      false,       0,       0,       -8 },
-{ N_("Bent"),           { IPL_DAMP_CURSE,           50,     75 },         3, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      false,       0,       0,       -4 },
-{ N_("Weak"),           { IPL_DAMP_CURSE,           25,     45 },         1, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      false,       0,       0,       -3 },
-{ N_("Jagged"),         { IPL_DAMP,                 20,     35 },         4, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,      250,     450,        3 },
-{ N_("Deadly"),         { IPL_DAMP,                 36,     50 },         6, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,      500,     700,        4 },
-{ N_("Heavy"),          { IPL_DAMP,                 51,     65 },         9, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,      750,     950,        5 },
-{ N_("Vicious"),        { IPL_DAMP,                 66,     80 },        12, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_EVIL, true,      true,     1000,    1450,        8 },
-{ N_("Brutal"),         { IPL_DAMP,                 81,     95 },        16, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,     1500,    1950,       10 },
-{ N_("Massive"),        { IPL_DAMP,                 96,    110 },        20, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,     2000,    2450,       13 },
-{ N_("Savage"),         { IPL_DAMP,                111,    125 },        23, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,     2500,    3000,       15 },
-{ N_("Ruthless"),       { IPL_DAMP,                126,    150 },        35, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,    10100,   15000,       17 },
-{ N_("Merciless"),      { IPL_DAMP,                151,    175 },        60, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,    15000,   20000,       20 },
-{ N_("Clumsy"),         { IPL_TOHIT_DAMP_CURSE,     50,     75 },         5, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      false,       0,       0,       -7 },
-{ N_("Dull"),           { IPL_TOHIT_DAMP_CURSE,     25,     45 },         1, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      false,       0,       0,       -5 },
-{ N_("Sharp"),          { IPL_TOHIT_DAMP,           20,     35 },         1, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      false,     350,     950,        5 },
-{ N_("Fine"),           { IPL_TOHIT_DAMP,           36,     50 },         6, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,     1100,    1700,        7 },
-{ N_("Warrior's"),      { IPL_TOHIT_DAMP,           51,     65 },        10, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  true,      true,     1850,    2450,       13 },
-{ N_("Soldier's"),      { IPL_TOHIT_DAMP,           66,     80 },        15, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  true,      true,     2600,    3950,       17 },
-{ N_("Lord's"),         { IPL_TOHIT_DAMP,           81,     95 },        19, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  true,      true,     4100,    5950,       21 },
-{ N_("Knight's"),       { IPL_TOHIT_DAMP,           96,    110 },        23, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  true,      true,     6100,    8450,       26 },
-{ N_("Master's"),       { IPL_TOHIT_DAMP,          111,    125 },        28, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  true,      true,     8600,   13000,       30 },
-{ N_("Champion's"),     { IPL_TOHIT_DAMP,          126,    150 },        40, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  true,      true,    15200,   24000,       33 },
-{ N_("King's"),         { IPL_TOHIT_DAMP,          151,    175 },        28, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  true,      true,    24100,   35000,       38 },
-{ N_("Vulnerable"),     { IPL_ACP_CURSE,            51,    100 },         3, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  true,      false,       0,       0,       -3 },
-{ N_("Rusted"),         { IPL_ACP_CURSE,            25,     50 },         1, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  true,      false,       0,       0,       -2 },
-{ N_("Fine"),           { IPL_ACP,                  20,     30 },         1, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  true,      true,       20,     100,        2 },
-{ N_("Strong"),         { IPL_ACP,                  31,     40 },         3, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  true,      true,      120,     200,        3 },
-{ N_("Grand"),          { IPL_ACP,                  41,     55 },         6, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  true,      true,      220,     300,        5 },
-{ N_("Valiant"),        { IPL_ACP,                  56,     70 },        10, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  true,      true,      320,     400,        7 },
-{ N_("Glorious"),       { IPL_ACP,                  71,     90 },        14, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, true,      true,      420,     600,        9 },
-{ N_("Blessed"),        { IPL_ACP,                  91,    110 },        19, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, true,      true,      620,     800,       11 },
-{ N_("Saintly"),        { IPL_ACP,                 111,    130 },        24, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, true,      true,      820,    1200,       13 },
-{ N_("Awesome"),        { IPL_ACP,                 131,    150 },        28, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, true,      true,     1220,    2000,       15 },
-{ N_("Holy"),           { IPL_ACP,                 151,    170 },        35, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, true,      true,     5200,    6000,       17 },
-{ N_("Godly"),          { IPL_ACP,                 171,    200 },        60, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, true,      true,     6200,    7000,       20 },
-{ N_("Red"),            { IPL_FIRERES,              10,     20 },         4, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      500,    1500,        2 },
-{ N_("Crimson"),        { IPL_FIRERES,              21,     30 },        10, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2100,    3000,        2 },
-{ N_("Crimson"),        { IPL_FIRERES,              31,     40 },        16, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     3100,    4000,        2 },
-{ N_("Garnet"),         { IPL_FIRERES,              41,     50 },        20, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     8200,   12000,        3 },
-{ N_("Ruby"),           { IPL_FIRERES,              51,     60 },        26, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,    17100,   20000,        5 },
-{ N_("Blue"),           { IPL_LIGHTRES,             10,     20 },         4, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      500,    1500,        2 },
-{ N_("Azure"),          { IPL_LIGHTRES,             21,     30 },        10, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2100,    3000,        2 },
-{ N_("Lapis"),          { IPL_LIGHTRES,             31,     40 },        16, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     3100,    4000,        2 },
-{ N_("Cobalt"),         { IPL_LIGHTRES,             41,     50 },        20, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     8200,   12000,        3 },
-{ N_("Sapphire"),       { IPL_LIGHTRES,             51,     60 },        26, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,    17100,   20000,        5 },
-{ N_("White"),          { IPL_MAGICRES,             10,     20 },         4, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      500,    1500,        2 },
-{ N_("Pearl"),          { IPL_MAGICRES,             21,     30 },        10, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2100,    3000,        2 },
-{ N_("Ivory"),          { IPL_MAGICRES,             31,     40 },        16, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     3100,    4000,        2 },
-{ N_("Crystal"),        { IPL_MAGICRES,             41,     50 },        20, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     8200,   12000,        3 },
-{ N_("Diamond"),        { IPL_MAGICRES,             51,     60 },        26, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,    17100,   20000,        5 },
-{ N_("Topaz"),          { IPL_ALLRES,               10,     15 },         8, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2000,    5000,        3 },
-{ N_("Amber"),          { IPL_ALLRES,               16,     20 },        12, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     7400,   10000,        3 },
-{ N_("Jade"),           { IPL_ALLRES,               21,     30 },        18, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,    11000,   15000,        3 },
-{ N_("Obsidian"),       { IPL_ALLRES,               31,     40 },        24, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,    24000,   40000,        4 },
-{ N_("Emerald"),        { IPL_ALLRES,               41,     50 },        31, AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                              GOE_ANY,  false,     true,    61000,   75000,        7 },
-{ N_("Hyena's"),        { IPL_MANA_CURSE,           11,     25 },         4, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     false,     100,    1000,       -2 },
-{ N_("Frog's"),         { IPL_MANA_CURSE,            1,     10 },         1, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("Spider's"),       { IPL_MANA,                 10,     15 },         1, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_EVIL, false,     true,      500,    1000,        2 },
-{ N_("Raven's"),        { IPL_MANA,                 15,     20 },         5, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     true,     1100,    2000,        3 },
-{ N_("Snake's"),        { IPL_MANA,                 21,     30 },         9, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     true,     2100,    4000,        5 },
-{ N_("Serpent's"),      { IPL_MANA,                 30,     40 },        15, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     true,     4100,    6000,        7 },
-{ N_("Drake's"),        { IPL_MANA,                 41,     50 },        21, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     true,     6100,   10000,        9 },
-{ N_("Dragon's"),       { IPL_MANA,                 51,     60 },        27, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     true,    10100,   15000,       11 },
-{ N_("Wyrm's"),         { IPL_MANA,                 61,     80 },        35, AffixItemType::Staff,                                                                                                                   GOE_ANY,  false,     true,    15100,   19000,       12 },
-{ N_("Hydra's"),        { IPL_MANA,                 81,    100 },        60, AffixItemType::Staff,                                                                                                                   GOE_ANY,  false,     true,    19100,   30000,       13 },
-{ N_("Angel's"),        { IPL_SPLLVLADD,             1,      1 },        15, AffixItemType::Staff,                                                                                                                   GOE_GOOD, false,     true,    25000,   25000,        2 },
-{ N_("Arch-Angel's"),   { IPL_SPLLVLADD,             2,      2 },        25, AffixItemType::Staff,                                                                                                                   GOE_GOOD, false,     true,    50000,   50000,        3 },
-{ N_("Plentiful"),      { IPL_CHARGES,               2,      2 },         4, AffixItemType::Staff,                                                                                                                   GOE_ANY,  false,     true,     2000,    2000,        2 },
-{ N_("Bountiful"),      { IPL_CHARGES,               3,      3 },         9, AffixItemType::Staff,                                                                                                                   GOE_ANY,  false,     true,     3000,    3000,        3 },
-{ N_("Flaming"),        { IPL_FIREDAM,               1,     10 },         7, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  false,     true,     5000,    5000,        2 },
-{ N_("Lightning"),      { IPL_LIGHTDAM,              2,     20 },        18, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  false,     true,    10000,   10000,        2 },
-{ N_("Jester's"),       { IPL_JESTERS,               1,      1 },         7, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     1200,    1200,        3 },
-{ N_("Crystalline"),    { IPL_CRYSTALLINE,          30,     70 },         5, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     1000,    3000,        3 },
-	// TRANSLATORS: Item prefix section end.
-{ N_("Doppelganger's"), { IPL_DOPPELGANGER,         81,     95 },        11, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  false,     true,     2000,    2400,       10 },
-{ "",                   { IPL_INVALID,               0,      0 },         0, AffixItemType::None,                                                                                                                    GOE_ANY,  false,     false,       0,       0,        0 },
-	// clang-format on
-};
-
-/** Contains the data related to each item suffix. */
-const PLStruct ItemSuffixes[] = {
-	// clang-format off
-// PLName,             { type,               param1, param2 }     PLMinLvl, PLIType,                                                                                                                                PLGOE,    PLDouble,  PLOk,   minVal,  maxVal,  multVal
-	// TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
-{ N_("quality"),       { IPL_DAMMOD,              1,        2 },         2, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,      100,     200,        2 },
-{ N_("maiming"),       { IPL_DAMMOD,              3,        5 },         7, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,     1300,    1500,        3 },
-{ N_("slaying"),       { IPL_DAMMOD,              6,        8 },        15, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     2600,    3000,        5 },
-{ N_("gore"),          { IPL_DAMMOD,              9,       12 },        25, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     4100,    5000,        8 },
-{ N_("carnage"),       { IPL_DAMMOD,             13,       16 },        35, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     5100,   10000,       10 },
-{ N_("slaughter"),     { IPL_DAMMOD,             17,       20 },        60, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,    10100,   15000,       13 },
-{ N_("pain"),          { IPL_GETHIT_CURSE,        2,        4 },         4, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -4 },
-{ N_("tears"),         { IPL_GETHIT_CURSE,        1,        1 },         2, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("health"),        { IPL_GETHIT,              1,        1 },         2, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_GOOD, false,     true,      200,     200,        2 },
-{ N_("protection"),    { IPL_GETHIT,              2,        2 },         6, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, false,     true,      400,     800,        4 },
-{ N_("absorption"),    { IPL_GETHIT,              3,        3 },        12, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_GOOD, false,     true,     1001,    2500,       10 },
-{ N_("deflection"),    { IPL_GETHIT,              4,        4 },        20, AffixItemType::Armor,                                                                                                                   GOE_GOOD, false,     true,     2500,    6500,       15 },
-{ N_("osmosis"),       { IPL_GETHIT,              5,        6 },        50, AffixItemType::Armor,                                                                                                                   GOE_GOOD, false,     true,     7500,   10000,       20 },
-{ N_("frailty"),       { IPL_STR_CURSE,           6,       10 },         3, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -3 },
-{ N_("weakness"),      { IPL_STR_CURSE,           1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("strength"),      { IPL_STR,                 1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      200,    1000,        2 },
-{ N_("might"),         { IPL_STR,                 6,       10 },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     1200,    2000,        3 },
-{ N_("power"),         { IPL_STR,                11,       15 },        11, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2200,    3000,        4 },
-{ N_("giants"),        { IPL_STR,                16,       20 },        17, AffixItemType::Armor |                         AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     3200,    5000,        7 },
-{ N_("titans"),        { IPL_STR,                21,       30 },        23, AffixItemType::Weapon |                                             AffixItemType::Misc,                                                GOE_ANY,  false,     true,     5200,   10000,       10 },
-{ N_("paralysis"),     { IPL_DEX_CURSE,           6,       10 },         3, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -3 },
-{ N_("atrophy"),       { IPL_DEX_CURSE,           1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("dexterity"),     { IPL_DEX,                 1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      200,    1000,        2 },
-{ N_("skill"),         { IPL_DEX,                 6,       10 },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     1200,    2000,        3 },
-{ N_("accuracy"),      { IPL_DEX,                11,       15 },        11, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2200,    3000,        4 },
-{ N_("precision"),     { IPL_DEX,                16,       20 },        17, AffixItemType::Armor |                         AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     3200,    5000,        7 },
-{ N_("perfection"),    { IPL_DEX,                21,       30 },        23, AffixItemType::Bow | AffixItemType::Misc,                                                                                               GOE_ANY,  false,     true,     5200,   10000,       10 },
-{ N_("the fool"),      { IPL_MAG_CURSE,           6,       10 },         3, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -3 },
-{ N_("dyslexia"),      { IPL_MAG_CURSE,           1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("magic"),         { IPL_MAG,                 1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      200,    1000,        2 },
-{ N_("the mind"),      { IPL_MAG,                 6,       10 },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     1200,    2000,        3 },
-{ N_("brilliance"),    { IPL_MAG,                11,       15 },        11, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     2200,    3000,        4 },
-{ N_("sorcery"),       { IPL_MAG,                16,       20 },        17, AffixItemType::Armor |                         AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     3200,    5000,        7 },
-{ N_("wizardry"),      { IPL_MAG,                21,       30 },        23, AffixItemType::Staff |                      AffixItemType::Misc,                                                                        GOE_ANY,  false,     true,     5200,   10000,       10 },
-{ N_("illness"),       { IPL_VIT_CURSE,           6,       10 },         3, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -3 },
-{ N_("disease"),       { IPL_VIT_CURSE,           1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("vitality"),      { IPL_VIT,                 1,        5 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_GOOD, false,     true,      200,    1000,        2 },
-{ N_("zest"),          { IPL_VIT,                 6,       10 },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_GOOD, false,     true,     1200,    2000,        3 },
-{ N_("vim"),           { IPL_VIT,                11,       15 },        11, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_GOOD, false,     true,     2200,    3000,        4 },
-{ N_("vigor"),         { IPL_VIT,                16,       20 },        17, AffixItemType::Armor | AffixItemType::Weapon |                                                AffixItemType::Bow | AffixItemType::Misc, GOE_GOOD, false,     true,     3200,    5000,        7 },
-{ N_("life"),          { IPL_VIT,                21,       30 },        23, AffixItemType::Misc,                                                                                                                    GOE_GOOD, false,     true,     5200,   10000,       10 },
-{ N_("trouble"),       { IPL_ATTRIBS_CURSE,       6,       10 },        12, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,      -10 },
-{ N_("the pit"),       { IPL_ATTRIBS_CURSE,       1,        5 },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -5 },
-{ N_("the sky"),       { IPL_ATTRIBS,             1,        3 },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,      800,    4000,        5 },
-{ N_("the moon"),      { IPL_ATTRIBS,             4,        7 },        11, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     4800,    8000,       10 },
-{ N_("the stars"),     { IPL_ATTRIBS,             8,       11 },        17, AffixItemType::Armor |                         AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  false,     true,     8800,   12000,       15 },
-{ N_("the heavens"),   { IPL_ATTRIBS,            12,       15 },        25, AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc,                                                GOE_ANY,  false,     true,    12800,   20000,       20 },
-{ N_("the zodiac"),    { IPL_ATTRIBS,            16,       20 },        30, AffixItemType::Misc,                                                                                                                    GOE_ANY,  false,     true,    20800,   40000,       30 },
-{ N_("the vulture"),   { IPL_LIFE_CURSE,         11,       25 },         4, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -4 },
-{ N_("the jackal"),    { IPL_LIFE_CURSE,          1,       10 },         1, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("the fox"),       { IPL_LIFE,               10,       15 },         1, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_ANY,  false,     true,      100,    1000,        2 },
-{ N_("the jaguar"),    { IPL_LIFE,               16,       20 },         5, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_ANY,  false,     true,     1100,    2000,        3 },
-{ N_("the eagle"),     { IPL_LIFE,               21,       30 },         9, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_ANY,  false,     true,     2100,    4000,        5 },
-{ N_("the wolf"),      { IPL_LIFE,               30,       40 },        15, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_ANY,  false,     true,     4100,    6000,        7 },
-{ N_("the tiger"),     { IPL_LIFE,               41,       50 },        21, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_ANY,  false,     true,     6100,   10000,        9 },
-{ N_("the lion"),      { IPL_LIFE,               51,       60 },        27, AffixItemType::Armor |                                                                                             AffixItemType::Misc, GOE_ANY,  false,     true,    10100,   15000,       11 },
-{ N_("the mammoth"),   { IPL_LIFE,               61,       80 },        35, AffixItemType::Armor,                                                                                                                   GOE_ANY,  false,     true,    15100,   19000,       12 },
-{ N_("the whale"),     { IPL_LIFE,               81,      100 },        60, AffixItemType::Armor,                                                                                                                   GOE_ANY,  false,     true,    19100,   30000,       13 },
-{ N_("fragility"),     { IPL_DUR_CURSE,         100,      100 },         3, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon,                                                                   GOE_EVIL, false,     false,       0,       0,       -4 },
-{ N_("brittleness"),   { IPL_DUR_CURSE,          26,       75 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon,                                                                   GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("sturdiness"),    { IPL_DUR,                26,       75 },         1, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff,                                            GOE_ANY,  false,     true,      100,     100,        2 },
-{ N_("craftsmanship"), { IPL_DUR,                51,      100 },         6, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff,                                            GOE_ANY,  false,     true,      200,     200,        2 },
-{ N_("structure"),     { IPL_DUR,               101,      200 },        12, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff,                                            GOE_ANY,  false,     true,      300,     300,        2 },
-{ N_("the ages"),      { IPL_INDESTRUCTIBLE                   },        25, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon | AffixItemType::Staff,                                            GOE_ANY,  false,     true,      600,     600,        5 },
-{ N_("the dark"),      { IPL_LIGHT_CURSE,         4,        4 },         6, AffixItemType::Armor |                         AffixItemType::Weapon |                                             AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -3 },
-{ N_("the night"),     { IPL_LIGHT_CURSE,         2,        2 },         3, AffixItemType::Armor |                         AffixItemType::Weapon |                                             AffixItemType::Misc, GOE_EVIL, false,     false,       0,       0,       -2 },
-{ N_("light"),         { IPL_LIGHT,               2,        2 },         4, AffixItemType::Armor |                         AffixItemType::Weapon |                                             AffixItemType::Misc, GOE_GOOD, false,     true,      750,     750,        2 },
-{ N_("radiance"),      { IPL_LIGHT,               4,        4 },         8, AffixItemType::Armor |                         AffixItemType::Weapon |                                             AffixItemType::Misc, GOE_GOOD, false,     true,     1500,    1500,        3 },
-{ N_("flame"),         { IPL_FIRE_ARROWS,         1,        3 },         1, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,     2000,    2000,        2 },
-{ N_("fire"),          { IPL_FIRE_ARROWS,         1,        6 },        11, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,     4000,    4000,        4 },
-{ N_("burning"),       { IPL_FIRE_ARROWS,         1,       16 },        35, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,     6000,    6000,        6 },
-{ N_("shock"),         { IPL_LIGHT_ARROWS,        1,        6 },        13, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,     6000,    6000,        2 },
-{ N_("lightning"),     { IPL_LIGHT_ARROWS,        1,       10 },        21, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,     8000,    8000,        4 },
-{ N_("thunder"),       { IPL_LIGHT_ARROWS,        1,       20 },        60, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,    12000,   12000,        6 },
-{ N_("many"),          { IPL_DUR,               100,      100 },         3, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,      750,     750,        2 },
-{ N_("plenty"),        { IPL_DUR,               200,      200 },         7, AffixItemType::Bow,                                                                                                                     GOE_ANY,  false,     true,     1500,    1500,        3 },
-{ N_("thorns"),        { IPL_THORNS,              1,        3 },         1, AffixItemType::Armor | AffixItemType::Shield,                                                                                           GOE_ANY,  false,     true,      500,     500,        2 },
-{ N_("corruption"),    { IPL_NOMANA                           },         5, AffixItemType::Armor | AffixItemType::Shield | AffixItemType::Weapon,                                                                   GOE_EVIL, false,     false,   -1000,   -1000,        2 },
-{ N_("thieves"),       { IPL_ABSHALFTRAP                      },        11, AffixItemType::Armor | AffixItemType::Shield |                                                                     AffixItemType::Misc, GOE_ANY,  false,     true,     1500,    1500,        2 },
-{ N_("the bear"),      { IPL_KNOCKBACK                        },         5, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_EVIL, false,     true,      750,     750,        2 },
-{ N_("the bat"),       { IPL_STEALMANA,           3,        3 },         8, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     7500,    7500,        3 },
-{ N_("vampires"),      { IPL_STEALMANA,           5,        5 },        19, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,    15000,   15000,        3 },
-{ N_("the leech"),     { IPL_STEALLIFE,           3,        3 },         8, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     7500,    7500,        3 },
-{ N_("blood"),         { IPL_STEALLIFE,           5,        5 },        19, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,    15000,   15000,        3 },
-{ N_("piercing"),      { IPL_TARGAC,              1,        1 },         1, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,     1000,    1000,        3 },
-{ N_("puncturing"),    { IPL_TARGAC,              2,        2 },         9, AffixItemType::Weapon |                        AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,     2000,    2000,        6 },
-{ N_("bashing"),       { IPL_TARGAC,              3,        3 },        17, AffixItemType::Weapon,                                                                                                                  GOE_ANY,  false,     true,     4000,    4000,       12 },
-{ N_("readiness"),     { IPL_FASTATTACK,          1,        1 },         1, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,     2000,    2000,        2 },
-{ N_("swiftness"),     { IPL_FASTATTACK,          2,        2 },        10, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,     4000,    4000,        4 },
-{ N_("speed"),         { IPL_FASTATTACK,          3,        3 },        19, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  false,     true,     8000,    8000,        8 },
-{ N_("haste"),         { IPL_FASTATTACK,          4,        4 },        27, AffixItemType::Weapon | AffixItemType::Staff,                                                                                           GOE_ANY,  false,     true,    16000,   16000,       16 },
-{ N_("balance"),       { IPL_FASTRECOVER,         1,        1 },         1, AffixItemType::Armor |                                                                                             AffixItemType::Misc, GOE_ANY,  false,     true,     2000,    2000,        2 },
-{ N_("stability"),     { IPL_FASTRECOVER,         2,        2 },        10, AffixItemType::Armor |                                                                                             AffixItemType::Misc, GOE_ANY,  false,     true,     4000,    4000,        4 },
-{ N_("harmony"),       { IPL_FASTRECOVER,         3,        3 },        20, AffixItemType::Armor |                                                                                             AffixItemType::Misc, GOE_ANY,  false,     true,     8000,    8000,        8 },
-{ N_("blocking"),      { IPL_FASTBLOCK,           1,        1 },         5, AffixItemType::Shield,                                                                                                                  GOE_ANY,  false,     true,     4000,    4000,        4 },
-{ N_("devastation"),   { IPL_DEVASTATION,         1,        1 },         1, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,     1200,    1200,        3 },
-{ N_("decay"),         { IPL_DECAY,             150,      250 },         1, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,      200,     200,        2 },
-	// TRANSLATORS: Item suffix section end.
-{ N_("peril"),         { IPL_PERIL,               1,        1 },         5, AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow,                                                                      GOE_ANY,  false,     true,      500,     500,        1 },
-{ "",                  {                                      },         0, AffixItemType::None,                                                                                                                    GOE_ANY,  false,     false,       0,       0,        0 },
-	// clang-format on
-};
-
-/** Contains the data related to each unique item ID. */
-const UniqueItem UniqueItems[] = {
-	// clang-format off
-// UIName,                       UIItemId,            UIMinLvl,  UINumPL,  UIValue, {  ItemPower[0],                          ItemPower[1],                          ItemPower[2],                          ItemPower[3],                          ItemPower[4],                          ItemPower[5]                         }
-	// TRANSLATORS: Unique Item section
-{ N_("The Butcher's Cleaver"),   UITYPE_CLEAVER,             1,        3,     3650, { { IPL_STR,             10,       10 }, { IPL_SETDAM,           4,       24 }, { IPL_SETDUR,          10,       10 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("The Undead Crown"),        UITYPE_SKCROWN,             1,        3,    16650, { { IPL_RNDSTEALLIFE                  }, { IPL_SETAC,            8,        8 }, { IPL_INVCURS,         77           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Empyrean Band"),           UITYPE_INFRARING,           1,        4,     8000, { { IPL_ATTRIBS,          2,        2 }, { IPL_LIGHT,            2,        2 }, { IPL_FASTRECOVER,      1,        1 }, { IPL_ABSHALFTRAP                   }, {                                   }, {                                   } }  },
-{ N_("Optic Amulet"),            UITYPE_OPTAMULET,           1,        5,     9750, { { IPL_LIGHT,            2,        2 }, { IPL_LIGHTRES,        20,       20 }, { IPL_GETHIT,           1,        1 }, { IPL_MAG,              5,        5 }, { IPL_INVCURS,         44           }, {                                   } }  },
-{ N_("Ring of Truth"),           UITYPE_TRING,               1,        4,     9100, { { IPL_LIFE,            10,       10 }, { IPL_GETHIT,           1,        1 }, { IPL_ALLRES,          10,       10 }, { IPL_INVCURS,         10           }, {                                   }, {                                   } }  },
-{ N_("Harlequin Crest"),         UITYPE_HARCREST,            1,        6,     4000, { { IPL_AC_CURSE,         3,        3 }, { IPL_GETHIT,           1,        1 }, { IPL_ATTRIBS,          2,        2 }, { IPL_LIFE,             7,        7 }, { IPL_MANA,             7,        7 }, { IPL_INVCURS,         81           } }  },
-{ N_("Veil of Steel"),           UITYPE_STEELVEIL,           1,        6,    63800, { { IPL_ALLRES,          50,       50 }, { IPL_LIGHT_CURSE,      2,        2 }, { IPL_ACP,             60,       60 }, { IPL_MANA_CURSE,      30,       30 }, { IPL_STR,             15,       15 }, { IPL_VIT,             15,       15 } }  },
-{ N_("Arkaine's Valor"),         UITYPE_ARMOFVAL,            1,        4,    42000, { { IPL_SETAC,           25,       25 }, { IPL_VIT,             10,       10 }, { IPL_GETHIT,           3,        3 }, { IPL_FASTRECOVER,      3,        3 }, {                                   }, {                                   } }  },
-{ N_("Griswold's Edge"),         UITYPE_GRISWOLD,            1,        6,    42000, { { IPL_FIREDAM,          1,       10 }, { IPL_TOHIT,           25,       25 }, { IPL_FASTATTACK,       2,        2 }, { IPL_KNOCKBACK                     }, { IPL_MANA,            20,       20 }, { IPL_LIFE_CURSE,      20,       20 } }  },
-{ N_("Bovine Plate"),            UITYPE_BOVINE,              1,        6,      400, { { IPL_SETAC,          150,      150 }, { IPL_INDESTRUCTIBLE                }, { IPL_LIGHT,            5,        5 }, { IPL_ALLRES,          30,       30 }, { IPL_MANA_CURSE,      50,       50 }, { IPL_SPLLVLADD,       -2,       -2 } }  },
-{ N_("The Rift Bow"),            UITYPE_SHORTBOW,            1,        3,     1800, { { IPL_RNDARROWVEL                   }, { IPL_DAMMOD,           2,        2 }, { IPL_DEX_CURSE,        3,        3 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("The Needler"),             UITYPE_SHORTBOW,            2,        4,     8900, { { IPL_TOHIT,           50,       50 }, { IPL_SETDAM,           1,        3 }, { IPL_FASTATTACK,       2,        2 }, { IPL_INVCURS,        158           }, {                                   }, {                                   } }  },
-{ N_("The Celestial Bow"),       UITYPE_LONGBOW,             2,        4,     1200, { { IPL_NOMINSTR                      }, { IPL_DAMMOD,           2,        2 }, { IPL_SETAC,            5,        5 }, { IPL_INVCURS,        133           }, {                                   }, {                                   } }  },
-{ N_("Deadly Hunter"),           UITYPE_COMPBOW,             3,        4,     8750, { { IPL_3XDAMVDEM,       10,       10 }, { IPL_TOHIT,           20,       20 }, { IPL_MAG_CURSE,        5,        5 }, { IPL_INVCURS,        108           }, {                                   }, {                                   } }  },
-{ N_("Bow of the Dead"),         UITYPE_COMPBOW,             5,        6,     2500, { { IPL_TOHIT,           10,       10 }, { IPL_DEX,              4,        4 }, { IPL_VIT_CURSE,        3,        3 }, { IPL_LIGHT_CURSE,      2,        2 }, { IPL_SETDUR,          30,       30 }, { IPL_INVCURS,        108           } }  },
-{ N_("The Blackoak Bow"),        UITYPE_LONGBOW,             5,        4,     2500, { { IPL_DEX,             10,       10 }, { IPL_VIT_CURSE,       10,       10 }, { IPL_DAMP,            50,       50 }, { IPL_LIGHT_CURSE,      1,        1 }, {                                   }, {                                   } }  },
-{ N_("Flamedart"),               UITYPE_HUNTBOW,            10,        4,    14250, { { IPL_FIRE_ARROWS,      0,        0 }, { IPL_FIREDAM,          1,        6 }, { IPL_TOHIT,           20,       20 }, { IPL_FIRERES,         40,       40 }, {                                   }, {                                   } }  },
-{ N_("Fleshstinger"),            UITYPE_LONGBOW,            13,        4,    16500, { { IPL_DEX,             15,       15 }, { IPL_TOHIT,           40,       40 }, { IPL_DAMP,            80,       80 }, { IPL_DUR,              6,        6 }, {                                   }, {                                   } }  },
-{ N_("Windforce"),               UITYPE_WARBOW,             17,        4,    37750, { { IPL_STR,              5,        5 }, { IPL_DAMP,           200,      200 }, { IPL_KNOCKBACK                     }, { IPL_INVCURS,        164           }, {                                   }, {                                   } }  },
-{ N_("Eaglehorn"),               UITYPE_BATTLEBOW,          26,        5,    42500, { { IPL_DEX,             20,       20 }, { IPL_TOHIT,           50,       50 }, { IPL_DAMP,           100,      100 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        108           }, {                                   } }  },
-{ N_("Gonnagal's Dirk"),         UITYPE_DAGGER,              1,        5,     7040, { { IPL_DEX_CURSE,        5,        5 }, { IPL_DAMMOD,           4,        4 }, { IPL_FASTATTACK,       2,        2 }, { IPL_FIRERES,         25,       25 }, { IPL_INVCURS,         54           }, {                                   } }  },
-{ N_("The Defender"),            UITYPE_SABRE,               1,        3,     2000, { { IPL_SETAC,            5,        5 }, { IPL_VIT,              5,        5 }, { IPL_TOHIT_CURSE,      5,        5 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Gryphon's Claw"),          UITYPE_FALCHION,            1,        4,     1000, { { IPL_DAMP,           100,      100 }, { IPL_MAG_CURSE,        2,        2 }, { IPL_DEX_CURSE,        5,        5 }, { IPL_INVCURS,         68           }, {                                   }, {                                   } }  },
-{ N_("Black Razor"),             UITYPE_DAGGER,              1,        4,     2000, { { IPL_DAMP,           150,      150 }, { IPL_VIT,              2,        2 }, { IPL_SETDUR,           5,        5 }, { IPL_INVCURS,         53           }, {                                   }, {                                   } }  },
-{ N_("Gibbous Moon"),            UITYPE_BROADSWR,            2,        4,     6660, { { IPL_ATTRIBS,          2,        2 }, { IPL_DAMP,            25,       25 }, { IPL_MANA,            15,       15 }, { IPL_LIGHT_CURSE,      3,        3 }, {                                   }, {                                   } }  },
-{ N_("Ice Shank"),               UITYPE_LONGSWR,             3,        3,     5250, { { IPL_FIRERES,         40,       40 }, { IPL_SETDUR,          15,       15 }, { IPL_STR,              5,       10 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("The Executioner's Blade"), UITYPE_FALCHION,            3,        5,     7080, { { IPL_DAMP,           150,      150 }, { IPL_LIFE_CURSE,      10,       10 }, { IPL_LIGHT_CURSE,      1,        1 }, { IPL_DUR,            200,      200 }, { IPL_INVCURS,         58           }, {                                   } }  },
-{ N_("The Bonesaw"),             UITYPE_CLAYMORE,            6,        6,     4400, { { IPL_DAMMOD,          10,       10 }, { IPL_STR,             10,       10 }, { IPL_MAG_CURSE,        5,        5 }, { IPL_DEX_CURSE,        5,        5 }, { IPL_LIFE,            10,       10 }, { IPL_MANA_CURSE,      10,       10 } }  },
-{ N_("Shadowhawk"),              UITYPE_BROADSWR,            8,        4,    13750, { { IPL_LIGHT_CURSE,      2,        2 }, { IPL_STEALLIFE,        5,        5 }, { IPL_TOHIT,           15,       15 }, { IPL_ALLRES,           5,        5 }, {                                   }, {                                   } }  },
-{ N_("Wizardspike"),             UITYPE_DAGGER,             11,        5,    12920, { { IPL_MAG,             15,       15 }, { IPL_MANA,            35,       35 }, { IPL_TOHIT,           25,       25 }, { IPL_ALLRES,          15,       15 }, { IPL_INVCURS,         50           }, {                                   } }  },
-{ N_("Lightsabre"),              UITYPE_SABRE,              13,        4,    19150, { { IPL_LIGHT,            2,        2 }, { IPL_LIGHTDAM,         1,       10 }, { IPL_TOHIT,           20,       20 }, { IPL_LIGHTRES,        50,       50 }, {                                   }, {                                   } }  },
-{ N_("The Falcon's Talon"),      UITYPE_SCIMITAR,           15,        5,     7867, { { IPL_FASTATTACK,       4,        4 }, { IPL_TOHIT,           20,       20 }, { IPL_DAMP_CURSE,      33,       33 }, { IPL_DEX,             10,       10 }, { IPL_INVCURS,         68           }, {                                   } }  },
-{ N_("Inferno"),                 UITYPE_LONGSWR,            17,        4,    34600, { { IPL_FIREDAM,          2,       12 }, { IPL_LIGHT,            3,        3 }, { IPL_MANA,            20,       20 }, { IPL_FIRERES,         80,       80 }, {                                   }, {                                   } }  },
-{ N_("Doombringer"),             UITYPE_BASTARDSWR,         19,        5,    18250, { { IPL_TOHIT,           25,       25 }, { IPL_DAMP,           250,      250 }, { IPL_ATTRIBS_CURSE,    5,        5 }, { IPL_LIFE_CURSE,      25,       25 }, { IPL_LIGHT_CURSE,      2,        2 }, {                                   } }  },
-{ N_("The Grizzly"),             UITYPE_TWOHANDSWR,         23,        6,    50000, { { IPL_STR,             20,       20 }, { IPL_VIT_CURSE,        5,        5 }, { IPL_DAMP,           200,      200 }, { IPL_KNOCKBACK                     }, { IPL_DUR,            100,      100 }, { IPL_INVCURS,        160           } }  },
-{ N_("The Grandfather"),         UITYPE_GREATSWR,           27,        6,   119800, { { IPL_ONEHAND                       }, { IPL_ATTRIBS,          5,        5 }, { IPL_TOHIT,           20,       20 }, { IPL_DAMP,            70,       70 }, { IPL_LIFE,            20,       20 }, { IPL_INVCURS,        161           } }  },
-{ N_("The Mangler"),             UITYPE_LARGEAXE,            2,        5,     2850, { { IPL_DAMP,           200,      200 }, { IPL_DEX_CURSE,        5,        5 }, { IPL_MAG_CURSE,        5,        5 }, { IPL_MANA_CURSE,      10,       10 }, { IPL_INVCURS,        144           }, {                                   } }  },
-{ N_("Sharp Beak"),              UITYPE_LARGEAXE,            2,        4,     2850, { { IPL_LIFE,            20,       20 }, { IPL_MAG_CURSE,       10,       10 }, { IPL_MANA_CURSE,      10,       10 }, { IPL_INVCURS,        143           }, {                                   }, {                                   } }  },
-{ N_("BloodSlayer"),             UITYPE_BROADAXE,            3,        5,     2500, { { IPL_DAMP,           100,      100 }, { IPL_3XDAMVDEM,       50,       50 }, { IPL_ATTRIBS_CURSE,    5,        5 }, { IPL_SPLLVLADD,       -1,       -1 }, { IPL_INVCURS,        144           }, {                                   } }  },
-{ N_("The Celestial Axe"),       UITYPE_BATTLEAXE,           4,        4,    14100, { { IPL_NOMINSTR                      }, { IPL_TOHIT,           15,       15 }, { IPL_LIFE,            15,       15 }, { IPL_STR_CURSE,       15,       15 }, {                                   }, {                                   } }  },
-{ N_("Wicked Axe"),              UITYPE_LARGEAXE,            5,        6,    31150, { { IPL_TOHIT,           30,       30 }, { IPL_DEX,             10,       10 }, { IPL_VIT_CURSE,       10,       10 }, { IPL_GETHIT,           1,        6 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        143           } }  },
-{ N_("Stonecleaver"),            UITYPE_BROADAXE,            7,        5,    23900, { { IPL_LIFE,            30,       30 }, { IPL_TOHIT,           20,       20 }, { IPL_DAMP,            50,       50 }, { IPL_LIGHTRES,        40,       40 }, { IPL_INVCURS,        104           }, {                                   } }  },
-{ N_("Aguinara's Hatchet"),      UITYPE_SMALLAXE,           12,        3,    24800, { { IPL_SPLLVLADD,        1,        1 }, { IPL_MAG,             10,       10 }, { IPL_MAGICRES,        80,       80 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Hellslayer"),              UITYPE_BATTLEAXE,          15,        5,    26200, { { IPL_STR,              8,        8 }, { IPL_VIT,              8,        8 }, { IPL_DAMP,           100,      100 }, { IPL_LIFE,            25,       25 }, { IPL_MANA_CURSE,      25,       25 }, {                                   } }  },
-{ N_("Messerschmidt's Reaver"),  UITYPE_GREATAXE,           25,        6,    58000, { { IPL_DAMP,           200,      200 }, { IPL_DAMMOD,          15,       15 }, { IPL_ATTRIBS,          5,        5 }, { IPL_LIFE_CURSE,      50,       50 }, { IPL_FIREDAM,          2,       12 }, { IPL_INVCURS,        163           } }  },
-{ N_("Crackrust"),               UITYPE_MACE,                1,        5,    11375, { { IPL_ATTRIBS,          2,        2 }, { IPL_INDESTRUCTIBLE                }, { IPL_ALLRES,          15,       15 }, { IPL_DAMP,            50,       50 }, { IPL_SPLLVLADD,       -1,       -1 }, {                                   } }  },
-{ N_("Hammer of Jholm"),         UITYPE_MAUL,                1,        4,     8700, { { IPL_DAMP,             4,       10 }, { IPL_INDESTRUCTIBLE                }, { IPL_STR,              3,        3 }, { IPL_TOHIT,           15,       15 }, {                                   }, {                                   } }  },
-{ N_("Civerb's Cudgel"),         UITYPE_MACE,                1,        3,     2000, { { IPL_3XDAMVDEM,       35,       35 }, { IPL_DEX_CURSE,        5,        5 }, { IPL_MAG_CURSE,        2,        2 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("The Celestial Star"),      UITYPE_FLAIL,               2,        5,     7810, { { IPL_NOMINSTR                      }, { IPL_LIGHT,            2,        2 }, { IPL_DAMMOD,          10,       10 }, { IPL_AC_CURSE,         8,        8 }, { IPL_INVCURS,        131           }, {                                   } }  },
-{ N_("Baranar's Star"),          UITYPE_MORNSTAR,            5,        6,     6850, { { IPL_TOHIT,           12,       12 }, { IPL_DAMP,            80,       80 }, { IPL_FASTATTACK,       1,        1 }, { IPL_VIT,              4,        4 }, { IPL_DEX_CURSE,        4,        4 }, { IPL_SETDUR,          60,       60 } }  },
-{ N_("Gnarled Root"),            UITYPE_SPIKCLUB,            9,        6,     9820, { { IPL_TOHIT,           20,       20 }, { IPL_DAMP,           300,      300 }, { IPL_DEX,             10,       10 }, { IPL_MAG,              5,        5 }, { IPL_ALLRES,          10,       10 }, { IPL_AC_CURSE,        10,       10 } }  },
-{ N_("The Cranium Basher"),      UITYPE_MAUL,               12,        6,    36500, { { IPL_DAMMOD,          20,       20 }, { IPL_STR,             15,       15 }, { IPL_INDESTRUCTIBLE                }, { IPL_MANA_CURSE,     150,      150 }, { IPL_ALLRES,           5,        5 }, { IPL_INVCURS,        122           } }  },
-{ N_("Schaefer's Hammer"),       UITYPE_WARHAMMER,          16,        6,    56125, { { IPL_DAMP_CURSE,     100,      100 }, { IPL_LIGHTDAM,         1,       50 }, { IPL_LIFE,            50,       50 }, { IPL_TOHIT,           30,       30 }, { IPL_LIGHTRES,        80,       80 }, { IPL_LIGHT,            1,        1 } }  },
-{ N_("Dreamflange"),             UITYPE_MACE,               26,        5,    26450, { { IPL_MAG,             30,       30 }, { IPL_MANA,            50,       50 }, { IPL_MAGICRES,        50,       50 }, { IPL_LIGHT,            2,        2 }, { IPL_SPLLVLADD,        1,        1 }, {                                   } }  },
-{ N_("Staff of Shadows"),        UITYPE_LONGSTAFF,           2,        5,     1250, { { IPL_MAG_CURSE,       10,       10 }, { IPL_TOHIT,           10,       10 }, { IPL_DAMP,            60,       60 }, { IPL_LIGHT_CURSE,      2,        2 }, { IPL_FASTATTACK,       1,        1 }, {                                   } }  },
-{ N_("Immolator"),               UITYPE_LONGSTAFF,           4,        4,     3900, { { IPL_FIRERES,         20,       20 }, { IPL_FIREDAM,          4,        4 }, { IPL_MANA,            10,       10 }, { IPL_VIT_CURSE,        5,        5 }, {                                   }, {                                   } }  },
-{ N_("Storm Spire"),             UITYPE_WARSTAFF,            8,        4,    22500, { { IPL_LIGHTRES,        50,       50 }, { IPL_LIGHTDAM,         2,        8 }, { IPL_STR,             10,       10 }, { IPL_MAG_CURSE,       10,       10 }, {                                   }, {                                   } }  },
-{ N_("Gleamsong"),               UITYPE_SHORTSTAFF,          8,        4,     6520, { { IPL_MANA,            25,       25 }, { IPL_STR_CURSE,        3,        3 }, { IPL_VIT_CURSE,        3,        3 }, { IPL_SPELL,           10,       76 }, {                                   }, {                                   } }  },
-{ N_("Thundercall"),             UITYPE_COMPSTAFF,          14,        5,    22250, { { IPL_TOHIT,           35,       35 }, { IPL_LIGHTDAM,         1,       10 }, { IPL_SPELL,            3,       76 }, { IPL_LIGHTRES,        30,       30 }, { IPL_LIGHT,            2,        2 }, {                                   } }  },
-{ N_("The Protector"),           UITYPE_SHORTSTAFF,         16,        6,    17240, { { IPL_VIT,              5,        5 }, { IPL_GETHIT,           5,        5 }, { IPL_SETAC,           40,       40 }, { IPL_SPELL,            2,       86 }, { IPL_THORNS,           1,        3 }, { IPL_INVCURS,        162           } }  },
-{ N_("Naj's Puzzler"),           UITYPE_LONGSTAFF,          18,        5,    34000, { { IPL_MAG,             20,       20 }, { IPL_DEX,             10,       10 }, { IPL_ALLRES,          20,       20 }, { IPL_SPELL,           23,       57 }, { IPL_LIFE_CURSE,      25,       25 }, {                                   } }  },
-{ N_("Mindcry"),                 UITYPE_QUARSTAFF,          20,        4,    41500, { { IPL_MAG,             15,       15 }, { IPL_SPELL,           13,       69 }, { IPL_ALLRES,          15,       15 }, { IPL_SPLLVLADD,        1,        1 }, {                                   }, {                                   } }  },
-{ N_("Rod of Onan"),             UITYPE_WARSTAFF,           22,        3,    44167, { { IPL_SPELL,           21,       50 }, { IPL_DAMP,           100,      100 }, { IPL_ATTRIBS,          5,        5 }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Helm of Spirits"),         UITYPE_HELM,                1,        2,     7525, { { IPL_STEALLIFE,        5,        5 }, { IPL_INVCURS,         77           }, {                                   }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Thinking Cap"),            UITYPE_SKULLCAP,            6,        5,     2020, { { IPL_MANA,            30,       30 }, { IPL_SPLLVLADD,        2,        2 }, { IPL_ALLRES,          20,       20 }, { IPL_SETDUR,           1,        1 }, { IPL_INVCURS,         93           }, {                                   } }  },
-{ N_("OverLord's Helm"),         UITYPE_HELM,                7,        6,    12500, { { IPL_STR,             20,       20 }, { IPL_DEX,             15,       15 }, { IPL_VIT,              5,        5 }, { IPL_MAG_CURSE,       20,       20 }, { IPL_SETDUR,          15,       15 }, { IPL_INVCURS,         99           } }  },
-{ N_("Fool's Crest"),            UITYPE_HELM,               12,        5,    10150, { { IPL_ATTRIBS_CURSE,    4,        4 }, { IPL_LIFE,           100,      100 }, { IPL_GETHIT_CURSE,     1,        6 }, { IPL_THORNS,           1,        3 }, { IPL_INVCURS,         80           }, {                                   } }  },
-{ N_("Gotterdamerung"),          UITYPE_GREATHELM,          21,        6,    54900, { { IPL_ATTRIBS,         20,       20 }, { IPL_SETAC,           60,       60 }, { IPL_GETHIT,           4,        4 }, { IPL_ALLRESZERO                    }, { IPL_LIGHT_CURSE,      4,        4 }, { IPL_INVCURS,         85           } }  },
-{ N_("Royal Circlet"),           UITYPE_CROWN,              27,        5,    24875, { { IPL_ATTRIBS,         10,       10 }, { IPL_MANA,            40,       40 }, { IPL_SETAC,           40,       40 }, { IPL_LIGHT,            1,        1 }, { IPL_INVCURS,         79           }, {                                   } }  },
-{ N_("Torn Flesh of Souls"),     UITYPE_RAGS,                2,        5,     4825, { { IPL_SETAC,            8,        8 }, { IPL_VIT,             10,       10 }, { IPL_GETHIT,           1,        1 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,         92           }, {                                   } }  },
-{ N_("The Gladiator's Bane"),    UITYPE_STUDARMOR,           6,        4,     3450, { { IPL_SETAC,           25,       25 }, { IPL_GETHIT,           2,        2 }, { IPL_DUR,            200,      200 }, { IPL_ATTRIBS_CURSE,    3,        3 }, {                                   }, {                                   } }  },
-{ N_("The Rainbow Cloak"),       UITYPE_CLOAK,               2,        6,     4900, { { IPL_SETAC,           10,       10 }, { IPL_ATTRIBS,          1,        1 }, { IPL_ALLRES,          10,       10 }, { IPL_LIFE,             5,        5 }, { IPL_DUR,             50,       50 }, { IPL_INVCURS,        138           } }  },
-{ N_("Leather of Aut"),          UITYPE_LEATHARMOR,          4,        5,    10550, { { IPL_SETAC,           15,       15 }, { IPL_STR,              5,        5 }, { IPL_MAG_CURSE,        5,        5 }, { IPL_DEX,              5,        5 }, { IPL_INDESTRUCTIBLE                }, {                                   } }  },
-{ N_("Wisdom's Wrap"),           UITYPE_ROBE,                5,        6,     6200, { { IPL_MAG,              5,        5 }, { IPL_MANA,            10,       10 }, { IPL_LIGHTRES,        25,       25 }, { IPL_SETAC,           15,       15 }, { IPL_GETHIT,           1,        1 }, { IPL_INVCURS,        138           } }  },
-{ N_("Sparking Mail"),           UITYPE_CHAINMAIL,           9,        2,    15750, { { IPL_SETAC,           30,       30 }, { IPL_LIGHTDAM,         1,       10 }, {                                   }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Scavenger Carapace"),      UITYPE_BREASTPLATE,        13,        4,    14000, { { IPL_GETHIT,          15,       15 }, { IPL_AC_CURSE,        30,       30 }, { IPL_DEX,              5,        5 }, { IPL_LIGHTRES,        40,       40 }, {                                   }, {                                   } }  },
-{ N_("Nightscape"),              UITYPE_CAPE,               16,        6,    11600, { { IPL_FASTRECOVER,      2,        2 }, { IPL_LIGHT_CURSE,      4,        4 }, { IPL_SETAC,           15,       15 }, { IPL_DEX,              3,        3 }, { IPL_ALLRES,          20,       20 }, { IPL_INVCURS,        138           } }  },
-{ N_("Naj's Light Plate"),       UITYPE_PLATEMAIL,          19,        6,    78700, { { IPL_NOMINSTR                      }, { IPL_MAG,              5,        5 }, { IPL_MANA,            20,       20 }, { IPL_ALLRES,          20,       20 }, { IPL_SPLLVLADD,        1,        1 }, { IPL_INVCURS,        159           } }  },
-{ N_("Demonspike Coat"),         UITYPE_FULLPLATE,          25,        5,   251175, { { IPL_SETAC,          100,      100 }, { IPL_GETHIT,           6,        6 }, { IPL_STR,             10,       10 }, { IPL_INDESTRUCTIBLE                }, { IPL_FIRERES,         50,       50 }, {                                   } }  },
-{ N_("The Deflector"),           UITYPE_BUCKLER,             1,        5,     1500, { { IPL_SETAC,            7,        7 }, { IPL_ALLRES,          10,       10 }, { IPL_DAMP_CURSE,      20,       20 }, { IPL_TOHIT_CURSE,      5,        5 }, { IPL_INVCURS,         83           }, {                                   } }  },
-{ N_("Split Skull Shield"),      UITYPE_BUCKLER,             1,        6,     2025, { { IPL_SETAC,           10,       10 }, { IPL_LIFE,            10,       10 }, { IPL_STR,              2,        2 }, { IPL_LIGHT_CURSE,      1,        1 }, { IPL_SETDUR,          15,       15 }, { IPL_INVCURS,        116           } }  },
-{ N_("Dragon's Breach"),         UITYPE_KITESHIELD,          2,        6,    19200, { { IPL_FIRERES,         25,       25 }, { IPL_STR,              5,        5 }, { IPL_SETAC,           20,       20 }, { IPL_MAG_CURSE,        5,        5 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        117           } }  },
-{ N_("Blackoak Shield"),         UITYPE_SMALLSHIELD,         4,        6,     5725, { { IPL_DEX,             10,       10 }, { IPL_VIT_CURSE,       10,       10 }, { IPL_SETAC,           18,       18 }, { IPL_LIGHT_CURSE,      1,        1 }, { IPL_DUR,            150,      150 }, { IPL_INVCURS,        146           } }  },
-{ N_("Holy Defender"),           UITYPE_LARGESHIELD,        10,        6,    13800, { { IPL_SETAC,           15,       15 }, { IPL_GETHIT,           2,        2 }, { IPL_FIRERES,         20,       20 }, { IPL_DUR,            200,      200 }, { IPL_FASTBLOCK,        1,        1 }, { IPL_INVCURS,        146           } }  },
-{ N_("Stormshield"),             UITYPE_GOTHSHIELD,         24,        6,    49000, { { IPL_SETAC,           40,       40 }, { IPL_GETHIT_CURSE,     4,        4 }, { IPL_STR,             10,       10 }, { IPL_INDESTRUCTIBLE                }, { IPL_FASTBLOCK,        1,        1 }, { IPL_INVCURS,        148           } }  },
-{ N_("Bramble"),                 UITYPE_RING,                1,        4,     1000, { { IPL_ATTRIBS_CURSE,    2,        2 }, { IPL_DAMMOD,           3,        3 }, { IPL_MANA,            10,       10 }, { IPL_INVCURS,          9           }, {                                   }, {                                   } }  },
-{ N_("Ring of Regha"),           UITYPE_RING,                1,        6,     4175, { { IPL_MAG,             10,       10 }, { IPL_MAGICRES,        10,       10 }, { IPL_LIGHT,            1,        1 }, { IPL_STR_CURSE,        3,        3 }, { IPL_DEX_CURSE,        3,        3 }, { IPL_INVCURS,         11           } }  },
-{ N_("The Bleeder"),             UITYPE_RING,                2,        4,     8500, { { IPL_MAGICRES,        20,       20 }, { IPL_MANA,            30,       30 }, { IPL_LIFE_CURSE,      10,       10 }, { IPL_INVCURS,          8           }, {                                   }, {                                   } }  },
-{ N_("Constricting Ring"),       UITYPE_RING,                5,        3,    62000, { { IPL_ALLRES,          75,       75 }, { IPL_DRAINLIFE                     }, { IPL_INVCURS,         14           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Ring of Engagement"),      UITYPE_RING,               11,        5,    12476, { { IPL_GETHIT,           1,        2 }, { IPL_THORNS,           1,        3 }, { IPL_SETAC,            5,        5 }, { IPL_TARGAC,           2,        2 }, { IPL_INVCURS,         13           }, {                                   } }  },
-{ N_("Giant's Knuckle"),         UITYPE_RING,                8,        3,     8000, { { IPL_STR,             60,       60 }, { IPL_DEX_CURSE,       30,       30 }, { IPL_INVCURS,        179           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Mercurial Ring"),          UITYPE_RING,                8,        3,     8000, { { IPL_DEX,             60,       60 }, { IPL_STR_CURSE,       30,       30 }, { IPL_INVCURS,        176           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Xorine's Ring"),           UITYPE_RING,                8,        3,     8000, { { IPL_MAG,             60,       60 }, { IPL_STR_CURSE,       30,       30 }, { IPL_INVCURS,        168           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Karik's Ring"),            UITYPE_RING,                8,        3,     8000, { { IPL_VIT,             60,       60 }, { IPL_MAG_CURSE,       30,       30 }, { IPL_INVCURS,        173           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Ring of Magma"),           UITYPE_RING,                8,        4,     8000, { { IPL_FIRERES,         60,       60 }, { IPL_LIGHTRES_CURSE,  30,       30 }, { IPL_MAGICRES_CURSE,  30,       30 }, { IPL_INVCURS,        184           }, {                                   }, {                                   } }  },
-{ N_("Ring of the Mystics"),     UITYPE_RING,                8,        4,     8000, { { IPL_MAGICRES,        60,       60 }, { IPL_FIRERES_CURSE,   30,       30 }, { IPL_LIGHTRES_CURSE,  30,       30 }, { IPL_INVCURS,        181           }, {                                   }, {                                   } }  },
-{ N_("Ring of Thunder"),         UITYPE_RING,                8,        4,     8000, { { IPL_LIGHTRES,        60,       60 }, { IPL_FIRERES_CURSE,   30,       30 }, { IPL_MAGICRES_CURSE,  30,       30 }, { IPL_INVCURS,        177           }, {                                   }, {                                   } }  },
-{ N_("Amulet of Warding"),       UITYPE_AMULET,             12,        3,    30000, { { IPL_ALLRES,          40,       40 }, { IPL_LIFE_CURSE,     100,      100 }, { IPL_INVCURS,        170           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Gnat Sting"),              UITYPE_HUNTBOW,            15,        5,    30000, { { IPL_MULT_ARROWS,      3,        3 }, { IPL_SETDAM,           1,        2 }, { IPL_FASTATTACK,       1,        1 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        210           }, {                                   } }  },
-{ N_("Flambeau"),                UITYPE_COMPBOW,            11,        4,    30000, { { IPL_FIREBALL,        15,       20 }, { IPL_SETDAM,           0,        0 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        209           }, {                                   }, {                                   } }  },
-{ N_("Armor of Gloom"),          UITYPE_FULLPLATE,          25,        5,   200000, { { IPL_NOMINSTR                      }, { IPL_SETAC,          225,      225 }, { IPL_ALLRESZERO                    }, { IPL_LIGHT_CURSE,      2,        2 }, { IPL_INVCURS,        203           }, {                                   } }  },
-{ N_("Blitzen"),                 UITYPE_COMPBOW,            13,        4,    30000, { { IPL_ADDACLIFE,       10,       15 }, { IPL_SETDAM,           0,        0 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        219           }, {                                   }, {                                   } }  },
-{ N_("Thunderclap"),             UITYPE_WARHAMMER,          13,        6,    30000, { { IPL_ADDMANAAC,        3,        6 }, { IPL_STR,             20,       20 }, { IPL_LIGHTRES,        30,       30 }, { IPL_LIGHT,            2,        2 }, { IPL_INDESTRUCTIBLE                }, { IPL_INVCURS,        205           } }  },
-{ N_("Shirotachi"),              UITYPE_GREATSWR,           21,        4,    36000, { { IPL_ONEHAND                       }, { IPL_FASTATTACK,       4,        4 }, { IPL_TARGAC,           2,        2 }, { IPL_LIGHTDAM,         6,        6 }, {                                   }, {                                   } }  },
-{ N_("Eater of Souls"),          UITYPE_TWOHANDSWR,         23,        6,    42000, { { IPL_INDESTRUCTIBLE                }, { IPL_LIFE,            50,       50 }, { IPL_STEALLIFE,        5,        5 }, { IPL_STEALMANA,        5,        5 }, { IPL_DRAINLIFE                     }, { IPL_INVCURS,        200           } }  },
-{ N_("Diamondedge"),             UITYPE_LONGSWR,            17,        6,    42000, { { IPL_SETDUR,          10,       10 }, { IPL_TOHIT,           50,       50 }, { IPL_DAMP,           100,      100 }, { IPL_LIGHTRES,        50,       50 }, { IPL_SETAC,           10,       10 }, { IPL_INVCURS,        206           } }  },
-{ N_("Bone Chain Armor"),        UITYPE_CHAINMAIL,          13,        3,    36000, { { IPL_SETAC,           40,       40 }, { IPL_ACUNDEAD                      }, { IPL_INVCURS,        204           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Demon Plate Armor"),       UITYPE_FULLPLATE,          25,        3,    80000, { { IPL_SETAC,           80,       80 }, { IPL_ACDEMON                       }, { IPL_INVCURS,        225           }, {                                   }, {                                   }, {                                   } }  },
-{ N_("Acolyte's Amulet"),        UITYPE_AMULET,             10,        2,    10000, { { IPL_MANATOLIFE,      50,       50 }, { IPL_INVCURS,        183           }, {                                   }, {                                   }, {                                   }, {                                   } }  },
-	// TRANSLATORS: Unique Item section end.
-{ N_("Gladiator's Ring"),        UITYPE_RING,               10,        2,    10000, { { IPL_LIFETOMANA,      40,       40 }, { IPL_INVCURS,        186           }, {                                   }, {                                   }, {                                   }, {                                   } }  },
-{ "",                            UITYPE_INVALID,             0,        0,        0, { {                                   }, {                                   }, {                                   }, {                                   }, {                                   }, {                                   } }  },
-	// clang-format on
-};
 
 } // namespace devilution

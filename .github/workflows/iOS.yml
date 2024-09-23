@@ -6,14 +6,17 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [opened, synchronize]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   release:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,19 +28,19 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: macos-latest
+    runs-on: macos-12
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Cache CMake build folder
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build
-        key: ${{ github.workflow }}-v2-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v2-
+        key: ${{ github.workflow }}-v4-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v4-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -58,7 +61,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-iOS.ipa
         path: build/devilutionx-iOS.ipa

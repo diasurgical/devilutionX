@@ -6,10 +6,12 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [ opened, synchronize ]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,7 +22,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -30,7 +32,7 @@ jobs:
         sudo apt-get install -y cmake file g++ git libfmt-dev libsdl1.2-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
 
     - name: Cache CMake build folder
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build
         key: ${{ github.workflow }}-v2-${{ github.sha }}
@@ -52,7 +54,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx_linux_x86_64_SDL1.tar.xz
         path: devilutionx.tar.xz

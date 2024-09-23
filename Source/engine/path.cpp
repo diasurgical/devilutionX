@@ -10,6 +10,7 @@
 
 #include <function_ref.hpp>
 
+#include "crawl.hpp"
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "objects.h"
@@ -316,7 +317,7 @@ bool IsTileNotSolid(Point position)
 		return false;
 	}
 
-	return !TileHasAny(dPiece[position.x][position.y], TileProperties::Solid);
+	return !TileHasAny(position, TileProperties::Solid);
 }
 
 bool IsTileSolid(Point position)
@@ -325,7 +326,7 @@ bool IsTileSolid(Point position)
 		return false;
 	}
 
-	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid);
+	return TileHasAny(position, TileProperties::Solid);
 }
 
 bool IsTileWalkable(Point position, bool ignoreDoors)
@@ -340,7 +341,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors)
 		}
 	}
 
-	return !IsTileSolid(position);
+	return IsTileNotSolid(position);
 }
 
 bool IsTileOccupied(Point position)

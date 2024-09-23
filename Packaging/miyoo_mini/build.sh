@@ -25,6 +25,7 @@ cmake_configure() {
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_TOOLCHAIN_FILE="${PACKAGING_DIR}/toolchainfile.cmake" \
 		-DBUILD_TESTING=OFF \
+		-DDISABLE_DEMOMODE=ON \
 		"$@"
 }
 
@@ -49,7 +50,7 @@ build_custom_sdl() {
 
 	# change back to devilutionx root
 	cd "$PACKAGING_DIR/../.."
-	cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/lib/libSDL-1.2.so.0"
+	cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/OnionOS/Roms/PORTS/Games/Diablo (DevilutionX)/lib/libSDL-1.2.so.0"
 }
 
 prepare_onion_skeleton() {
@@ -58,26 +59,17 @@ prepare_onion_skeleton() {
 	# Copy basic skeleton
 	cp -rf  Packaging/miyoo_mini/skeleton_OnionOS/* $BUILD_DIR/OnionOS
 
-	# ensure devilutionx asset dir
-	mkdir -p $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/assets
-
 	# ensure lib dir for custom SDL
-	mkdir -p $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/lib
-
-	# ensure config dir
-	mkdir -p $BUILD_DIR/OnionOS/Saves/CurrentProfile/config/DevilutionX
-
-	# ensure save dir
-	mkdir -p $BUILD_DIR/OnionOS/Saves/CurrentProfile/saves/DevilutionX
+	mkdir -p "$BUILD_DIR/OnionOS/Roms/PORTS/Games/Diablo (DevilutionX)/lib"
 }
 
 package_onion() {
 	prepare_onion_skeleton
 	build_custom_sdl
-	# copy assets
-	cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/assets
+	# copy assets mpq
+	cp -f $BUILD_DIR/devilutionx.mpq "$BUILD_DIR/OnionOS/Roms/PORTS/Games/Diablo (DevilutionX)/devilutionx.mpq"
 	# copy executable
-	cp -f $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/Roms/PORTS/Binaries/Diablo.port/devilutionx
+	cp -f $BUILD_DIR/devilutionx "$BUILD_DIR/OnionOS/Roms/PORTS/Games/Diablo (DevilutionX)/devilutionx"
 
 	rm -f $BUILD_DIR/onion.zip
 

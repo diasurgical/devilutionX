@@ -1,9 +1,11 @@
 #include "locale.hpp"
 
+#include <algorithm>
 #include <cstdint>
+#include <string_view>
 
 #ifdef __ANDROID__
-#include "SDL.h"
+#include <SDL.h>
 #include <jni.h>
 #elif defined(__vita__)
 #include <cstring>
@@ -12,7 +14,7 @@
 #include <psp2/system_param.h>
 #elif defined(__3DS__)
 #include "platform/ctr/locale.hpp"
-#elif defined(_WIN32) && !defined(NXDK)
+#elif defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 // Suppress definitions of `min` and `max` macros by <windows.h>:
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
@@ -26,14 +28,11 @@
 #include <clocale>
 #endif
 
-#include "utils/stdcompat/algorithm.hpp"
-#include "utils/stdcompat/string_view.hpp"
-
 namespace devilution {
 namespace {
 
-#if (defined(_WIN32) && WINVER >= 0x0600 && !defined(NXDK)) || (defined(__APPLE__) && defined(USE_COREFOUNDATION))
-std::string IetfToPosix(string_view langCode)
+#if (defined(_WIN32) && WINVER >= 0x0600 && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)) || (defined(__APPLE__) && defined(USE_COREFOUNDATION))
+std::string IetfToPosix(std::string_view langCode)
 {
 	/*
 	 * Handle special case for simplified/traditional Chinese. IETF/BCP-47 specifies that only the script should be
@@ -113,7 +112,7 @@ std::vector<std::string> GetLocales()
 	// use default
 #elif defined(__3DS__)
 	locales.push_back(n3ds::GetLocale());
-#elif defined(_WIN32) && !defined(NXDK)
+#elif defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
 #if WINVER >= 0x0600
 	auto wideCharToUtf8 = [](PWSTR wideString) {
 		// WideCharToMultiByte potentially leaves the buffer unterminated, default initialise here as a workaround
@@ -179,10 +178,10 @@ std::vector<std::string> GetLocales()
 
 	CFRelease(languages);
 #else
-	constexpr auto svOrEmpty = [](const char *cString) -> string_view {
+	constexpr auto svOrEmpty = [](const char *cString) -> std::string_view {
 		return cString != nullptr ? cString : "";
 	};
-	string_view languages = svOrEmpty(std::getenv("LANGUAGE"));
+	std::string_view languages = svOrEmpty(std::getenv("LANGUAGE"));
 	if (languages.empty()) {
 		languages = svOrEmpty(std::getenv("LANG"));
 		if (languages.empty()) {

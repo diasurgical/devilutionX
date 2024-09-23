@@ -1,7 +1,9 @@
 BasedOnStyle: webkit
 AlignTrailingComments: true
 AllowShortBlocksOnASingleLine: true
-AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
 PointerAlignment: Right
 TabWidth: 4
 UseTab: ForIndentation

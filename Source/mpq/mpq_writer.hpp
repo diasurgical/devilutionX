@@ -5,11 +5,12 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
+#include <string_view>
 
 #include "mpq/mpq_common.hpp"
 #include "utils/logged_fstream.hpp"
-#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 class MpqWriter {
@@ -23,21 +24,21 @@ public:
 	MpqWriter &operator=(MpqWriter &&other) = default;
 	~MpqWriter();
 
-	bool HasFile(const char *name) const;
+	bool HasFile(std::string_view name) const;
 
-	void RemoveHashEntry(const char *filename);
+	void RemoveHashEntry(std::string_view filename);
 	void RemoveHashEntries(bool (*fnGetName)(uint8_t, char *));
-	bool WriteFile(const char *filename, const byte *data, size_t size);
-	void RenameFile(const char *name, const char *newName);
+	bool WriteFile(std::string_view filename, const std::byte *data, size_t size);
+	void RenameFile(std::string_view name, std::string_view newName);
 
 private:
 	bool IsValidMpqHeader(MpqFileHeader *hdr) const;
-	uint32_t GetHashIndex(uint32_t index, uint32_t hashA, uint32_t hashB) const;
-	uint32_t FetchHandle(const char *filename) const;
+	uint32_t GetHashIndex(MpqFileHash fileHash) const;
+	uint32_t FetchHandle(std::string_view filename) const;
 
 	bool ReadMPQHeader(MpqFileHeader *hdr);
-	MpqBlockEntry *AddFile(const char *filename, MpqBlockEntry *block, uint32_t blockIndex);
-	bool WriteFileContents(const char *filename, const byte *fileData, size_t fileSize, MpqBlockEntry *block);
+	MpqBlockEntry *AddFile(std::string_view filename, MpqBlockEntry *block, uint32_t blockIndex);
+	bool WriteFileContents(const std::byte *fileData, uint32_t fileSize, MpqBlockEntry *block);
 
 	// Returns an unused entry in the block entry table.
 	MpqBlockEntry *NewBlock(uint32_t *blockIndex = nullptr);
@@ -56,7 +57,7 @@ private:
 
 	LoggedFStream stream_;
 	std::string name_;
-	std::uintmax_t size_ {};
+	uint32_t size_ {};
 	std::unique_ptr<MpqHashEntry[]> hashTable_;
 	std::unique_ptr<MpqBlockEntry[]> blockTable_;
 

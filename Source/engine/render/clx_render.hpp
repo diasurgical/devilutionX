@@ -82,8 +82,13 @@ inline void RenderClxSpriteWithTRN(const Surface &out, ClxSprite clx, Point posi
 
 void ClxDrawBlendedTRN(const Surface &out, Point position, ClxSprite clx, const uint8_t *trn);
 
-// defined in scrollrt.cpp
-extern int LightTableIndex;
+/**
+ * @brief Blit CLX sprite with 50% transparency to the given buffer at the given coordinates.
+ * @param out Output buffer
+ * @param position Target buffer coordinate
+ * @param clx CLX frame
+ */
+void ClxDrawBlended(const Surface &out, Point position, ClxSprite clx);
 
 /**
  * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
@@ -91,12 +96,13 @@ extern int LightTableIndex;
  * @param position Target buffer coordinate
  * @param clx CLX frame
  */
-inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx)
+inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx, int lightTableIndex)
 {
-	if (LightTableIndex != 0)
-		ClxDrawTRN(out, position, clx, LightTables[LightTableIndex].data());
-	else
+	if (lightTableIndex != 0) {
+		ClxDrawTRN(out, position, clx, LightTables[lightTableIndex].data());
+	} else {
 		ClxDraw(out, position, clx);
+	}
 }
 
 /**
@@ -105,16 +111,32 @@ inline void ClxDrawLight(const Surface &out, Point position, ClxSprite clx)
  * @param position Target buffer coordinate
  * @param clx CLX frame
  */
-inline void ClxDrawLightBlended(const Surface &out, Point position, ClxSprite clx)
+inline void ClxDrawLightBlended(const Surface &out, Point position, ClxSprite clx, int lightTableIndex)
 {
-	ClxDrawBlendedTRN(out, position, clx, LightTables[LightTableIndex].data());
+	if (lightTableIndex != 0) {
+		ClxDrawBlendedTRN(out, position, clx, LightTables[lightTableIndex].data());
+	} else {
+		ClxDrawBlended(out, position, clx);
+	}
 }
+
+/**
+ * Returns if cursor is within the CLX sprite (ignores shadow)
+ */
+bool IsPointWithinClx(Point position, ClxSprite clx);
 
 /**
  * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
  * of fully transparent columns in the sprite.
  */
 std::pair<int, int> ClxMeasureSolidHorizontalBounds(ClxSprite clx);
+
+/**
+ * @brief Clears the CLX draw cache.
+ *
+ * Must be called whenever CLX sprites are freed.
+ */
+void ClearClxDrawCache();
 
 #ifdef DEBUG_CLX
 std::string ClxDescribe(ClxSprite clx);

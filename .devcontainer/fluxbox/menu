@@ -1,0 +1,20 @@
+[begin] (  Application Menu  )
+    [exec] (File Manager) { nautilus /workspaces/devilutionX } </usr/share/icons/gnome/32x32/apps/file-manager.png>
+    [exec] (D1 Graphics Tool) { D1GraphicsTool } <>
+    [exec] (Text Editor) { mousepad } <>
+    [exec] (Terminal) { tilix -w ~ -e $(readlink -f /proc/$$/exe) -il } <>
+    [exec] (Web Browser) { x-www-browser --disable-dev-shm-usage } <>
+    [submenu] (System) {}
+        [exec] (Set Resolution) { tilix -t "Set Resolution" -e bash /usr/local/bin/set-resolution } <>
+        [exec] (Edit Application Menu) { mousepad ~/.fluxbox/menu } <>
+        [exec] (Passwords and Keys) { seahorse } <>
+        [exec] (Top Processes) { tilix -t "Top" -e htop } <>
+        [exec] (Disk Utilization) { tilix -t "Disk Utilization" -e ncdu / } <>
+        [exec] (Editres) {editres} <>
+        [exec] (Xfontsel) {xfontsel} <>
+        [exec] (Xkill) {xkill} <>
+        [exec] (Xrefresh) {xrefresh} <>
+    [end]
+    [config] (Configuration)
+    [workspaces] (Workspaces)
+[end]

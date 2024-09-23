@@ -5,17 +5,15 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
+#include <string>
 #include <type_traits>
-#include <vector>
 
 #include "effects.h"
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "spelldat.h"
 #include "utils/enum_traits.h"
-#include "utils/stdcompat/cstddef.hpp"
-#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -105,11 +103,11 @@ enum class MissileMovementDistribution : uint8_t {
 	 */
 	Disabled,
 	/**
-	 * @brief The missile moves and if it hits a enemey it stops (for example firebolt)
+	 * @brief The missile moves and if it hits an enemy it stops (for example firebolt)
 	 */
 	Blockable,
 	/**
-	 * @brief The missile moves and even it hits a enemy it keeps moving (for example flame wave)
+	 * @brief The missile moves and even it hits an enemy it keeps moving (for example flame wave)
 	 */
 	Unblockable,
 };
@@ -130,11 +128,21 @@ enum class MissileDataFlags : uint8_t {
 use_enum_as_flags(MissileDataFlags);
 
 struct MissileData {
-	void (*mAddProc)(Missile &, AddMissileParameter &);
-	void (*mProc)(Missile &);
-	_sfx_id mlSFX;
-	_sfx_id miSFX;
-	MissileGraphicID mFileNum;
+	using AddFn = void (*)(Missile &, AddMissileParameter &);
+	using ProcessFn = void (*)(Missile &);
+
+	AddFn addFn;
+	ProcessFn processFn;
+
+	/**
+	 * @brief Sound emitted when cast.
+	 */
+	SfxID castSound;
+	/**
+	 * @brief Sound emitted on impact.
+	 */
+	SfxID hitSound;
+	MissileGraphicID graphic;
 	MissileDataFlags flags;
 	MissileMovementDistribution movementDistribution;
 
@@ -166,7 +174,7 @@ struct MissileFileData {
 	OptionalOwnedClxSpriteListOrSheet sprites;
 	uint16_t animWidth;
 	int8_t animWidth2;
-	char name[9];
+	std::string name;
 	uint8_t animFAmt;
 	MissileGraphicsFlags flags;
 	uint8_t animDelayIdx;
@@ -196,19 +204,10 @@ struct MissileFileData {
 	}
 };
 
-extern const MissileData MissilesData[];
+const MissileData &GetMissileData(MissileID missileId);
+MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId);
 
-inline const MissileData &GetMissileData(MissileID missileId)
-{
-	return MissilesData[static_cast<std::underlying_type<MissileID>::type>(missileId)];
-}
-
-extern MissileFileData MissileSpriteData[];
-
-inline MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId)
-{
-	return MissileSpriteData[static_cast<std::underlying_type<MissileGraphicID>::type>(graphicId)];
-}
+void LoadMissileData();
 
 void InitMissileGFX(bool loadHellfireGraphics = false);
 void FreeMissileGFX();

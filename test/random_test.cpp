@@ -17,10 +17,10 @@ TEST(RandomTest, RandomEngineParams)
 	SetRndSeed(0);
 
 	// Starting from a seed of 0 means the multiplicand is dropped and the state advances by increment only
-	ASSERT_EQ(GenerateSeed(), increment) << "Increment factor is incorrect";
+	ASSERT_EQ(GenerateRandomNumber(), increment) << "Increment factor is incorrect";
 
 	// LCGs use a formula of mult * seed + inc. Using a long form in the code to document the expected factors.
-	ASSERT_EQ(GenerateSeed(), (multiplicand * 1) + increment) << "Multiplicand factor is incorrect";
+	ASSERT_EQ(GenerateRandomNumber(), (multiplicand * 1) + increment) << "Multiplicand factor is incorrect";
 
 	// C++11 defines the default seed for a LCG engine as 1. The ten thousandth value is commonly used for sanity checking
 	// a sequence, so as we've had one round since state 1 we need to discard another 9998 values to get to the 10000th state.
@@ -28,9 +28,9 @@ TEST(RandomTest, RandomEngineParams)
 	DiscardRandomValues(9997);
 
 	uint32_t expectedState = 3495122800U;
-	EXPECT_EQ(GenerateSeed(), expectedState) << "Wrong engine state after 9999 invocations";
+	EXPECT_EQ(GenerateRandomNumber(), expectedState) << "Wrong engine state after 9999 invocations";
 	expectedState = 3007658545U;
-	ASSERT_EQ(GenerateSeed(), expectedState) << "Wrong engine state after 10000 invocations";
+	ASSERT_EQ(GenerateRandomNumber(), expectedState) << "Wrong engine state after 10000 invocations";
 }
 
 TEST(RandomTest, AbsDistribution)
@@ -278,6 +278,31 @@ TEST(RandomTest, NegativeReturnValues)
 		SetRndSeed(1457187811);
 		EXPECT_EQ(GenerateRnd(i), -8) << "Unexpected return value for a limit of " << i;
 	}
+
+	// The following values are/were used throughout the code
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(37), -23) << "Unexpected return value for a limit of 37";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(38), -12) << "Unexpected return value for a limit of 38";
+
+	SetRndSeed(1457187811);
+	// commonly used for dungeon megatile coordinates
+	EXPECT_EQ(GenerateRnd(40), -8) << "Unexpected return value for a limit of 40";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(41), -9) << "Unexpected return value for a limit of 41";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(52), -8) << "Unexpected return value for a limit of 52";
+
+	SetRndSeed(1457187811);
+	// commonly used for dungeon tile coordinates
+	EXPECT_EQ(GenerateRnd(80), -48) << "Unexpected return value for a limit of 80";
+
+	SetRndSeed(1457187811);
+	// commonly used for percentage rolls (typically in a context that 0 and -68 lead to the same outcome)
+	EXPECT_EQ(GenerateRnd(100), -68) << "Unexpected return value for a limit of 100";
 
 	for (int i = 1; i < 32768; i *= 2) {
 		SetRndSeed(1457187811);

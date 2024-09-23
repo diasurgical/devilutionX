@@ -5,6 +5,7 @@ on:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -16,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Create Build Environment
       run: >
         sudo apt-get update &&
-        sudo apt-get install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev libgtest-dev libgmock-dev git smpq gettext python-is-python3
+        sudo apt-get install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev libgtest-dev libgmock-dev libbenchmark-dev git smpq gettext python-is-python3
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -31,7 +32,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-src.tar.xz
         path: devilutionx-src.tar.xz
@@ -47,14 +48,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Create Build Environment
       run: >
         sudo apt-get update &&
-        sudo apt-get install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev libgtest-dev libgmock-dev git smpq gettext python-is-python3
+        sudo apt-get install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev libgtest-dev libgmock-dev libbenchmark-dev git smpq gettext python-is-python3
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -62,7 +63,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-src-fully-vendored.tar.xz
         path: devilutionx-src-fully-vendored.tar.xz

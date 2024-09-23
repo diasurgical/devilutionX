@@ -6,11 +6,11 @@
 #include "gamemenu.h"
 
 #include "cursor.h"
+#include "diablo_msg.hpp"
 #include "engine/backbuffer_state.hpp"
 #include "engine/events.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
-#include "error.h"
 #include "gmenu.h"
 #include "init.h"
 #include "loadsave.h"
@@ -20,6 +20,9 @@
 #include "utils/language.h"
 
 namespace devilution {
+
+bool isGameMenuOpen = false;
+
 namespace {
 
 // Forward-declare menu handlers, used by the global menu structs below.
@@ -241,7 +244,7 @@ void GamemenuSoundVolume(bool bActivate)
 			gbSoundOn = true;
 		}
 	}
-	PlaySFX(IS_TITLEMOV);
+	PlaySFX(SfxID::MenuMove);
 	GamemenuGetSound();
 }
 
@@ -330,8 +333,10 @@ void gamemenu_save_game(bool /*bActivate*/)
 	InitDiabloMsg(EMSG_SAVING);
 	RedrawEverything();
 	DrawAndBlit();
+	uint32_t currentTime = SDL_GetTicks();
 	SaveGame();
 	ClrDiabloMsg();
+	InitDiabloMsg(EMSG_GAME_SAVED, currentTime + 1000 - SDL_GetTicks());
 	RedrawEverything();
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
@@ -344,6 +349,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 
 void gamemenu_on()
 {
+	isGameMenuOpen = true;
 	if (!gbIsMultiplayer) {
 		gmenu_set_items(sgSingleMenu, GamemenuUpdateSingle);
 	} else {
@@ -354,6 +360,7 @@ void gamemenu_on()
 
 void gamemenu_off()
 {
+	isGameMenuOpen = false;
 	gmenu_set_items(nullptr, nullptr);
 }
 

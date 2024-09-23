@@ -13,7 +13,6 @@
 
 namespace devilution {
 
-extern int LightTableIndex;
 extern bool AutoMapShowItems;
 extern bool frameflag;
 
@@ -33,12 +32,10 @@ void ClearCursor();
 /**
  * @brief Shifting the view area along the logical grid
  *        Note: this won't allow you to shift between even and odd rows
- * @param x X offset
- * @param y Y offset
  * @param horizontal Shift the screen left or right
  * @param vertical Shift the screen up or down
  */
-void ShiftGrid(int *x, int *y, int horizontal, int vertical);
+void ShiftGrid(Point *offset, int horizontal, int vertical);
 
 /**
  * @brief Gets the number of rows covered by the main panel
@@ -59,6 +56,12 @@ void CalcTileOffset(int *offsetX, int *offsetY);
  */
 void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
+
+/**
+ * @brief Calculate the screen position of a given tile
+ * @param tile Position of a dungeon tile
+ */
+Point GetScreenPosition(Point tile);
 
 /**
  * @brief Render the whole screen black

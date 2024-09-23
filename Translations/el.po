@@ -496,7 +496,7 @@ msgstr "Διακομιστή-πελάτη (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
 #, fuzzy
-msgid "Offline" 
+msgid "Offline"
 msgstr "Βρόχος επιστροφής"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
@@ -1018,7 +1018,7 @@ msgid "Command "
 msgstr "Η Εντολή "
 
 #: Source/control.cpp:356
-msgid " is unkown."
+msgid " is unknown."
 msgstr " είναι άγνωστη."
 
 #: Source/control.cpp:359 Source/control.cpp:360
@@ -2788,8 +2788,8 @@ msgstr "Πάπυρος Αποκάλυψης"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-msgid "Book of "
-msgstr "Βιβλίο: "
+msgid "Book of {:s}"
+msgstr "Βιβλίο: {:s}"
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
@@ -10678,7 +10678,7 @@ msgstr ""
 #: Source/textdat.cpp:425
 msgid ""
 "If I was you... and I ain't... but if I was, I'd sell all that stuff you got and "
-"get out of here. That boy out there... He's always got somethin good, but you "
+"get out of here. That boy out there... He's always got somethin' good, but you "
 "gotta give him some gold or he won't even show you what he's got."
 msgstr ""
 "Αν ήμουν στη θέση σου... και δεν είμαι... αλλά αν ήμουν, θα πουλούσα όλα αυτά που "
@@ -11352,7 +11352,7 @@ msgstr ""
 msgid ""
 "My grandmother often tells me stories about the strange forces that inhabit the "
 "graveyard outside of the church.  And it may well interest you to hear one of "
-"them.  She said that if you were to leave the proper offering in the cemetary, "
+"them.  She said that if you were to leave the proper offering in the cemetery, "
 "enter the cathedral to pray for the dead, and then return, the offering would be "
 "altered in some strange way.  I don't know if this is just the talk of an old sick "
 "woman, but anything seems possible these days."

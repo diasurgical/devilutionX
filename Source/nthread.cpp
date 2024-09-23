@@ -67,14 +67,7 @@ void NthreadHandler()
 
 void nthread_terminate_game(const char *pszFcn)
 {
-	uint32_t sErr = SErrGetLastError();
-	if (sErr == STORM_ERROR_INVALID_PLAYER) {
-		return;
-	}
-	if (sErr != STORM_ERROR_GAME_TERMINATED && sErr != STORM_ERROR_NOT_IN_GAME) {
-		app_fatal(StrCat(pszFcn, ":\n", pszFcn));
-	}
-
+	app_fatal(pszFcn);
 	gbGameDestroyed = true;
 }
 
@@ -121,8 +114,6 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		return true;
 	}
 	if (!SNetReceiveTurns(MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, &player_state[0])) {
-		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
-			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = false;
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
@@ -224,7 +215,7 @@ bool nthread_has_500ms_passed(bool *drawGame /*= nullptr*/)
 		if (gbIsMultiplayer) {
 			for (size_t i = 0; i < Players.size(); i++) {
 				if ((player_state[i] & PS_CONNECTED) != 0 && i != MyPlayerId) {
-					// Reset last tick is not allowed when other players are connected, cause the elapsed time is needed to sync the game ticks between the clients
+					// Reset last tick is not allowed when other players are connected, because the elapsed time is needed to sync the game ticks between the clients
 					resetLastTick = false;
 					break;
 				}
@@ -258,7 +249,7 @@ void nthread_UpdateProgressToNextGameTick()
 	}
 	int ticksAdvanced = gnTickDelay - ticksMissing;
 	int32_t fraction = ticksAdvanced * AnimationInfo::baseValueFraction / gnTickDelay;
-	fraction = clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
+	fraction = std::clamp<int32_t>(fraction, 0, AnimationInfo::baseValueFraction);
 	ProgressToNextGameTick = static_cast<uint8_t>(fraction);
 }
 

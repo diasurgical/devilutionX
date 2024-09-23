@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SDLDEV_VERS=2.26.1
-SODIUM_VERS=1.0.18
+SDLDEV_VERS=2.30.5
+SODIUM_VERS=1.0.20
 
 # exit when any command fails
 set -euo pipefail
@@ -30,6 +30,10 @@ if [ `id -u` -ne 0 ]; then
 else
     SUDO=""
 fi
+
+rm -rf "tmp-mingw-${MINGW_ARCH}-prep"
+mkdir -p "tmp-mingw-${MINGW_ARCH}-prep"
+cd "tmp-mingw-${MINGW_ARCH}-prep"
 
 wget -q https://www.libsdl.org/release/SDL2-devel-${SDLDEV_VERS}-mingw.tar.gz -OSDL2-devel-${SDLDEV_VERS}-mingw.tar.gz
 tar -xzf SDL2-devel-${SDLDEV_VERS}-mingw.tar.gz

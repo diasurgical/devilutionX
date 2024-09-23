@@ -12,6 +12,7 @@
 
 #include <lwip/igmp.h>
 #include <lwip/mld6.h>
+#include <lwip/nd6.h>
 #include <lwip/sockets.h>
 #include <lwip/tcpip.h>
 
@@ -46,7 +47,7 @@ void protocol_zt::set_reuseaddr(int fd)
 	lwip_setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (void *)&yes, sizeof(yes));
 }
 
-bool protocol_zt::network_online()
+tl::expected<bool, PacketError> protocol_zt::network_online()
 {
 	if (!zerotier_network_ready())
 		return false;
@@ -64,7 +65,7 @@ bool protocol_zt::network_online()
 		if (ret < 0) {
 			Log("lwip, (udp) bind: {}", strerror(errno));
 			SDL_SetError("lwip, (udp) bind: %s", strerror(errno));
-			throw protocol_exception();
+			return tl::make_unexpected(ProtocolError());
 		}
 		set_nonblock(fd_udp);
 	}
@@ -75,13 +76,13 @@ bool protocol_zt::network_online()
 		if (r1 < 0) {
 			Log("lwip, (tcp) bind: {}", strerror(errno));
 			SDL_SetError("lwip, (udp) bind: %s", strerror(errno));
-			throw protocol_exception();
+			return tl::make_unexpected(ProtocolError());
 		}
 		auto r2 = lwip_listen(fd_tcp, 10);
 		if (r2 < 0) {
 			Log("lwip, listen: {}", strerror(errno));
 			SDL_SetError("lwip, listen: %s", strerror(errno));
-			throw protocol_exception();
+			return tl::make_unexpected(ProtocolError());
 		}
 		set_nonblock(fd_tcp);
 		set_nodelay(fd_tcp);
@@ -89,10 +90,13 @@ bool protocol_zt::network_online()
 	return true;
 }
 
-bool protocol_zt::send(const endpoint &peer, const buffer_t &data)
+tl::expected<void, PacketError> protocol_zt::send(const endpoint &peer, const buffer_t &data)
 {
-	peer_list[peer].send_queue.push_back(frame_queue::MakeFrame(data));
-	return true;
+	tl::expected<buffer_t, PacketError> frame = frame_queue::MakeFrame(data);
+	if (!frame.has_value())
+		return tl::make_unexpected(frame.error());
+	peer_list[peer].send_queue.push_back(*frame);
+	return {};
 }
 
 bool protocol_zt::send_oob(const endpoint &peer, const buffer_t &data) const
@@ -113,36 +117,37 @@ bool protocol_zt::send_oob_mc(const buffer_t &data) const
 	return send_oob(mc, data);
 }
 
-bool protocol_zt::send_queued_peer(const endpoint &peer)
+tl::expected<bool, PacketError> protocol_zt::send_queued_peer(const endpoint &peer)
 {
-	if (peer_list[peer].fd == -1) {
-		peer_list[peer].fd = lwip_socket(AF_INET6, SOCK_STREAM, 0);
-		set_nodelay(peer_list[peer].fd);
-		set_nonblock(peer_list[peer].fd);
+	peer_state &state = peer_list[peer];
+	if (state.fd == -1) {
+		state.fd = lwip_socket(AF_INET6, SOCK_STREAM, 0);
+		set_nodelay(state.fd);
+		set_nonblock(state.fd);
 		struct sockaddr_in6 in6 {
 		};
 		in6.sin6_port = htons(default_port);
 		in6.sin6_family = AF_INET6;
 		std::copy(peer.addr.begin(), peer.addr.end(), in6.sin6_addr.s6_addr);
-		lwip_connect(peer_list[peer].fd, (const struct sockaddr *)&in6, sizeof(in6));
+		lwip_connect(state.fd, (const struct sockaddr *)&in6, sizeof(in6));
 	}
-	while (!peer_list[peer].send_queue.empty()) {
-		auto len = peer_list[peer].send_queue.front().size();
-		auto r = lwip_send(peer_list[peer].fd, peer_list[peer].send_queue.front().data(), len, 0);
+	while (!state.send_queue.empty()) {
+		auto len = state.send_queue.front().size();
+		auto r = lwip_send(state.fd, state.send_queue.front().data(), len, 0);
 		if (r < 0) {
 			// handle error
 			return false;
 		}
 		if (decltype(len)(r) < len) {
 			// partial send
-			auto it = peer_list[peer].send_queue.front().begin();
-			peer_list[peer].send_queue.front().erase(it, it + r);
+			auto it = state.send_queue.front().begin();
+			state.send_queue.front().erase(it, it + r);
 			return true;
 		}
 		if (decltype(len)(r) == len) {
-			peer_list[peer].send_queue.pop_front();
+			state.send_queue.pop_front();
 		} else {
-			throw protocol_exception();
+			return tl::make_unexpected(ProtocolError());
 		}
 	}
 	return true;
@@ -151,10 +156,11 @@ bool protocol_zt::send_queued_peer(const endpoint &peer)
 bool protocol_zt::recv_peer(const endpoint &peer)
 {
 	unsigned char buf[PKTBUF_LEN];
+	peer_state &state = peer_list[peer];
 	while (true) {
-		auto len = lwip_recv(peer_list[peer].fd, buf, sizeof(buf), 0);
+		auto len = lwip_recv(state.fd, buf, sizeof(buf), 0);
 		if (len >= 0) {
-			peer_list[peer].recv_queue.Write(buffer_t(buf, buf + len));
+			state.recv_queue.Write(buffer_t(buf, buf + len));
 		} else {
 			return errno == EAGAIN || errno == EWOULDBLOCK;
 		}
@@ -163,8 +169,13 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 
 bool protocol_zt::send_queued_all()
 {
-	for (auto &peer : peer_list) {
-		if (!send_queued_peer(peer.first)) {
+	for (const auto &[endpoint, _] : peer_list) {
+		tl::expected<bool, PacketError> result = send_queued_peer(endpoint);
+		if (!result.has_value()) {
+			LogError("send_queued_peer: {}", result.error().what());
+			continue;
+		}
+		if (!*result) {
 			// handle error?
 		}
 	}
@@ -173,10 +184,10 @@ bool protocol_zt::send_queued_all()
 
 bool protocol_zt::recv_from_peers()
 {
-	for (auto &peer : peer_list) {
-		if (peer.second.fd != -1) {
-			if (!recv_peer(peer.first)) {
-				disconnect_queue.push_back(peer.first);
+	for (const auto &[endpoint, state] : peer_list) {
+		if (state.fd != -1) {
+			if (!recv_peer(endpoint)) {
+				disconnect_queue.push_back(endpoint);
 			}
 		}
 	}
@@ -210,14 +221,15 @@ bool protocol_zt::accept_all()
 			break;
 		endpoint ep;
 		std::copy(in6.sin6_addr.s6_addr, in6.sin6_addr.s6_addr + 16, ep.addr.begin());
-		if (peer_list[ep].fd != -1) {
+		peer_state &state = peer_list[ep];
+		if (state.fd != -1) {
 			Log("protocol_zt::accept_all: WARNING: overwriting connection");
 			SDL_SetError("protocol_zt::accept_all: WARNING: overwriting connection");
-			lwip_close(peer_list[ep].fd);
+			lwip_close(state.fd);
 		}
 		set_nonblock(newfd);
 		set_nodelay(newfd);
-		peer_list[ep].fd = newfd;
+		state.fd = newfd;
 	}
 	return true;
 }
@@ -237,11 +249,21 @@ bool protocol_zt::recv(endpoint &peer, buffer_t &data)
 	}
 
 	for (auto &p : peer_list) {
-		if (p.second.recv_queue.PacketReady()) {
-			peer = p.first;
-			data = p.second.recv_queue.ReadPacket();
-			return true;
+		tl::expected<bool, PacketError> ready = p.second.recv_queue.PacketReady();
+		if (!ready.has_value()) {
+			LogError("PacketReady: {}", ready.error().what());
+			continue;
 		}
+		if (!*ready)
+			continue;
+		tl::expected<buffer_t, PacketError> packet = p.second.recv_queue.ReadPacket();
+		if (!packet.has_value()) {
+			LogError("Failed reading packet data from peer: {}", packet.error().what());
+			continue;
+		}
+		peer = p.first;
+		data = *packet;
+		return true;
 	}
 	return false;
 }
@@ -258,14 +280,15 @@ bool protocol_zt::get_disconnected(endpoint &peer)
 
 void protocol_zt::disconnect(const endpoint &peer)
 {
-	if (peer_list.count(peer) != 0) {
-		if (peer_list[peer].fd != -1) {
-			if (lwip_close(peer_list[peer].fd) < 0) {
+	const auto it = peer_list.find(peer);
+	if (it != peer_list.end()) {
+		if (it->second.fd != -1) {
+			if (lwip_close(it->second.fd) < 0) {
 				Log("lwip_close: {}", strerror(errno));
 				SDL_SetError("lwip_close: %s", strerror(errno));
 			}
 		}
-		peer_list.erase(peer);
+		peer_list.erase(it);
 	}
 }
 
@@ -279,9 +302,9 @@ void protocol_zt::close_all()
 		lwip_close(fd_udp);
 		fd_udp = -1;
 	}
-	for (auto &peer : peer_list) {
-		if (peer.second.fd != -1)
-			lwip_close(peer.second.fd);
+	for (auto &[_, state] : peer_list) {
+		if (state.fd != -1)
+			lwip_close(state.fd);
 	}
 	peer_list.clear();
 }
@@ -309,7 +332,29 @@ uint64_t protocol_zt::current_ms()
 
 bool protocol_zt::is_peer_connected(endpoint &peer)
 {
-	return peer_list.count(peer) != 0 && peer_list[peer].fd != -1;
+	const auto it = peer_list.find(peer);
+	return it != peer_list.end() && it->second.fd != -1;
+}
+
+bool protocol_zt::is_peer_relayed(const endpoint &peer) const
+{
+	ip6_addr_t address = {};
+	IP6_ADDR_PART(&address, 0, peer.addr[0], peer.addr[1], peer.addr[2], peer.addr[3]);
+	IP6_ADDR_PART(&address, 1, peer.addr[4], peer.addr[5], peer.addr[6], peer.addr[7]);
+	IP6_ADDR_PART(&address, 2, peer.addr[8], peer.addr[9], peer.addr[10], peer.addr[11]);
+	IP6_ADDR_PART(&address, 3, peer.addr[12], peer.addr[13], peer.addr[14], peer.addr[15]);
+
+	const u8_t *hwaddr;
+	if (nd6_get_next_hop_addr_or_queue(netif_default, nullptr, &address, &hwaddr) != ERR_OK)
+		return true;
+
+	uint64_t mac = hwaddr[0];
+	mac = (mac << 8) | hwaddr[1];
+	mac = (mac << 8) | hwaddr[2];
+	mac = (mac << 8) | hwaddr[3];
+	mac = (mac << 8) | hwaddr[4];
+	mac = (mac << 8) | hwaddr[5];
+	return zerotier_is_relayed(mac);
 }
 
 std::string protocol_zt::make_default_gamename()
@@ -317,8 +362,8 @@ std::string protocol_zt::make_default_gamename()
 	std::string ret;
 	std::string allowedChars = "abcdefghkopqrstuvwxyz";
 	std::random_device rd;
-	std::uniform_int_distribution<int> dist(0, allowedChars.size() - 1);
-	for (int i = 0; i < 5; ++i) {
+	std::uniform_int_distribution<size_t> dist(0, allowedChars.size() - 1);
+	for (size_t i = 0; i < 5; ++i) {
 		ret += allowedChars.at(dist(rd));
 	}
 	return ret;

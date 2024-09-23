@@ -89,14 +89,10 @@ public:
 
 private:
 	// For OptionalClxSprite.
-	constexpr ClxSprite()
-	    : data_(nullptr)
-	    , pixel_data_size_(0)
-	{
-	}
+	constexpr ClxSprite() = default;
 
-	const uint8_t *data_;
-	uint32_t pixel_data_size_;
+	const uint8_t *data_ = nullptr;
+	uint32_t pixel_data_size_ = 0;
 
 	friend class OptionalClxSprite;
 };
@@ -139,7 +135,7 @@ public:
 	}
 
 	/** @brief The offset to the next sprite sheet, or file size if this is the last sprite sheet. */
-	[[nodiscard]] constexpr uint32_t nextSpriteSheetOffsetOrFileSize() const
+	[[nodiscard]] constexpr uint32_t dataSize() const
 	{
 		return LoadLE32(&data_[4 + numSprites() * 4]);
 	}
@@ -154,12 +150,9 @@ public:
 
 private:
 	// For OptionalClxSpriteList.
-	constexpr ClxSpriteList()
-	    : data_(nullptr)
-	{
-	}
+	constexpr ClxSpriteList() = default;
 
-	const uint8_t *data_;
+	const uint8_t *data_ = nullptr;
 
 	friend class OptionalClxSpriteList;
 };
@@ -264,16 +257,17 @@ public:
 	[[nodiscard]] constexpr ClxSpriteSheetIterator begin() const;
 	[[nodiscard]] constexpr ClxSpriteSheetIterator end() const;
 
-private:
-	// For OptionalClxSpriteSheet.
-	constexpr ClxSpriteSheet()
-	    : data_(nullptr)
-	    , num_lists_(0)
+	[[nodiscard]] size_t dataSize() const
 	{
+		return static_cast<size_t>(&data_[sheetOffset(num_lists_ - 1)] + (*this)[num_lists_ - 1].dataSize() - &data_[0]);
 	}
 
-	const uint8_t *data_;
-	uint16_t num_lists_;
+private:
+	// For OptionalClxSpriteSheet.
+	constexpr ClxSpriteSheet() = default;
+
+	const uint8_t *data_ = nullptr;
+	uint16_t num_lists_ = 0;
 
 	friend class OptionalClxSpriteSheet;
 };
@@ -362,6 +356,16 @@ public:
 		return ClxSpriteList { *this }[spriteIndex];
 	}
 
+	[[nodiscard]] uint32_t numSprites() const
+	{
+		return ClxSpriteList { *this }.numSprites();
+	}
+
+	[[nodiscard]] size_t dataSize() const
+	{
+		return ClxSpriteList { *this }.dataSize();
+	}
+
 private:
 	// For OptionalOwnedClxSpriteList.
 	OwnedClxSpriteList() = default;
@@ -380,9 +384,9 @@ inline ClxSpriteList::ClxSpriteList(const OwnedClxSpriteList &owned)
 
 inline OwnedClxSpriteList ClxSpriteList::clone() const
 {
-	const size_t dataSize = nextSpriteSheetOffsetOrFileSize();
-	std::unique_ptr<uint8_t[]> data { new uint8_t[dataSize] };
-	memcpy(data.get(), data_, dataSize);
+	const size_t size = dataSize();
+	std::unique_ptr<uint8_t[]> data { new uint8_t[size] };
+	memcpy(data.get(), data_, size);
 	return OwnedClxSpriteList { std::move(data) };
 }
 
@@ -417,16 +421,17 @@ public:
 		return ClxSpriteSheet { *this }.end();
 	}
 
-private:
-	// For OptionalOwnedClxSpriteList.
-	OwnedClxSpriteSheet()
-	    : data_(nullptr)
-	    , num_lists_(0)
+	[[nodiscard]] size_t dataSize() const
 	{
+		return ClxSpriteSheet { *this }.dataSize();
 	}
 
+private:
+	// For OptionalOwnedClxSpriteList.
+	OwnedClxSpriteSheet() = default;
+
 	std::unique_ptr<uint8_t[]> data_;
-	uint16_t num_lists_;
+	uint16_t num_lists_ = 0;
 
 	friend class ClxSpriteSheet; // for implicit conversion.
 	friend class OptionalOwnedClxSpriteSheet;
@@ -484,16 +489,17 @@ public:
 		return num_lists_ != 0;
 	}
 
-private:
-	const uint8_t *data_;
-	uint16_t num_lists_;
-
-	// For OptionalClxSpriteListOrSheet.
-	constexpr ClxSpriteListOrSheet()
-	    : data_(nullptr)
-	    , num_lists_(0)
+	[[nodiscard]] size_t dataSize() const
 	{
+		return isSheet() ? sheet().dataSize() : list().dataSize();
 	}
+
+private:
+	// For OptionalClxSpriteListOrSheet.
+	constexpr ClxSpriteListOrSheet() = default;
+
+	const uint8_t *data_ = nullptr;
+	uint16_t num_lists_ = 0;
 
 	friend class OptionalClxSpriteListOrSheet;
 };
@@ -558,16 +564,19 @@ public:
 		return num_lists_ != 0;
 	}
 
-private:
-	std::unique_ptr<uint8_t[]> data_;
-	uint16_t num_lists_;
+	[[nodiscard]] uint16_t numLists() const { return num_lists_; }
 
-	// For OptionalOwnedClxSpriteListOrSheet.
-	OwnedClxSpriteListOrSheet()
-	    : data_(nullptr)
-	    , num_lists_(0)
+	[[nodiscard]] size_t dataSize() const
 	{
+		return ClxSpriteListOrSheet { *this }.dataSize();
 	}
+
+private:
+	// For OptionalOwnedClxSpriteListOrSheet.
+	OwnedClxSpriteListOrSheet() = default;
+
+	std::unique_ptr<uint8_t[]> data_;
+	uint16_t num_lists_ = 0;
 
 	friend class ClxSpriteListOrSheet;
 	friend class OptionalOwnedClxSpriteListOrSheet;

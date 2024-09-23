@@ -1,6 +1,7 @@
 #include "panels/mainpanel.hpp"
 
 #include <cstdint>
+#include <optional>
 
 #include "control.h"
 #include "engine/clx_sprite.hpp"
@@ -11,7 +12,6 @@
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/surface_to_clx.hpp"
 
 namespace devilution {
@@ -25,28 +25,30 @@ OptionalOwnedClxSpriteList PanelButton;
 OptionalOwnedClxSpriteList PanelButtonGrime;
 OptionalOwnedClxSpriteList PanelButtonDownGrime;
 
-void DrawButtonText(const Surface &out, string_view text, Rectangle placement, UiFlags style, int spacing = 1)
+void DrawButtonText(const Surface &out, std::string_view text, Rectangle placement, UiFlags style, int spacing = 1)
 {
-	DrawString(out, text, { placement.position + Displacement { 0, 1 }, placement.size }, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, spacing);
-	DrawString(out, text, placement, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, spacing);
+	DrawString(out, text, { placement.position + Displacement { 0, 1 }, placement.size },
+	    { .flags = UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, .spacing = spacing });
+	DrawString(out, text, placement,
+	    { .flags = UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, .spacing = spacing });
 }
 
-void DrawButtonOnPanel(Point position, string_view text, int frame)
+void DrawButtonOnPanel(Point position, std::string_view text, int frame)
 {
-	RenderClxSprite(*pBtmBuff, (*PanelButton)[frame], position);
+	RenderClxSprite(*BottomBuffer, (*PanelButton)[frame], position);
 	int spacing = 2;
 	int width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	if (width > 38) {
 		spacing = 1;
 		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
-	RenderClxSprite(pBtmBuff->subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 7, width, pBtmBuff->h() - 7), (*PanelButtonGrime)[frame], { 0, 0 });
-	DrawButtonText(*pBtmBuff, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
+	RenderClxSprite(BottomBuffer->subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 7, width, BottomBuffer->h() - 7), (*PanelButtonGrime)[frame], { 0, 0 });
+	DrawButtonText(*BottomBuffer, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
 }
 
-void RenderMainButton(const Surface &out, int buttonId, string_view text, int frame)
+void RenderMainButton(const Surface &out, int buttonId, std::string_view text, int frame)
 {
-	Point panelPosition { PanBtnPos[buttonId].x + 4, PanBtnPos[buttonId].y + 17 };
+	Point panelPosition { MainPanelButtonRect[buttonId].position + Displacement { 4, 17 } };
 	DrawButtonOnPanel(panelPosition, text, frame);
 	if (IsChatAvailable())
 		DrawButtonOnPanel(panelPosition + Displacement { 0, GetMainPanel().size.height + 16 }, text, frame);
@@ -96,15 +98,15 @@ void LoadMainPanel()
 		const int talkButtonWidth = (*talkButton)[0].width();
 
 		constexpr size_t NumOtherPlayers = 3;
-		// Render the unpressed voice buttons to pBtmBuff.
-		string_view text = _("voice");
+		// Render the unpressed voice buttons to BottomBuffer.
+		std::string_view text = _("voice");
 		const int textWidth = GetLineWidth(text, GameFont12, 1);
 		for (size_t i = 0; i < NumOtherPlayers; ++i) {
 			Point position { 176, static_cast<int>(GetMainPanel().size.height + 101 + 18 * i) };
-			RenderClxSprite(*pBtmBuff, (*talkButton)[0], position);
+			RenderClxSprite(*BottomBuffer, (*talkButton)[0], position);
 			int width = std::min<int>(textWidth, (*PanelButton)[0].width());
-			RenderClxSprite(pBtmBuff->subregion(position.x + (talkButtonWidth - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
-			DrawButtonText(*pBtmBuff, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
+			RenderClxSprite(BottomBuffer->subregion(position.x + (talkButtonWidth - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
+			DrawButtonText(*BottomBuffer, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
 		}
 
 		const int talkButtonHeight = (*talkButton)[0].height();

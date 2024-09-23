@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## DevilutionX 1.5.2
+
+### Bug Fixes
+
+#### Multiplayer
+
+- Unable to join game due to invalid player data
+
+#### Translations
+
+- Improve rendering of Chinese/Japanese/Korean texts
+
+#### Gameplay
+
+- Hellfire items not saving their identified state
+
+#### Stability / Performance / System
+
+- Amiga: Incorrect rendering of things behind transparent elements
+- Android: Game locking up when switching sound output
+- Linux: Statically link BZIP2 and libsodium on x86_64
+- Stash corrupting when converting a hero between Diablo and Hellfire
+- Xbox: Game crashing unexpectedly
+- Xbox: Improve performance
+
+## DevilutionX 1.5.1
+
 ### Features
 
 #### Multiplayer
@@ -15,27 +42,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the pvp arenas
 - Rename "Loopback" to "Offline"
 
-#### Translations
-
-- Update French translation
-- Update German translation
-- Update Greek translation
-- Update Japanese translation
-- Update Korean translation
-- Update Portuguese translation
-- Update Ukrainian translation
-
-#### Platforms
-
-- Android TV: Update banner to include app name
-
 #### Stability / Performance / System
 
 - Move hp/mana display and item graphics to gameplay options
 - Validate properties when reloading items
 - Demomode: Improve replay stability
 - Update [Discord link](https://discord.gg/devilutionx)
+- Display save game confirmation
 - Reduce ram usage
+
+#### Translations
+
+- Update Simplified Chinese translation
+- Update French translation
+- Update German translation
+- Update Greek translation
+- Update Japanese translation
+- Update Korean translation
+- Update Portuguese translation
+- Update Spanish translation
+- Update Swedish translation
+- Update Ukrainian translation
 
 ### Bugfixes
 
@@ -43,13 +70,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Being able to enter Lazarus' chamber before opening the portal
 - Book requirements not updating
-- Diablo: Incorrect level 4 layout when Magic Banner quest is active
-- Halls of the Blind not being compleated by picking up the amulet
+- Some monsters not walking
+- Missiles not traveling the full distance at some angles
+- Diablo: Incorrect level 4 layout when the Magic Banner quest is active
+- Halls of the Blind not being completed by picking up the amulet
+- Shareware: Bucklers not dropping
+- Player animation stuttering
+
+#### Multiplayer
+
+- Potions dropped by Divine shrines not being synced
 
 #### Platforms
 
-- Linux: Add sdl-image dependency for deb package
+- Linux: Add sdl-image dependency for the deb package
 - Linux: Include discord dependency
+- Xbox One: Missing assets
 
 #### Graphics / Audio
 
@@ -57,14 +93,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Incorrect outlines at the right edge of the screen
 - NPC speech continuing after starting a new game
 - Correct various font rendering issues
+- Hide the hit indicator when only one player is in the game
+- Issues with flashing lights
+- Floating number still appearing after death
+- Misaligned automap
 
 #### Controls
 
+- Inconsistencies with placing items into the stash
 - Gamepad: Being stuck in dialogs
 - Gamepad: Unable to use some scrolls directly
 
 #### Stability / Performance / System
 
+- Unable to playback new demo files
 - Various crashes
 
 ### Bugfixes for original Diablo bugs
@@ -72,10 +114,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Gameplay
 
 - Durability overflowing when reloading items
+- Teleporting onto an occupied tile
+- Right-click during dialogs casts spells
 
 #### Graphics / Audio
 
+- Cursor jitter when interacting with the inventory
 - Broken lava tiles
+
+#### Controls
+
+- Inconsistencies with placing items into the inventory
+
+### Bugfixes for original Hellfire bugs
+
+#### Gameplay
+
+- Warping onto a solid tile
 
 ## DevilutionX 1.5.0
 
@@ -214,7 +269,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Gameplay
 
-- Several issues that would cause missiles to miss when they shoudn't
+- Several issues that would cause missiles to miss when they shouldn't
 - Some wall tiles not blocking missiles and vision
 - The player can spawn in an incorrect location on some levels
 - Missing the extra stats at level 50
@@ -230,7 +285,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Deadly Hunter bow not dealing the correct damage
 - Spell remaining unavailable after using a stone shrine until reequipping the staff
 - Fast and faster hit recovery stacking
-- Incorrect calculation for max chages lost with when using the recharge skill
+- Incorrect calculation for max charges lost with when using the recharge skill
 - Not getting XP after damaging a monster if it dies from a trap
 - Fire Arrows causing monsters to stop healing
 
@@ -397,9 +452,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve Korean localization
 - Improve Portuguese localization
 - Improve Romanian localization
-- Improve Russian localization ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq) by Stream)
+- Improve Russian localization ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/ru.mpq) by Stream)
 - Improve Spanish localization
- 
+
 #### Gameplay
 
 - Added a stash at Gillian's house
@@ -577,7 +632,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - PS4: The games fail to launch without a default ini, please see https://github.com/diasurgical/devilutionX/issues/4443
 - Clicking an empty hero slot will crash the game
-- Xbo/s: Missing translation files (download and add [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/devilutionx.mpq))
+- Xbo/s: Missing translation files (download and add [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/devilutionx.mpq))
 
 ## DevilutionX 1.3.0
 
@@ -604,7 +659,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added option for pickup sound
 - Shrine reveals map in a different color than your own exploration
 - Automap has drop shadow for better contrast in some levels
-- Added font with support for Extended Latin, Greek, Coptic, Cyrillic, [Chinese, Japanese, and Korean](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq)
+- Added font with support for Extended Latin, Greek, Coptic, Cyrillic, [Chinese, Japanese, and Korean](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq)
 - Item outline color now matches rarity
 - Use gold color to indicate unique items in stores
 - Improved XP bar visuals
@@ -664,12 +719,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added French
 - Added German
 - Added Italian
-- Added Korean (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
-- Added Polish ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq) by professional voice actors)
+- Added Korean (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq))
+- Added Polish ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/pl.mpq) by professional voice actors)
 - Added Russian
-- Added Simplified Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+- Added Simplified Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq))
 - Added Spanish
-- Added Traditional Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+- Added Traditional Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq))
 
 ### Bugfixes
 
@@ -724,7 +779,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix name filtering
 - Correct minor memory leaks
 - Further reduced memory usage
-- Performance improvments
+- Performance improvements
 - Windows: Only show network errors once
 
 ### Bugfixes for original Diablo bugs
@@ -1352,7 +1407,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### January 14, 2019
 
 - [50% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
-- [#456](https://github.com/diasurgical/devilution/pull/456) Assets can now be loaded directly form disk (no need for MPQ-files when modding)
+- [#456](https://github.com/diasurgical/devilution/pull/456) Assets can now be loaded directly from disk (no need for MPQ-files when modding)
 - [#528](https://github.com/diasurgical/devilution/pull/528) Code ported to C (can still be compiled as C++)
 - [#111](https://github.com/diasurgical/devilution/pull/111) Rich Header no longer contains incorrect sections
 - [#182](https://github.com/diasurgical/devilution/pull/182) defined a [Code Style](https://github.com/diasurgical/devilution/wiki/Code-style-guide) with accompanying clang-format definition
@@ -1374,7 +1429,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### September 18, 2018
 
-- Merge nightly back in to devilution
+- Merge nightly back into devilution
 
 ### September 3, 2018
 

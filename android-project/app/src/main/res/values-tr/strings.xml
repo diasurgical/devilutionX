@@ -1,0 +1,21 @@
+<resources>
+	<string name="app_name" translatable="false">DevilutionX</string>
+	<!-- Strings used for fragments for navigation -->
+
+	<string name="guide_full_installation">Tam sürümü oynayabilmek için orjinal oyunun DIABDAT.MPQ dosyasını Android/data/org.diasurgical.devilutionx/files konumuna atmalısınız.<br/>\n<br/>\nEğer orjinal oyuna sahip değilseniz Diablo\'yu bu linkten satın alabilirsiniz: <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
+	<string name="guide_shareware">Buna alternatif olarak, oyunu denemek için demo sürümünü de indirebilirsiniz.</string>
+	<string name="faq_link">Daha fazla ayrıntı için lütfen kontrol edin: <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Kurulum Talimatları</a></string>
+	<string name="game_data_retry">Tekrar kontrol et</string>
+	<string name="title_activity_data">Oyun Dosyaları</string>
+	<string name="download_spawn">Demo Dosyalarını İndir</string>
+	<string name="missing_game_data">Oyun dosyaları eksik</string>
+	<string name="download_started">İndirme işlemi başladı</string>
+	<string name="shareware_data">Diablo Demo Dosyaları</string>
+	<string name="import_short_label">Dosyaları İçeri Aktar</string>
+	<string name="gamepad_tv_text">Bu oyun, kontrolcü gerektirir.</string>
+	<string name="import_data_info">On the next screen, select files that will be imported into:\n\n%1$s</string>
+	<string name="overwrite_query">Bu dosyalar tekrar yazılacaktır. Emin misiniz?\n\n%1$s</string>
+	<string name="ok_button">Tamam</string>
+	<string name="continue_button">Devam Et</string>
+	<string name="cancel_button">İptal</string>
+</resources>

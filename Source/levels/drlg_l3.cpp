@@ -12,6 +12,7 @@
 #include "monster.h"
 #include "objdat.h"
 #include "objects.h"
+#include "player.h"
 #include "quests.h"
 
 namespace devilution {
@@ -757,8 +758,8 @@ void CreateBlock(int x, int y, int obs, int dir)
 	int x2;
 	int y2;
 
-	int blksizex = GenerateRnd(2) + 3;
-	int blksizey = GenerateRnd(2) + 3;
+	int blksizex = RandomIntBetween(3, 4);
+	int blksizey = RandomIntBetween(3, 4);
 
 	if (dir == 0) {
 		y2 = y - 1;
@@ -1016,14 +1017,14 @@ void River()
 	int riveramt;
 
 	int rivercnt = 0;
-	int trys = 0;
+	int tries = 0;
 	/// BUGFIX: pdir is uninitialized, add code `pdir = -1;`(fixed)
 	int pdir = -1;
 
-	while (trys < 200 && rivercnt < 4) {
+	while (tries < 200 && rivercnt < 4) {
 		bool bail = false;
-		while (!bail && trys < 200) {
-			trys++;
+		while (!bail && tries < 200) {
+			tries++;
 			int rx = 0;
 			int ry = 0;
 			int i = 0;
@@ -1102,10 +1103,10 @@ void River()
 				if (dungeon[rx][ry] == 7) {
 					dircheck = 0;
 					if (dir < 2) {
-						river[2][riveramt] = GenerateRnd(2) + 17;
+						river[2][riveramt] = PickRandomlyAmong({ 17, 18 });
 					}
 					if (dir > 1) {
-						river[2][riveramt] = GenerateRnd(2) + 15;
+						river[2][riveramt] = PickRandomlyAmong({ 15, 16 });
 					}
 					river[0][riveramt] = rx;
 					river[1][riveramt] = ry;
@@ -1368,7 +1369,7 @@ bool CanReplaceTile(uint8_t replace, Point tile)
 		return true;
 	}
 
-	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatibility)
 	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
 		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
 		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
@@ -1502,12 +1503,12 @@ bool PlacePool()
 }
 
 /**
- * @brief Fill lava pools correctly, cause River() only generates the edges.
+ * @brief Fill lava pools correctly, because River() only generates the edges.
  */
 void PoolFix()
 {
 	for (Point tile : PointsInRectangle(Rectangle { { 1, 1 }, { DMAXX - 2, DMAXY - 2 } })) {
-		// Check if the tile is a the default dirt ceiling tile
+		// Check if the tile is the default dirt ceiling tile
 		if (dungeon[tile.x][tile.y] != 8)
 			continue;
 
@@ -1796,21 +1797,16 @@ void Fence()
 	FenceDoorFix();
 }
 
-void LoadQuestSetPieces()
-{
-	if (Quests[Q_ANVIL].IsAvailable())
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
-}
-
 bool PlaceAnvil()
 {
+	std::unique_ptr<uint16_t[]> setPieceData = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
 	// growing the size by 2 to allow a 1 tile border on all sides
-	WorldTileSize areaSize = WorldTileSize(SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1])) + 2;
+	WorldTileSize areaSize = GetDunSize(setPieceData.get()) + 2;
 	WorldTileCoord sx = GenerateRnd(DMAXX - areaSize.width);
 	WorldTileCoord sy = GenerateRnd(DMAXY - areaSize.height);
 
-	for (int trys = 0;; trys++, sx++) {
-		if (trys > 198)
+	for (int tries = 0;; tries++, sx++) {
+		if (tries > 198)
 			return false;
 
 		if (sx == DMAXX - areaSize.width) {
@@ -1832,7 +1828,7 @@ bool PlaceAnvil()
 			break;
 	}
 
-	PlaceDunTiles(pSetPiece.get(), { sx + 1, sy + 1 }, 7);
+	PlaceDunTiles(setPieceData.get(), { sx + 1, sy + 1 }, 7);
 	SetPiece = { { sx, sy }, areaSize };
 
 	for (WorldTilePosition tile : PointsInRectangle(SetPiece)) {
@@ -1993,9 +1989,11 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	LoadQuestSetPieces();
+	if (LevelSeeds[currlevel])
+		SetRndSeed(*LevelSeeds[currlevel]);
 
 	while (true) {
+		LevelSeeds[currlevel] = GetLCGEngineState();
 		InitDungeonFlags();
 		int x1 = GenerateRnd(20) + 10;
 		int y1 = GenerateRnd(20) + 10;
@@ -2028,8 +2026,6 @@ void GenerateLevel(lvl_entry entry)
 		if (PlacePool())
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	if (leveltype == DTYPE_NEST) {
 		PlaceMiniSetRandom(L6ISLE1, 70);

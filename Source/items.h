@@ -6,14 +6,15 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 
 #include "DiabloUI/ui_flags.hpp"
+#include "cursor.h"
 #include "engine.h"
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"
 #include "itemdat.h"
 #include "monster.h"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/string_or_view.hpp"
 
 namespace devilution {
@@ -165,7 +166,8 @@ enum icreateinfo_flag {
 
 enum icreateinfo_flag2 {
 	// clang-format off
-	CF_HELLFIRE = 1,
+	CF_HELLFIRE = 1 << 0,
+	CF_UIDOFFSET = ((1 << 4) - 1) << 1,
 	// clang-format on
 };
 
@@ -187,7 +189,7 @@ struct Item {
 	 */
 	AnimationInfo AnimInfo;
 	bool _iDelFlag = false; // set when item is flagged for deletion, deprecated in 1.02
-	uint8_t _iSelFlag = 0;
+	SelectionRegion selectionRegion = SelectionRegion::None;
 	bool _iPostDraw = false;
 	bool _iIdentified = false;
 	item_quality _iMagical = ITEM_QUALITY_NORMAL;
@@ -303,10 +305,6 @@ struct Item {
 	 */
 	bool isWeapon() const
 	{
-		if (this->isEmpty()) {
-			return false;
-		}
-
 		switch (this->_itype) {
 		case ItemType::Axe:
 		case ItemType::Bow:
@@ -326,10 +324,6 @@ struct Item {
 	 */
 	bool isArmor() const
 	{
-		if (this->isEmpty()) {
-			return false;
-		}
-
 		switch (this->_itype) {
 		case ItemType::HeavyArmor:
 		case ItemType::LightArmor:
@@ -342,12 +336,21 @@ struct Item {
 	}
 
 	/**
+	 * @brief Checks whether this item is gold.
+	 * @return 'True' in case the item is gold and 'False' otherwise.
+	 */
+	bool isGold() const
+	{
+		return this->_itype == ItemType::Gold;
+	}
+
+	/**
 	 * @brief Checks whether this item is a helm.
 	 * @return 'True' in case the item is a helm and 'False' otherwise.
 	 */
 	bool isHelm() const
 	{
-		return !this->isEmpty() && this->_itype == ItemType::Helm;
+		return this->_itype == ItemType::Helm;
 	}
 
 	/**
@@ -356,7 +359,7 @@ struct Item {
 	 */
 	bool isShield() const
 	{
-		return !this->isEmpty() && this->_itype == ItemType::Shield;
+		return this->_itype == ItemType::Shield;
 	}
 
 	/**
@@ -365,10 +368,6 @@ struct Item {
 	 */
 	bool isJewelry() const
 	{
-		if (this->isEmpty()) {
-			return false;
-		}
-
 		switch (this->_itype) {
 		case ItemType::Amulet:
 		case ItemType::Ring:
@@ -454,6 +453,11 @@ struct Item {
 
 	/** @brief Returns the translated item name to display (respects identified flag) */
 	StringOrView getName() const;
+
+	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
+	{
+		return { -CalculateWidth2(sprite.width()), 0 };
+	}
 };
 
 struct ItemGetRecordStruct {
@@ -478,7 +482,7 @@ extern uint8_t ActiveItemCount;
 extern int8_t dItem[MAXDUNX][MAXDUNY];
 extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
-extern bool UniqueItemFlags[128];
+extern DVL_API_FOR_TEST bool UniqueItemFlags[128];
 
 uint8_t GetOutlineColor(const Item &item, bool checkReq);
 bool IsItemAvailable(int i);
@@ -510,15 +514,19 @@ Point GetSuperItemLoc(Point position);
 void GetItemAttrs(Item &item, _item_indexes itemData, int lvl);
 void SetupItem(Item &item);
 Item *SpawnUnique(_unique_items uid, Point position, std::optional<int> level = std::nullopt, bool sendmsg = true, bool exactPosition = false);
+void GetSuperItemSpace(Point position, int8_t inum);
+_item_indexes RndItemForMonsterLevel(int8_t monsterLevel);
+void SetupAllItems(const Player &player, Item &item, _item_indexes idx, uint32_t iseed, int lvl, int uper, bool onlygood, bool pregen, int uidOffset = 0, bool forceNotUnique = false);
+void TryRandomUniqueItem(Item &item, _item_indexes idx, int8_t mLevel, int uper, bool onlygood, bool pregen);
 void SpawnItem(Monster &monster, Point position, bool sendmsg, bool spawn = false);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta, bool spawn = false);
 void RecreateItem(const Player &player, Item &item, _item_indexes idx, uint16_t icreateinfo, uint32_t iseed, int ivalue, bool isHellfire);
-void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, string_view heroName);
+void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, std::string_view heroName);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
-void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, int selflag, bool sendmsg);
+void SpawnQuestItem(_item_indexes itemid, Point position, int randarea, SelectionRegion selectionRegion, bool sendmsg);
 void SpawnRewardItem(_item_indexes itemid, Point position, bool sendmsg);
 void SpawnMapOfDoom(Point position, bool sendmsg);
 void SpawnRuneBomb(Point position, bool sendmsg);
@@ -537,7 +545,7 @@ bool DoOil(Player &player, int cii);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);
-void UseItem(size_t pnum, item_misc_id Mid, SpellID spellID, int spellFrom);
+void UseItem(Player &player, item_misc_id Mid, SpellID spellID, int spellFrom);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensGrave(const Item &item, Point position);
 void SpawnSmith(int lvl);
@@ -568,15 +576,11 @@ bool ApplyOilToItem(Item &item, Player &player);
  */
 void UpdateHellfireFlag(Item &item, const char *identifiedItemName);
 
-#ifdef _DEBUG
-std::string DebugSpawnItem(std::string itemName);
-std::string DebugSpawnUniqueItem(std::string itemName);
-#endif
 /* data */
 
 extern int MaxGold;
 
 extern int8_t ItemCAnimTbl[];
-extern _sfx_id ItemInvSnds[];
+extern SfxID ItemInvSnds[];
 
 } // namespace devilution

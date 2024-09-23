@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 #include <string>
-#include <utility>
-
-#include "utils/stdcompat/string_view.hpp"
+#include <string_view>
 
 namespace devilution {
 
@@ -16,12 +14,12 @@ constexpr char32_t Utf8DecodeError = 0xD83F;
  * Sets `len` to the length of the code point in bytes.
  * Returns `Utf8DecodeError` on error.
  */
-char32_t DecodeFirstUtf8CodePoint(string_view input, std::size_t *len);
+char32_t DecodeFirstUtf8CodePoint(std::string_view input, std::size_t *len);
 
 /**
  * Decodes and removes the first code point from UTF8-encoded input.
  */
-inline char32_t ConsumeFirstUtf8CodePoint(string_view *input)
+inline char32_t ConsumeFirstUtf8CodePoint(std::string_view *input)
 {
 	std::size_t len;
 	const char32_t result = DecodeFirstUtf8CodePoint(*input, &len);
@@ -54,9 +52,26 @@ inline bool IsTrailUtf8CodeUnit(char x)
 }
 
 /**
+ * @brief Returns the number of code units for a code point starting at *src;
+ *
+ * `src` must not be empty.
+ * If `src` does not begin with a UTF-8 code point start byte, returns 1.
+ */
+inline size_t Utf8CodePointLen(const char *src)
+{
+	// This constant is effectively a lookup table for 2-bit keys, where
+	// values represent code point length - 1.
+	// `-1` is so that this method never returns 0, even for invalid values
+	// (which could lead to infinite loops in some code).
+	// Generated with:
+	// ruby -e 'p "0000000000000000000000001111223".reverse.to_i(4).to_s(16)'
+	return ((0x3a55000000000000ULL >> (2 * (static_cast<unsigned char>(*src) >> 3))) & 0x3) + 1;
+}
+
+/**
  * Returns the start byte index of the last code point in a UTF-8 string.
  */
-inline std::size_t FindLastUtf8Symbols(string_view input)
+inline std::size_t FindLastUtf8Symbols(std::string_view input)
 {
 	if (input.empty())
 		return 0;
@@ -73,8 +88,11 @@ inline std::size_t FindLastUtf8Symbols(string_view input)
  * @param source The source string
  * @param bytes Max number of bytes to copy
  */
-void CopyUtf8(char *dest, string_view source, std::size_t bytes);
+void CopyUtf8(char *dest, std::string_view source, std::size_t bytes);
 
 void AppendUtf8(char32_t codepoint, std::string &out);
+
+/** @brief Truncates `str` to at most `len` at a code point boundary. */
+std::string_view TruncateUtf8(std::string_view str, std::size_t len);
 
 } // namespace devilution

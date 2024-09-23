@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-
-#include "utils/stdcompat/string_view.hpp"
+#include <string_view>
 
 #define _(x) LanguageTranslate(x)
 #define ngettext(x, y, z) LanguagePluralTranslate(x, y, z)
@@ -12,7 +11,7 @@
 
 extern std::string forceLocale;
 
-devilution::string_view GetLanguageCode();
+std::string_view GetLanguageCode();
 
 bool HasTranslation(const std::string &locale);
 void LanguageInitialize();
@@ -22,8 +21,8 @@ void LanguageInitialize();
  *
  * @return guaranteed to be null-terminated.
  */
-devilution::string_view LanguageTranslate(const char *key);
-inline devilution::string_view LanguageTranslate(const std::string &key)
+std::string_view LanguageTranslate(const char *key);
+inline std::string_view LanguageTranslate(const std::string &key)
 {
 	return LanguageTranslate(key.c_str());
 }
@@ -33,14 +32,18 @@ inline devilution::string_view LanguageTranslate(const std::string &key)
  *
  * @return guaranteed to be null-terminated if `plural` is.
  */
-devilution::string_view LanguagePluralTranslate(const char *singular, devilution::string_view plural, int count);
+std::string_view LanguagePluralTranslate(const char *singular, std::string_view plural, int count);
 
 /**
  * @brief Returns the translation for the given key and context identifier.
  *
  * @return guaranteed to be null-terminated.
  */
-devilution::string_view LanguageParticularTranslate(devilution::string_view context, devilution::string_view message);
+std::string_view LanguageParticularTranslate(std::string_view context, std::string_view message);
 
 // Chinese and Japanese, and Korean small font is 16px instead of a 12px one for readability.
-bool IsSmallFontTall();
+inline bool IsSmallFontTall()
+{
+	const std::string_view code = GetLanguageCode().substr(0, 2);
+	return code == "zh" || code == "ja" || code == "ko";
+}

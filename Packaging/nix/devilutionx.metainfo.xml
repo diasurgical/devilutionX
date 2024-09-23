@@ -2,8 +2,12 @@
 <component type="desktop-application">
 	<id>org.diasurgical.DevilutionX</id>
 
+	<developer id="org.diasurgical">
+		<name>Diasurgical team</name>
+	</developer>
+
 	<name>DevilutionX</name>
-	<summary>Diablo/Hellfire source port for modern operating systems</summary>
+	<summary>Diablo/Hellfire source port</summary>
 
 	<metadata_license>CC-BY-SA-4.0</metadata_license>
 	<project_license>LicenseRef-proprietary</project_license>
@@ -55,15 +59,62 @@
 	<screenshots>
 		<screenshot type="default">
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen1.png</image>
+			<caption>Diablo gameplay in widescreen</caption>
 		</screenshot>
 		<screenshot>
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen2.png</image>
+			<caption>Diablo gameplay with enemy health bar and XP bar</caption>
 		</screenshot>
 		<screenshot>
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen3.png</image>
+			<caption>Diablo gameplay on Android mobile device</caption>
 		</screenshot>
 	</screenshots>
 	<releases>
+		<release version="1.5.3" date="2024-08-30">
+			<description>
+				<p>This release includes the following updates:</p>
+				<ul>
+					<li>Resolved validation multiplayer errors</li>
+					<li>Added Hungarian translation</li>
+					<li>Added Turkish translation</li>
+					<li>Fixed issue where a line is repeated in the info panel</li>
+					<li>Fixed errors when converting Hellfire saved games</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.3</url>
+		</release>
+		<release version="1.5.2" date="2024-02-04">
+			<description>
+				<p>This release includes the following updates:</p>
+				<ul>
+					<li>Fix issues with joining games due to invalid player data</li>
+					<li>Improve rendering of Chinese/Japanese/Korean texts</li>
+					<li>Fix Hellfire items not saving their identified state</li>
+					<li>Fix stash corrupting when converting a hero between Diablo and Hellfire</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.2</url>
+		</release>
+		<release version="1.5.1" date="2023-09-02">
+			<description>
+				<p>This is a primarily bugfix release, which includes the following updates:</p>
+				<ul>
+					<li>Resolve various gameplay and graphical issues</li>
+					<li>Revamped settings menu for better organization</li>
+					<li>Rectification of crashes identified in version 1.5.0</li>
+					<li>Reduced RAM usage for improved performance</li>
+					<li>Updates to PVP arenas</li>
+					<li>Increased reliability in multiplayer functionality</li>
+					<li>Improved translations</li>
+					<li>Fixed gameplay recording playback issues</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.1</url>
+		</release>
 		<release version="1.5.0" date="2023-06-13">
 			<description>
 				<p>This release includes a lot of features, such as:</p>

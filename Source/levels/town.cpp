@@ -24,20 +24,18 @@ void FillSector(const char *path, int xi, int yy)
 {
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
+	WorldTileSize size = GetDunSize(dunData.get());
 	const uint16_t *tileLayer = &dunData[2];
 
-	for (int j = 0; j < height; j++) {
+	for (WorldTileCoord j = 0; j < size.height; j++) {
 		int xx = xi;
-		for (int i = 0; i < width; i++) {
+		for (WorldTileCoord i = 0; i < size.width; i++) {
 			int v1 = 218;
 			int v2 = 218;
 			int v3 = 218;
 			int v4 = 218;
 
-			int tileId = SDL_SwapLE16(tileLayer[j * width + i]) - 1;
+			int tileId = SDL_SwapLE16(tileLayer[j * size.width + i]) - 1;
 			if (tileId >= 0) {
 				MegaTile mega = pMegaTiles[tileId];
 				v1 = SDL_SwapLE16(mega.micro1);
@@ -115,17 +113,17 @@ void TownCloseHive()
 	dPiece[83][62] = 0x505;
 	dPiece[82][63] = 0x506;
 	dPiece[83][63] = 0x507;
-	dPiece[84][61] = 0x117;
-	dPiece[84][62] = 0x117;
-	dPiece[84][63] = 0x117;
-	dPiece[85][60] = 0x117;
-	dPiece[85][61] = 0x117;
-	dPiece[85][63] = 7;
-	dPiece[85][64] = 7;
-	dPiece[86][60] = 0xd8;
-	dPiece[86][61] = 0x17;
-	dPiece[85][62] = 0x12;
-	dPiece[84][64] = 0x117;
+	dPiece[84][61] = 279;
+	dPiece[84][62] = 280;
+	dPiece[84][63] = 279;
+	dPiece[84][64] = 10;
+	dPiece[85][60] = 11;
+	dPiece[85][61] = 12;
+	dPiece[85][62] = 13;
+	dPiece[85][63] = 14;
+	dPiece[85][64] = 15;
+	dPiece[86][60] = 16;
+	dPiece[86][61] = 17;
 }
 
 /**
@@ -221,7 +219,7 @@ void DrlgTPass3()
 		dungeon[16][35] = 7;
 		dungeon[17][35] = 7;
 		for (int x = 36; x < 46; x++) {
-			FillTile(x, 78, GenerateRnd(4) + 1);
+			FillTile(x, 78, PickRandomlyAmong({ 1, 2, 3, 4 }));
 		}
 	}
 	if (gbIsHellfire) {
@@ -318,17 +316,17 @@ void TownOpenHive()
 	dPiece[83][62] = 0x523;
 	dPiece[82][63] = 0x524;
 	dPiece[83][63] = 0x525;
-	dPiece[84][61] = 0x117;
-	dPiece[84][62] = 0x117;
-	dPiece[84][63] = 0x117;
-	dPiece[85][60] = 0x117;
-	dPiece[85][61] = 0x117;
-	dPiece[85][63] = 7;
-	dPiece[85][64] = 7;
-	dPiece[86][60] = 0xd8;
-	dPiece[86][61] = 0x17;
-	dPiece[85][62] = 0x12;
-	dPiece[84][64] = 0x117;
+	dPiece[84][61] = 279;
+	dPiece[84][62] = 280;
+	dPiece[84][63] = 279;
+	dPiece[84][64] = 10;
+	dPiece[85][60] = 11;
+	dPiece[85][61] = 12;
+	dPiece[85][62] = 13;
+	dPiece[85][63] = 14;
+	dPiece[85][64] = 15;
+	dPiece[86][60] = 16;
+	dPiece[86][61] = 17;
 }
 
 void TownOpenGrave()

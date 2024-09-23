@@ -10,6 +10,9 @@
 
 namespace devilution {
 
+// Defined in player.h, forward declared here to allow for functions which operate in the context of a player.
+struct Player;
+
 #define MAXPORTAL 4
 
 struct Portal {
@@ -24,13 +27,13 @@ extern Portal Portals[MAXPORTAL];
 
 void InitPortals();
 void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype, bool isSetLevel);
-void AddWarpMissile(int i, Point position, bool sync);
+void AddPortalMissile(const Player &player, Point position, bool sync);
 void SyncPortals();
-void AddInTownPortal(int i);
-void ActivatePortal(int i, Point position, int lvl, dungeon_type lvltype, bool sp);
-void DeactivatePortal(int i);
-bool PortalOnLevel(size_t i);
-void RemovePortalMissile(int id);
+void AddPortalInTown(const Player &player);
+void ActivatePortal(const Player &player, Point position, int lvl, dungeon_type lvltype, bool sp);
+void DeactivatePortal(const Player &player);
+bool PortalOnLevel(const Player &player);
+void RemovePortalMissile(const Player &player);
 void SetCurrentPortal(size_t p);
 void GetPortalLevel();
 void GetPortalLvlPos();

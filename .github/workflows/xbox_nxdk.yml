@@ -6,14 +6,17 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [opened, synchronize]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   release:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,10 +38,10 @@ jobs:
 
     - name: Build nxdk
       shell: bash
-      run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 all cxbe
+      run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 CFLAGS=-O2 CXXFLAGS=-O2 all cxbe
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -55,7 +58,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-xbox
         path: build-xbox/pkg/

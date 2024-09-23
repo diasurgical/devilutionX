@@ -6,10 +6,12 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [ opened, synchronize ]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -18,27 +20,29 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Install dependencies
       run: |
         sudo apt-get update -y
-        sudo apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev wget
+        sudo apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libbenchmark-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev wget
     - name: Cache CMake build folder
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build
         key: ${{ github.workflow }}-v1-${{ github.sha }}
         restore-keys: ${{ github.workflow }}-v1-
 
+    # We specify `-DDEVILUTIONX_SYSTEM_BENCHMARK=OFF` to work around the following error:
+    # lto1: fatal error: bytecode stream in file ‘/usr/lib/x86_64-linux-gnu/libbenchmark_main.a’ generated with LTO version 11.2 instead of the expected 11.3
     - name: Build tests
       run: |
-        cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
+        cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON -DDEVILUTIONX_SYSTEM_BENCHMARK=OFF
         wget -nc https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq -P build
         cmake --build build -j $(nproc)
 
@@ -46,6 +50,6 @@ jobs:
       run: cd build && ctest --output-on-failure
 
     - name: Upload results
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         gcov: true

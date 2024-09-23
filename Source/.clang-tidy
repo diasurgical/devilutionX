@@ -46,12 +46,15 @@ Checks: >
   performance-*,
   portability-*,
   readability-*,
+  -readability-identifier-length,
+  -bugprone-easily-swappable-parameters,
   -readability-magic-numbers,
   -misc-non-private-member-variables-in-classes,
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
   -modernize-concat-nested-namespaces,
-  -modernize-avoid-bind
+  -modernize-avoid-bind,
+  -modernize-use-constraints
 
 HeaderFilterRegex: "^(Source|test)\\.h$"
 

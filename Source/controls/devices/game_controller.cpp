@@ -271,7 +271,10 @@ GamepadLayout GameController::getLayout(const SDL_Event &event)
 	case SDL_CONTROLLER_TYPE_VIRTUAL:
 #endif
 	case SDL_CONTROLLER_TYPE_UNKNOWN:
-		return GamepadLayout::Generic;
+#if SDL_VERSION_ATLEAST(2, 30, 0)
+	case SDL_CONTROLLER_TYPE_MAX:
+#endif
+		break;
 	}
 #endif
 	return GamepadLayout::Generic;

@@ -30,8 +30,8 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelConnDlg;
 #define DESCRIPTION_WIDTH 205
 
 void SelconnEsc();
-void SelconnFocus(int value);
-void SelconnSelect(int value);
+void SelconnFocus(size_t value);
+void SelconnSelect(size_t value);
 
 void SelconnLoad()
 {
@@ -81,7 +81,7 @@ void SelconnLoad()
 	SDL_Rect rect9 = { (Sint16)(uiPosition.x + 299), (Sint16)(uiPosition.y + 427), 140, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect9, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	SDL_Rect rect10 = { (Sint16)(uiPosition.x + 454), (Sint16)(uiPosition.y + 427), 140, 35 };
+	SDL_Rect rect10 = { (Sint16)(uiPosition.x + 454), (Sint16)(uiPosition.y + 427), 144, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("Cancel"), &UiFocusNavigationEsc, rect10, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
 	UiInitList(SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg, true);
@@ -102,7 +102,7 @@ void SelconnEsc()
 	selconn_EndMenu = true;
 }
 
-void SelconnFocus(int value)
+void SelconnFocus(size_t value)
 {
 	int players = MAX_PLRS;
 	switch (vecConnItems[value]->m_value) {
@@ -124,7 +124,7 @@ void SelconnFocus(int value)
 	CopyUtf8(selconn_Description, WordWrapString(selconn_Description, DESCRIPTION_WIDTH), sizeof(selconn_Description));
 }
 
-void SelconnSelect(int value)
+void SelconnSelect(size_t value)
 {
 	provider = vecConnItems[value]->m_value;
 

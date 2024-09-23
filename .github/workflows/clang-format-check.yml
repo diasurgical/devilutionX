@@ -6,10 +6,12 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [ opened, synchronize ]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,19 +22,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Formatting Check (Source)
-      uses: jidicula/clang-format-action@v4.11.0
+      uses: jidicula/clang-format-action@v4.13.0
       with:
         clang-format-version: '13'
         check-path: 'Source'
         fallback-style: 'webkit'
 
     - name: Formatting Check (test)
-      uses: jidicula/clang-format-action@v4.11.0
+      uses: jidicula/clang-format-action@v4.13.0
       with:
         clang-format-version: '13'
         check-path: 'test'

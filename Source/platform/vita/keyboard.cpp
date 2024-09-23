@@ -83,7 +83,7 @@ static int vita_input_thread(void *ime_buffer)
 	return 0;
 }
 
-static int vita_keyboard_get(devilution::string_view guide_text, devilution::string_view initial_text, unsigned max_len, SceWChar16 *buf)
+static int vita_keyboard_get(std::string_view guide_text, std::string_view initial_text, unsigned max_len, SceWChar16 *buf)
 {
 	SceWChar16 title[SCE_IME_DIALOG_MAX_TITLE_LENGTH];
 	SceWChar16 text[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
@@ -116,7 +116,7 @@ static int vita_keyboard_get(devilution::string_view guide_text, devilution::str
 	return 1;
 }
 
-void vita_start_text_input(devilution::string_view guide_text, devilution::string_view initial_text, unsigned max_length)
+void vita_start_text_input(std::string_view guide_text, std::string_view initial_text, unsigned max_length)
 {
 	SceWChar16 ime_buffer[SCE_IME_DIALOG_MAX_TEXT_LENGTH];
 	if (vita_keyboard_get(guide_text, initial_text, max_length, ime_buffer)) {

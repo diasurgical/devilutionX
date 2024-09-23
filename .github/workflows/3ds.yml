@@ -1,0 +1,90 @@
+---
+name: Nintendo 3DS
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitarm:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            ffmpeg \
+            gettext
+
+      - name: Get external dependencies
+        run: |
+          wget https://github.com/diasurgical/bannertool/releases/download/1.2.0/bannertool.zip
+          unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
+          wget https://github.com/3DSGuy/Project_CTR/releases/download/makerom-v0.18/makerom-v0.18-ubuntu_x86_64.zip
+          unzip "makerom-v0.18-ubuntu_x86_64.zip" "makerom" -d "/opt/devkitpro/tools/bin"
+          chmod a+x /opt/devkitpro/tools/bin/makerom
+
+      - name: Configure CMake
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake
+
+      - name: Build DevilutionX
+        run: cmake --build build
+
+      - name: Upload 3dsx Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.3dsx
+          path: ./build/devilutionx.3dsx
+
+      - name: Upload cia Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.cia
+          path: ./build/devilutionx.cia
+
+      - name: Update Release 3dsx
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          asset_name: devilutionx-3ds.3dsx
+          file: ./build/devilutionx.3dsx
+          overwrite: true
+
+      - name: Update Release cia
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          asset_name: devilutionx-3ds.cia
+          file: ./build/devilutionx.cia
+          overwrite: true
+...

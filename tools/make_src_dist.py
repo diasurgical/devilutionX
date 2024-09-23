@@ -36,12 +36,12 @@ import sys
 # 1. Uncommon in package managers (sdl_audiolib and simpleini).
 # 2. Require devilutionx forks (all others).
 _DEPS = ['asio', 'libmpq', 'libsmackerdec',
-         'libzt', 'sdl_audiolib', 'simpleini']
+         'libzt', 'sdl_audiolib', 'simpleini', 'unordered_dense']
 _ALWAYS_VENDORED_DEPS = ['asio', 'libmpq', 'libsmackerdec', 'libzt']
 
 # These dependencies are not vendored by default.
 # Run with `--fully_vendored` to include them.
-_DEPS_NOT_VENDORED_BY_DEFAULT = ['googletest', 'sdl2', 'sdl_image',
+_DEPS_NOT_VENDORED_BY_DEFAULT = ['googletest', 'benchmark', 'sdl2', 'sdl_image',
                                  'libpng', 'libfmt', 'bzip2', 'libsodium']
 
 _ROOT_DIR = pathlib.Path(__file__).resolve().parent.parent
@@ -101,7 +101,7 @@ def main():
 		src = src_bytes.decode()
 		dst_path = paths.archive_top_level_dir.joinpath(src)
 		dst_path.parent.mkdir(parents=True, exist_ok=True)
-		if re.search('(^|/)\.gitkeep$', src):
+		if re.search(r'(^|/)\.gitkeep$', src):
 			continue
 		shutil.copy2(_ROOT_DIR.joinpath(src), dst_path, follow_symlinks=False)
 

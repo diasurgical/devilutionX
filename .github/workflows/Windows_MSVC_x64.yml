@@ -6,10 +6,19 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [ opened, synchronize ]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
+
+permissions:
+  contents: write
+
+env:
+  VCPKG_FEATURE_FLAGS: dependencygraph
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,7 +29,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -31,9 +40,9 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Restore or setup vcpkg
-      uses: lukka/run-vcpkg@v11
+      uses: lukka/run-vcpkg@v11.5
       with:
-        vcpkgGitCommitId: '78b61582c9e093fda56a01ebb654be15a0033897'
+        vcpkgGitCommitId: '29b2ea2d4b6197e66ef346e62ccbba35b55b7de5'
 
     - name: Fetch test data
       run: |
@@ -52,7 +61,7 @@ jobs:
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx.exe
         path: |

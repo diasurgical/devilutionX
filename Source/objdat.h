@@ -6,7 +6,9 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
+#include "cursor.h"
 #include "levels/gendung.h"
 #include "utils/enum_traits.h"
 
@@ -33,74 +35,8 @@ enum theme_id : int8_t {
 	THEME_NONE = -1,
 };
 
-enum object_graphic_id : int8_t {
-	OFILE_L1BRAZ,
-	OFILE_L1DOORS,
-	OFILE_LEVER,
-	OFILE_CHEST1,
-	OFILE_CHEST2,
-	OFILE_BANNER,
-	OFILE_SKULPILE,
-	OFILE_SKULFIRE,
-	OFILE_SKULSTIK,
-	OFILE_CRUXSK1,
-	OFILE_CRUXSK2,
-	OFILE_CRUXSK3,
-	OFILE_BOOK1,
-	OFILE_BOOK2,
-	OFILE_ROCKSTAN,
-	OFILE_ANGEL,
-	OFILE_CHEST3,
-	OFILE_BURNCROS,
-	OFILE_CANDLE2,
-	OFILE_NUDE2,
-	OFILE_SWITCH4,
-	OFILE_TNUDEM,
-	OFILE_TNUDEW,
-	OFILE_TSOUL,
-	OFILE_L2DOORS,
-	OFILE_WTORCH4,
-	OFILE_WTORCH3,
-	OFILE_SARC,
-	OFILE_FLAME1,
-	OFILE_PRSRPLT1,
-	OFILE_TRAPHOLE,
-	OFILE_MINIWATR,
-	OFILE_WTORCH2,
-	OFILE_WTORCH1,
-	OFILE_BCASE,
-	OFILE_BSHELF,
-	OFILE_WEAPSTND,
-	OFILE_BARREL,
-	OFILE_BARRELEX,
-	OFILE_LSHRINEG,
-	OFILE_RSHRINEG,
-	OFILE_BLOODFNT,
-	OFILE_DECAP,
-	OFILE_PEDISTL,
-	OFILE_L3DOORS,
-	OFILE_PFOUNTN,
-	OFILE_ARMSTAND,
-	OFILE_GOATSHRN,
-	OFILE_CAULDREN,
-	OFILE_MFOUNTN,
-	OFILE_TFOUNTN,
-	OFILE_ALTBOY,
-	OFILE_MCIRL,
-	OFILE_BKSLBRNT,
-	OFILE_MUSHPTCH,
-	OFILE_LZSTAND,
-	OFILE_POD,
-	OFILE_PODEX,
-	OFILE_L5DOORS,
-	OFILE_L5LEVER,
-	OFILE_L5CANDLE,
-	OFILE_L5SARC,
-	OFILE_URN,
-	OFILE_URNEX,
-	OFILE_L5BOOKS,
-	OFILE_NULL = -1,
-};
+// Index into ObjMasterLoadList.
+using object_graphic_id = uint8_t;
 
 enum _object_id : int8_t {
 	OBJ_L1LIGHT,
@@ -212,6 +148,8 @@ enum _object_id : int8_t {
 	OBJ_L5RDOOR,
 	OBJ_L5LEVER,
 	OBJ_L5SARC,
+
+	OBJ_LAST = OBJ_L5SARC,
 	OBJ_NULL = -1,
 };
 
@@ -244,6 +182,7 @@ enum quest_id : int8_t {
 };
 
 enum class ObjectDataFlags : uint8_t {
+	None = 0,
 	Animated = 1U,
 	Solid = 1U << 1,
 	MissilesPassThrough = 1U << 2,
@@ -264,7 +203,7 @@ struct ObjectData {
 	uint8_t animDelay; // Tick length of each frame in the current animation
 	uint8_t animLen;   // Number of frames in current animation
 	uint8_t animWidth;
-	int8_t selFlag; // TODO Create enum
+	SelectionRegion selectionRegion;
 
 	[[nodiscard]] bool isAnimated() const
 	{
@@ -298,7 +237,9 @@ struct ObjectData {
 };
 
 extern const _object_id ObjTypeConv[];
-extern const ObjectData AllObjects[109];
-extern const char *const ObjMasterLoadList[];
+extern std::vector<ObjectData> AllObjects;
+extern std::vector<std::string> ObjMasterLoadList;
+
+void LoadObjectData();
 
 } // namespace devilution

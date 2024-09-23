@@ -11,7 +11,7 @@ For the full game:
   - Optional: If you want to also play the Hellfire expansion, copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq into this fodler aswell
 
 For the free shareware version:
-  - Get the spawn.mpq (https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq)
+  - Get the spawn.mpq (https://github.com/diasurgical/devilutionx-assets/releases/latest/download/spawn.mpq)
   - Copy the spawn.mpq into this folder
 
 Controls

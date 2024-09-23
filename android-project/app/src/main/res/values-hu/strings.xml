@@ -1,0 +1,21 @@
+<resources>
+	<string name="app_name" translatable="false">DevilutionX</string>
+	<!-- Strings used for fragments for navigation -->
+
+	<string name="guide_full_installation">Ahhoz, hogy a teljes változattal játssz, másold a DIABDAT.MPQ fájlt az eredi játék mappájából a Android/data/org.diasurgical.devilutionx/files mappába a készülékeden. Ehhez egy USB-kábel lehet szükséges.<br/>\n<br/>\nAmennyiben még nincs meg az eredeti játék, megvásárolhatod a <a href="https://www.gog.com/game/diablo">GOG.com</a> nevű oldalon.</string>
+	<string name="guide_shareware">Máskülönben használhatod az úgynevezett Spawn változatot, amely a játék próbaváltozata.</string>
+	<string name="faq_link">Lásd még a <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">telepítési útmutatót</a> további részletekért.</string>
+	<string name="game_data_retry">Próbáld újra</string>
+	<string name="title_activity_data">Játék adatok</string>
+	<string name="download_spawn">Próbaváltozat letöltése</string>
+	<string name="missing_game_data">A játék adatok hiányoznak</string>
+	<string name="download_started">Letöltés megkezdődött</string>
+	<string name="shareware_data">Próbaváltozat adatfájl</string>
+	<string name="import_short_label">Adat importálása</string>
+	<string name="gamepad_tv_text">A játékhoz gamepad-re van szükség</string>
+	<string name="import_data_info">A következő képernyőn válaszd ki az importálandó fájlokat:\n\n%1$s</string>
+	<string name="overwrite_query">Az alábbi fájlok felül lesznek írva. Ez így rendben lesz?\n\n%1$s</string>
+	<string name="ok_button">Rendben</string>
+	<string name="continue_button">Folytatás</string>
+	<string name="cancel_button">Mégse</string>
+</resources>

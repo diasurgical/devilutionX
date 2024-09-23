@@ -75,4 +75,29 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/full_guide" />
+
+	<ImageView
+		android:id="@+id/gamepad_icon"
+		android:layout_width="247dp"
+		android:layout_height="154dp"
+		android:layout_marginTop="16dp"
+		android:src="@drawable/gamepad"
+		android:visibility="gone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/gamepad_text" />
+
+	<TextView
+		android:id="@+id/gamepad_text"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="16dp"
+		android:layout_marginTop="16dp"
+		android:layout_marginEnd="16dp"
+		android:text="@string/gamepad_tv_text"
+		android:visibility="gone"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/download_button" />
+
 </android.support.constraint.ConstraintLayout>

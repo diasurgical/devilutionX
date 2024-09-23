@@ -14,13 +14,15 @@
 
 namespace devilution {
 
+// Defined in player.h, forward declared here to allow for functions which operate in the context of a player.
+struct Player;
+
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS 4
 
 struct GameData {
 	int32_t size;
-	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
-	uint32_t dwSeed;
+	uint8_t reserved[4];
 	uint32_t programid;
 	uint8_t versionMajor;
 	uint8_t versionMinor;
@@ -32,6 +34,8 @@ struct GameData {
 	uint8_t bCowQuest;
 	uint8_t bFriendlyFire;
 	uint8_t fullQuests;
+	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
+	uint32_t gameSeed[4];
 };
 
 /* @brief Contains info of running public game (for game list browsing) */
@@ -56,11 +60,11 @@ extern uint32_t player_state[MAX_PLRS];
 extern bool IsLoopback;
 
 void InitGameInfo();
-void NetSendLoPri(int playerId, const byte *data, size_t size);
-void NetSendHiPri(int playerId, const byte *data, size_t size);
-void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size);
+void NetSendLoPri(uint8_t playerId, const std::byte *data, size_t size);
+void NetSendHiPri(uint8_t playerId, const std::byte *data, size_t size);
+void multi_send_msg_packet(uint32_t pmask, const std::byte *data, size_t size);
 void multi_msg_countdown();
-void multi_player_left(int pnum, int reason);
+void multi_player_left(uint8_t pnum, int reason);
 void multi_net_ping();
 
 /**
@@ -68,9 +72,9 @@ void multi_net_ping();
  */
 bool multi_handle_delta();
 void multi_process_network_packets();
-void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const byte *data, size_t size);
+void multi_send_zero_packet(uint8_t pnum, _cmd_id bCmd, const std::byte *data, size_t size);
 void NetClose();
 bool NetInit(bool bSinglePlayer);
-void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv);
+void recv_plrinfo(Player &player, const TCmdPlrInfoHdr &header, bool recv);
 
 } // namespace devilution

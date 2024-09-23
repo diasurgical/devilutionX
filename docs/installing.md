@@ -4,10 +4,10 @@ First, you will need access to the game's MPQ files.
 
 - Locate `DIABDAT.MPQ` on your CD, or in the [GoG](https://www.gog.com/game/diablo) installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)).
 - For the Diablo: Hellfire expansion you will also need `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq`.
-- DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v3/devilutionx.mpq) which is required to run the game properly.
-- Chinese, Korean, and Japanese users will also need [fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v3/fonts.mpq) or the text will be missing.
-- For Polish voice support you need [pl.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq)
-- For Russian voice support you need [ru.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq)
+- DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/devilutionx.mpq) which is required to run the game properly.
+- Chinese, Korean, and Japanese users will also need [fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/fonts.mpq) or the text will be missing.
+- For Polish voice support you need [pl.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/pl.mpq)
+- For Russian voice support you need [ru.mpq](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/ru.mpq)
 
 Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) for your system (if available) and extract the contents to a location of your choosing, or [build from source](building.md). Then follow the system-specific instructions below.
 
@@ -32,6 +32,10 @@ Open the device's internal storage, and navigate to `Android/data/org.diasurgica
 When the transfer is done you can disconnect your device and press "Check again" in the App to start the game.
 
 ![image](https://user-images.githubusercontent.com/204594/139541657-d8c1197d-fbef-42b6-a34f-2b17f1ceab5f.png)
+
+**Troubleshooting**: If you encounter some trouble getting the MPQ files onto your Android device, you can refer to
+[our guide](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer#android) for extracting the MPQ files on the Android device itself.
+Note that Inno Setup Extractor is only available for Android 8+ and the Import Data feature is only available for Android 7.1.1+.
 
 </details>
 
@@ -152,7 +156,7 @@ If you'd like to use this option, scan the QR code below.
 - Press `View` on DevilutionX and select `Manage game and add-ons`
 - Go to `File info` and note `FullName`
 - Copy the MPQ files to `/LOCALFOLDER/*FullName*/LocalState/diasurgical/devilution` using a FTP-client on your PC
-  
+
 ![image](https://user-images.githubusercontent.com/204594/187104388-fc5648da-5629-4335-ae8b-403600721e2a.png)
 
 </details>

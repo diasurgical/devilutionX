@@ -42,7 +42,7 @@ public class SDLControllerManager
 
     public static void initialize() {
         if (mJoystickHandler == null) {
-            if (Build.VERSION.SDK_INT >= 19) {
+            if (Build.VERSION.SDK_INT >= 19 /* Android 4.4 (KITKAT) */) {
                 mJoystickHandler = new SDLJoystickHandler_API19();
             } else {
                 mJoystickHandler = new SDLJoystickHandler_API16();
@@ -50,7 +50,7 @@ public class SDLControllerManager
         }
 
         if (mHapticHandler == null) {
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (Build.VERSION.SDK_INT >= 26 /* Android 8.0 (O) */) {
                 mHapticHandler = new SDLHapticHandler_API26();
             } else {
                 mHapticHandler = new SDLHapticHandler();
@@ -546,13 +546,15 @@ class SDLHapticHandler {
             if (haptic == null) {
                 InputDevice device = InputDevice.getDevice(deviceIds[i]);
                 Vibrator vib = device.getVibrator();
-                if (vib.hasVibrator()) {
-                    haptic = new SDLHaptic();
-                    haptic.device_id = deviceIds[i];
-                    haptic.name = device.getName();
-                    haptic.vib = vib;
-                    mHaptics.add(haptic);
-                    SDLControllerManager.nativeAddHaptic(haptic.device_id, haptic.name);
+                if (vib != null) {
+                    if (vib.hasVibrator()) {
+                        haptic = new SDLHaptic();
+                        haptic.device_id = deviceIds[i];
+                        haptic.name = device.getName();
+                        haptic.vib = vib;
+                        mHaptics.add(haptic);
+                        SDLControllerManager.nativeAddHaptic(haptic.device_id, haptic.name);
+                    }
                 }
             }
         }
@@ -809,7 +811,7 @@ class SDLGenericMotionListener_API26 extends SDLGenericMotionListener_API24 {
 
     @Override
     public boolean supportsRelativeMouse() {
-        return (!SDLActivity.isDeXMode() || (Build.VERSION.SDK_INT >= 27));
+        return (!SDLActivity.isDeXMode() || Build.VERSION.SDK_INT >= 27 /* Android 8.1 (O_MR1) */);
     }
 
     @Override
@@ -819,7 +821,7 @@ class SDLGenericMotionListener_API26 extends SDLGenericMotionListener_API24 {
 
     @Override
     public boolean setRelativeMouseEnabled(boolean enabled) {
-        if (!SDLActivity.isDeXMode() || (Build.VERSION.SDK_INT >= 27)) {
+        if (!SDLActivity.isDeXMode() || Build.VERSION.SDK_INT >= 27 /* Android 8.1 (O_MR1) */) {
             if (enabled) {
                 SDLActivity.getContentView().requestPointerCapture();
             } else {

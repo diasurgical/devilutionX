@@ -60,7 +60,7 @@ OwnedClxSpriteSheet LoadMultipleCl2Sheet(tl::function_ref<const char *(size_t)> 
 		if (!handle.ok() || !handle.read(&data[accumulatedSize], size)) {
 			FailedToOpenFileError(paths[i].data(), handle.error());
 		}
-		WriteLE32(&data[i * 4], accumulatedSize);
+		WriteLE32(&data[i * 4], static_cast<uint32_t>(accumulatedSize));
 		accumulatedSize += size;
 	}
 #ifdef UNPACKED_MPQS

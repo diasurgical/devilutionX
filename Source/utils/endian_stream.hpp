@@ -13,7 +13,7 @@ namespace devilution {
 
 inline void LoggedFread(void *buffer, size_t size, FILE *stream)
 {
-	if (std::fread(buffer, size, 1, stream) != 1) {
+	if (std::fread(buffer, size, 1, stream) != 1 && !std::feof(stream)) {
 		LogError("fread failed: {}", std::strerror(errno));
 	}
 }

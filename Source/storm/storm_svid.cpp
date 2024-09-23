@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <optional>
 
 #include <SmackerDecoder.h>
 
@@ -19,7 +20,6 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_wrap.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace {
@@ -285,7 +285,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	if (renderer != nullptr) {
 		int renderWidth = static_cast<int>(SVidWidth);
 		int renderHeight = static_cast<int>(SVidHeight);
-		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, renderWidth, renderHeight);
+		texture = SDLWrap::CreateTexture(renderer, DEVILUTIONX_DISPLAY_TEXTURE_FORMAT, SDL_TEXTUREACCESS_STREAMING, renderWidth, renderHeight);
 		if (SDL_RenderSetLogicalSize(renderer, renderWidth, renderHeight) <= -1) {
 			ErrSdl();
 		}

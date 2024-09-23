@@ -32,7 +32,7 @@ constexpr float LogBase = 10.0;
  * Picked so that a volume change of -10 dB results in half perceived loudness.
  * VolumeScale = -1000 / log(0.5)
  */
-constexpr float VolumeScale = 3321.9281;
+constexpr float VolumeScale = 3321.9281F;
 
 /**
  * Min and max volume range, in millibel.
@@ -140,7 +140,7 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 	isMp3_ = isMp3;
 	file_data_ = std::move(fileData);
 	file_data_size_ = dwBytes;
-	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);
+	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), static_cast<int>(dwBytes));
 	if (buf == nullptr) {
 		return -1;
 	}
@@ -170,7 +170,7 @@ int SoundSample::GetLength() const
 {
 	if (!stream_)
 		return 0;
-	return std::chrono::duration_cast<std::chrono::milliseconds>(stream_->duration()).count();
+	return static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(stream_->duration()).count());
 }
 
 } // namespace devilution

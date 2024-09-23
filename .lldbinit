@@ -1,0 +1,4 @@
+script topsrcdir = topsrcdir if "topsrcdir" in locals() else os.getcwd()
+script sys.path.append(os.path.join(topsrcdir, "tools/lldb"))
+script import devilution_lldb
+script devilution_lldb.init()

@@ -6,8 +6,9 @@
 #pragma once
 
 #include <cstdint>
-#include <map>
 #include <vector>
+
+#include <ankerl/unordered_dense.h>
 
 #include "engine/point.hpp"
 #include "items.h"
@@ -21,7 +22,7 @@ public:
 	static constexpr StashCell EmptyCell = -1;
 
 	void RemoveStashItem(StashCell iv);
-	std::map<unsigned, StashGrid> stashGrids;
+	ankerl::unordered_dense::map<unsigned, StashGrid> stashGrids;
 	std::vector<Item> stashList;
 	int gold;
 	bool dirty = false;
@@ -88,9 +89,9 @@ void CheckStashButtonPress(Point mousePosition);
 
 void StartGoldWithdraw();
 void WithdrawGoldKeyPress(SDL_Keycode vkey);
-void DrawGoldWithdraw(const Surface &out, int amount);
+void DrawGoldWithdraw(const Surface &out);
 void CloseGoldWithdraw();
-void GoldWithdrawNewText(string_view text);
+bool HandleGoldWithdrawTextInputEvent(const SDL_Event &event);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's stash.

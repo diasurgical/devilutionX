@@ -32,7 +32,7 @@ enum clicktype : int8_t {
 };
 
 /**
- * @brief Specifices what game logic step is currently executed
+ * @brief Specifies what game logic step is currently executed
  */
 enum class GameLogicStep : uint8_t {
 	None,
@@ -58,7 +58,8 @@ enum class MouseActionType : uint8_t {
 	OperateObject,
 };
 
-extern uint32_t glSeedTbl[NUMLEVELS];
+extern uint32_t DungeonSeeds[NUMLEVELS];
+extern std::optional<uint32_t> LevelSeeds[NUMLEVELS];
 extern Point MousePosition;
 extern DVL_API_FOR_TEST bool gbRunGame;
 extern bool gbRunGameResult;
@@ -117,10 +118,10 @@ struct QuickMessage {
 	const char *const message;
 };
 
-constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
+constexpr size_t QUICK_MESSAGE_OPTIONS = 10;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 /**
- * @brief Specifices what game logic step is currently executed
+ * @brief Specifies what game logic step is currently executed
  */
 extern GameLogicStep gGameLogicStep;
 

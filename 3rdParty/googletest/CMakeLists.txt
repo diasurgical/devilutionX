@@ -1,10 +1,9 @@
 include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
-# branch: v1.12.x (master no longer supports C++11)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/58d77fa8070e8cec2dc1ed015d66b454c8d78850.tar.gz
-  URL_HASH MD5=22bdde3b84a8c506e7aba7b3c97dc760
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+  URL_HASH MD5=c8340a482851ef6a3fe618a082304cfc
 )
 
 set(INSTALL_GTEST OFF)

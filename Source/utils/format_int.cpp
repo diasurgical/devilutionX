@@ -1,7 +1,8 @@
 #include "utils/format_int.hpp"
 
+#include <string_view>
+
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {
@@ -23,7 +24,7 @@ std::string FormatInteger(int n)
 		return out;
 	}
 
-	const string_view separator = _(/* TRANSLATORS: Thousands separator */ ",");
+	const std::string_view separator = _(/* TRANSLATORS: Thousands separator */ ",");
 	out.reserve(len + separator.size() * (numLen - 1) / GroupSize);
 	if (n < 0) {
 		out += '-';
@@ -36,7 +37,7 @@ std::string FormatInteger(int n)
 	out.append(begin, mlen);
 	begin += mlen;
 	for (; begin != end; begin += GroupSize) {
-		AppendStrView(out, separator);
+		out.append(separator);
 		out.append(begin, GroupSize);
 	}
 

@@ -13,6 +13,7 @@
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"
+#include "player.h"
 
 namespace devilution {
 
@@ -158,13 +159,21 @@ void ApplyShadowsPatterns()
 	}
 }
 
-void LoadQuestSetPieces()
+void InitSetPiece()
 {
+	std::unique_ptr<uint16_t[]> setPieceData;
+
 	if (Quests[Q_WARLORD].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
 	} else if (currlevel == 15 && UseMultiplayerQuests()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
+	} else {
+		return; // no setpiece needed for this level
 	}
+
+	WorldTilePosition setPiecePosition = SetPieceRoom.position;
+	PlaceDunTiles(setPieceData.get(), setPiecePosition, 6);
+	SetPiece = { setPiecePosition, GetDunSize(setPieceData.get()) };
 }
 
 void InitDungeonFlags()
@@ -304,7 +313,7 @@ void MakeDmt()
 {
 	for (int y = 0; y < DMAXY - 1; y++) {
 		for (int x = 0; x < DMAXX - 1; x++) {
-			int val = (DungeonMask.test(x + 1, y + 1) << 3) | (DungeonMask.test(x, y + 1) << 2) | (DungeonMask.test(x + 1, y) << 1) | DungeonMask.test(x, y);
+			int val = (DungeonMask.test(x + 1, y + 1) << 3) | (DungeonMask.test(x, y + 1) << 2) | (DungeonMask.test(x + 1, y) << 1) | (DungeonMask.test(x, y) << 0);
 			dungeon[x][y] = L4ConvTbl[val];
 		}
 	}
@@ -846,7 +855,7 @@ void Substitution()
 			if (FlipCoin(10)) {
 				uint8_t c = dungeon[x][y];
 				if (L4BTYPES[c] == 6 && !Protected.test(x, y)) {
-					dungeon[x][y] = GenerateRnd(3) + 95;
+					dungeon[x][y] = PickRandomlyAmong({ 95, 96, 97 });
 				}
 			}
 		}
@@ -1130,13 +1139,15 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	LoadQuestSetPieces();
+	if (LevelSeeds[currlevel])
+		SetRndSeed(*LevelSeeds[currlevel]);
 
 	while (true) {
 		DRLG_InitTrans();
 
 		constexpr size_t Minarea = 692;
 		do {
+			LevelSeeds[currlevel] = GetLCGEngineState();
 			InitDungeonFlags();
 			FirstRoom();
 			CloseOuterBorders();
@@ -1160,15 +1171,13 @@ void GenerateLevel(lvl_entry entry)
 		AddWall();
 		FloodTransparencyValues(6);
 		FixTransparency();
-		SetSetPieceRoom(SetPieceRoom.position, 6);
+		InitSetPiece();
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
 		}
 		if (PlaceStairs(entry))
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	GeneralFix();
 

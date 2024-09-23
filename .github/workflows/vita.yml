@@ -1,0 +1,67 @@
+---
+name: Sony PlayStation Vita
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    types: [opened, synchronize]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: vitasdk/vitasdk:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          apk add \
+            gettext \
+            git \
+            samurai
+
+      - name: Configure CMake
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake
+
+      - name: Build DevilutionX
+        run: cmake --build build
+
+      - name: Upload Package
+        if: ${{ !env.ACT }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: devilutionx.vpk
+          path: ./build/devilutionx.vpk
+
+      - name: Update Release
+        if: ${{ github.event_name == 'release' && !env.ACT }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          asset_name: devilutionx-vita.vpk
+          file: ./build/devilutionx.vpk
+          overwrite: true
+...

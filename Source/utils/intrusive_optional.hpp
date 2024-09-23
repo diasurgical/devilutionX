@@ -1,10 +1,10 @@
 #pragma once
 
+#include <optional>
 #include <type_traits>
 #include <utility>
 
 #include "appfat.h"
-#include "utils/stdcompat/optional.hpp"
 
 /// An optional that uses a field of the stored class and some value to store nullopt.
 #define DEFINE_INTRUSIVE_OPTIONAL_IMPL(OPTIONAL_CLASS, VALUE_CLASS, FIELD, NULL_VALUE, CONSTEXPR) \
@@ -30,7 +30,10 @@ public:                                                                         
 	}                                                                                             \
                                                                                                   \
 	template <class U = VALUE_CLASS>                                                              \
-	CONSTEXPR OPTIONAL_CLASS &operator=(VALUE_CLASS &&value)                                      \
+	CONSTEXPR std::enable_if_t<                                                                   \
+	    !std::is_same_v<OPTIONAL_CLASS, std::remove_cv_t<std::remove_reference_t<U>>>,            \
+	    OPTIONAL_CLASS> &                                                                         \
+	operator=(U &&value) noexcept                                                                 \
 	{                                                                                             \
 		value_ = std::forward<U>(value);                                                          \
 		return *this;                                                                             \
@@ -66,9 +69,14 @@ public:                                                                         
 		return &value_;                                                                           \
 	}                                                                                             \
                                                                                                   \
-	CONSTEXPR operator bool() const                                                               \
+	[[nodiscard]] CONSTEXPR bool has_value() const                                                \
 	{                                                                                             \
 		return value_.FIELD != NULL_VALUE;                                                        \
+	}                                                                                             \
+                                                                                                  \
+	CONSTEXPR operator bool() const                                                               \
+	{                                                                                             \
+		return has_value();                                                                       \
 	}                                                                                             \
                                                                                                   \
 private:                                                                                          \

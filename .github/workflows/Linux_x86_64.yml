@@ -6,14 +6,17 @@ on:
       - master
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   pull_request:
     types: [opened, synchronize]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   release:
     types: [published]
     paths-ignore:
       - '*.md'
+      - 'docs/**'
   workflow_dispatch:
 
 concurrency:
@@ -25,19 +28,33 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
+    - name: Add gcc repo
+      run: sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+
+    # Installs dependencies and runs `sudo apt-get update` as part of it.
+    - name: Install dependencies
+      run: Packaging/nix/debian-host-prep.sh --no-gcc
+
+    - name: Install gcc-13
+      run: |
+        sudo apt-get install -yq --no-install-recommends gcc-13 g++-13 && \
+        sudo update-alternatives --install \
+          /usr/bin/gcc gcc /usr/bin/gcc-13 13 \
+          --slave /usr/bin/g++ g++ /usr/bin/g++-13
+
     - name: Create Build Environment
-      run: Packaging/nix/debian-host-prep.sh
+      run: Packaging/nix/debian-host-prep.sh --no-gcc
 
     - name: Cache CMake build folder
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build
-        key: ${{ github.workflow }}-v2-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v2-
+        key: ${{ github.workflow }}-v5-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v5-
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -45,10 +62,13 @@ jobs:
       env:
         CMAKE_BUILD_TYPE: ${{github.event_name == 'release' && 'Release' || 'RelWithDebInfo'}}
       # We set DEVILUTIONX_SYSTEM_LIBFMT=OFF because its soversion changes frequently.
+      # We set DEVILUTIONX_SYSTEM_LIBSODIUM=OFF because its soversion changes frequently.
       # We set DEVILUTIONX_SYSTEM_SIMPLEINI=OFF because we require v4.19+, still missing from many distributions.
+      # We set DEVILUTIONX_SYSTEM_BZIP2=OFF because Fedora and Debian do not agree on how to link it.
       run: |
         cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=${{env.CMAKE_BUILD_TYPE}} -DCMAKE_INSTALL_PREFIX=/usr -DCPACK=ON \
-          -DDISCORD_INTEGRATION=ON -DBUILD_TESTING=OFF -DDEVILUTIONX_SYSTEM_LIBFMT=OFF -DDEVILUTIONX_SYSTEM_SIMPLEINI=OFF && \
+          -DDISCORD_INTEGRATION=ON -DBUILD_TESTING=OFF -DDEVILUTIONX_SYSTEM_LIBFMT=OFF \
+          -DDEVILUTIONX_SYSTEM_LIBSODIUM=OFF -DDEVILUTIONX_SYSTEM_SIMPLEINI=OFF -DDEVILUTIONX_SYSTEM_BZIP2=OFF && \
         cmake --build build -j $(getconf _NPROCESSORS_ONLN) --target package
 
     - name: Package
@@ -59,14 +79,14 @@ jobs:
 
     - name: Upload Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-x86_64-linux-gnu.tar.xz
         path: devilutionx-x86_64-linux-gnu.tar.xz
 
     - name: Upload AppImage
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: devilutionx-x86_64-linux-gnu.appimage
         path: devilutionx-x86_64-linux-gnu.appimage

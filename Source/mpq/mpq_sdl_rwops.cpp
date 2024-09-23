@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 namespace devilution {
@@ -14,13 +15,13 @@ struct Data {
 	std::optional<MpqArchive> ownedArchive;
 	MpqArchive *mpqArchive;
 	uint32_t fileNumber;
-	uint32_t blockSize;
-	uint32_t lastBlockSize;
+	size_t blockSize;
+	size_t lastBlockSize;
 	uint32_t numBlocks;
-	uint32_t size;
+	size_t size;
 
 	// State:
-	uint32_t position;
+	size_t position;
 	bool blockRead;
 	std::unique_ptr<uint8_t[]> blockData;
 };
@@ -61,10 +62,10 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 		newPosition = offset;
 		break;
 	case RW_SEEK_CUR:
-		newPosition = data.position + offset;
+		newPosition = static_cast<OffsetType>(data.position + offset);
 		break;
 	case RW_SEEK_END:
-		newPosition = data.size + offset;
+		newPosition = static_cast<OffsetType>(data.size + offset);
 		break;
 	default:
 		return -1;
@@ -74,7 +75,7 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 		return newPosition;
 
 	if (newPosition > static_cast<OffsetType>(data.size)) {
-		SDL_SetError("MpqFileRwSeek beyond EOF (%d > %u)", static_cast<int>(newPosition), data.size);
+		SDL_SetError("MpqFileRwSeek beyond EOF (%d > %u)", static_cast<int>(newPosition), static_cast<unsigned>(data.size));
 		return -1;
 	}
 
@@ -83,10 +84,10 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 		return -1;
 	}
 
-	if (data.position / data.blockSize != newPosition / data.blockSize)
+	if (data.position / data.blockSize != static_cast<size_t>(newPosition) / data.blockSize)
 		data.blockRead = false;
 
-	data.position = newPosition;
+	data.position = static_cast<size_t>(newPosition);
 
 	return newPosition;
 }
@@ -94,8 +95,8 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType size, SizeType maxnum)
 {
 	Data &data = *GetData(context);
-	const SizeType totalSize = size * maxnum;
-	uint32_t remainingSize = totalSize;
+	const size_t totalSize = size * maxnum;
+	size_t remainingSize = totalSize;
 
 	auto *out = static_cast<uint8_t *>(ptr);
 
@@ -103,13 +104,13 @@ static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType siz
 		data.blockData = std::unique_ptr<uint8_t[]> { new uint8_t[data.blockSize] };
 	}
 
-	uint32_t blockNumber = data.position / data.blockSize;
+	uint32_t blockNumber = static_cast<uint32_t>(data.position / data.blockSize);
 	while (remainingSize > 0) {
 		if (data.position == data.size) {
 			break;
 		}
 
-		const uint32_t currentBlockSize = blockNumber + 1 == data.numBlocks ? data.lastBlockSize : data.blockSize;
+		const size_t currentBlockSize = blockNumber + 1 == data.numBlocks ? data.lastBlockSize : data.blockSize;
 
 		if (!data.blockRead) {
 			const int32_t error = data.mpqArchive->ReadBlock(data.fileNumber, blockNumber, data.blockData.get(), currentBlockSize);
@@ -120,8 +121,8 @@ static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType siz
 			data.blockRead = true;
 		}
 
-		const uint32_t blockPosition = data.position - blockNumber * data.blockSize;
-		const uint32_t remainingBlockSize = currentBlockSize - blockPosition;
+		const size_t blockPosition = data.position - blockNumber * data.blockSize;
+		const size_t remainingBlockSize = currentBlockSize - blockPosition;
 
 		if (remainingSize < remainingBlockSize) {
 			std::memcpy(out, data.blockData.get() + blockPosition, remainingSize);
@@ -137,7 +138,7 @@ static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType siz
 		data.blockRead = false;
 	}
 
-	return (totalSize - remainingSize) / size;
+	return static_cast<SizeType>((totalSize - remainingSize) / size);
 }
 
 static int MpqFileRwClose(struct SDL_RWops *context)
@@ -153,7 +154,7 @@ static int MpqFileRwClose(struct SDL_RWops *context)
 
 } // namespace
 
-SDL_RWops *SDL_RWops_FromMpqFile(MpqArchive &mpqArchive, uint32_t fileNumber, const char *filename, bool threadsafe)
+SDL_RWops *SDL_RWops_FromMpqFile(MpqArchive &mpqArchive, uint32_t fileNumber, std::string_view filename, bool threadsafe)
 {
 	auto result = std::make_unique<SDL_RWops>();
 	std::memset(result.get(), 0, sizeof(*result));
@@ -205,7 +206,7 @@ SDL_RWops *SDL_RWops_FromMpqFile(MpqArchive &mpqArchive, uint32_t fileNumber, co
 	}
 	data->numBlocks = numBlocks;
 
-	const std::uint32_t blockSize = archive.GetBlockSize(fileNumber, 0, error);
+	const size_t blockSize = archive.GetBlockSize(fileNumber, 0, error);
 	if (error != 0) {
 		SDL_SetError("MpqFileRwRead GetBlockSize: %s", MpqArchive::ErrorMessage(error));
 		return nullptr;

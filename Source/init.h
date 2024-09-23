@@ -5,8 +5,9 @@
  */
 #pragma once
 
+#include <optional>
+
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 #ifdef UNPACKED_MPQS
 #include <string>
@@ -95,6 +96,19 @@ inline bool AreExtraFontsOutOfDate()
 	return font_data_path && AreExtraFontsOutOfDate(*font_data_path);
 #else
 	return font_mpq && AreExtraFontsOutOfDate(*font_mpq);
+#endif
+}
+
+#ifndef UNPACKED_MPQS
+bool IsDevilutionXMpqOutOfDate(MpqArchive &archive);
+#endif
+
+inline bool IsDevilutionXMpqOutOfDate()
+{
+#ifdef UNPACKED_MPQS
+	return false;
+#else
+	return devilutionx_mpq.has_value() && IsDevilutionXMpqOutOfDate(*devilutionx_mpq);
 #endif
 }
 

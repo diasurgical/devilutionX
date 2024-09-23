@@ -349,7 +349,7 @@ bool CanReplaceTile(uint8_t replace, Point tile)
 		return true;
 	}
 
-	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatibility)
 	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
 		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
 		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
@@ -372,7 +372,7 @@ void FillFloor()
 			if (dungeon[i][j] != Floor || Protected.test(i, j))
 				continue;
 
-			int rv = GenerateRnd(3);
+			int rv = RandomIntLessThan(3);
 			if (rv == 1)
 				dungeon[i][j] = Floor22;
 			else if (rv == 2)
@@ -381,15 +381,22 @@ void FillFloor()
 	}
 }
 
-void LoadQuestSetPieces()
+void InitSetPiece()
 {
+	std::unique_ptr<uint16_t[]> setPieceData;
 	if (Quests[Q_BUTCHER].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\rnd6.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l1data\\rnd6.dun");
 	} else if (Quests[Q_SKELKING].IsAvailable() && !UseMultiplayerQuests()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\skngdo.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l1data\\skngdo.dun");
 	} else if (Quests[Q_LTBANNER].IsAvailable()) {
-		pSetPiece = LoadFileInMem<uint16_t>("levels\\l1data\\banner2.dun");
+		setPieceData = LoadFileInMem<uint16_t>("levels\\l1data\\banner2.dun");
+	} else {
+		return; // no setpiece needed for this level
 	}
+
+	WorldTilePosition setPiecePosition = SelectChamber();
+	PlaceDunTiles(setPieceData.get(), setPiecePosition, Floor);
+	SetPiece = { setPiecePosition, GetDunSize(setPieceData.get()) };
 }
 
 void InitDungeonPieces()
@@ -1015,8 +1022,8 @@ void FillChambers()
 		} else if (CornerStone.isAvailable()) {
 			SetCornerRoom();
 		}
-	} else if (pSetPiece != nullptr) {
-		SetSetPieceRoom(SelectChamber(), Floor);
+	} else {
+		InitSetPiece();
 	}
 }
 
@@ -1158,6 +1165,9 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
+	if (LevelSeeds[currlevel])
+		SetRndSeed(*LevelSeeds[currlevel]);
+
 	size_t minarea = 761;
 	switch (currlevel) {
 	case 1:
@@ -1170,12 +1180,11 @@ void GenerateLevel(lvl_entry entry)
 		break;
 	}
 
-	LoadQuestSetPieces();
-
 	while (true) {
 		DRLG_InitTrans();
 
 		do {
+			LevelSeeds[currlevel] = GetLCGEngineState();
 			FirstRoom();
 		} while (FindArea() < minarea);
 
@@ -1188,8 +1197,6 @@ void GenerateLevel(lvl_entry entry)
 		if (PlaceStairs(entry))
 			break;
 	}
-
-	FreeQuestSetPieces();
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
