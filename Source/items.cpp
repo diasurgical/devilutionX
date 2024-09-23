@@ -43,7 +43,6 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
-#include "utils/math.h"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
@@ -2472,20 +2471,6 @@ void InitItems()
 	initItemGetRecords();
 }
 
-int GetBonusAC(const Item &item)
-{
-	if (item._iPLAC != 0) {
-		int tempAc = item._iAC;
-		tempAc *= item._iPLAC;
-		tempAc /= 100;
-		if (tempAc == 0)
-			tempAc = math::Sign(item._iPLAC);
-		return tempAc;
-	}
-
-	return 0;
-}
-
 void CalcPlrDamage(Player &player, int minDamage, int maxDamage)
 {
 	const uint8_t playerLevel = player.getCharacterLevel();
@@ -2817,7 +2802,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			if (item._iMagical == ITEM_QUALITY_NORMAL || item._iIdentified) {
 				dam += item._iPLDam;
 				toHit += item._iPLToHit;
-				bonusAc += GetBonusAC(item);
+				bonusAc += item.getBonusAC();
 				flags |= item._iFlags;
 				damAcFlags |= item._iDamAcFlags;
 				strength += item._iPLStr;
@@ -4097,22 +4082,23 @@ void PrintItemDetails(const Item &item)
 		return;
 
 	if (item._iClass == ICLASS_WEAPON) {
+		std::pair<int, int> realDamage = item.getFinalDamage(showItemBaseStats || !item._iIdentified);
 		if (item._iMinDam == item._iMaxDam) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), item._iMinDam));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}  Indestructible")), realDamage.first));
 			else
-				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
+				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}")), realDamage.first, item._iDurability, item._iMaxDur));
 		} else {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), item._iMinDam, item._iMaxDam));
+				AddInfoBoxString(fmt::format(fmt::runtime(_("damage: {:d}-{:d}  Indestructible")), realDamage.first, realDamage.second));
 			else
-				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur));
+				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}")), realDamage.first, realDamage.second, item._iDurability, item._iMaxDur));
 		}
 	}
 	if (item._iClass == ICLASS_ARMOR) {
 		int realAC = item._iAC;
 		if (!showItemBaseStats && item._iIdentified) {
-			realAC += GetBonusAC(item);
+			realAC += item.getBonusAC();
 		}
 		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
 			AddInfoBoxString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), realAC));

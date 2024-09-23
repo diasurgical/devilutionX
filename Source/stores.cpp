@@ -305,10 +305,17 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags, bool cursIndent = fa
 	}
 
 	if (item._itype != ItemType::Misc) {
-		if (item._iClass == ICLASS_WEAPON)
-			productLine = fmt::format(fmt::runtime(_("Damage: {:d}-{:d}  ")), item._iMinDam, item._iMaxDam);
-		else if (item._iClass == ICLASS_ARMOR)
-			productLine = fmt::format(fmt::runtime(_("Armor: {:d}  ")), item._iAC);
+		if (item._iClass == ICLASS_WEAPON) {
+			std::pair<int, int> realDamage = item.getFinalDamage(showItemBaseStats || !item._iIdentified);
+			productLine = fmt::format(fmt::runtime(_("Damage: {:d}-{:d}  ")), realDamage.first, realDamage.second);
+		}
+		else if (item._iClass == ICLASS_ARMOR) {
+			int realAC = item._iAC;
+			if (!showItemBaseStats && item._iIdentified) {
+				realAC += item.getBonusAC();
+			}
+			productLine = fmt::format(fmt::runtime(_("Armor: {:d}  ")), realAC);
+		}
 		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
 			productLine += fmt::format(fmt::runtime(_("Dur: {:d}/{:d}")), item._iDurability, item._iMaxDur);
 		else
