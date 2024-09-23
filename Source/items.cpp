@@ -4109,10 +4109,14 @@ void PrintItemDetails(const Item &item)
 		}
 	}
 	if (item._iClass == ICLASS_ARMOR) {
+		int realAC = item._iAC;
+		if (item._iIdentified) {
+			realAC += GetBonusAC(item);
+		}
 		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-			AddInfoBoxString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), item._iAC));
+			AddInfoBoxString(fmt::format(fmt::runtime(_("armor: {:d}  Indestructible")), realAC));
 		else
-			AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), item._iAC, item._iDurability, item._iMaxDur));
+			AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}")), realAC, item._iDurability, item._iMaxDur));
 	}
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
