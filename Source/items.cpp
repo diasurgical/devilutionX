@@ -2809,7 +2809,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			maxDamage += item._iMaxDam;
 			ac += item._iAC;
 
-			if (IsValidSpell(item._iSpell)) {
+			if (IsValidSpell(item._iSpell) && item._iCharges != 0) {
 				spells |= GetSpellBitmask(item._iSpell);
 			}
 
