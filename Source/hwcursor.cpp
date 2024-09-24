@@ -144,7 +144,7 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	constexpr std::uint8_t TransparentColor = 1;
 	SDL_FillRect(out.surface, nullptr, TransparentColor);
 	SDL_SetColorKey(out.surface, 1, TransparentColor);
-	DrawSoftwareCursor(out, { outlineWidth, size.height - outlineWidth }, pcurs);
+	DrawSoftwareCursor(out, { outlineWidth, size.height - outlineWidth - 1 }, pcurs);
 
 	const bool result = SetHardwareCursorFromSurface(
 	    out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
