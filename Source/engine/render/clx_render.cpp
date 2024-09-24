@@ -405,8 +405,8 @@ void RenderClxOutline(const Surface &out, Point position, ClxSprite sprite, uint
 	UpdateOutlinePixelsCache<SkipColorIndexZero>(sprite);
 	--position.x;
 	position.y -= sprite.height();
-	if (position.x >= 0 && position.x + sprite.width() < out.w()
-	    && position.y >= 0 && position.y + sprite.height() < out.h()) {
+	if (position.x >= 0 && position.x + sprite.width() + 2 < out.w()
+	    && position.y >= 0 && position.y + sprite.height() + 2 < out.h()) {
 		for (const auto &[x, y] : OutlinePixelsCache.outlinePixels) {
 			*out.at(position.x + x, position.y + y) = color;
 		}
