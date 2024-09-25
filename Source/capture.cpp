@@ -46,7 +46,7 @@ FILE *CaptureFile(std::string *dstPath)
 	const std::time_t tt = std::time(nullptr);
 	const std::tm *tm = std::localtime(&tt);
 	const std::string filename = tm != nullptr
-	    ? fmt::format("Screenshot from {:04}-{:02}-{:02} {:02}-{:02}-{:02}",
+	    ? fmt::format("{:04}-{:02}-{:02} {:02}-{:02}-{:02}",
 	        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec)
 	    : "Screenshot";
 	*dstPath = StrCat(paths::PrefPath(), filename, ext);
@@ -60,6 +60,16 @@ FILE *CaptureFile(std::string *dstPath)
 
 } // namespace
 
+std::string FileNameForChat(const std::string &fullPath)
+{
+	// Extracts just the file name from the full path
+	auto pos = fullPath.find_last_of("\\/");
+	if (pos == std::string::npos) {
+		return fullPath;
+	}
+	return fullPath.substr(pos + 1);
+}
+
 void CaptureScreen()
 {
 	std::string fileName;
@@ -68,7 +78,9 @@ void CaptureScreen()
 	if (outStream == nullptr) {
 		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. */ "Failed to open {} for writing: {}")), fileName, std::strerror(errno));
 		LogError("{}", errorMessage);
-		EventPlrMsg(errorMessage, UiFlags::ColorWhitegold);
+
+		auto chatMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the name of the file where the screenshot was attempted to be saved. */ "Failed to open {} for writing")), FileNameForChat(fileName));
+		EventPlrMsg(chatMessage, UiFlags::ColorWhitegold);
 		return;
 	}
 
@@ -80,14 +92,18 @@ void CaptureScreen()
 #endif
 
 	if (!result.has_value()) {
-		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. {result.error()} is the error message returned during the save attempt. */ "Failed to save screenshot at {}: {}")), fileName, result.error());
+		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. {result.error()} is the error message returned during the save attempt. */ "Failed to save screenshot {}: {}")), fileName, result.error());
 		LogError("{}", errorMessage);
-		EventPlrMsg(errorMessage, UiFlags::ColorWhitegold);
+
+		auto chatMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the name of the file where the screenshot was attempted to be saved. */ "Failed to save screenshot {}")), FileNameForChat(fileName));
+		EventPlrMsg(chatMessage, UiFlags::ColorWhitegold);
 		RemoveFile(fileName.c_str());
 	} else {
 		auto successMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was successfully saved. */ "Screenshot saved at {}")), fileName);
 		Log("{}", successMessage);
-		EventPlrMsg(successMessage, UiFlags::ColorWhitegold);
+
+		auto chatMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the name of the file where the screenshot was successfully saved. */ "Screenshot saved as {}")), FileNameForChat(fileName));
+		EventPlrMsg(chatMessage, UiFlags::ColorWhitegold);
 	}
 }
 
