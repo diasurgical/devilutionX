@@ -58,8 +58,6 @@ FILE *CaptureFile(std::string *dstPath)
 	return OpenFile(dstPath->c_str(), "wb");
 }
 
-} // namespace
-
 std::string FileNameForChat(const std::string &fullPath)
 {
 	// Extracts just the file name from the full path
@@ -69,6 +67,8 @@ std::string FileNameForChat(const std::string &fullPath)
 	}
 	return fullPath.substr(pos + 1);
 }
+
+} // namespace
 
 void CaptureScreen()
 {
