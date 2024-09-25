@@ -26,6 +26,7 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
+#include "plrmsg.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
@@ -57,40 +58,19 @@ FILE *CaptureFile(std::string *dstPath)
 	return OpenFile(dstPath->c_str(), "wb");
 }
 
-/**
- * @brief Make a red version of the given palette and apply it to the screen.
- */
-void RedPalette()
-{
-	for (int i = 0; i < 256; i++) {
-		system_palette[i].g = 0;
-		system_palette[i].b = 0;
-	}
-	palette_update();
-	BltFast(nullptr, nullptr);
-	RenderPresent();
-}
-
 } // namespace
 
 void CaptureScreen()
 {
-	SDL_Color palette[256];
 	std::string fileName;
-	const uint32_t startTime = SDL_GetTicks();
 
 	FILE *outStream = CaptureFile(&fileName);
 	if (outStream == nullptr) {
-		LogError("Failed to open {} for writing: {}", fileName, std::strerror(errno));
+		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. */ "Failed to open {} for writing: {}")), fileName, std::strerror(errno));
+		LogError("{}", errorMessage);
+		EventPlrMsg(errorMessage, UiFlags::ColorWhitegold);
 		return;
 	}
-	DrawAndBlit();
-	PaletteGetEntries(256, palette);
-	RedPalette();
-	for (int i = 0; i < 256; i++) {
-		system_palette[i] = palette[i];
-	}
-	palette_update();
 
 	const tl::expected<void, std::string> result =
 #if DEVILUTIONX_SCREENSHOT_FORMAT == DEVILUTIONX_SCREENSHOT_FORMAT_PCX
@@ -100,16 +80,15 @@ void CaptureScreen()
 #endif
 
 	if (!result.has_value()) {
-		LogError("Failed to save screenshot at {}: ", fileName, result.error());
+		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. {result.error()} is the error message returned during the save attempt. */ "Failed to save screenshot at {}: {}")), fileName, result.error());
+		LogError("{}", errorMessage);
+		EventPlrMsg(errorMessage, UiFlags::ColorWhitegold);
 		RemoveFile(fileName.c_str());
 	} else {
-		Log("Screenshot saved at {}", fileName);
+		auto successMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was successfully saved. */ "Screenshot saved at {}")), fileName);
+		Log("{}", successMessage);
+		EventPlrMsg(successMessage, UiFlags::ColorWhitegold);
 	}
-	const uint32_t timePassed = SDL_GetTicks() - startTime;
-	if (timePassed < 300) {
-		SDL_Delay(300 - timePassed);
-	}
-	RedrawEverything();
 }
 
 } // namespace devilution
