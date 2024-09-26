@@ -23,6 +23,7 @@
 #include "utils/surface_to_png.hpp"
 #endif
 
+#include "effects.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
@@ -75,7 +76,6 @@ void CaptureScreen()
 	auto tempPalette = system_palette;
 	system_palette = orig_palette;
 	palette_update();
-	RedrawEverything();
 
 	const tl::expected<void, std::string> result =
 #if DEVILUTIONX_SCREENSHOT_FORMAT == DEVILUTIONX_SCREENSHOT_FORMAT_PCX
