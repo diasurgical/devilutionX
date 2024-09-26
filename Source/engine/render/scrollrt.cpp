@@ -6,6 +6,7 @@
 #include "engine/render/scrollrt.h"
 
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 
 #include <ankerl/unordered_dense.h>
@@ -1154,41 +1155,46 @@ void DrawView(const Surface &out, Point startPosition)
 				    { .flags = UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter });
 			}
 			if (DebugGrid) {
-				auto drawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
-					auto drawLine = [&out](Point from, Point to, uint8_t col) {
-						int dx = to.x - from.x;
-						int dy = to.y - from.y;
-						int steps = std::abs(dx) > std::abs(dy) ? std::abs(dx) : std::abs(dy);
-						auto ix = static_cast<float>(dx) / static_cast<float>(steps);
-						auto iy = static_cast<float>(dy) / static_cast<float>(steps);
-						auto sx = static_cast<float>(from.x);
-						auto sy = static_cast<float>(from.y);
-
-						for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
-							out.SetPixel({ static_cast<int>(sx), static_cast<int>(sy) }, col);
-					};
-					drawLine(center - hor, center + ver, col);
-					drawLine(center + hor, center + ver, col);
-					drawLine(center - hor, center - ver, col);
-					drawLine(center + hor, center - ver, col);
-				};
-
-				Displacement hor = { TILE_WIDTH / 2, 0 };
-				Displacement ver = { 0, TILE_HEIGHT / 2 };
+				int halfTileWidth = TILE_WIDTH / 2;
+				int halfTileHeight = TILE_HEIGHT / 2;
 				if (*sgOptions.Graphics.zoom) {
-					hor *= 2;
-					ver *= 2;
+					halfTileWidth *= 2;
+					halfTileHeight *= 2;
 				}
-				Point center = pixelCoords + hor - ver;
+				const Point center { pixelCoords.x + halfTileWidth, pixelCoords.y - halfTileHeight };
 
 				if (megaTiles) {
-					hor *= 2;
-					ver *= 2;
+					halfTileWidth *= 2;
+					halfTileHeight *= 2;
 				}
 
-				uint8_t col = PAL16_BEIGE;
-
-				drawDebugSquare(center, hor, ver, col);
+				const uint8_t col = PAL16_BEIGE;
+				for (const auto &[originX, dx] : { std::pair(center.x - halfTileWidth, 1), std::pair(center.x + halfTileWidth, -1) }) {
+					// We only need to draw half of the grid cell boundaries (one triangle).
+					// The other triangle will be drawn when drawing the adjacent grid cells.
+					const int dy = 1;
+					Point from { originX, center.y };
+					int height = halfTileHeight;
+					if (out.InBounds(from) && out.InBounds(from + Displacement { 2 * dx * height, dy * height })) {
+						uint8_t *dst = out.at(from.x, from.y);
+						const int pitch = out.pitch();
+						while (height-- > 0) {
+							*dst = col;
+							dst += dx;
+							*dst = col;
+							dst += dx;
+							dst += static_cast<ptrdiff_t>(dy * pitch);
+						}
+					} else {
+						while (height-- > 0) {
+							out.SetPixel(from, col);
+							from.x += dx;
+							out.SetPixel(from, col);
+							from.x += dx;
+							from.y += dy;
+						}
+					}
+				}
 			}
 		}
 	}
