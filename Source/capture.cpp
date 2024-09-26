@@ -74,6 +74,7 @@ void CaptureScreen()
 	DrawAndBlit();
 
 	auto tempPalette = system_palette;
+
 	system_palette = orig_palette;
 	palette_update();
 
@@ -91,7 +92,6 @@ void CaptureScreen()
 		Log("Screenshot saved at {}", fileName);
 		PlaySFX(SfxID::MenuSelect);
 	}
-
 	system_palette = tempPalette;
 	palette_update();
 	RedrawEverything();
