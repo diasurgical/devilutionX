@@ -58,16 +58,6 @@ FILE *CaptureFile(std::string *dstPath)
 	return OpenFile(dstPath->c_str(), "wb");
 }
 
-std::string FileNameForChat(const std::string &fullPath)
-{
-	// Extracts just the file name from the full path
-	auto pos = fullPath.find_last_of("\\/");
-	if (pos == std::string::npos) {
-		return fullPath;
-	}
-	return fullPath.substr(pos + 1);
-}
-
 } // namespace
 
 void CaptureScreen()
