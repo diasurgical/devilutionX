@@ -46,7 +46,7 @@ FILE *CaptureFile(std::string *dstPath)
 	const std::time_t tt = std::time(nullptr);
 	const std::tm *tm = std::localtime(&tt);
 	const std::string filename = tm != nullptr
-	    ? fmt::format("{:04}-{:02}-{:02} {:02}-{:02}-{:02}",
+	    ? fmt::format("Screenshot from {:04}-{:02}-{:02} {:02}-{:02}-{:02}",
 	        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec)
 	    : "Screenshot";
 	*dstPath = StrCat(paths::PrefPath(), filename, ext);
@@ -72,17 +72,21 @@ std::string FileNameForChat(const std::string &fullPath)
 
 void CaptureScreen()
 {
+	SDL_Color palette[256];
 	std::string fileName;
+	const uint32_t startTime = SDL_GetTicks();
 
 	FILE *outStream = CaptureFile(&fileName);
 	if (outStream == nullptr) {
-		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. */ "Failed to open {} for writing: {}")), fileName, std::strerror(errno));
-		LogError("{}", errorMessage);
-
-		auto chatMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the name of the file where the screenshot was attempted to be saved. */ "Failed to open {} for writing")), FileNameForChat(fileName));
-		EventPlrMsg(chatMessage, UiFlags::ColorWhitegold);
+		LogError("Failed to open {} for writing: {}", fileName, std::strerror(errno));
 		return;
 	}
+	DrawAndBlit();
+
+	auto tempPalette = system_palette;
+	system_palette = orig_palette;
+	palette_update();
+	RedrawEverything();
 
 	const tl::expected<void, std::string> result =
 #if DEVILUTIONX_SCREENSHOT_FORMAT == DEVILUTIONX_SCREENSHOT_FORMAT_PCX
@@ -92,19 +96,16 @@ void CaptureScreen()
 #endif
 
 	if (!result.has_value()) {
-		auto errorMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was attempted to be saved. {result.error()} is the error message returned during the save attempt. */ "Failed to save screenshot {}: {}")), fileName, result.error());
-		LogError("{}", errorMessage);
-
-		auto chatMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the name of the file where the screenshot was attempted to be saved. */ "Failed to save screenshot {}")), FileNameForChat(fileName));
-		EventPlrMsg(chatMessage, UiFlags::ColorWhitegold);
+		LogError("Failed to save screenshot at {}: ", fileName, result.error());
 		RemoveFile(fileName.c_str());
 	} else {
-		auto successMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the file path where the screenshot was successfully saved. */ "Screenshot saved at {}")), fileName);
-		Log("{}", successMessage);
-
-		auto chatMessage = fmt::format(fmt::runtime(_(/* TRANSLATORS: {fileName} is the name of the file where the screenshot was successfully saved. */ "Screenshot saved as {}")), FileNameForChat(fileName));
-		EventPlrMsg(chatMessage, UiFlags::ColorWhitegold);
+		Log("Screenshot saved at {}", fileName);
+		PlaySFX(SfxID::MenuSelect);
 	}
+
+	system_palette = tempPalette;
+	palette_update();
+	RedrawEverything();
 }
 
 } // namespace devilution
