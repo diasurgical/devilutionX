@@ -15,13 +15,15 @@
 namespace devilution {
 namespace {
 
-tl::expected<void, std::string> CheckedFWrite(const void *ptr, size_t size, FILE *out)
+tl::expected<void, std::string> CheckedFWrite(const void *ptr, size_t size, SDL_RWops *out)
 {
-	if (std::fwrite(ptr, size, 1, out) != 1) {
-		const char *errorMessage = std::strerror(errno);
+	if (SDL_RWwrite(out, ptr, size, 1) != 1) {
+		const char *errorMessage = SDL_GetError();
 		if (errorMessage == nullptr)
 			errorMessage = "";
-		return tl::make_unexpected(std::string("fwrite failed with: ").append(errorMessage));
+		tl::expected<void, std::string> result = tl::make_unexpected(std::string("write failed with: ").append(errorMessage));
+		SDL_ClearError();
+		return result;
 	}
 	return {};
 }
@@ -33,7 +35,7 @@ tl::expected<void, std::string> CheckedFWrite(const void *ptr, size_t size, FILE
  * @param out File stream to write to
  * @return True on success
  */
-tl::expected<void, std::string> WritePcxHeader(int16_t width, int16_t height, FILE *out)
+tl::expected<void, std::string> WritePcxHeader(int16_t width, int16_t height, SDL_RWops *out)
 {
 	PCXHeader buffer;
 
@@ -58,7 +60,7 @@ tl::expected<void, std::string> WritePcxHeader(int16_t width, int16_t height, FI
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-tl::expected<void, std::string> WritePcxPalette(SDL_Color *palette, FILE *out)
+tl::expected<void, std::string> WritePcxPalette(SDL_Color *palette, SDL_RWops *out)
 {
 	uint8_t pcxPalette[1 + 256 * 3];
 
@@ -121,7 +123,7 @@ uint8_t *WritePcxLine(uint8_t *src, uint8_t *dst, int width)
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-tl::expected<void, std::string> WritePcxPixels(const Surface &buf, FILE *out)
+tl::expected<void, std::string> WritePcxPixels(const Surface &buf, SDL_RWops *out)
 {
 	const int width = buf.w();
 	const std::unique_ptr<uint8_t[]> pBuffer { new uint8_t[static_cast<size_t>(2 * width)] };
@@ -138,7 +140,7 @@ tl::expected<void, std::string> WritePcxPixels(const Surface &buf, FILE *out)
 } // namespace
 
 tl::expected<void, std::string>
-WriteSurfaceToFilePcx(const Surface &buf, FILE *outStream)
+WriteSurfaceToFilePcx(const Surface &buf, SDL_RWops *outStream)
 {
 	tl::expected<void, std::string> result = WritePcxHeader(buf.w(), buf.h(), outStream);
 	if (!result.has_value()) return result;
@@ -146,7 +148,7 @@ WriteSurfaceToFilePcx(const Surface &buf, FILE *outStream)
 	if (!result.has_value()) return result;
 	result = WritePcxPalette(buf.surface->format->palette->colors, outStream);
 	if (!result.has_value()) return result;
-	std::fclose(outStream);
+	SDL_RWclose(outStream);
 	return {};
 }
 

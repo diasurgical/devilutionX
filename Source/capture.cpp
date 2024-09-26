@@ -34,7 +34,7 @@
 namespace devilution {
 namespace {
 
-FILE *CaptureFile(std::string *dstPath)
+SDL_RWops *CaptureFile(std::string *dstPath)
 {
 	const char *ext =
 #if DEVILUTIONX_SCREENSHOT_FORMAT == DEVILUTIONX_SCREENSHOT_FORMAT_PCX
@@ -54,7 +54,7 @@ FILE *CaptureFile(std::string *dstPath)
 		i++;
 		*dstPath = StrCat(paths::PrefPath(), filename, "-", i, ext);
 	}
-	return OpenFile(dstPath->c_str(), "wb");
+	return SDL_RWFromFile(dstPath->c_str(), "wb");
 }
 
 /**
@@ -79,9 +79,10 @@ void CaptureScreen()
 	std::string fileName;
 	const uint32_t startTime = SDL_GetTicks();
 
-	FILE *outStream = CaptureFile(&fileName);
+	SDL_RWops *outStream = CaptureFile(&fileName);
 	if (outStream == nullptr) {
-		LogError("Failed to open {} for writing: {}", fileName, std::strerror(errno));
+		LogError("Failed to open {} for writing: {}", fileName, SDL_GetError());
+		SDL_ClearError();
 		return;
 	}
 	DrawAndBlit();
