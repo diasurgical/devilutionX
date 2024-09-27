@@ -33,6 +33,7 @@ extern uint32_t glEndSeed[NUMLEVELS];
 
 enum class DebugGridTextItem : uint16_t {
 	None,
+	microTiles,
 	dPiece,
 	dTransVal,
 	dLight,
