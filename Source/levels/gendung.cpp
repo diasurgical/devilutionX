@@ -468,6 +468,10 @@ void LoadLevelSOLData()
 		break;
 	case DTYPE_CAVES:
 		LoadFileInMem("levels\\l3data\\l3.sol", SOLData);
+		// The graphics for tile 48 sub-tile 171 frame 461 are partly incorrect, as they
+		// have a few pixels that should belong to the solid tile 49 instead.
+		// Marks the sub-tile as "BlockMissile" to avoid treating it as a floor during rendering.
+		SOLData[170] |= TileProperties::BlockMissile;
 		break;
 	case DTYPE_HELL:
 		LoadFileInMem("levels\\l4data\\l4.sol", SOLData);

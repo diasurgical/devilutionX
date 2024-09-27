@@ -84,7 +84,7 @@ constexpr auto RightFrameDisplacement = Displacement { DunFrameWidth, 0 };
 
 [[nodiscard]] DVL_ALWAYS_INLINE bool IsFloor(Point tilePosition)
 {
-	return !TileHasAny(tilePosition, TileProperties::Solid);
+	return !TileHasAny(tilePosition, TileProperties::Solid | TileProperties::BlockMissile);
 }
 
 [[nodiscard]] DVL_ALWAYS_INLINE bool IsWall(Point tilePosition)

@@ -19,7 +19,8 @@ struct DunFrameInfo {
 
 	[[nodiscard]] bool isFloor() const
 	{
-		return !HasAnyOf(properties, TileProperties::Solid)
+		// The BlockMissile check is for stairs in L3 and L4, e.g. tile 46 sub-tile 141 frame 386 in L4.
+		return !HasAnyOf(properties, TileProperties::Solid | TileProperties::BlockMissile)
 		    && (microTileIndex == 0 || microTileIndex == 1);
 	}
 	[[nodiscard]] bool isFloorLeft() const { return microTileIndex == 0; }
