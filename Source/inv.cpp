@@ -1297,18 +1297,10 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 	}
 
 	if (itemSize.height == 2) {
-		for (int x = 10 - itemSize.width; x >= 0; x -= itemSize.width) {
+		for (int x = 10 - itemSize.width; x >= 0; x--) {
 			for (int y = 0; y < 3; y++) {
 				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem, sendNetworkMessage))
 					return true;
-			}
-		}
-		if (itemSize.width == 2) {
-			for (int x = 7; x >= 0; x -= 2) {
-				for (int y = 0; y < 3; y++) {
-					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem, sendNetworkMessage))
-						return true;
-				}
 			}
 		}
 		return false;
