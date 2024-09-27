@@ -165,6 +165,26 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		}
 		break;
 	}
+	case DebugGridTextItem::microTiles: {
+		std::string result;
+		const MICROS &micros = DPieceMicros[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		for (const LevelCelBlock tile : micros.mt) {
+			if (!tile.hasValue()) break;
+			if (!result.empty()) result += '\n';
+			StrAppend(result, tile.frame(), " ");
+			switch (tile.type()) {
+			case TileType::Square: StrAppend(result, "S"); break;
+			case TileType::TransparentSquare: StrAppend(result, "T"); break;
+			case TileType::LeftTriangle: StrAppend(result, "<"); break;
+			case TileType::RightTriangle: StrAppend(result, ">"); break;
+			case TileType::LeftTrapezoid: StrAppend(result, "\\"); break;
+			case TileType::RightTrapezoid: StrAppend(result, "/"); break;
+			}
+		}
+		if (result.empty()) return false;
+		*BufCopy(debugGridTextBuffer, result) = '\0';
+		return true;
+	} break;
 	case DebugGridTextItem::dPiece:
 		info = dPiece[dungeonCoords.x][dungeonCoords.y];
 		break;
