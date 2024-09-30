@@ -404,6 +404,8 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 
 	std::u32string text32 = ConvertUtf8ToUtf32(text);
 	std::u32string_view remaining = text32;
+
+	std::string rem;
 	uint32_t bytesDrawn = 0;
 
 	size_t lineStart = 0;
@@ -411,7 +413,7 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 	std::u32string line;
 
 	const auto maybeDrawCursor = [&]() {
-		if (opts.cursorPosition == static_cast<int>(text.size() - remaining.size())) {
+		if (opts.cursorPosition == static_cast<int>(text.size() - rem.size())) {
 			Point position = characterPosition;
 			MaybeWrap(position, 2, rightMargin, position.x, opts.lineHeight);
 			if (GetAnimationFrame(2, 500) != 0) {
@@ -430,7 +432,8 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		line = ConvertLogicalToVisual(text32.substr(lineStart, currPos - lineStart));
 
 		for (uint16_t j = lineStart; j < currPos; j++) {
-			remaining = text32.substr(j + 1);
+			remaining = text32.substr(j);
+			rem = ConvertUtf32ToUtf8(remaining);
 
 			char32_t cnext = line[j - lineStart];
 
@@ -447,11 +450,13 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 			const uint8_t frame = cnext & 0xFF;
 			const ClxSprite glyph = (*currentFont.sprite)[frame];
 			const int w = glyph.width();
-			const auto byteIndex = static_cast<int>(text.size() - ConvertUtf32ToUtf8(text32.substr(j)).size());
+			const auto byteIndex = static_cast<int>(text.size() - rem.size());
 
 			// Draw highlight
 			if (byteIndex >= opts.highlightRange.begin && byteIndex < opts.highlightRange.end) {
-				const bool lastInRange = static_cast<int>(byteIndex + 1) == opts.highlightRange.end;
+				size_t cpLen;
+				DecodeFirstUtf8CodePoint(rem, &cpLen);
+				const bool lastInRange = static_cast<int>(byteIndex + cpLen) == opts.highlightRange.end;
 				FillRect(out, characterPosition.x, characterPosition.y,
 					glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
 					opts.highlightColor);
@@ -461,12 +466,15 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 			maybeDrawCursor();
 			characterPosition.x += w + opts.spacing;
 		}
+		remaining = text32.substr(currPos);
+		rem = ConvertUtf32ToUtf8(remaining);
+		maybeDrawCursor();
 	};
 
 	int16_t lineX = characterPosition.x;
 
 
-	for (currPos = 0; currPos < remaining.size() && text32[currPos] != U'\0'; currPos++) {
+	for (currPos = 0; currPos < text32.size() && text32[currPos] != U'\0'; currPos++) {
 		char32_t next = text32[currPos];
 		bytesDrawn += ConvertUtf32ToUtf8(text32.substr(currPos, currPos + 1)).size();
 
@@ -510,7 +518,6 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 	}
 
 	drawSingleLine();
-	maybeDrawCursor();
 	return bytesDrawn;
 }
 
