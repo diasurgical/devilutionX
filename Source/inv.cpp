@@ -603,13 +603,11 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	}
 }
 
-namespace {
 inv_body_loc MapSlotToInvBodyLoc(inv_xy_slot slot)
 {
 	assert(slot <= SLOTXY_CHEST);
 	return static_cast<inv_body_loc>(slot);
 }
-} // namespace
 
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
