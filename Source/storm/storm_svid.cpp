@@ -31,14 +31,32 @@ std::uint8_t SVidAudioDepth;
 std::unique_ptr<int16_t[]> SVidAudioBuffer;
 #endif
 
+// Smacker's atomic time unit is a one hundred thousand's of a second (i.e. 0.01 millisecond, or 10 microseconds).
+// We use SDL ticks for timing, which have millisecond resolution.
+// There are 100 Smacker time units in a millisecond.
+constexpr uint64_t SmackerTimeUnit = 100;
+constexpr uint64_t TimeMsToSmk(uint64_t ms) { return ms * SmackerTimeUnit; }
+constexpr uint64_t TimeSmkToMs(uint64_t time) { return time / SmackerTimeUnit; };
+uint64_t GetTicksSmk()
+{
+#if SDL_VERSION_ATLEAST(2, 0, 18)
+	return TimeMsToSmk(SDL_GetTicks64());
+#else
+	return TimeMsToSmk(SDL_GetTicks());
+#endif
+}
+
 uint32_t SVidWidth, SVidHeight;
-double SVidFrameEnd;
-double SVidFrameLength;
 bool SVidLoop;
 SmackerHandle SVidHandle;
 std::unique_ptr<uint8_t[]> SVidFrameBuffer;
 SDLPaletteUniquePtr SVidPalette;
 SDLSurfaceUniquePtr SVidSurface;
+
+// The end of the current frame (time in SMK time units from the start of the program).
+uint64_t SVidFrameEnd;
+// The length of a frame in SMK time units.
+uint32_t SVidFrameLength;
 
 bool IsLandscapeFit(unsigned long srcW, unsigned long srcH, unsigned long dstW, unsigned long dstH)
 {
@@ -278,7 +296,10 @@ bool SVidPlayBegin(const char *filename, int flags)
 	}
 #endif
 
-	SVidFrameLength = 1000000.0 / Smacker_GetFrameRate(SVidHandle);
+	// SMK format internally defines the frame rate as the frame duration
+	// in either milliseconds or SMK time units (0.01ms). The library converts it
+	// to FPS, which is always an integer, and here we convert it back to SMK time units.
+	SVidFrameLength = 100000 / static_cast<uint32_t>(Smacker_GetFrameRate(SVidHandle));
 	Smacker_GetFrameSize(SVidHandle, SVidWidth, SVidHeight);
 
 #ifndef USE_SDL1
@@ -318,7 +339,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	SVidPalette = SDLWrap::AllocPalette();
 	UpdatePalette();
 
-	SVidFrameEnd = SDL_GetTicks() * 1000.0 + SVidFrameLength;
+	SVidFrameEnd = GetTicksSmk() + SVidFrameLength;
 
 	return true;
 }
@@ -329,7 +350,7 @@ bool SVidPlayContinue()
 		UpdatePalette();
 	}
 
-	if (SDL_GetTicks() * 1000.0 >= SVidFrameEnd) {
+	if (GetTicksSmk() >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
@@ -345,16 +366,16 @@ bool SVidPlayContinue()
 	}
 #endif
 
-	if (SDL_GetTicks() * 1000.0 >= SVidFrameEnd) {
+	if (GetTicksSmk() >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
 	}
 
 	if (!BlitFrame())
 		return false;
 
-	double now = SDL_GetTicks() * 1000.0;
+	uint64_t now = GetTicksSmk();
 	if (now < SVidFrameEnd) {
-		SDL_Delay(static_cast<Uint32>((SVidFrameEnd - now) / 1000.0)); // wait with next frame if the system is too fast
+		SDL_Delay(static_cast<Uint32>(TimeSmkToMs(SVidFrameEnd - now))); // wait with next frame if the system is too fast
 	}
 
 	return SVidLoadNextFrame();
