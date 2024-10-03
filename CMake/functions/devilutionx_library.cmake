@@ -31,6 +31,11 @@ function(add_devilutionx_library NAME)
     target_link_libraries(${NAME} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   endif()
 
+  if(DEVILUTIONX_RESOURCE_TRACKING_ENABLED)
+    genex_for_option(DEVILUTIONX_RESOURCE_TRACKING_ENABLED)
+    target_compile_definitions(${NAME} PUBLIC "$<${DEVILUTIONX_RESOURCE_TRACKING_ENABLED_GENEX}:DEVILUTIONX_RESOURCE_TRACKING_ENABLED>")
+  endif()
+
   if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     genex_for_option(DEVILUTIONX_STATIC_CXX_STDLIB)
     target_link_libraries(${NAME} PUBLIC $<${DEVILUTIONX_STATIC_CXX_STDLIB_GENEX}:-static-libgcc;-static-libstdc++>)

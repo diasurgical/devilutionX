@@ -297,7 +297,11 @@ void LoadCharPanel()
 		}
 	}
 
-	Panel = SurfaceToClx(out);
+	Panel = SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    "runtime\\char_panel", /*trnName=*/ {},
+#endif
+	    out);
 }
 
 void FreeCharPanel()
