@@ -341,10 +341,10 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 		return SDL_BlitSurface(src, srcrect, dst, dstrect);
 	}
 
-	double src_x0, src_y0, src_x1, src_y1;
-	double dst_x0, dst_y0, dst_x1, dst_y1;
+	float src_x0, src_y0, src_x1, src_y1;
+	float dst_x0, dst_y0, dst_x1, dst_y1;
 	SDL_Rect final_src, final_dst;
-	double scaling_w, scaling_h;
+	float scaling_w, scaling_h;
 	int src_w, src_h;
 	int dst_w, dst_h;
 
@@ -379,8 +379,8 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 		return SDL_BlitSurface(src, srcrect, dst, dstrect);
 	}
 
-	scaling_w = (double)dst_w / src_w;
-	scaling_h = (double)dst_h / src_h;
+	scaling_w = (float)dst_w / src_w;
+	scaling_h = (float)dst_h / src_h;
 
 	if (NULL == dstrect) {
 		dst_x0 = 0;
