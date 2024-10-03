@@ -184,12 +184,12 @@ void palette_update(int first, int ncolor)
 
 void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256> &src, int n)
 {
-	double g = *sgOptions.Graphics.gammaCorrection / 100.0;
+	float g = *sgOptions.Graphics.gammaCorrection / 100.0F;
 
 	for (int i = 0; i < n; i++) {
-		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0, g) * 256.0);
-		dst[i].g = static_cast<Uint8>(pow(src[i].g / 256.0, g) * 256.0);
-		dst[i].b = static_cast<Uint8>(pow(src[i].b / 256.0, g) * 256.0);
+		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0F, g) * 256.0F);
+		dst[i].g = static_cast<Uint8>(pow(src[i].g / 256.0F, g) * 256.0F);
+		dst[i].b = static_cast<Uint8>(pow(src[i].b / 256.0F, g) * 256.0F);
 	}
 	RedrawEverything();
 }
