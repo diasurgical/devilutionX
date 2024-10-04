@@ -54,7 +54,7 @@ jobs:
       if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX'}}
       working-directory: ${{github.workspace}}
       shell: bash
-      run: mkdir artifacts_dir && unzip build/devilutionx.zip -d artifacts_dir && mkdir artifacts_dir/exe_dir && mv artifacts_dir/devilutionx/devilutionx.exe artifacts_dir/exe_dir && zip -m artifacts_dir/exe_dir/build.zip artifacts_dir/exe_dir/devilutionx.exe
+      run: mkdir artifacts_dir && unzip build/devilutionx.zip -d artifacts_dir && mkdir artifacts_dir/exe_dir && mv artifacts_dir/devilutionx/devilutionx.exe artifacts_dir/exe_dir && zip -m artifacts_dir/exe_dir/build.zip artifacts_dir/exe_dir/devilutionx.exe && rm artifacts_dir/devilutionx/libTolk.dll
 
     - name: Pushes DLLs and devilutionx.mpq to another repository
       if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
