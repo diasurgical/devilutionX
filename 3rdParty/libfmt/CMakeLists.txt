@@ -32,3 +32,8 @@ endif()
 if(TARGET_PLATFORM STREQUAL "rg99")
   target_compile_definitions(fmt PUBLIC FMT_BUILTIN_TYPES=0)
 endif()
+
+# https://github.com/fmtlib/fmt/issues/4189
+if(NINTENDO_3DS OR NINTENDO_SWITCH OR VITA)
+  target_compile_definitions(fmt PUBLIC FMT_USE_FALLBACK_FILE=1)
+endif()
