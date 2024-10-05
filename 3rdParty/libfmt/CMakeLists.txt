@@ -21,6 +21,9 @@ FetchContent_Declare(libfmt
 )
 FetchContent_MakeAvailableExcludeFromAll(libfmt)
 
+# We do not use locale-specific features of libfmt and disabling them reduces the size.
+target_compile_definitions(fmt PUBLIC FMT_USE_LOCALE=0)
+
 if(DEVILUTIONX_WINDOWS_NO_WCHAR)
   target_compile_definitions(fmt PUBLIC FMT_USE_WRITE_CONSOLE)
 endif()
