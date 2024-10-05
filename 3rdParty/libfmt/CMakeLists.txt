@@ -24,3 +24,8 @@ FetchContent_MakeAvailableExcludeFromAll(libfmt)
 if(DEVILUTIONX_WINDOWS_NO_WCHAR)
   target_compile_definitions(fmt PUBLIC FMT_USE_WRITE_CONSOLE)
 endif()
+
+# Reduces the overall binary size by 8 KiB.
+if(TARGET_PLATFORM STREQUAL "rg99")
+  target_compile_definitions(fmt PUBLIC FMT_BUILTIN_TYPES=0)
+endif()
