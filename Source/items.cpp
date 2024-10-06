@@ -2629,14 +2629,14 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 	magic = (magic * playerClassAttributes.itmMana) >> 6;
 	mana += (magic << 6);
 
-	player._pMaxHP = std::max(life + player._pMaxHPBase, 1 << 6);
+	player._pMaxHP = std::clamp(life + player._pMaxHPBase, 1 << 6, 2000 << 6);
 	player._pHitPoints = std::min(life + player._pHPBase, player._pMaxHP);
 
 	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(player, 0);
 	}
 
-	player._pMaxMana = std::max(mana + player._pMaxManaBase, 0);
+	player._pMaxMana = std::clamp(mana + player._pMaxManaBase, 0, 2000);
 	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
 }
 
