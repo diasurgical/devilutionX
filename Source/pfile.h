@@ -19,7 +19,11 @@
 
 namespace devilution {
 
+#ifdef __DREAMCAST____
 #define MAX_CHARACTERS 1 // todo restore me to 99
+#else
+#define MAX_CHARACTERS 99
+#endif
 
 extern bool gbValidSaveFile;
 
@@ -28,7 +32,6 @@ struct SaveReader {
 	explicit SaveReader(std::string &&dir)
 	    : dir_(std::move(dir))
 	{
-		Log("new SaveReader(\"{}\");", dir);
 	}
 
 	const std::string &dir() const
@@ -51,7 +54,6 @@ struct SaveWriter {
 	explicit SaveWriter(std::string &&dir)
 	    : dir_(std::move(dir))
 	{
-		Log("new SaveWriter(\"{}\");", dir);
 	}
 
 	bool WriteFile(const char *filename, const std::byte *data, size_t size);

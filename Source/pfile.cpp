@@ -54,6 +54,7 @@ namespace devilution {
 
 bool gbValidSaveFile;
 
+#ifdef __DREAMCAST__
 void listdir(const char *dir, int depth)
 {
 	file_t d = fs_open(dir, O_RDONLY | O_DIR);
@@ -74,6 +75,7 @@ void listdir(const char *dir, int depth)
 	fs_close(d);
 	printf("============ %s ============\n\n\n", dir);
 }
+#endif
 namespace {
 
 /** List of character names for the character selection screen. */
@@ -84,13 +86,18 @@ std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 	// shorter names to get around VMU filename size limits
 	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
+#ifdef __DREAMCAST__
 	        ? (gbIsMultiplayer ? "M" : "S")
 	        : (gbIsMultiplayer ? "m" : "s"),
+#else
+	        ? (gbIsMultiplayer ? "share_" : "spawn_")
+	        : (gbIsMultiplayer ? "multi_" : "single_"),
+#endif
 	    saveNum,
 #ifdef UNPACKED_SAVES
 #ifdef __DREAMCAST__
-	    // flatten directory structure for easier fs_ramdisk_* usage
-	    // for example, /ram/spawn_sv/hero would become /ram/spawn_sv_hero
+	    // flatten directory structure for VMU filesystem compatibility
+	    // for example, /vmu/spawn_sv/hero would become /vmu/spawn_sv_hero
 
 	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv_"
 #else
@@ -156,14 +163,9 @@ void RenameTempToPerm(SaveWriter &saveWriter)
 		[[maybe_unused]] bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
 		assert(result);
 		dwIndex++;
-		Log("GetPermSaveNames({}, \"{}\")", dwIndex, szTemp);
 		if (saveWriter.HasFile(szTemp)) {
-			Log("saveWriter.HasFile(\"{}\") = true", szTemp);
-			if (saveWriter.HasFile(szPerm)) {
-				Log("saveWriter.HasFile(\"{}\") = true => RemoveHashEntry", szPerm);
+			if (saveWriter.HasFile(szPerm))
 				saveWriter.RemoveHashEntry(szPerm);
-			}
-			Log("saveWriter.RenameFile(\"{}\", {})", szTemp, szPerm);
 			saveWriter.RenameFile(szTemp, szPerm);
 		}
 	}
@@ -176,7 +178,6 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 
 	auto buf = ReadArchive(archive, "hero", &read);
 	if (buf == nullptr) {
-		Log("ReadArchive(archive, \"hero\", {}) = false", read);
 		return false;
 	}
 
@@ -185,12 +186,14 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 		memcpy(pPack, buf.get(), sizeof(*pPack));
 		ret = true;
 	}
+
+#ifdef __DREAMCAST__
 	Log("{} == sizeof(*pPack) ({}) = {}", read, sizeof(*pPack), read == sizeof(*pPack));
 	Log("Read player {}", pPack->pName);
 	// Log("\tpHPBase = {}", pPack->pHPBase);
-
 	listdir("/ram", 0);
 	listdir("/vmu/a1", 0);
+#endif
 	return ret;
 }
 
@@ -200,13 +203,9 @@ void EncodeHero(SaveWriter &saveWriter, const PlayerPack *pack)
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
 	std::unique_ptr<std::byte[]> packed { new std::byte[packedLen] };
 
-	Log("memcpy(packed.get(), pack, {})", sizeof(*pack));
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
-	Log("Saving player {}", pack->pName);
-	// Log("\tpHPBase = {}", pack->pHPBase);
-	bool result = saveWriter.WriteFile("hero", packed.get(), packedLen /* sizeof(*pack) */);
-	Log("saveWriter.WriteFile(\"hero\", packed.get(), {}) = {}", packedLen, result);
+	saveWriter.WriteFile("hero", packed.get(), packedLen);
 }
 
 SaveWriter GetSaveWriter(uint32_t saveNum)
@@ -292,8 +291,8 @@ std::optional<SaveReader> CreateSaveReader(std::string &&path)
 #ifdef UNPACKED_SAVES
 #ifdef __DREAMCAST__
 	Log("\tAttempting to load save file {}", path);
-	// no notion of directories in ramdisk, so /ram/spawn_0_sv/ doesn't exist
-	// instead, we check for /ram/spawn_0_sv_hero which was previously created
+	// no notion of directories in vmu, so /vmu/spawn_0_sv/ doesn't exist
+	// instead, we check for /vmu/spawn_0_sv_hero which was previously created
 	std::string heroFile = path + "hero";
 	if (!FileExists(heroFile)) {
 		Log("\tFailed ):");
@@ -811,12 +810,9 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	int32_t error;
 	std::size_t length;
 
-	Log("ReadArchive(archive, \"{}\", {})", pszName, *pdwLen);
-	Log("ReadArchive 0");
 	std::unique_ptr<std::byte[]> result = archive.ReadFile(pszName, length, error);
 	if (error != 0) {
 		Log("ReadArchive 0 error = {}", error);
-		app_fatal("ReadArchive 0 = " + error);
 		return nullptr;
 	}
 
@@ -824,14 +820,7 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
 	if (decodedLength == 0) {
 		Log("ReadArchive nullptr");
-		app_fatal("decodedLength = 0");
 		return nullptr;
-	}
-	if (strcmp(pszName, "hero") == 0) {
-		PlayerPack pPack;
-		memcpy(&pPack, result.get(), decodedLength);
-		Log("ReadArchive player {}", pPack.pName);
-		// Log("\tpHPBase = {}", pPack.pHPBase);
 	}
 
 	Log("ReadArchive 2");
@@ -867,7 +856,6 @@ void pfile_write_hero_demo(int demo)
 
 HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails)
 {
-	Log("pfile_compare_hero_demo({}, {})", demo, logDetails);
 	std::string referenceSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
 
 	if (!FileExists(referenceSavePath.c_str()))
@@ -906,13 +894,9 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 		if (archive) {
 			PlayerPack pkplr;
 			if (ReadHero(*archive, &pkplr)) {
-				Log("ReadHero OK");
-				Log("Player {}", pkplr.pName);
-				// Log("Player {}, HP = {}", pkplr.pName, pkplr.pHPBase);
 				_uiheroinfo uihero;
 				uihero.saveNumber = i;
 				strcpy(hero_names[i], pkplr.pName);
-				Log("hero_names[{}] = {}", i, pkplr.pName);
 				bool hasSaveGame = ArchiveContainsGame(*archive);
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
@@ -926,9 +910,6 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 				Game2UiPlayer(player, &uihero, hasSaveGame);
 				uiAddHeroInfo(&uihero);
-			} else {
-				Log("ReadHero(*archive, &pkplr) failed");
-				app_fatal("ReadHero(*archive, &pkplr) failed");
 			}
 		}
 	}
@@ -1003,13 +984,17 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	{
 		std::optional<SaveReader> archive = OpenSaveArchive(saveNum);
 		if (!archive) {
+#ifdef __DREAMCAST__
 			listdir("/ram", 0);
 			listdir("/vmu/a1", 0);
+#endif
 			app_fatal(_("Unable to open archive"));
 		}
 		if (!ReadHero(*archive, &pkplr)) {
+#ifdef __DREAMCAST__
 			listdir("/ram", 0);
 			listdir("/vmu/a1", 0);
+#endif
 			app_fatal(_("Unable to load character"));
 		}
 
@@ -1055,10 +1040,15 @@ void pfile_update(bool forceSave)
 		return;
 
 	Uint32 tick = SDL_GetTicks();
+#ifdef __DREAMCAST__
 	// 600000 instead of 60000
 	// 60000 ms is too frequent for the VMU, the game hangs too often and too long
 	if (!forceSave && tick - prevTick <= 600000)
 		return;
+#else
+	if (!forceSave && tick - prevTick <= 60000)
+		return;
+#endif
 
 	Log("pfile_update({})", forceSave);
 	prevTick = tick;

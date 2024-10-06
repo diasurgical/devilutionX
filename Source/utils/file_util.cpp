@@ -108,6 +108,7 @@ bool FileExists(const char *path)
 	return true;
 #elif defined(__DREAMCAST__)
 	// ramdisk access doesn't work with SDL_RWFromFile or std::filesystem::exists
+	// todo check to see if this is needed with vmu fs
 	int file = fs_open(path, O_RDONLY);
 	if (file != -1) {
 		fs_close(file);
@@ -327,6 +328,7 @@ bool TruncateFile(const char *path, off_t size)
 	fs_unlink(path);
 	file_t fh = fs_open(path, O_WRONLY);
 	int result = fs_write(fh, contents, size);
+	fs_close(fh);
 	free(contents);
 	return result != -1;
 }
