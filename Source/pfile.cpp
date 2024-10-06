@@ -33,10 +33,10 @@
 #include "utils/utf8.hpp"
 
 #ifdef __DREAMCAST__
-#include <kos/fs_ramdisk.h>
-#include <kos/fs.h>
-#include <libgen.h>
 #include <dc/vmu_pkg.h>
+#include <kos/fs.h>
+#include <kos/fs_ramdisk.h>
+#include <libgen.h>
 #endif
 
 #ifdef UNPACKED_SAVES
@@ -54,19 +54,20 @@ namespace devilution {
 
 bool gbValidSaveFile;
 
-
-void listdir(const char *dir, int depth) {
+#ifdef __DREAMCAST__
+void listdir(const char *dir, int depth)
+{
 	file_t d = fs_open(dir, O_RDONLY | O_DIR);
 	dirent_t *entry;
 	printf("============ %s ============\n", dir);
-	while(NULL != (entry = fs_readdir(d))) {
+	while (NULL != (entry = fs_readdir(d))) {
 		char absolutePath[1024];
 		strcpy(absolutePath, dir);
 		strcat(absolutePath, "/");
 		strcat(absolutePath, entry->name);
 		bool isDir = entry->size == -1;
 		printf("[%s]\t%.2f kB\t%s\n", isDir ? "DIR" : "FIL", entry->size / 1024.0, entry->name);
-		if(isDir) {
+		if (isDir) {
 			printf("absolutePath = %s, depth = %d\n", absolutePath, depth);
 			listdir(absolutePath, depth + 1);
 		}
@@ -74,6 +75,7 @@ void listdir(const char *dir, int depth) {
 	fs_close(d);
 	printf("============ %s ============\n\n\n", dir);
 }
+#endif
 namespace {
 
 /** List of character names for the character selection screen. */
@@ -81,20 +83,25 @@ char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
-	//shorter names to get around VMU filename size limits
+	// shorter names to get around VMU filename size limits
 	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
+#ifdef __DREAMCAST__
 	        ? (gbIsMultiplayer ? "M" : "S")
 	        : (gbIsMultiplayer ? "m" : "s"),
+#else
+	        ? (gbIsMultiplayer ? "share_" : "spawn_")
+	        : (gbIsMultiplayer ? "multi_" : "single_"),
+#endif
 	    saveNum,
 #ifdef UNPACKED_SAVES
 #ifdef __DREAMCAST__
-            //flatten directory structure for easier fs_ramdisk_* usage
-            //for example, /ram/spawn_sv/hero would become /ram/spawn_sv_hero
+	    // flatten directory structure for VMU filesystem compatibility
+	    // for example, /vmu/spawn_sv/hero would become /vmu/spawn_sv_hero
 
-            gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv_"
+	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv_"
 #else
-            gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
+	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
 #endif
 #else
 	    gbIsHellfire ? ".hsv" : ".sv"
@@ -108,7 +115,7 @@ std::string GetStashSavePath()
 	    gbIsSpawn ? "stash_spawn" : "stash",
 #ifdef UNPACKED_SAVES
 #ifdef __DREAMCAST__
-            //same as above
+	    // same as above
 	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv_"
 #else
 	    gbIsHellfire ? "_hsv" DIRECTORY_SEPARATOR_STR : "_sv" DIRECTORY_SEPARATOR_STR
@@ -156,14 +163,9 @@ void RenameTempToPerm(SaveWriter &saveWriter)
 		[[maybe_unused]] bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
 		assert(result);
 		dwIndex++;
-		Log("GetPermSaveNames({}, \"{}\")", dwIndex, szTemp);
 		if (saveWriter.HasFile(szTemp)) {
-			Log("saveWriter.HasFile(\"{}\") = true", szTemp);
-			if (saveWriter.HasFile(szPerm)) {
-				Log("saveWriter.HasFile(\"{}\") = true => RemoveHashEntry", szPerm);
+			if (saveWriter.HasFile(szPerm))
 				saveWriter.RemoveHashEntry(szPerm);
-			}
-			Log("saveWriter.RenameFile(\"{}\", {})", szTemp, szPerm);
 			saveWriter.RenameFile(szTemp, szPerm);
 		}
 	}
@@ -176,7 +178,6 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 
 	auto buf = ReadArchive(archive, "hero", &read);
 	if (buf == nullptr) {
-		Log("ReadArchive(archive, \"hero\", {}) = false", read);
 		return false;
 	}
 
@@ -185,12 +186,14 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 		memcpy(pPack, buf.get(), sizeof(*pPack));
 		ret = true;
 	}
+
+#ifdef __DREAMCAST__
 	Log("{} == sizeof(*pPack) ({}) = {}", read, sizeof(*pPack), read == sizeof(*pPack));
 	Log("Read player {}", pPack->pName);
-	//Log("\tpHPBase = {}", pPack->pHPBase);
-
+	// Log("\tpHPBase = {}", pPack->pHPBase);
 	listdir("/ram", 0);
-        listdir("/vmu/a1", 0);
+	listdir("/vmu/a1", 0);
+#endif
 	return ret;
 }
 
@@ -200,13 +203,9 @@ void EncodeHero(SaveWriter &saveWriter, const PlayerPack *pack)
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
 	std::unique_ptr<std::byte[]> packed { new std::byte[packedLen] };
 
-	Log("memcpy(packed.get(), pack, {})", sizeof(*pack));
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
-	Log("Saving player {}", pack->pName);
-	//Log("\tpHPBase = {}", pack->pHPBase);
-	bool result = saveWriter.WriteFile("hero", packed.get(), packedLen /* sizeof(*pack) */);
-	Log("saveWriter.WriteFile(\"hero\", packed.get(), {}) = {}", packedLen, result);
+	saveWriter.WriteFile("hero", packed.get(), packedLen);
 }
 
 SaveWriter GetSaveWriter(uint32_t saveNum)
@@ -292,8 +291,8 @@ std::optional<SaveReader> CreateSaveReader(std::string &&path)
 #ifdef UNPACKED_SAVES
 #ifdef __DREAMCAST__
 	Log("\tAttempting to load save file {}", path);
-	//no notion of directories in ramdisk, so /ram/spawn_0_sv/ doesn't exist
-	//instead, we check for /ram/spawn_0_sv_hero which was previously created
+	// no notion of directories in vmu, so /vmu/spawn_0_sv/ doesn't exist
+	// instead, we check for /vmu/spawn_0_sv_hero which was previously created
 	std::string heroFile = path + "hero";
 	if (!FileExists(heroFile)) {
 		Log("\tFailed ):");
@@ -613,16 +612,14 @@ std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::siz
 	Log("path = \"{}\"", path);
 	size_t size = 0;
 	uint8 *contents;
-	if(fs_load(path.c_str(), &contents) == -1)
-	{
+	if (fs_load(path.c_str(), &contents) == -1) {
 		error = 1;
 		LogError("fs_load(\"{}\", &contents) = -1", path);
 		app_fatal("SaveReader::ReadFile " + path + " KO");
 		return nullptr;
 	}
 	vmu_pkg_t package;
-	if(vmu_pkg_parse(contents, &package) < 0)
-	{
+	if (vmu_pkg_parse(contents, &package) < 0) {
 		error = 1;
 		free(contents);
 		LogError("vmu_pkg_parse = -1");
@@ -634,7 +631,7 @@ std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::siz
 	std::unique_ptr<std::byte[]> result;
 	result.reset(new std::byte[fileSize]);
 	memcpy(result.get(), package.data, fileSize);
-	//free(package.data);
+	// free(package.data);
 	free(contents);
 	return result;
 }
@@ -670,10 +667,9 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	const std::string path = dir_ + filename;
 	Log("dir_ = {}", dir_);
 	Log("path = {}", path);
-	const char* baseName = basename(path.c_str());
-	//vmu code
-	if(dir_.starts_with("/vmu"))
-	{
+	const char *baseName = basename(path.c_str());
+	// vmu code
+	if (dir_.starts_with("/vmu")) {
 		vmu_pkg_t package;
 		strcpy(package.app_id, "DevilutionX");
 		strncpy(package.desc_short, filename, 20);
@@ -687,16 +683,14 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 
 		uint8 *contents;
 		size_t packageSize;
-		if(vmu_pkg_build(&package, &contents, &packageSize) < 0)
-		{
+		if (vmu_pkg_build(&package, &contents, &packageSize) < 0) {
 			delete[] package.data;
 			LogError("vmu_pkg_build failed");
 			app_fatal("vmu_pkg_build failed");
 			return false;
 		}
-		FILE* file = OpenFile(path.c_str(), "wb");
-		if(file == nullptr)
-		{
+		FILE *file = OpenFile(path.c_str(), "wb");
+		if (file == nullptr) {
 			delete[] package.data;
 			free(contents);
 			LogError("fopen(\"{}\", \"wb\") = nullptr", path);
@@ -704,8 +698,7 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 			return false;
 		}
 		size_t written = std::fwrite(contents, sizeof(uint8), packageSize, file);
-		if(written != packageSize)
-		{
+		if (written != packageSize) {
 			delete[] package.data;
 			free(contents);
 			std::fclose(file);
@@ -713,8 +706,7 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 			app_fatal("vmu fwrite call failed");
 			return false;
 		}
-		if(std::fclose(file) != 0)
-		{
+		if (std::fclose(file) != 0) {
 			delete[] package.data;
 			free(contents);
 			LogError("fclose(file) = 0");
@@ -727,23 +719,21 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 		return true;
 	}
 
-	//ramdisk code
+	// ramdisk code
 	bool exists = FileExists(baseName);
-	if(exists)
-	{
+	if (exists) {
 		Log("{} exists, removing it", path);
 		void *toFree;
 		size_t ignore;
 		int detach_result = fs_ramdisk_detach(baseName, &toFree, &ignore);
 		free(toFree);
 		Log("fs_ramdisk_detach result = {}", detach_result);
-		if(detach_result == -1)
-		{
+		if (detach_result == -1) {
 			return false;
 		}
 	}
 	Log("\tAllocating {} bytes for path {}", size, baseName);
-	void* buffer = malloc(size);
+	void *buffer = malloc(size);
 	memcpy(buffer, data, size);
 	Log("\tMallocation succeeded ? {}", buffer != NULL);
 	int attach_result = fs_ramdisk_attach(baseName, buffer, size);
@@ -793,7 +783,7 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	std::fclose(file);
 	return true;
 }
-#endif //def __DREAMCAST__
+#endif // def __DREAMCAST__
 void SaveWriter::RemoveHashEntries(bool (*fnGetName)(uint8_t, char *))
 {
 	char pszFileName[MaxMpqPathSize];
@@ -803,7 +793,7 @@ void SaveWriter::RemoveHashEntries(bool (*fnGetName)(uint8_t, char *))
 		RemoveHashEntry(pszFileName);
 	}
 }
-#endif //def UNPACKED_SAVES
+#endif // def UNPACKED_SAVES
 
 std::optional<SaveReader> OpenSaveArchive(uint32_t saveNum)
 {
@@ -820,12 +810,9 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	int32_t error;
 	std::size_t length;
 
-	Log("ReadArchive(archive, \"{}\", {})", pszName, *pdwLen);
-	Log("ReadArchive 0");
 	std::unique_ptr<std::byte[]> result = archive.ReadFile(pszName, length, error);
 	if (error != 0) {
 		Log("ReadArchive 0 error = {}", error);
-		app_fatal("ReadArchive 0 = " + error);
 		return nullptr;
 	}
 
@@ -833,15 +820,7 @@ std::unique_ptr<std::byte[]> ReadArchive(SaveReader &archive, const char *pszNam
 	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
 	if (decodedLength == 0) {
 		Log("ReadArchive nullptr");
-		app_fatal("decodedLength = 0");
 		return nullptr;
-	}
-	if(strcmp(pszName, "hero") == 0)
-	{
-		PlayerPack pPack;
-		memcpy(&pPack, result.get(), decodedLength);
-		Log("ReadArchive player {}", pPack.pName);
-		//Log("\tpHPBase = {}", pPack.pHPBase);
 	}
 
 	Log("ReadArchive 2");
@@ -877,7 +856,6 @@ void pfile_write_hero_demo(int demo)
 
 HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails)
 {
-	Log("pfile_compare_hero_demo({}, {})", demo, logDetails);
 	std::string referenceSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
 
 	if (!FileExists(referenceSavePath.c_str()))
@@ -916,13 +894,9 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 		if (archive) {
 			PlayerPack pkplr;
 			if (ReadHero(*archive, &pkplr)) {
-				Log("ReadHero OK");
-				Log("Player {}", pkplr.pName);
-				//Log("Player {}, HP = {}", pkplr.pName, pkplr.pHPBase);
 				_uiheroinfo uihero;
 				uihero.saveNumber = i;
 				strcpy(hero_names[i], pkplr.pName);
-				Log("hero_names[{}] = {}", i, pkplr.pName);
 				bool hasSaveGame = ArchiveContainsGame(*archive);
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
@@ -936,10 +910,6 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 				Game2UiPlayer(player, &uihero, hasSaveGame);
 				uiAddHeroInfo(&uihero);
-			}
-                        else {
-				Log("ReadHero(*archive, &pkplr) failed");
-				app_fatal("ReadHero(*archive, &pkplr) failed");
 			}
 		}
 	}
@@ -1014,13 +984,17 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	{
 		std::optional<SaveReader> archive = OpenSaveArchive(saveNum);
 		if (!archive) {
+#ifdef __DREAMCAST__
 			listdir("/ram", 0);
-                        listdir("/vmu/a1", 0);
+			listdir("/vmu/a1", 0);
+#endif
 			app_fatal(_("Unable to open archive"));
 		}
 		if (!ReadHero(*archive, &pkplr)) {
+#ifdef __DREAMCAST__
 			listdir("/ram", 0);
-                        listdir("/vmu/a1", 0);
+			listdir("/vmu/a1", 0);
+#endif
 			app_fatal(_("Unable to load character"));
 		}
 
@@ -1066,10 +1040,15 @@ void pfile_update(bool forceSave)
 		return;
 
 	Uint32 tick = SDL_GetTicks();
-	//600000 instead of 60000
-	//60000 ms is too frequent for the VMU, the game hangs too often and too long
+#ifdef __DREAMCAST__
+	// 600000 instead of 60000
+	// 60000 ms is too frequent for the VMU, the game hangs too often and too long
 	if (!forceSave && tick - prevTick <= 600000)
 		return;
+#else
+	if (!forceSave && tick - prevTick <= 60000)
+		return;
+#endif
 
 	Log("pfile_update({})", forceSave);
 	prevTick = tick;

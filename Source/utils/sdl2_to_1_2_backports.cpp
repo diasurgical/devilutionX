@@ -883,7 +883,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	return retval;
 #elif defined(__DREAMCAST__)
 	retval = SDL_strdup("/vmu/a1/");
-        return retval;
+	return retval;
 #endif
 
 	if (!app) {

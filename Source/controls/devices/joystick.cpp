@@ -104,18 +104,18 @@ StaticVector<ControllerButtonEvent, 4> Joystick::ToControllerButtonEvents(const 
 	case SDL_JOYAXISMOTION:
 	case SDL_JOYBALLMOTION:
 #ifdef __DREAMCAST__
-	if(event.jaxis.axis == 3) {
-		Log("BUTTON_LEFTSHOULDER detected");
-		Log("event.jbutton.button = {}", event.jbutton.button);
-		Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
-		return { ControllerButtonEvent { ControllerButton_BUTTON_LEFTSHOULDER, event.jaxis.value < 255 } };
-	}
-	if(event.jaxis.axis == 2) {
-		Log("BUTTON_RIGHTSHOULDER detected");
-		Log("event.jbutton.button = {}", event.jbutton.button);
-		Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
-		return { ControllerButtonEvent { ControllerButton_BUTTON_RIGHTSHOULDER, event.jaxis.value < 255 } };
-	}
+		if (event.jaxis.axis == 3) {
+			Log("BUTTON_LEFTSHOULDER detected");
+			Log("event.jbutton.button = {}", event.jbutton.button);
+			Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
+			return { ControllerButtonEvent { ControllerButton_BUTTON_LEFTSHOULDER, event.jaxis.value < 255 } };
+		}
+		if (event.jaxis.axis == 2) {
+			Log("BUTTON_RIGHTSHOULDER detected");
+			Log("event.jbutton.button = {}", event.jbutton.button);
+			Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
+			return { ControllerButtonEvent { ControllerButton_BUTTON_RIGHTSHOULDER, event.jaxis.value < 255 } };
+		}
 #endif
 		// ProcessAxisMotion() requires a ControllerButtonEvent parameter
 		// so provide one here using ControllerButton_NONE
@@ -322,11 +322,11 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 	Log("event.jbutton.state == SDL_RELEASED = {}", event.jbutton.state == SDL_RELEASED);
 
 	switch (event.jaxis.axis) {
-	case 0: //horizontal
+	case 0: // horizontal
 		leftStickXUnscaled = event.jaxis.value;
 		leftStickNeedsScaling = true;
 		return true;
-	case 1: //vertical
+	case 1: // vertical
 		leftStickYUnscaled = event.jaxis.value;
 		leftStickNeedsScaling = true;
 		return true;
@@ -334,7 +334,7 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 		return false;
 	}
 }
-#else //!ifdef __DREAMCAST__
+#else //! ifdef __DREAMCAST__
 bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 {
 	if (event.type != SDL_JOYAXISMOTION)

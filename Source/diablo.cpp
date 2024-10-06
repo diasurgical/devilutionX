@@ -789,11 +789,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 	default:
 		if (IsCustomEvent(event.type)) {
 			if (gbIsMultiplayer)
-                        {
-				Log("IsCustomEvent({}) = true", event.type);
-				Log("pfile_write_hero");
 				pfile_write_hero();
-                        }
 			nthread_ignore_mutex(true);
 			PaletteFadeOut(8);
 			sound_stop();
@@ -913,7 +909,6 @@ void RunGameLoop(interface_mode uMsg)
 	demo::NotifyGameLoopEnd();
 
 	if (gbIsMultiplayer) {
-		Log("gbRunGame = {}, pfile_write_hero(/*writeGameData=*/false)", gbRunGame);
 		pfile_write_hero(/*writeGameData=*/false);
 		sfile_write_stash();
 	}
@@ -2850,7 +2845,6 @@ void DisableInputEventHandler(const SDL_Event &event, uint16_t modState)
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
-	Log("LoadGameLevel(firstflag = {}, lvldir = {})", firstflag, static_cast<uint8_t>(lvldir));
 	_music_id neededTrack = GetLevelMusic(leveltype);
 	ClearFloatingNumbers();
 
