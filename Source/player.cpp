@@ -2947,8 +2947,6 @@ void ProcessPlayers()
 	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
 		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
-			CheckCheatStats(player);
-
 			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {
 				SyncPlrKill(player, DeathReason::Unknown);
 			}
