@@ -19,7 +19,7 @@
 
 namespace devilution {
 
-#define MAX_CHARACTERS 1 //todo restore me to 99
+#define MAX_CHARACTERS 1 // todo restore me to 99
 
 extern bool gbValidSaveFile;
 

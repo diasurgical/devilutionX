@@ -107,14 +107,14 @@ bool FileExists(const char *path)
 	}
 	return true;
 #elif defined(__DREAMCAST__)
-	//ramdisk access doesn't work with SDL_RWFromFile or std::filesystem::exists
+	// ramdisk access doesn't work with SDL_RWFromFile or std::filesystem::exists
 	int file = fs_open(path, O_RDONLY);
-	if(file != -1) {
+	if (file != -1) {
 		fs_close(file);
 		return true;
 	}
 	file = fs_open(path, O_RDONLY | O_DIR);
-	if(file != -1) {
+	if (file != -1) {
 		fs_close(file);
 		return true;
 	}
@@ -317,19 +317,18 @@ void RecursivelyCreateDir(const char *path)
 #ifdef __DREAMCAST__
 bool TruncateFile(const char *path, off_t size)
 {
-    Log("TruncateFile(\"{}\", {})", path, size);
-    void *contents;
-    size_t read = fs_load(path, &contents);
-    if(read == -1)
-    {
-        return false;
-    }
+	Log("TruncateFile(\"{}\", {})", path, size);
+	void *contents;
+	size_t read = fs_load(path, &contents);
+	if (read == -1) {
+		return false;
+	}
 
-    fs_unlink(path);
-    file_t fh = fs_open(path, O_WRONLY);
-    int result = fs_write(fh, contents, size);
-    free(contents);
-    return result != -1;
+	fs_unlink(path);
+	file_t fh = fs_open(path, O_WRONLY);
+	int result = fs_write(fh, contents, size);
+	free(contents);
+	return result != -1;
 }
 #endif
 

@@ -23,9 +23,10 @@
 #include "diablo.h"
 
 #ifdef __DREAMCAST__
-//fchmod fails to link on the dreamcast, this stub is provided as a workaround
-extern "C" int fchmod(int fd, mode_t mode) {
-    return 0;
+// fchmod fails to link on the dreamcast, this stub is provided as a workaround
+extern "C" int fchmod(int fd, mode_t mode)
+{
+	return 0;
 }
 #endif
 

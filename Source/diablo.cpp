@@ -788,12 +788,11 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 #endif
 	default:
 		if (IsCustomEvent(event.type)) {
-			if (gbIsMultiplayer)
-                        {
+			if (gbIsMultiplayer) {
 				Log("IsCustomEvent({}) = true", event.type);
 				Log("pfile_write_hero");
 				pfile_write_hero();
-                        }
+			}
 			nthread_ignore_mutex(true);
 			PaletteFadeOut(8);
 			sound_stop();

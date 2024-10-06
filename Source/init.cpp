@@ -220,10 +220,10 @@ bool IsDevilutionXMpqOutOfDate(MpqArchive &archive)
 bool AreExtraFontsOutOfDate(const std::string &path)
 {
 #ifdef __DREAMCAST__
-       //handle ISO 9660 trailing period
-       const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION.";
+	// handle ISO 9660 trailing period
+	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION.";
 #else
-       const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
 #endif
 
 	if (versionPath.size() + 1 > AssetRef::PathBufSize)
