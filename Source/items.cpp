@@ -2638,6 +2638,7 @@ void CalcPlrLifeMana(Player &player, int vitality, int magic, int life, int mana
 
 	player._pMaxMana = std::max(mana + player._pMaxManaBase, 0);
 	player._pMana = std::min(mana + player._pManaBase, player._pMaxMana);
+}
 
 void CalcPlrBlockFlag(Player &player)
 {
