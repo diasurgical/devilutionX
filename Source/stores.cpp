@@ -396,15 +396,10 @@ void ScrollSmithBuy(int idx)
 	ScrollVendorStore(SmithItems, static_cast<int>(std::size(SmithItems)), idx);
 }
 
-uint32_t TotalPlayerGold()
-{
-	return MyPlayer->_pGold + Stash.gold;
-}
-
 // TODO: Change `_iIvalue` to be unsigned instead of passing `int` here.
 bool PlayerCanAfford(int price)
 {
-	return TotalPlayerGold() >= static_cast<uint32_t>(price);
+	return MyPlayer->_pGold >= static_cast<uint32_t>(price);
 }
 
 void StartSmithBuy()
@@ -2404,7 +2399,7 @@ void DrawSText(const Surface &out)
 	}
 
 	if (RenderGold) {
-		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:s}")), FormatInteger(TotalPlayerGold())).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
+		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:s}")), FormatInteger(MyPlayer->_pGold)).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
 	}
 
 	if (HasScrollbar)
