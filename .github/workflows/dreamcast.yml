@@ -68,8 +68,6 @@ jobs:
 
       - name: Build DevilutionX
         run: |
-          # patches libfmt to support long double
-          patch build/_deps/libfmt-src/include/fmt/format.h -l -p0 < libfmt-long-double.patch
           source /opt/toolchains/dc/kos/environ.sh && cd build && kos-make
 
       - name: Generate .cdi

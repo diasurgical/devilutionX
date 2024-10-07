@@ -31,9 +31,6 @@ RUN source /opt/toolchains/dc/kos/environ.sh && \
     export CMAKE_PREFIX_PATH=/opt/toolchains/dc/kos-ports/libbz2/inst/:/opt/toolchains/dc/kos-ports/zlib/inst/ && \
     kos-cmake -S. -Bbuild
 
-RUN echo "Patching fmt to support long double..."
-RUN patch build/_deps/libfmt-src/include/fmt/format.h -l -p0 < libfmt-long-double.patch
-
 RUN echo "Compiling..."
 RUN source /opt/toolchains/dc/kos/environ.sh && cd build && kos-make
 
