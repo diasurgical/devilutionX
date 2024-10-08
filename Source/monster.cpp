@@ -333,15 +333,58 @@ size_t GetMonsterTypeIndex(_monster_id type)
 	return LevelMonsterTypeCount;
 }
 
-void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspacksize)
+Point GetUniqueMonstPosition(UniqueMonsterType uniqindex)
 {
-	Monster &monster = Monsters[ActiveMonsterCount];
-	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
+	if (setlevel) {
+		switch (uniqindex) {
+		case UniqueMonsterType::Lazarus:
+			return { 32, 46 };
+		case UniqueMonsterType::RedVex:
+			return { 40, 45 };
+		case UniqueMonsterType::BlackJade:
+			return { 38, 49 };
+		case UniqueMonsterType::SkeletonKing:
+			return { 35, 47 };
+		default:
+			break;
+		}
+	}
 
-	int count = 0;
+	switch (uniqindex) {
+	case UniqueMonsterType::SnotSpill:
+		return SetPiece.position.megaToWorld() + Displacement { 8, 12 };
+	case UniqueMonsterType::WarlordOfBlood:
+		return SetPiece.position.megaToWorld() + Displacement { 6, 7 };
+	case UniqueMonsterType::Zhar:
+		for (int i = 0; i < themeCount; i++) {
+			if (i == zharlib) {
+				return themeLoc[i].room.position.megaToWorld() + Displacement { 4, 4 };
+			}
+		}
+		break;
+	case UniqueMonsterType::Lazarus:
+		return SetPiece.position.megaToWorld() + Displacement { 3, 6 };
+	case UniqueMonsterType::RedVex:
+		return SetPiece.position.megaToWorld() + Displacement { 5, 3 };
+	case UniqueMonsterType::BlackJade:
+		return SetPiece.position.megaToWorld() + Displacement { 5, 9 };
+	case UniqueMonsterType::Butcher:
+		return SetPiece.position.megaToWorld() + Displacement { 4, 4 };
+	case UniqueMonsterType::NaKrul:
+		if (UberRow == 0 || UberCol == 0) {
+			UberDiabloMonsterIndex = -1;
+			break;
+		}
+		UberDiabloMonsterIndex = static_cast<int>(ActiveMonsterCount);
+		return { UberRow - 2, UberCol };
+	default:
+		break;
+	}
+
 	Point position;
-	while (true) {
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+	int count = 0;
+	do {
+		Point position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
 		int count2 = 0;
 		for (int x = position.x - 3; x < position.x + 3; x++) {
 			for (int y = position.y - 3; y < position.y + 3; y++) {
@@ -357,66 +400,20 @@ void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspa
 				continue;
 			}
 		}
+	} while (!CanPlaceMonster(position));
 
-		if (CanPlaceMonster(position)) {
-			break;
-		}
-	}
+	return position;
+}
 
-	if (uniqindex == UniqueMonsterType::SnotSpill) {
-		position = SetPiece.position.megaToWorld() + Displacement { 8, 12 };
-	}
-	if (uniqindex == UniqueMonsterType::WarlordOfBlood) {
-		position = SetPiece.position.megaToWorld() + Displacement { 6, 7 };
-	}
-	if (uniqindex == UniqueMonsterType::Zhar) {
-		for (int i = 0; i < themeCount; i++) {
-			if (i == zharlib) {
-				position = themeLoc[i].room.position.megaToWorld() + Displacement { 4, 4 };
-				break;
-			}
-		}
-	}
-	if (setlevel) {
-		if (uniqindex == UniqueMonsterType::Lazarus) {
-			position = { 32, 46 };
-		}
-		if (uniqindex == UniqueMonsterType::RedVex) {
-			position = { 40, 45 };
-		}
-		if (uniqindex == UniqueMonsterType::BlackJade) {
-			position = { 38, 49 };
-		}
-		if (uniqindex == UniqueMonsterType::SkeletonKing) {
-			position = { 35, 47 };
-		}
-	} else {
-		if (uniqindex == UniqueMonsterType::Lazarus) {
-			position = SetPiece.position.megaToWorld() + Displacement { 3, 6 };
-		}
-		if (uniqindex == UniqueMonsterType::RedVex) {
-			position = SetPiece.position.megaToWorld() + Displacement { 5, 3 };
-		}
-		if (uniqindex == UniqueMonsterType::BlackJade) {
-			position = SetPiece.position.megaToWorld() + Displacement { 5, 9 };
-		}
-	}
-	if (uniqindex == UniqueMonsterType::Butcher) {
-		position = SetPiece.position.megaToWorld() + Displacement { 4, 4 };
-	}
-
-	if (uniqindex == UniqueMonsterType::NaKrul) {
-		if (UberRow == 0 || UberCol == 0) {
-			UberDiabloMonsterIndex = -1;
-			return;
-		}
-		position = { UberRow - 2, UberCol };
-		UberDiabloMonsterIndex = static_cast<int>(ActiveMonsterCount);
-	}
+void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspacksize)
+{
+	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
 	const size_t typeIndex = GetMonsterTypeIndex(uniqueMonsterData.mtype);
+	const Point position = GetUniqueMonstPosition(uniqindex);
 	PlaceMonster(ActiveMonsterCount, typeIndex, position);
-	ActiveMonsterCount++;
 
+	Monster &monster = Monsters[ActiveMonsterCount];
+	ActiveMonsterCount++;
 	PrepareUniqueMonst(monster, uniqindex, minionType, bosspacksize, uniqueMonsterData);
 }
 
