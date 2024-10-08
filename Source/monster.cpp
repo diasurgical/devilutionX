@@ -544,6 +544,13 @@ void PlaceQuestMonsters()
 		}
 	} else if (setlvlnum == SL_SKELKING) {
 		PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, 0, 0);
+	} else if (setlvlnum == SL_VILEBETRAYER) {
+		AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonsterType::BlackJade, PLACE_UNIQUE);
+		PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
+		PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
+		PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
 	}
 }
 
@@ -3540,15 +3547,6 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 	if (setlevel)
 		for (int i = 0; i < MAX_PLRS; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
-
-	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonsterType::BlackJade, PLACE_UNIQUE);
-		PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
-		PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
-		PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
-	}
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
