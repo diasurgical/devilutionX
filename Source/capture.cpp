@@ -62,7 +62,6 @@ FILE *CaptureFile(std::string *dstPath)
 
 void CaptureScreen()
 {
-	SDL_Color palette[256];
 	std::string fileName;
 	const uint32_t startTime = SDL_GetTicks();
 
