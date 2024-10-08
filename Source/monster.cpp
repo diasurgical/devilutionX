@@ -338,81 +338,92 @@ void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspa
 	Monster &monster = Monsters[ActiveMonsterCount];
 	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
 
-	int count = 0;
 	Point position;
-	while (true) {
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
-		int count2 = 0;
-		for (int x = position.x - 3; x < position.x + 3; x++) {
-			for (int y = position.y - 3; y < position.y + 3; y++) {
-				if (InDungeonBounds({ x, y }) && CanPlaceMonster({ x, y })) {
-					count2++;
-				}
-			}
-		}
+	bool hasPredefinedPosition = true;
 
-		if (count2 < 9) {
-			count++;
-			if (count < 1000) {
-				continue;
-			}
-		}
-
-		if (CanPlaceMonster(position)) {
-			break;
-		}
-	}
-
-	if (uniqindex == UniqueMonsterType::SnotSpill) {
+	switch (uniqindex) {
+	case UniqueMonsterType::SnotSpill:
 		position = SetPiece.position.megaToWorld() + Displacement { 8, 12 };
-	}
-	if (uniqindex == UniqueMonsterType::WarlordOfBlood) {
+		break;
+	case UniqueMonsterType::WarlordOfBlood:
 		position = SetPiece.position.megaToWorld() + Displacement { 6, 7 };
-	}
-	if (uniqindex == UniqueMonsterType::Zhar) {
+		break;
+	case UniqueMonsterType::Zhar:
 		for (int i = 0; i < themeCount; i++) {
 			if (i == zharlib) {
 				position = themeLoc[i].room.position.megaToWorld() + Displacement { 4, 4 };
 				break;
 			}
 		}
-	}
-	if (setlevel) {
-		if (uniqindex == UniqueMonsterType::Lazarus) {
+		break;
+	case UniqueMonsterType::Lazarus:
+		if (setlevel) {
 			position = { 32, 46 };
-		}
-		if (uniqindex == UniqueMonsterType::RedVex) {
-			position = { 40, 45 };
-		}
-		if (uniqindex == UniqueMonsterType::BlackJade) {
-			position = { 38, 49 };
-		}
-		if (uniqindex == UniqueMonsterType::SkeletonKing) {
-			position = { 35, 47 };
-		}
-	} else {
-		if (uniqindex == UniqueMonsterType::Lazarus) {
+		} else {
 			position = SetPiece.position.megaToWorld() + Displacement { 3, 6 };
 		}
-		if (uniqindex == UniqueMonsterType::RedVex) {
+		break;
+	case UniqueMonsterType::RedVex:
+		if (setlevel) {
+			position = { 40, 45 };
+		} else {
 			position = SetPiece.position.megaToWorld() + Displacement { 5, 3 };
 		}
-		if (uniqindex == UniqueMonsterType::BlackJade) {
+		break;
+	case UniqueMonsterType::BlackJade:
+		if (setlevel) {
+			position = { 38, 49 };
+		} else {
 			position = SetPiece.position.megaToWorld() + Displacement { 5, 9 };
 		}
-	}
-	if (uniqindex == UniqueMonsterType::Butcher) {
+		break;
+	case UniqueMonsterType::SkeletonKing:
+		if (setlevel) {
+			position = { 35, 47 };
+		}
+		break;
+	case UniqueMonsterType::Butcher:
 		position = SetPiece.position.megaToWorld() + Displacement { 4, 4 };
-	}
-
-	if (uniqindex == UniqueMonsterType::NaKrul) {
+		break;
+	case UniqueMonsterType::NaKrul:
 		if (UberRow == 0 || UberCol == 0) {
 			UberDiabloMonsterIndex = -1;
 			return;
 		}
 		position = { UberRow - 2, UberCol };
 		UberDiabloMonsterIndex = static_cast<int>(ActiveMonsterCount);
+		break;
+	default:
+		hasPredefinedPosition = false;
+		break;
 	}
+
+	if (!hasPredefinedPosition) {
+		int count = 0;
+		while (true) {
+			position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+			int count2 = 0;
+			for (int x = position.x - 3; x < position.x + 3; x++) {
+				for (int y = position.y - 3; y < position.y + 3; y++) {
+					if (InDungeonBounds({ x, y }) && CanPlaceMonster({ x, y })) {
+						count2++;
+					}
+				}
+			}
+
+			if (count2 < 9) {
+				count++;
+				if (count < 1000) {
+					continue;
+				}
+			}
+
+			if (CanPlaceMonster(position)) {
+				break;
+			}
+		}
+	}
+
 	const size_t typeIndex = GetMonsterTypeIndex(uniqueMonsterData.mtype);
 	PlaceMonster(ActiveMonsterCount, typeIndex, position);
 	ActiveMonsterCount++;
