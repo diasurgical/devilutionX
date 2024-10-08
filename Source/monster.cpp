@@ -384,7 +384,7 @@ Point GetUniqueMonstPosition(UniqueMonsterType uniqindex)
 	Point position;
 	int count = 0;
 	do {
-		Point position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
 		int count2 = 0;
 		for (int x = position.x - 3; x < position.x + 3; x++) {
 			for (int y = position.y - 3; y < position.y + 3; y++) {
