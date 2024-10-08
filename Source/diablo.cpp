@@ -2951,7 +2951,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			}
 		}
 
-		PlayDungMsgs();
 		InitMultiView();
 		IncProgress();
 
@@ -3019,6 +3018,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				for (int y = 0; y < DMAXY; y++)
 					UpdateAutomapExplorer({ x, y }, MAP_EXP_SELF);
 		}
+
+		PlayDungMsgs();
+
 		if (UseMultiplayerQuests())
 			ResyncMPQuests();
 		else
@@ -3053,7 +3055,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			}
 		}
 		IncProgress();
-		PlayDungMsgs();
 		InitMultiView();
 		IncProgress();
 
@@ -3069,6 +3070,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				ResyncQuests();
 		}
 
+		PlayDungMsgs();
 		InitMissiles();
 		IncProgress();
 	}
