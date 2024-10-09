@@ -3069,16 +3069,6 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 	player.walkpath[path] = WALK_NONE;
 }
 
-void CalcPlrStaff(Player &player)
-{
-	player._pISpells = 0;
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag
-	    && player.InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
-		player._pISpells |= GetSpellBitmask(player.InvBody[INVLOC_HAND_LEFT]._iSpell);
-	}
-}
-
 void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 {
 	bool addflag = false;

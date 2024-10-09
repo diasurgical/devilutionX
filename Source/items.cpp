@@ -2912,7 +2912,6 @@ void CalcPlrInv(Player &player, bool loadgfx)
 			item.updateRequiredStatsCacheForPlayer(player);
 		}
 		player.CalcScrolls();
-		CalcPlrStaff(player);
 		if (IsStashOpen) {
 			// If stash is open, ensure the items are displayed correctly
 			Stash.RefreshItemStatFlags();
