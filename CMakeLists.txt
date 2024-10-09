@@ -627,7 +627,7 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
       RENAME "${project_name}.metainfo.xml"
     )
     if(DISCORD_SHARED_LIB)
-      install(FILES "${DISCORD_SHARED_LIB}" DESTINATION "lib")
+      install(FILES "${DISCORD_SHARED_LIB}" DESTINATION "${CMAKE_INSTALL_LIBDIR}")
     endif()
 
     # -G DEB
