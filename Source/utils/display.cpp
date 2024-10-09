@@ -43,6 +43,19 @@
 #endif
 #endif
 
+#ifdef __DREAMCAST__
+#include <SDL_dreamcast.h>
+
+void enable_dma_driver()
+{
+	SDL_DC_VerticalWait(SDL_FALSE);
+	SDL_DC_ShowAskHz(SDL_TRUE);
+	SDL_DC_EmulateKeyboard(SDL_FALSE);
+	SDL_DC_EmulateMouse(SDL_FALSE);
+	SDL_DC_SetVideoDriver(SDL_DC_DMA_VIDEO);
+}
+#endif
+
 namespace devilution {
 
 extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
@@ -229,6 +242,9 @@ float GetDpiScalingFactor()
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
 	Log("Setting video mode {}x{} bpp={} flags=0x{:08X}", width, height, bpp, flags);
+#ifdef __DREAMCAST__
+	enable_dma_driver();
+#endif
 	ghMainWnd = SDL_SetVideoMode(width, height, bpp, flags);
 	if (ghMainWnd == nullptr) {
 		ErrSdl();
@@ -462,6 +478,9 @@ void SetFullscreenMode()
 	if (*sgOptions.Graphics.fullscreen) {
 		flags |= SDL_FULLSCREEN;
 	}
+#ifdef __DREAMCAST__
+	enable_dma_driver();
+#endif
 	ghMainWnd = SDL_SetVideoMode(0, 0, 0, flags);
 	if (ghMainWnd == NULL) {
 		ErrSdl();

@@ -29,7 +29,7 @@ if(DEVILUTIONX_WINDOWS_NO_WCHAR)
 endif()
 
 # Reduces the overall binary size by 8 KiB.
-if(TARGET_PLATFORM STREQUAL "rg99")
+if(TARGET_PLATFORM STREQUAL "rg99" OR PLATFORM_DREAMCAST)
   target_compile_definitions(fmt PUBLIC FMT_BUILTIN_TYPES=0)
 endif()
 

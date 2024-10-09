@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dreamcast
     paths-ignore:
       - '*.md'
       - 'docs/**'
