@@ -1110,6 +1110,13 @@ void TryDisarm(const Player &player, Object &object)
 	}
 }
 
+bool IsPlayerNextToTarget(Player &player, const WorldTilePosition &target)
+{
+	int x = std::abs(player.position.tile.x - target.x);
+	int y = std::abs(player.position.tile.y - target.y);
+	return x <= 1 && y <= 1;
+}
+
 void CheckNewPath(Player &player, bool pmWillBeCalled)
 {
 	int x = 0;
@@ -1161,23 +1168,21 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	}
 
 	Direction d;
+
 	if (player.walkpath[0] != WALK_NONE) {
 		if (player._pmode == PM_STAND) {
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
-					if (player.destAction == ACTION_ATTACKMON) {
-						auto monsterPosition = GetTargetMonsterPosition(*monster, player);
-						x = std::abs(player.position.future.x - monsterPosition.x);
-						y = std::abs(player.position.future.y - monsterPosition.y);
-						d = GetDirection(player.position.future, monsterPosition);
-					} else {
-						auto targetPosition = GetTargetPlayerPosition(*target, player);
-						x = std::abs(player.position.future.x - targetPosition.x);
-						y = std::abs(player.position.future.y - targetPosition.y);
-						d = GetDirection(player.position.future, targetPosition);
-					}
+					WorldTilePosition targetPosition;
 
-					if (x <= 1 && y <= 1) {
+					if (player.destAction == ACTION_ATTACKMON)
+						targetPosition = GetTargetMonsterPosition(*monster, player);
+					else
+						targetPosition = GetTargetPlayerPosition(*target, player);
+
+					d = GetDirection(player.position.future, targetPosition);
+
+					if (IsPlayerNextToTarget(player, targetPosition)) {
 						ClrPlrPath(player);
 						if (player.destAction == ACTION_ATTACKMON && monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 							TalktoMonster(player, *monster);
@@ -1242,9 +1247,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_ATTACKMON:
 			auto monsterPosition = GetTargetMonsterPosition(*monster, player);
-			x = std::abs(player.position.tile.x - monsterPosition.x);
-			y = std::abs(player.position.tile.y - monsterPosition.y);
-			if (x <= 1 && y <= 1) {
+
+			if (IsPlayerNextToTarget(player, monsterPosition)) {
 				d = GetDirection(player.position.future, monsterPosition);
 				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 					TalktoMonster(player, *monster);
@@ -1254,10 +1258,9 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_ATTACKPLR:
-			x = std::abs(player.position.tile.x - target->position.future.x);
-			y = std::abs(player.position.tile.y - target->position.future.y);
-			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, target->position.future);
+			auto targetPosition = GetTargetPlayerPosition(*target, player);
+			if (IsPlayerNextToTarget(player, targetPosition)) {
+				d = GetDirection(player.position.future, targetPosition);
 				StartAttack(player, d, pmWillBeCalled);
 			}
 			break;
@@ -1364,18 +1367,17 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartAttack(player, d, pmWillBeCalled);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
-			x = std::abs(player.position.tile.x - monster->position.future.x);
-			y = std::abs(player.position.tile.y - monster->position.future.y);
-			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, monster->position.future);
+			auto monsterPosition = GetTargetMonsterPosition(*monster, player);
+			if (IsPlayerNextToTarget(player, monsterPosition)) {
+				d = GetDirection(player.position.future, monsterPosition);
 				StartAttack(player, d, pmWillBeCalled);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKPLR) {
-			x = std::abs(player.position.tile.x - target->position.future.x);
-			y = std::abs(player.position.tile.y - target->position.future.y);
-			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, target->position.future);
+			auto targetPosition = GetTargetPlayerPosition(*target, player);
+
+			if (IsPlayerNextToTarget(player, targetPosition)) {
+				d = GetDirection(player.position.future, targetPosition);
 				StartAttack(player, d, pmWillBeCalled);
 			}
 			player.destAction = ACTION_NONE;
