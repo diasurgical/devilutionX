@@ -1245,9 +1245,8 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartAttack(player, d, pmWillBeCalled);
 			break;
-		case ACTION_ATTACKMON:
+		case ACTION_ATTACKMON: {
 			auto monsterPosition = GetTargetMonsterPosition(*monster, player);
-
 			if (IsPlayerNextToTarget(player, monsterPosition)) {
 				d = GetDirection(player.position.future, monsterPosition);
 				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
@@ -1256,14 +1255,14 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 					StartAttack(player, d, pmWillBeCalled);
 				}
 			}
-			break;
-		case ACTION_ATTACKPLR:
+		} break;
+		case ACTION_ATTACKPLR: {
 			auto targetPosition = GetTargetPlayerPosition(*target, player);
 			if (IsPlayerNextToTarget(player, targetPosition)) {
 				d = GetDirection(player.position.future, targetPosition);
 				StartAttack(player, d, pmWillBeCalled);
 			}
-			break;
+		} break;
 		case ACTION_RATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(player, d, player.destParam1, player.destParam2, pmWillBeCalled);
@@ -1328,9 +1327,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_PICKUPITEM:
 			if (&player == MyPlayer) {
-				x = std::abs(player.position.tile.x - item->position.x);
-				y = std::abs(player.position.tile.y - item->position.y);
-				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
+				if (IsPlayerNextToTarget(player, item->position) && pcurs == CURSOR_HAND && !item->_iRequest) {
 					NetSendCmdGItem(true, CMD_REQUESTGITEM, player, targetId);
 					item->_iRequest = true;
 				}
@@ -1338,9 +1335,7 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			break;
 		case ACTION_PICKUPAITEM:
 			if (&player == MyPlayer) {
-				x = std::abs(player.position.tile.x - item->position.x);
-				y = std::abs(player.position.tile.y - item->position.y);
-				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
+				if (IsPlayerNextToTarget(player, item->position) && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(true, CMD_REQUESTAGITEM, player, targetId);
 				}
 			}
