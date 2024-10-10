@@ -1554,7 +1554,7 @@ size_t OnAttackMonster(const TCmd *pCmd, Player &player)
 	const uint16_t monsterIdx = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && monsterIdx < MaxMonsters) {
-		Point position = Monsters[monsterIdx].position.future;
+		Point position = GetTargetMonsterPosition(Monsters[monsterIdx], player);
 		if (player.position.tile.WalkingDistance(position) > 1)
 			MakePlrPath(player, position, false);
 		player.destAction = ACTION_ATTACKMON;
@@ -1570,7 +1570,7 @@ size_t OnAttackPlayer(const TCmd *pCmd, Player &player)
 	const uint16_t playerIdx = SDL_SwapLE16(message.wParam1);
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && playerIdx < Players.size()) {
-		MakePlrPath(player, Players[playerIdx].position.future, false);
+		MakePlrPath(player, GetTargetPlayerPosition(Players[playerIdx], player), false);
 		player.destAction = ACTION_ATTACKPLR;
 		player.destParam1 = playerIdx;
 	}

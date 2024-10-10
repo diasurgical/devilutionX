@@ -56,6 +56,40 @@ std::vector<Player> Players;
 Player *InspectPlayer;
 bool MyPlayerIsDead;
 
+WorldTilePosition GetTargetMonsterPosition(const Monster &monster, const Player &player)
+{
+	if (IsAnyOf(player.destAction, ACTION_RATTACKMON, ACTION_RATTACKPLR, ACTION_SPELLMON, ACTION_SPELLPLR))
+		return monster.position.future;
+
+	WorldTilePosition targetPosition = monster.position.future;
+
+	if (monster.isWalking()) {
+		auto progress = monster.animInfo.getAnimationProgress();
+		if (progress <= 64) {
+			targetPosition = monster.position.tile;
+		}
+	}
+
+	return targetPosition;
+}
+
+WorldTilePosition GetTargetPlayerPosition(const Player &targetPlayer, const Player &player)
+{
+	if (IsAnyOf(player.destAction, ACTION_RATTACKMON, ACTION_RATTACKPLR, ACTION_SPELLMON, ACTION_SPELLPLR))
+		return targetPlayer.position.future;
+
+	WorldTilePosition targetPosition = targetPlayer.position.future;
+
+	if (targetPlayer.isWalking()) {
+		auto progress = targetPlayer.AnimInfo.getAnimationProgress();
+		if (progress <= 64) {
+			targetPosition = targetPlayer.position.tile;
+		}
+	}
+
+	return targetPosition;
+}
+
 namespace {
 
 struct DirectionSettings {
@@ -1097,8 +1131,9 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			player.Stop();
 			return;
 		}
-		if (player.destAction == ACTION_ATTACKMON)
-			MakePlrPath(player, monster->position.future, false);
+		if (player.destAction == ACTION_ATTACKMON) {
+			MakePlrPath(player, GetTargetMonsterPosition(*monster, player), false);
+		}
 		break;
 	case ACTION_ATTACKPLR:
 	case ACTION_RATTACKPLR:
@@ -1108,8 +1143,9 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			player.Stop();
 			return;
 		}
-		if (player.destAction == ACTION_ATTACKPLR)
-			MakePlrPath(player, target->position.future, false);
+		if (player.destAction == ACTION_ATTACKPLR) {
+			MakePlrPath(player, GetTargetPlayerPosition(*target, player), false);
+		}
 		break;
 	case ACTION_OPERATE:
 	case ACTION_DISARM:
@@ -1125,21 +1161,23 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	}
 
 	Direction d;
-	if (player.walkpath[0] != WALK_NONE) {
-		if (player._pmode == PM_STAND) {
+	if (player.walkpath[0] != WALK_NONE) { // player is currently walking
+		if (player._pmode == PM_STAND) {   // player is currently standing
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 					if (player.destAction == ACTION_ATTACKMON) {
-						x = std::abs(player.position.future.x - monster->position.future.x);
-						y = std::abs(player.position.future.y - monster->position.future.y);
-						d = GetDirection(player.position.future, monster->position.future);
+						auto monsterPosition = GetTargetMonsterPosition(*monster, player);
+						x = std::abs(player.position.tile.x - monsterPosition.x);
+						y = std::abs(player.position.tile.y - monsterPosition.y);
+						d = GetDirection(player.position.tile, monsterPosition);
 					} else {
-						x = std::abs(player.position.future.x - target->position.future.x);
-						y = std::abs(player.position.future.y - target->position.future.y);
-						d = GetDirection(player.position.future, target->position.future);
+						auto targetPosition = GetTargetPlayerPosition(*target, player);
+						x = std::abs(player.position.tile.x - targetPosition.x);
+						y = std::abs(player.position.tile.y - targetPosition.y);
+						d = GetDirection(player.position.tile, targetPosition);
 					}
 
-					if (x < 2 && y < 2) {
+					if (x <= 1 && y <= 1) {
 						ClrPlrPath(player);
 						if (player.destAction == ACTION_ATTACKMON && monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 							TalktoMonster(player, *monster);
@@ -1203,10 +1241,11 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 			StartAttack(player, d, pmWillBeCalled);
 			break;
 		case ACTION_ATTACKMON:
-			x = std::abs(player.position.tile.x - monster->position.future.x);
-			y = std::abs(player.position.tile.y - monster->position.future.y);
+			auto monsterPosition = GetTargetMonsterPosition(*monster, player);
+			x = std::abs(player.position.tile.x - monsterPosition.x);
+			y = std::abs(player.position.tile.y - monsterPosition.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, monster->position.future);
+				d = GetDirection(player.position.future, monsterPosition);
 				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 					TalktoMonster(player, *monster);
 				} else {
@@ -1840,43 +1879,43 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	switch (cmdId) {
 	case _cmd_id::CMD_RATTACKID: {
 		Monster &monster = Monsters[wParam1];
-		dir = GetDirection(position.future, monster.position.future);
+		dir = GetDirection(position.tile, GetTargetMonsterPosition(monster, *this));
 		graphic = player_graphic::Attack;
 		break;
 	}
 	case _cmd_id::CMD_SPELLID: {
 		Monster &monster = Monsters[wParam1];
-		dir = GetDirection(position.future, monster.position.future);
+		dir = GetDirection(position.tile, GetTargetMonsterPosition(monster, *this));
 		graphic = GetPlayerGraphicForSpell(static_cast<SpellID>(wParam2));
 		break;
 	}
 	case _cmd_id::CMD_ATTACKID: {
 		Monster &monster = Monsters[wParam1];
-		point = monster.position.future;
+		point = GetTargetMonsterPosition(monster, *this);
 		minimalWalkDistance = 2;
 		if (!CanTalkToMonst(monster)) {
-			dir = GetDirection(position.future, monster.position.future);
+			dir = GetDirection(position.tile, point);
 			graphic = player_graphic::Attack;
 		}
 		break;
 	}
 	case _cmd_id::CMD_RATTACKPID: {
 		Player &targetPlayer = Players[wParam1];
-		dir = GetDirection(position.future, targetPlayer.position.future);
+		dir = GetDirection(position.tile, GetTargetPlayerPosition(targetPlayer, *this));
 		graphic = player_graphic::Attack;
 		break;
 	}
 	case _cmd_id::CMD_SPELLPID: {
 		Player &targetPlayer = Players[wParam1];
-		dir = GetDirection(position.future, targetPlayer.position.future);
+		dir = GetDirection(position.tile, GetTargetPlayerPosition(targetPlayer, *this));
 		graphic = GetPlayerGraphicForSpell(static_cast<SpellID>(wParam2));
 		break;
 	}
 	case _cmd_id::CMD_ATTACKPID: {
 		Player &targetPlayer = Players[wParam1];
-		point = targetPlayer.position.future;
+		point = GetTargetPlayerPosition(targetPlayer, *this);
 		minimalWalkDistance = 2;
-		dir = GetDirection(position.future, targetPlayer.position.future);
+		dir = GetDirection(position.tile, point);
 		graphic = player_graphic::Attack;
 		break;
 	}

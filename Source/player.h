@@ -917,6 +917,9 @@ inline bool IsInspectingPlayer()
 }
 extern bool MyPlayerIsDead;
 
+WorldTilePosition GetTargetMonsterPosition(const Monster &monster, const Player &player);
+WorldTilePosition GetTargetPlayerPosition(const Player &targetPlayer, const Player &player);
+
 Player *PlayerAtPosition(Point position, bool ignoreMovingPlayers = false);
 
 void LoadPlrGFX(Player &player, player_graphic graphic);
