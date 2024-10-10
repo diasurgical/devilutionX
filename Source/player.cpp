@@ -65,7 +65,7 @@ WorldTilePosition GetTargetMonsterPosition(const Monster &monster, const Player 
 
 	if (monster.isWalking()) {
 		auto progress = monster.animInfo.getAnimationProgress();
-		if (progress <= 64) {
+		if (progress <= AnimationInfo::baseValueFraction / 2) {
 			targetPosition = monster.position.tile;
 		}
 	}
@@ -82,7 +82,7 @@ WorldTilePosition GetTargetPlayerPosition(const Player &targetPlayer, const Play
 
 	if (targetPlayer.isWalking()) {
 		auto progress = targetPlayer.AnimInfo.getAnimationProgress();
-		if (progress <= 64) {
+		if (progress <= AnimationInfo::baseValueFraction / 2) {
 			targetPosition = targetPlayer.position.tile;
 		}
 	}
