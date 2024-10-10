@@ -2797,7 +2797,7 @@ void SaveGameData(SaveWriter &saveWriter)
 		}
 	}
 
-	file.Skip(4); // Blacksmith.itemCount
+	file.WriteBE<int32_t>(Blacksmith.items.size());
 	file.WriteBE<int32_t>(Blacksmith.itemLevel);
 
 	// Save Smith premium items with a fixed count
