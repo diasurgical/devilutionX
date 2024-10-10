@@ -1161,20 +1161,20 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 	}
 
 	Direction d;
-	if (player.walkpath[0] != WALK_NONE) { // player is currently walking
-		if (player._pmode == PM_STAND) {   // player is currently standing
+	if (player.walkpath[0] != WALK_NONE) {
+		if (player._pmode == PM_STAND) {
 			if (&player == MyPlayer) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 					if (player.destAction == ACTION_ATTACKMON) {
 						auto monsterPosition = GetTargetMonsterPosition(*monster, player);
-						x = std::abs(player.position.tile.x - monsterPosition.x);
-						y = std::abs(player.position.tile.y - monsterPosition.y);
-						d = GetDirection(player.position.tile, monsterPosition);
+						x = std::abs(player.position.future.x - monsterPosition.x);
+						y = std::abs(player.position.future.y - monsterPosition.y);
+						d = GetDirection(player.position.future, monsterPosition);
 					} else {
 						auto targetPosition = GetTargetPlayerPosition(*target, player);
-						x = std::abs(player.position.tile.x - targetPosition.x);
-						y = std::abs(player.position.tile.y - targetPosition.y);
-						d = GetDirection(player.position.tile, targetPosition);
+						x = std::abs(player.position.future.x - targetPosition.x);
+						y = std::abs(player.position.future.y - targetPosition.y);
+						d = GetDirection(player.position.future, targetPosition);
 					}
 
 					if (x <= 1 && y <= 1) {
@@ -1879,13 +1879,13 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	switch (cmdId) {
 	case _cmd_id::CMD_RATTACKID: {
 		Monster &monster = Monsters[wParam1];
-		dir = GetDirection(position.tile, GetTargetMonsterPosition(monster, *this));
+		dir = GetDirection(position.future, GetTargetMonsterPosition(monster, *this));
 		graphic = player_graphic::Attack;
 		break;
 	}
 	case _cmd_id::CMD_SPELLID: {
 		Monster &monster = Monsters[wParam1];
-		dir = GetDirection(position.tile, GetTargetMonsterPosition(monster, *this));
+		dir = GetDirection(position.future, GetTargetMonsterPosition(monster, *this));
 		graphic = GetPlayerGraphicForSpell(static_cast<SpellID>(wParam2));
 		break;
 	}
@@ -1894,20 +1894,20 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		point = GetTargetMonsterPosition(monster, *this);
 		minimalWalkDistance = 2;
 		if (!CanTalkToMonst(monster)) {
-			dir = GetDirection(position.tile, point);
+			dir = GetDirection(position.future, point);
 			graphic = player_graphic::Attack;
 		}
 		break;
 	}
 	case _cmd_id::CMD_RATTACKPID: {
 		Player &targetPlayer = Players[wParam1];
-		dir = GetDirection(position.tile, GetTargetPlayerPosition(targetPlayer, *this));
+		dir = GetDirection(position.future, GetTargetPlayerPosition(targetPlayer, *this));
 		graphic = player_graphic::Attack;
 		break;
 	}
 	case _cmd_id::CMD_SPELLPID: {
 		Player &targetPlayer = Players[wParam1];
-		dir = GetDirection(position.tile, GetTargetPlayerPosition(targetPlayer, *this));
+		dir = GetDirection(position.future, GetTargetPlayerPosition(targetPlayer, *this));
 		graphic = GetPlayerGraphicForSpell(static_cast<SpellID>(wParam2));
 		break;
 	}
@@ -1915,7 +1915,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		Player &targetPlayer = Players[wParam1];
 		point = GetTargetPlayerPosition(targetPlayer, *this);
 		minimalWalkDistance = 2;
-		dir = GetDirection(position.tile, point);
+		dir = GetDirection(position.future, point);
 		graphic = player_graphic::Attack;
 		break;
 	}
