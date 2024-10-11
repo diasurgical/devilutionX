@@ -2163,8 +2163,6 @@ void PerformSecondaryAction()
 			//} else if (pcursinvitem != -1) {
 			// GUISTORE: Sell item
 			//}
-		} else if (pcursinvitem != -1) {
-			TransferItemToBelt(myPlayer, pcursinvitem);
 		} else {
 			CtrlUseInvItem();
 		}
