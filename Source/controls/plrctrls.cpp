@@ -34,6 +34,7 @@
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
 #include "qol/chatlog.h"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
@@ -65,7 +66,7 @@ quest_id pcursquest = Q_INVALID;
  */
 bool InGameMenu()
 {
-	return ActiveStore != TalkID::None
+	return IsPlayerInStore()
 	    || HelpFlag
 	    || ChatLogFlag
 	    || ChatFlag
@@ -79,6 +80,7 @@ namespace {
 
 int Slot = SLOTXY_INV_FIRST;
 Point ActiveStashSlot = InvalidStashPoint;
+Point ActiveStoreSlot = InvalidStorePoint;
 int PreviousInventoryColumn = -1;
 bool BeltReturnsToStash = false;
 
@@ -719,6 +721,20 @@ Point FindFirstStashSlotOnItem(StashStruct::StashCell itemInvId)
 	return InvalidStashPoint;
 }
 
+// GUISTORE: Correct grid dimensions
+Point FindFirstStoreSlotOnItem(StoreStruct::StoreCell itemInvId)
+{
+	if (itemInvId == StoreStruct::EmptyCell)
+		return InvalidStorePoint;
+
+	for (WorldTilePosition point : PointsInRectangle(WorldTileRectangle { { 0, 0 }, { 10, 10 } })) {
+		if (Store.GetItemIdAtPosition(point) == itemInvId)
+			return point;
+	}
+
+	return InvalidStorePoint;
+}
+
 /**
  * Reset cursor position based on the current slot.
  */
@@ -761,6 +777,23 @@ int FindClosestInventorySlot(Point mousePos)
 }
 
 Point FindClosestStashSlot(Point mousePos)
+{
+	int shortestDistance = std::numeric_limits<int>::max();
+	Point bestSlot = {};
+
+	for (Point point : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10, 10 } })) {
+		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(point));
+		if (distance < shortestDistance) {
+			shortestDistance = distance;
+			bestSlot = point;
+		}
+	}
+
+	return bestSlot;
+}
+
+// GUISTORE: Change to correct grid dimensions
+Point FindClosestStoreSlot(Point mousePos)
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	Point bestSlot = {};
@@ -1332,6 +1365,9 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (IsStashOpen) {
 		return &StashMove;
 	}
+	if (IsStoreOpen) {
+		return &StoreMove;
+	}
 	if (invflag) {
 		return &CheckInventoryMove;
 	}
@@ -1347,7 +1383,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (QuestLogIsOpen) {
 		return &QuestLogMove;
 	}
-	if (ActiveStore != TalkID::None) {
+	if (IsPlayerInStore()) {
 		return &StoreMove;
 	}
 	return nullptr;
@@ -1741,7 +1777,7 @@ void plrctrls_after_check_curs_move()
 	if (ControllerActionHeld != GameActionType_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && pcursstoreitem == StoreStruct::EmptyCell && PlayerUnderCursor == nullptr) {
 			FindTrigger();
 		}
 		return;
@@ -1873,6 +1909,45 @@ void PerformPrimaryAction()
 				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
 				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
 				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
+				// Then we displace the mouse position to the bottom right corner of the item, then shift it back half a cell to center it.
+				// Could also be written as (cursorSize - 1) * InventorySlotSize + HalfInventorySlotSize, same thing in the end.
+				mousePos += Displacement { cursorSizeInCells } * Displacement { InventorySlotSizeInPixels } - Displacement { InventorySlotSizeInPixels } / 2;
+			} else {
+				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
+				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
+				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
+				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
+				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
+			}
+			SetCursorPos(mousePos);
+		} else if (IsStoreOpen && GetLeftPanel().contains(MousePosition)) { // GUISTORE: Revise this
+			Point storeSlot = (ActiveStoreSlot != InvalidStorePoint) ? ActiveStoreSlot : FindClosestStoreSlot(MousePosition);
+
+			Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+
+			// Find any item occupying a slot that is currently under the cursor
+			StoreStruct::StoreCell itemUnderCursor = [](Point storeSlot, Size cursorSizeInCells) -> StoreStruct::StoreCell {
+				if (storeSlot == InvalidStorePoint)
+					return StoreStruct::EmptyCell;
+				for (Point slotUnderCursor : PointsInRectangle(Rectangle { storeSlot, cursorSizeInCells })) {
+					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10) // GUISTORE: FIX THIS
+						continue;
+					StoreStruct::StoreCell itemId = Store.GetItemIdAtPosition(slotUnderCursor);
+					if (itemId != StoreStruct::EmptyCell)
+						return itemId;
+				}
+				return StoreStruct::EmptyCell;
+			}(storeSlot, cursorSizeInCells);
+
+			Point jumpSlot = itemUnderCursor == StoreStruct::EmptyCell ? storeSlot : FindFirstStoreSlotOnItem(itemUnderCursor);
+			CheckStoreItem(MousePosition);
+
+			Point mousePos = GetStoreSlotCoord(jumpSlot);
+			ActiveStoreSlot = jumpSlot;
+			if (MyPlayer->HoldItem.isEmpty()) {
+				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because store movement is always cell based (there's no fast
+				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
+				ActiveStoreSlot += Displacement { cursorSizeInCells - 1 }; // shift the active store slot coordinates to account for items larger than 1x1
 				// Then we displace the mouse position to the bottom right corner of the item, then shift it back half a cell to center it.
 				// Could also be written as (cursorSize - 1) * InventorySlotSize + HalfInventorySlotSize, same thing in the end.
 				mousePos += Displacement { cursorSizeInCells } * Displacement { InventorySlotSizeInPixels } - Displacement { InventorySlotSizeInPixels } / 2;
@@ -2082,6 +2157,12 @@ void PerformSecondaryAction()
 			} else if (pcursinvitem != -1) {
 				TransferItemToStash(myPlayer, pcursinvitem);
 			}
+			//} else if (IsStoreOpen) {
+			// if (pcursstoreitem != StoreStruct::EmptyCell) {
+			// GUISTORE: Buy item
+			//} else if (pcursinvitem != -1) {
+			// GUISTORE: Sell item
+			//}
 		} else {
 			CtrlUseInvItem();
 		}

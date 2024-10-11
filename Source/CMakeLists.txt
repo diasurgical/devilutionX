@@ -166,6 +166,7 @@ set(libdevilutionx_SRCS
   qol/autopickup.cpp
   qol/chatlog.cpp
   qol/floatingnumbers.cpp
+  qol/guistore.cpp
   qol/itemlabels.cpp
   qol/monhealthbar.cpp
   qol/stash.cpp

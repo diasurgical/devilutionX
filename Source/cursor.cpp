@@ -29,6 +29,7 @@
 #include "levels/trigs.h"
 #include "missiles.h"
 #include "options.h"
+#include "qol/guistore.h"
 #include "qol/itemlabels.h"
 #include "qol/stash.h"
 #include "towners.h"
@@ -402,6 +403,8 @@ int pcursmonst = -1;
 int8_t pcursinvitem;
 /** StashItem value */
 uint16_t pcursstashitem;
+/** StoreItem value */
+uint16_t pcursstoreitem;
 /** Current highlighted item */
 int8_t pcursitem;
 /** Current highlighted object */
@@ -596,6 +599,7 @@ void InitLevelCursor()
 	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	pcursstashitem = StashStruct::EmptyCell;
+	pcursstoreitem = StoreStruct::EmptyCell;
 	PlayerUnderCursor = nullptr;
 	ClearCursor();
 }
@@ -762,7 +766,7 @@ bool CheckMouseHold(const Point currentTile)
 	if ((sgbMouseDown != CLICK_NONE || ControllerActionHeld != GameActionType_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && PlayerUnderCursor == nullptr) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && pcursstoreitem == StoreStruct::EmptyCell && PlayerUnderCursor == nullptr) {
 			cursPosition = currentTile;
 			DisplayTriggerInfo();
 		}
@@ -782,6 +786,7 @@ void ResetCursorInfo()
 	}
 	pcursinvitem = -1;
 	pcursstashitem = StashStruct::EmptyCell;
+	pcursstoreitem = StoreStruct::EmptyCell;
 	PlayerUnderCursor = nullptr;
 	ShowUniqueItemInfoBox = false;
 	MainPanelFlag = false;
@@ -815,6 +820,9 @@ bool CheckPanelsAndFlags(Rectangle mainPanel)
 	}
 	if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 		pcursstashitem = CheckStashHLight(MousePosition);
+	}
+	if (IsStoreOpen && GetLeftPanel().contains(MousePosition)) {
+		pcursstoreitem = CheckStoreHLight(MousePosition);
 	}
 	if (SpellbookFlag && GetRightPanel().contains(MousePosition)) {
 		return true;

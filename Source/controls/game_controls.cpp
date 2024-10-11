@@ -14,6 +14,7 @@
 #include "gmenu.h"
 #include "options.h"
 #include "panels/spell_list.hpp"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "stores.h"
 
@@ -134,7 +135,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 					if (ControllerActionHeld == GameActionType_NONE) {
 						ControllerActionHeld = GameActionType_PRIMARY_ACTION;
 					}
-				} else if (sgpCurrentMenu != nullptr || ActiveStore != TalkID::None || QuestLogIsOpen) {
+				} else if (sgpCurrentMenu != nullptr || IsPlayerInStore() || QuestLogIsOpen) {
 					*action = GameActionSendKey { SDLK_RETURN, false };
 				} else {
 					*action = GameActionSendKey { SDLK_SPACE, false };
@@ -171,12 +172,12 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				return true;
 			}
 			if (VirtualGamepadState.healthButton.isHeld && VirtualGamepadState.healthButton.didStateChange) {
-				if (!QuestLogIsOpen && !SpellbookFlag && ActiveStore == TalkID::None)
+				if (!QuestLogIsOpen && !SpellbookFlag && !IsPlayerInStore())
 					*action = GameAction(GameActionType_USE_HEALTH_POTION);
 				return true;
 			}
 			if (VirtualGamepadState.manaButton.isHeld && VirtualGamepadState.manaButton.didStateChange) {
-				if (!QuestLogIsOpen && !SpellbookFlag && ActiveStore == TalkID::None)
+				if (!QuestLogIsOpen && !SpellbookFlag && !IsPlayerInStore())
 					*action = GameAction(GameActionType_USE_MANA_POTION);
 				return true;
 			}
@@ -196,7 +197,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 	SDL_Keycode translation = SDLK_UNKNOWN;
 
-	if (gmenu_is_active() || ActiveStore != TalkID::None)
+	if (gmenu_is_active() || IsPlayerInStore())
 		translation = TranslateControllerButtonToGameMenuKey(ctrlEvent.button);
 	else if (inGameMenu)
 		translation = TranslateControllerButtonToMenuKey(ctrlEvent.button);
@@ -228,6 +229,22 @@ void PressControllerButton(ControllerButton button)
 			return;
 		default:
 			break;
+		}
+	}
+
+	if (IsStoreOpen) {
+		switch (button) {
+		case ControllerButton_BUTTON_BACK:
+			// GUISTORE: Special action?
+			return;
+		case ControllerButton_BUTTON_LEFTSHOULDER:
+			// GUISTORE: Previous tab
+			return;
+		case ControllerButton_BUTTON_RIGHTSHOULDER:
+			// GUISTORE: Next tab
+			return;
+		default:
+			return;
 		}
 	}
 
