@@ -30,6 +30,12 @@ namespace devilution {
 
 namespace {
 
+template <typename T>
+bool OrderByValueIndex(const std::pair<std::string, T> &a, const std::pair<std::string, T> &b)
+{
+	return a.second.index < b.second.index;
+};
+
 // Returns a pointer to the first non-leading whitespace.
 // Only ' ' and '\t' are considered whitespace.
 // Requires: begin <= end.
@@ -72,6 +78,22 @@ Ini::Values::Values()
 Ini::Values::Values(const Value &data)
     : rep_(data)
 {
+}
+
+std::vector<std::string> Ini::getKeys(std::string_view section) const
+{
+	const auto sectionIt = data_.sections.find(section);
+	if (sectionIt == data_.sections.end()) return {};
+
+	std::vector<std::pair<std::string, ValuesData>> entries(sectionIt->second.entries.begin(), sectionIt->second.entries.end());
+	c_sort(entries, OrderByValueIndex<ValuesData>);
+
+	std::vector<std::string> keys;
+	keys.reserve(entries.size());
+	for (const auto &[key, _] : entries) {
+		keys.push_back(key);
+	}
+	return keys;
 }
 
 std::span<const Ini::Value> Ini::Values::get() const
@@ -366,12 +388,6 @@ void Ini::set(std::string_view section, std::string_view key, float value)
 }
 
 namespace {
-
-template <typename T>
-bool OrderByValueIndex(const std::pair<std::string, T> &a, const std::pair<std::string, T> &b)
-{
-	return a.second.index < b.second.index;
-};
 
 // Appends a possibly multi-line comment, converting \n to \r\n.
 void AppendComment(std::string_view comment, std::string &out)
