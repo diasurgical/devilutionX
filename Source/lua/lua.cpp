@@ -13,6 +13,7 @@
 #include "lua/modules/audio.hpp"
 #include "lua/modules/log.hpp"
 #include "lua/modules/render.hpp"
+#include "options.h"
 #include "plrmsg.h"
 #include "utils/console.h"
 #include "utils/log.hpp"
@@ -193,6 +194,20 @@ sol::environment CreateLuaSandbox()
 	return sandbox;
 }
 
+void LuaReloadActiveMods()
+{
+	// Loaded without a sandbox.
+	CurrentLuaState->events = RunScript(/*env=*/std::nullopt, "devilutionx.events", /*optional=*/false);
+	CurrentLuaState->commonPackages["devilutionx.events"] = CurrentLuaState->events;
+
+	for (std::string_view modname : sgOptions.Mods.GetActiveModList()) {
+		std::string packageName = StrCat("mods.", modname, ".init");
+		RunScript(CreateLuaSandbox(), packageName, /*optional=*/true);
+	}
+
+	LuaEvent("LoadModsComplete");
+}
+
 void LuaInitialize()
 {
 	CurrentLuaState.emplace(LuaState { .sol = { sol::c_call<decltype(&LuaPanic), &LuaPanic> } });
@@ -212,9 +227,6 @@ void LuaInitialize()
 	// Registering devilutionx object table
 	SafeCallResult(lua.safe_script(RequireGenSrc), /*optional=*/false);
 
-	// Loaded without a sandbox.
-	CurrentLuaState->events = RunScript(/*env=*/std::nullopt, "devilutionx.events", /*optional=*/false);
-
 	CurrentLuaState->commonPackages = lua.create_table_with(
 #ifdef _DEBUG
 	    "devilutionx.dev", LuaDevModule(lua),
@@ -224,16 +236,13 @@ void LuaInitialize()
 	    "devilutionx.audio", LuaAudioModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); },
-	    // These packages are loaded without a sandbox:
-	    "devilutionx.events", CurrentLuaState->events,
+	    // This package is loaded without a sandbox:
 	    "inspect", RunScript(/*env=*/std::nullopt, "inspect", /*optional=*/false));
 
 	// Used by the custom require implementation.
 	lua["setEnvironment"] = [](const sol::environment &env, const sol::function &fn) { sol::set_environment(env, fn); };
 
-	RunScript(CreateLuaSandbox(), "user", /*optional=*/true);
-
-	LuaEvent("GameBoot");
+	LuaReloadActiveMods();
 }
 
 void LuaShutdown()

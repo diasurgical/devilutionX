@@ -803,6 +803,28 @@ private:
 	bool CanDeferToMovementHandler(const Action &action) const;
 };
 
+struct ModOptions : OptionCategoryBase {
+	ModOptions();
+	std::vector<std::string_view> GetActiveModList();
+	std::vector<std::string_view> GetModList();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+private:
+	struct ModEntry {
+		ModEntry(std::string_view name)
+		    : name(name)
+		    , enabled(this->name, OptionEntryFlags::None, this->name.c_str(), "", false)
+		{
+		}
+
+		std::string name;
+		OptionEntryBoolean enabled;
+	};
+
+	std::vector<ModEntry> &GetModEntries();
+	std::optional<std::vector<ModEntry>> modEntries;
+};
+
 struct Options {
 	GameModeOptions GameMode;
 	StartUpOptions StartUp;
@@ -817,6 +839,7 @@ struct Options {
 	LanguageOptions Language;
 	KeymapperOptions Keymapper;
 	PadmapperOptions Padmapper;
+	ModOptions Mods;
 
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
@@ -834,6 +857,7 @@ struct Options {
 			&Chat,
 			&Keymapper,
 			&Padmapper,
+			&Mods,
 		};
 	}
 };

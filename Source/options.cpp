@@ -1787,6 +1787,52 @@ bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
 	    ControllerButton_BUTTON_DPAD_RIGHT);
 }
 
+ModOptions::ModOptions()
+    : OptionCategoryBase("Mods", N_("Mods"), N_("Mod Settings"))
+{
+}
+
+std::vector<std::string_view> ModOptions::GetActiveModList()
+{
+	std::vector<std::string_view> modList;
+	for (auto &modEntry : GetModEntries()) {
+		if (*modEntry.enabled)
+			modList.emplace_back(modEntry.name);
+	}
+	return modList;
+}
+
+std::vector<std::string_view> ModOptions::GetModList()
+{
+	std::vector<std::string_view> modList;
+	for (auto &modEntry : GetModEntries()) {
+		modList.emplace_back(modEntry.name);
+	}
+	return modList;
+}
+
+std::vector<OptionEntryBase *> ModOptions::GetEntries()
+{
+	std::vector<OptionEntryBase *> optionEntries;
+	for (auto &modEntry : GetModEntries()) {
+		optionEntries.emplace_back(&modEntry.enabled);
+	}
+	return optionEntries;
+}
+
+std::vector<ModOptions::ModEntry> &ModOptions::GetModEntries()
+{
+	if (modEntries)
+		return *modEntries;
+
+	std::vector<std::string> modNames = ini->getKeys(name);
+	std::vector<ModOptions::ModEntry> &newModEntries = modEntries.emplace();
+	for (auto &modName : modNames) {
+		newModEntries.emplace_back(modName);
+	}
+	return newModEntries;
+}
+
 namespace {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 constexpr char ResamplerSpeex[] = "Speex";

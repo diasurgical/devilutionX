@@ -54,6 +54,9 @@ public:
 	static tl::expected<Ini, std::string> parse(std::string_view buffer);
 	[[nodiscard]] std::string serialize() const;
 
+	/** @return all the keys associated with this section in the ini */
+	[[nodiscard]] std::vector<std::string> getKeys(std::string_view section) const;
+
 	/** @return all the values associated with this section and key in the ini */
 	[[nodiscard]] std::span<const Value> get(std::string_view section, std::string_view key) const;
 

@@ -40,9 +40,9 @@ local function CreateEvent()
 end
 
 local events = {
-  ---Called early on game boot.
-  GameBoot = CreateEvent(),
-  __doc_GameBoot = "Called early on game boot.",
+  ---Called after all mods have been loaded.
+  LoadModsComplete = CreateEvent(),
+  __doc_LoadModsComplete = "Called after all mods have been loaded.",
 
   ---Called every time a new game is started.
   GameStart = CreateEvent(),

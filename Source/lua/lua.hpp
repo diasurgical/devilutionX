@@ -8,6 +8,7 @@
 namespace devilution {
 
 void LuaInitialize();
+void LuaReloadActiveMods();
 void LuaShutdown();
 void LuaEvent(std::string_view name);
 sol::state &GetLuaState();
