@@ -1215,7 +1215,7 @@ void DrawView(const Surface &out, Point startPosition)
 	} else if (IsStashOpen) {
 		DrawStash(out);
 	} else if (IsStoreOpen) {
-		DrawStore(out);
+		DrawGUIStore(out);
 	}
 	DrawLevelButton(out);
 	if (ShowUniqueItemInfoBox) {

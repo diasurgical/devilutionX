@@ -24,7 +24,6 @@ public:
 	void RemoveStoreItem(StoreCell iv);
 	ankerl::unordered_dense::map<unsigned, StoreGrid> storeGrids;
 	std::vector<Item> storeList;
-	int gold;
 	bool dirty = false;
 
 	unsigned GetPage() const
@@ -70,28 +69,18 @@ constexpr Point InvalidStorePoint { -1, -1 };
 extern bool IsStoreOpen;
 extern StoreStruct Store;
 
-extern bool IsWithdrawGoldOpen;
-extern int WithdrawGoldValue;
-
 Point GetStoreSlotCoord(Point slot);
 void InitStore();
 void FreeStoreGFX();
-void TransferItemToInventory(Player &player, uint16_t itemId);
+void GUIBuyItem(Player &player, uint16_t itemId);
 /**
  * @brief Render the inventory panel to the given buffer.
  */
-void DrawStore(const Surface &out);
+void DrawGUIStore(const Surface &out);
 void CheckStoreItem(Point mousePosition, bool isShiftHeld = false, bool isCtrlHeld = false);
-bool UseStoreItem(uint16_t cii);
 uint16_t CheckStoreHLight(Point mousePosition);
 void CheckStoreButtonRelease(Point mousePosition);
 void CheckStoreButtonPress(Point mousePosition);
-
-void StartGoldWithdraw();
-void WithdrawGoldKeyPress(SDL_Keycode vkey);
-void DrawGoldWithdraw(const Surface &out);
-void CloseGoldWithdraw();
-bool HandleGoldWithdrawTextInputEvent(const SDL_Event &event);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's store.
@@ -101,6 +90,6 @@ bool HandleGoldWithdrawTextInputEvent(const SDL_Event &event);
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInStore(Player &player, const Item &item, bool persistItem);
+bool GUISellItem(Player &player, const Item &item, bool persistItem);
 
 } // namespace devilution

@@ -30,16 +30,11 @@ namespace devilution {
 
 bool IsStoreOpen;
 StoreStruct Store;
-bool IsWithdrawGoldOpen;
 
 namespace {
 
 constexpr unsigned CountStorePages = 100;
 constexpr unsigned LastStorePage = CountStorePages - 1;
-
-char GoldWithdrawText[21];
-TextInputCursorState GoldWithdrawCursor;
-std::optional<NumberInputState> GoldWithdrawInputState;
 
 constexpr Size ButtonSize { 27, 16 };
 /** Contains mappings for the buttons in the store (2 navigation buttons, withdraw gold buttons, 2 navigation buttons) */
@@ -119,17 +114,6 @@ void CheckStorePaste(Point cursorPosition)
 	if (!IsItemAllowedInStore(player.HoldItem))
 		return;
 
-	if (player.HoldItem._itype == ItemType::Gold) {
-		if (Store.gold > std::numeric_limits<int>::max() - player.HoldItem._ivalue)
-			return;
-		Store.gold += player.HoldItem._ivalue;
-		player.HoldItem.clear();
-		PlaySFX(SfxID::ItemGold);
-		Store.dirty = true;
-		NewCursor(CURSOR_HAND);
-		return;
-	}
-
 	const Size itemSize = GetInventorySize(player.HoldItem);
 
 	std::optional<Point> targetSlot = FindTargetSlotUnderItemCursor(cursorPosition, itemSize);
@@ -183,8 +167,6 @@ void CheckStorePaste(Point cursorPosition)
 void CheckStoreCut(Point cursorPosition, bool automaticMove)
 {
 	Player &player = *MyPlayer;
-
-	CloseGoldWithdraw();
 
 	Point slot = InvalidStorePoint;
 
@@ -252,13 +234,6 @@ void CheckStoreCut(Point cursorPosition, bool automaticMove)
 	}
 }
 
-void WithdrawGold(Player &player, int amount)
-{
-	AddGoldToInventory(player, amount);
-	Store.gold -= amount;
-	Store.dirty = true;
-}
-
 } // namespace
 
 Point GetStoreSlotCoord(Point slot)
@@ -282,7 +257,7 @@ void InitStore()
 	}
 }
 
-void TransferItemToInventory(Player &player, uint16_t itemId)
+void GUIBuyItem(Player &player, uint16_t itemId)
 {
 	if (itemId == StoreStruct::EmptyCell) {
 		return;
@@ -321,7 +296,6 @@ void CheckStoreButtonRelease(Point mousePosition)
 			Store.PreviousPage();
 			break;
 		case 2:
-			StartGoldWithdraw();
 			break;
 		case 3:
 			Store.NextPage();
@@ -351,7 +325,7 @@ void CheckStoreButtonPress(Point mousePosition)
 	StoreButtonPressed = -1;
 }
 
-void DrawStore(const Surface &out)
+void DrawGUIStore(const Surface &out)
 {
 	RenderClxSprite(out, (*StorePanelArt)[0], GetPanelPosition(UiPanels::Store));
 
@@ -400,8 +374,6 @@ void DrawStore(const Surface &out)
 
 	DrawString(out, StrCat(Store.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } },
 	    { .flags = UiFlags::AlignCenter | style });
-	DrawString(out, FormatInteger(Store.gold), { position + Displacement { 122, 19 }, { 107, 13 } },
-	    { .flags = UiFlags::AlignRight | style });
 }
 
 void CheckStoreItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
@@ -409,7 +381,7 @@ void CheckStoreItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 	if (!MyPlayer->HoldItem.isEmpty()) {
 		CheckStorePaste(mousePosition);
 	} else if (isCtrlHeld) {
-		TransferItemToInventory(*MyPlayer, pcursstoreitem);
+		GUIBuyItem(*MyPlayer, pcursstoreitem);
 	} else {
 		CheckStoreCut(mousePosition, isShiftHeld);
 	}
@@ -454,65 +426,6 @@ uint16_t CheckStoreHLight(Point mousePosition)
 	}
 
 	return itemId;
-}
-
-bool UseStoreItem(uint16_t c)
-{
-	if (MyPlayer->_pInvincible && MyPlayer->_pHitPoints == 0)
-		return true;
-	if (pcurs != CURSOR_HAND)
-		return true;
-	if (IsPlayerInStore())
-		return true;
-
-	Item *item = &Store.storeList[c];
-
-	constexpr int SpeechDelay = 10;
-	if (item->IDidx == IDI_MUSHROOM) {
-		MyPlayer->Say(HeroSpeech::NowThatsOneBigMushroom, SpeechDelay);
-		return true;
-	}
-	if (item->IDidx == IDI_FUNGALTM) {
-		PlaySFX(SfxID::ItemBook);
-		MyPlayer->Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
-		return true;
-	}
-
-	if (!item->isUsable())
-		return false;
-
-	if (!MyPlayer->CanUseItem(*item)) {
-		MyPlayer->Say(HeroSpeech::ICantUseThisYet);
-		return true;
-	}
-
-	CloseGoldWithdraw();
-
-	if (item->isScroll()) {
-		return true;
-	}
-
-	if (item->_iMiscId > IMISC_RUNEFIRST && item->_iMiscId < IMISC_RUNELAST && leveltype == DTYPE_TOWN) {
-		return true;
-	}
-
-	if (item->_iMiscId == IMISC_BOOK)
-		PlaySFX(SfxID::ReadBook);
-	else
-		PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
-
-	UseItem(*MyPlayer, item->_iMiscId, item->_iSpell, -1);
-
-	if (Store.storeList[c]._iMiscId == IMISC_MAPOFDOOM)
-		return true;
-	if (Store.storeList[c]._iMiscId == IMISC_NOTE) {
-		InitQTextMsg(TEXT_BOOK9);
-		CloseInventory();
-		return true;
-	}
-	Store.RemoveStoreItem(c);
-
-	return true;
 }
 
 void StoreStruct::RemoveStoreItem(StoreStruct::StoreCell iv)
@@ -582,117 +495,10 @@ void StoreStruct::RefreshItemStatFlags()
 	}
 }
 
-void StartGoldWithdraw()
-{
-	CloseGoldDrop();
-
-	if (ChatFlag)
-		ResetChat();
-
-	Point start = GetPanelPosition(UiPanels::Store, { 67, 128 });
-	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
-	SDL_SetTextInputRect(&rect);
-
-	IsWithdrawGoldOpen = true;
-	GoldWithdrawText[0] = '\0';
-	GoldWithdrawInputState.emplace(NumberInputState::Options {
-	    .textOptions {
-	        .value = GoldWithdrawText,
-	        .cursor = &GoldWithdrawCursor,
-	        .maxLength = sizeof(GoldWithdrawText) - 1,
-	    },
-	    .min = 0,
-	    .max = std::min(RoomForGold(), Store.gold),
-	});
-	SDL_StartTextInput();
-}
-
-void WithdrawGoldKeyPress(SDL_Keycode vkey)
-{
-	Player &myPlayer = *MyPlayer;
-
-	if (myPlayer._pHitPoints >> 6 <= 0) {
-		CloseGoldWithdraw();
-		return;
-	}
-
-	switch (vkey) {
-	case SDLK_RETURN:
-	case SDLK_KP_ENTER:
-		if (const int value = GoldWithdrawInputState->value(); value != 0) {
-			WithdrawGold(myPlayer, value);
-			PlaySFX(SfxID::ItemGold);
-		}
-		CloseGoldWithdraw();
-		break;
-	case SDLK_ESCAPE:
-		CloseGoldWithdraw();
-		break;
-	default:
-		break;
-	}
-}
-
-void DrawGoldWithdraw(const Surface &out)
-{
-	if (!IsWithdrawGoldOpen) {
-		return;
-	}
-
-	const std::string_view amountText = GoldWithdrawText;
-	const TextInputCursorState &cursor = GoldWithdrawCursor;
-
-	const int dialogX = 30;
-
-	ClxDraw(out, GetPanelPosition(UiPanels::Store, { dialogX, 178 }), (*GoldBoxBuffer)[0]);
-
-	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
-	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);
-
-	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
-	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
-	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Store, { dialogX + 31, 75 }), { 200, 50 } },
-	    { .flags = UiFlags::ColorWhitegold | UiFlags::AlignCenter, .lineHeight = 17 });
-
-	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
-	// use the Point form of DrawString.
-	DrawString(out, amountText, GetPanelPosition(UiPanels::Store, { dialogX + 37, 128 }),
-	    {
-	        .flags = UiFlags::ColorWhite | UiFlags::PentaCursor,
-	        .cursorPosition = static_cast<int>(cursor.position),
-	        .highlightRange = { static_cast<int>(cursor.selection.begin), static_cast<int>(cursor.selection.end) },
-	    });
-}
-
-void CloseGoldWithdraw()
-{
-	if (!IsWithdrawGoldOpen)
-		return;
-	SDL_StopTextInput();
-	IsWithdrawGoldOpen = false;
-	GoldWithdrawInputState = std::nullopt;
-}
-
-bool HandleGoldWithdrawTextInputEvent(const SDL_Event &event)
-{
-	return HandleNumberInputEvent(event, *GoldWithdrawInputState);
-}
-
-bool AutoPlaceItemInStore(Player &player, const Item &item, bool persistItem)
+bool GUISellItem(Player &player, const Item &item, bool persistItem)
 {
 	if (!IsItemAllowedInStore(item))
 		return false;
-
-	if (item._itype == ItemType::Gold) {
-		if (Store.gold > std::numeric_limits<int>::max() - item._ivalue)
-			return false;
-		if (persistItem) {
-			Store.gold += item._ivalue;
-			Store.dirty = true;
-		}
-		return true;
-	}
 
 	Size itemSize = GetInventorySize(item);
 
