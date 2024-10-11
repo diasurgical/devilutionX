@@ -83,6 +83,7 @@ Point ActiveStashSlot = InvalidStashPoint;
 Point ActiveStoreSlot = InvalidStorePoint;
 int PreviousInventoryColumn = -1;
 bool BeltReturnsToStash = false;
+bool BeltReturnsToStore = false;
 
 const Direction FaceDir[3][3] = {
 	// NONE             UP                DOWN
@@ -1212,6 +1213,125 @@ void StashMove(AxisDirection dir)
 	FocusOnInventory();
 }
 
+void GUIStoreMove(AxisDirection dir)
+{
+	static AxisDirectionRepeater repeater(/*min_interval_ms=*/150);
+	dir = repeater.Get(dir);
+	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
+		return;
+
+	if (Slot < 0 && ActiveStoreSlot == InvalidStorePoint) {
+		int invSlot = FindClosestInventorySlot(MousePosition);
+		Point invSlotCoord = GetSlotCoord(invSlot);
+		int invDistance = MousePosition.ManhattanDistance(invSlotCoord);
+
+		Point storeSlot = FindClosestStoreSlot(MousePosition);
+		Point storeSlotCoord = GetStoreSlotCoord(storeSlot);
+		int storeDistance = MousePosition.ManhattanDistance(storeSlotCoord);
+
+		if (invDistance < storeDistance) {
+			BeltReturnsToStore = false;
+			InventoryMove(dir);
+			return;
+		}
+
+		ActiveStoreSlot = storeSlot;
+	}
+
+	Item &holdItem = MyPlayer->HoldItem;
+	Size itemSize = holdItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(holdItem);
+
+	// Jump from belt to store
+	if (BeltReturnsToStore && Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
+		if (dir.y == AxisDirectionY_UP) {
+			int beltSlot = Slot - SLOTXY_BELT_FIRST;
+			InvalidateInventorySlot();
+			ActiveStoreSlot = { 2 + beltSlot, 10 - itemSize.height };
+			dir.y = AxisDirectionY_NONE;
+		}
+	}
+
+	// Jump from general inventory to store
+	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+		int firstSlot = Slot;
+		if (MyPlayer->HoldItem.isEmpty()) {
+			int8_t itemId = GetItemIdOnSlot(Slot);
+			if (itemId != 0) {
+				firstSlot = FindFirstSlotOnItem(itemId);
+			}
+		}
+		if (IsAnyOf(firstSlot, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST)) {
+			if (dir.x == AxisDirectionX_LEFT) {
+				Point slotCoord = GetSlotCoord(Slot);
+				InvalidateInventorySlot();
+				ActiveStoreSlot = FindClosestStoreSlot(slotCoord) - Displacement { itemSize.width - 1, 0 };
+				dir.x = AxisDirectionX_NONE;
+			}
+		}
+	}
+
+	bool isHeadSlot = SLOTXY_HEAD == Slot;
+	bool isLeftHandSlot = SLOTXY_HAND_LEFT == Slot;
+	bool isLeftRingSlot = Slot == SLOTXY_RING_LEFT;
+	if (isHeadSlot || isLeftHandSlot || isLeftRingSlot) {
+		if (dir.x == AxisDirectionX_LEFT) {
+			Point slotCoord = GetSlotCoord(Slot);
+			InvalidateInventorySlot();
+			ActiveStoreSlot = FindClosestStoreSlot(slotCoord) - Displacement { itemSize.width - 1, 0 };
+			dir.x = AxisDirectionX_NONE;
+		}
+	}
+
+	if (Slot >= 0) {
+		InventoryMove(dir);
+		return;
+	}
+
+	if (dir.x == AxisDirectionX_LEFT) {
+		if (ActiveStoreSlot.x > 0)
+			ActiveStoreSlot.x--;
+	} else if (dir.x == AxisDirectionX_RIGHT) {
+		if (ActiveStoreSlot.x < 10 - itemSize.width) {
+			ActiveStoreSlot.x++;
+		} else {
+			Point storeSlotCoord = GetStoreSlotCoord(ActiveStoreSlot);
+			Point rightPanelCoord = { GetRightPanel().position.x, storeSlotCoord.y };
+			Slot = FindClosestInventorySlot(rightPanelCoord);
+			ActiveStoreSlot = InvalidStorePoint;
+			BeltReturnsToStore = false;
+		}
+	}
+	if (dir.y == AxisDirectionY_UP) {
+		if (ActiveStoreSlot.y > 0)
+			ActiveStoreSlot.y--;
+	} else if (dir.y == AxisDirectionY_DOWN) {
+		if (ActiveStoreSlot.y < 10 - itemSize.height) {
+			ActiveStoreSlot.y++;
+		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(*MyPlayer, holdItem)) && ActiveStoreSlot.x > 1) {
+			int beltSlot = ActiveStoreSlot.x - 2;
+			Slot = SLOTXY_BELT_FIRST + beltSlot;
+			ActiveStoreSlot = InvalidStorePoint;
+			BeltReturnsToStore = true;
+		}
+	}
+
+	if (Slot >= 0) {
+		ResetInvCursorPosition();
+		return;
+	}
+
+	if (ActiveStoreSlot != InvalidStorePoint) {
+		Point mousePos = GetStoreSlotCoord(ActiveStoreSlot);
+		// Store coordinates are all the top left of the cell, so we need to shift the mouse to the center of the held item
+		// or the center of the cell if we have a hand cursor (itemSize will be 1x1 here so we can use the same calculation)
+		mousePos += Displacement { itemSize.width * INV_SLOT_HALF_SIZE_PX, itemSize.height * INV_SLOT_HALF_SIZE_PX };
+		SetCursorPos(mousePos);
+		return;
+	}
+
+	FocusOnInventory();
+}
+
 void HotSpellMove(AxisDirection dir)
 {
 	static AxisDirectionRepeater repeater;
@@ -1366,7 +1486,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 		return &StashMove;
 	}
 	if (IsStoreOpen) {
-		return &StoreMove;
+		return &GUIStoreMove;
 	}
 	if (invflag) {
 		return &CheckInventoryMove;

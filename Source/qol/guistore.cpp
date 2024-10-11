@@ -252,8 +252,8 @@ void FreeStoreGFX()
 void InitStore()
 {
 	if (!HeadlessMode) {
-		StorePanelArt = LoadClx("data\\store.clx");
-		StoreNavButtonArt = LoadClx("data\\storenavbtns.clx");
+		StorePanelArt = LoadClx("data\\stash.clx");
+		StoreNavButtonArt = LoadClx("data\\stashnavbtns.clx");
 	}
 }
 

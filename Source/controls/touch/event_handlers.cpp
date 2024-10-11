@@ -171,6 +171,7 @@ void HandleTouchEvent(const SDL_Event &event)
 	HandleBottomPanelInteraction(event);
 	HandleCharacterPanelInteraction(event);
 	HandleStashPanelInteraction(event);
+	HandleStorePanelInteraction(event);
 }
 
 bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)

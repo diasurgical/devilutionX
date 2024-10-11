@@ -1721,9 +1721,9 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 		break;
 	case TalkID::BasicBuy:
 	case TalkID::Buy:
-		SetupScreenElements(store);
-		SetupItemList(store);
-		UpdateItemStatFlags(store);
+		// SetupScreenElements(store);
+		// SetupItemList(store);
+		// UpdateItemStatFlags(store);
 		IsStoreOpen = true;
 		break;
 	case TalkID::Sell:

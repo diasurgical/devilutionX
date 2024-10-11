@@ -246,6 +246,7 @@ void LeftMouseCmd(bool bShift)
 	if (leveltype == DTYPE_TOWN) {
 		CloseGoldWithdraw();
 		CloseStash();
+		CloseStore();
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
@@ -402,6 +403,7 @@ void LeftMouseDown(uint16_t modState)
 			CheckInvScrn(isShiftHeld, isCtrlHeld);
 		CheckMainPanelButton();
 		CheckStashButtonPress(MousePosition);
+		CheckStoreButtonPress(MousePosition);
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
 	}
@@ -414,6 +416,7 @@ void LeftMouseUp(uint16_t modState)
 	if (MainPanelButtonDown)
 		CheckMainPanelButtonUp();
 	CheckStashButtonRelease(MousePosition);
+	CheckStoreButtonRelease(MousePosition);
 	if (CharPanelButtonActive) {
 		const bool isShiftHeld = (modState & KMOD_SHIFT) != 0;
 		ReleaseChrBtns(isShiftHeld);
@@ -1544,6 +1547,7 @@ void InventoryKeyPressed()
 	SpellbookFlag = false;
 	CloseGoldWithdraw();
 	CloseStash();
+	CloseStore();
 }
 
 void CharacterSheetKeyPressed()
@@ -1587,6 +1591,7 @@ void QuestLogKeyPressed()
 	CloseCharPanel();
 	CloseGoldWithdraw();
 	CloseStash();
+	CloseStore();
 }
 
 void DisplaySpellsKeyPressed()
@@ -1952,6 +1957,7 @@ void InitKeymapActions()
 		                    PROJECT_NAME,
 		                    PROJECT_VERSION),
 		        UiFlags::ColorWhite);
+		    IsStoreOpen = true;
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
@@ -2482,6 +2488,7 @@ void FreeGameMem()
 	FreeObjectGFX();
 	FreeTownerGFX();
 	FreeStashGFX();
+	FreeStoreGFX();
 #ifndef USE_SDL1
 	DeactivateVirtualGamepad();
 	FreeVirtualGamepadGFX();
@@ -3016,6 +3023,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 			InitTowners();
 			InitStash();
+			InitStore(); // GUISTORE: Do toggle check
 			InitItems();
 			InitMissiles();
 			IncProgress();

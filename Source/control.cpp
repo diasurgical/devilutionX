@@ -108,7 +108,7 @@ const Rectangle &GetRightPanel()
 }
 bool IsLeftPanelOpen()
 {
-	return CharFlag || QuestLogIsOpen || IsStashOpen;
+	return CharFlag || QuestLogIsOpen || IsStashOpen || IsStoreOpen;
 }
 bool IsRightPanelOpen()
 {
@@ -769,6 +769,7 @@ void OpenCharPanel()
 	QuestLogIsOpen = false;
 	CloseGoldWithdraw();
 	CloseStash();
+	CloseStore();
 	CharFlag = true;
 }
 
@@ -816,6 +817,7 @@ Point GetPanelPosition(UiPanels panel, Point offset)
 	case UiPanels::Quest:
 	case UiPanels::Character:
 	case UiPanels::Stash:
+	case UiPanels::Store:
 		return GetLeftPanel().position + displacement;
 	case UiPanels::Spell:
 	case UiPanels::Inventory:
@@ -1167,6 +1169,7 @@ void CheckMainPanelButtonUp()
 			CloseCharPanel();
 			CloseGoldWithdraw();
 			CloseStash();
+			CloseStore();
 			if (!QuestLogIsOpen)
 				StartQuestlog();
 			else
@@ -1184,6 +1187,7 @@ void CheckMainPanelButtonUp()
 			SpellbookFlag = false;
 			CloseGoldWithdraw();
 			CloseStash();
+			CloseStore();
 			invflag = !invflag;
 			CloseGoldDrop();
 			break;
