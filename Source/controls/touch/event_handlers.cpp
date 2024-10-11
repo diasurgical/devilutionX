@@ -10,6 +10,7 @@
 #include "inv.h"
 #include "panels/spell_book.hpp"
 #include "panels/spell_list.hpp"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
@@ -35,7 +36,7 @@ void SimulateMouseMovement(const SDL_Event &event)
 	bool isInMainPanel = GetMainPanel().contains(position);
 	bool isInLeftPanel = GetLeftPanel().contains(position);
 	bool isInRightPanel = GetRightPanel().contains(position);
-	if (IsStashOpen) {
+	if (IsStashOpen || IsStoreOpen) {
 		if (!SpellSelectFlag && !isInMainPanel && !isInLeftPanel && !isInRightPanel)
 			return;
 	} else if (invflag) {
@@ -126,6 +127,18 @@ void HandleStashPanelInteraction(const SDL_Event &event)
 		CheckStashButtonPress(MousePosition);
 	} else {
 		CheckStashButtonRelease(MousePosition);
+	}
+}
+
+void HandleStorePanelInteraction(const SDL_Event &event)
+{
+	if (!IsStoreOpen || !MyPlayer->HoldItem.isEmpty())
+		return;
+
+	if (event.type != SDL_FINGERUP) {
+		CheckStoreButtonPress(MousePosition);
+	} else {
+		CheckStoreButtonRelease(MousePosition);
 	}
 }
 

@@ -29,6 +29,7 @@
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "plrmsg.h"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
@@ -1575,6 +1576,8 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 		CheckInvPaste(*MyPlayer, MousePosition);
 	} else if (IsStashOpen && isCtrlHeld) {
 		TransferItemToStash(*MyPlayer, pcursinvitem);
+		//} else if (IsStoreOpen && isCtrlHeld) {
+		// GUISTORE: Sell item
 	} else {
 		CheckInvCut(*MyPlayer, MousePosition, isShiftHeld, isCtrlHeld);
 	}
@@ -2140,6 +2143,7 @@ void CloseInventory()
 {
 	CloseGoldWithdraw();
 	CloseStash();
+	CloseStore();
 	invflag = false;
 }
 
@@ -2168,6 +2172,30 @@ void CloseStash()
 	}
 
 	IsStashOpen = false;
+}
+
+void CloseStore()
+{
+	if (!IsStoreOpen)
+		return;
+
+	Player &myPlayer = *MyPlayer;
+	if (!myPlayer.HoldItem.isEmpty()) {
+		std::optional<Point> itemTile = FindAdjacentPositionForItem(myPlayer.position.future, myPlayer._pdir);
+		if (itemTile) {
+			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
+		} else {
+			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true, true)
+			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true, true)) {
+				app_fatal(_("No room for item"));
+			}
+			PlaySFX(ItemInvSnds[ItemCAnimTbl[myPlayer.HoldItem._iCurs]]);
+		}
+		myPlayer.HoldItem.clear();
+		NewCursor(CURSOR_HAND);
+	}
+
+	IsStoreOpen = false;
 }
 
 void DoTelekinesis()

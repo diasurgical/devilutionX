@@ -37,6 +37,7 @@
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "playerdat.hpp"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
@@ -1727,9 +1728,14 @@ void PrintItemOil(char iDidx)
 Point DrawUniqueInfoWindow(const Surface &out)
 {
 	const bool isInStash = IsStashOpen && GetLeftPanel().contains(MousePosition);
+	const bool isInStore = IsStoreOpen && GetLeftPanel().contains(MousePosition);
 	int panelX, panelY;
 	if (isInStash) {
 		ClxDraw(out, GetPanelPosition(UiPanels::Stash, { 24 + SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
+		panelX = GetLeftPanel().position.x + SidePanelSize.width + 27;
+		panelY = GetLeftPanel().position.y + 28;
+	} else if (isInStore) {
+		ClxDraw(out, GetPanelPosition(UiPanels::Store, { 24 + SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
 		panelX = GetLeftPanel().position.x + SidePanelSize.width + 27;
 		panelY = GetLeftPanel().position.y + 28;
 	} else {
@@ -1748,7 +1754,7 @@ Point DrawUniqueInfoWindow(const Surface &out)
 		DrawHalfTransparentRectTo(out, panelX, panelY, 265, 297);
 	}
 
-	return isInStash ? leftInfoPos : rightInfoPos;
+	return isInStash || isInStore ? leftInfoPos : rightInfoPos;
 }
 
 void printItemMiscKBM(const Item &item, const bool isOil, const bool isCastOnTarget)
@@ -2910,6 +2916,9 @@ void CalcPlrInv(Player &player, bool loadgfx)
 		if (IsStashOpen) {
 			// If stash is open, ensure the items are displayed correctly
 			Stash.RefreshItemStatFlags();
+		} else if (IsStoreOpen) {
+			// If store is open, ensure the items are displayed correctly
+			Store.RefreshItemStatFlags();
 		}
 	}
 }
@@ -4288,6 +4297,8 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 			}
 			if (IsStashOpen) {
 				Stash.RefreshItemStatFlags();
+			} else if (IsStoreOpen) {
+				Store.RefreshItemStatFlags();
 			}
 		}
 		RedrawComponent(PanelDrawComponent::Mana);

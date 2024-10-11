@@ -45,6 +45,7 @@
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"
+#include "qol/guistore.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
@@ -1213,6 +1214,8 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawQuestLog(out);
 	} else if (IsStashOpen) {
 		DrawStash(out);
+	} else if (IsStoreOpen) {
+		DrawStore(out);
 	}
 	DrawLevelButton(out);
 	if (ShowUniqueItemInfoBox) {

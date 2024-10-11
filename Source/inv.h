@@ -101,6 +101,7 @@ using ItemFunc = void (*)(Item &);
 
 void CloseInventory();
 void CloseStash();
+void CloseStore();
 void FreeInvGFX();
 void InitInv();
 

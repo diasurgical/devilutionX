@@ -12,6 +12,7 @@
 #include "levels/gendung.h"
 #include "minitext.h"
 #include "panels/ui_panels.hpp"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
@@ -447,7 +448,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetDungeonButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 {
-	if (pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell || pcurs > CURSOR_HAND)
+	if (pcursinvitem != -1 || pcursstashitem != StashStruct::EmptyCell || pcursstoreitem != StoreStruct::EmptyCell || pcurs > CURSOR_HAND)
 		return GetItemButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }

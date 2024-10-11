@@ -43,6 +43,7 @@ enum cursor_id : uint8_t {
 extern int pcursmonst;
 extern int8_t pcursinvitem;
 extern uint16_t pcursstashitem;
+extern uint16_t pcursstoreitem;
 extern int8_t pcursitem;
 
 struct Object; // Defined in objects.h

@@ -74,6 +74,7 @@
 #include "plrmsg.h"
 #include "qol/chatlog.h"
 #include "qol/floatingnumbers.h"
+#include "qol/guistore.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
@@ -377,6 +378,8 @@ void LeftMouseDown(uint16_t modState)
 				if (!IsWithdrawGoldOpen)
 					CheckStashItem(MousePosition, isShiftHeld, isCtrlHeld);
 				CheckStashButtonPress(MousePosition);
+			} else if (IsStoreOpen && GetLeftPanel().contains(MousePosition)) {
+				CheckStoreItem(MousePosition, isShiftHeld, isCtrlHeld);
 			} else if (SpellbookFlag && GetRightPanel().contains(MousePosition)) {
 				CheckSBook();
 			} else if (!MyPlayer->HoldItem.isEmpty()) {
@@ -597,6 +600,8 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 			AutomapUp();
 		} else if (IsStashOpen) {
 			Stash.PreviousPage();
+		} else if (IsStoreOpen) {
+			Store.PreviousPage();
 		}
 		return;
 	case SDLK_DOWN:
@@ -612,6 +617,8 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 			AutomapDown();
 		} else if (IsStashOpen) {
 			Stash.NextPage();
+		} else if (IsStoreOpen) {
+			Store.NextPage();
 		}
 		return;
 	case SDLK_PAGEUP:
@@ -762,6 +769,8 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				ChatLogScrollUp();
 			} else if (IsStashOpen) {
 				Stash.PreviousPage();
+			} else if (IsStoreOpen) {
+				Store.PreviousPage();
 			} else {
 				sgOptions.Keymapper.KeyPressed(MouseScrollUpButton);
 			}
@@ -776,6 +785,8 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				ChatLogScrollDown();
 			} else if (IsStashOpen) {
 				Stash.NextPage();
+			} else if (IsStoreOpen) {
+				Store.NextPage();
 			} else {
 				sgOptions.Keymapper.KeyPressed(MouseScrollDownButton);
 			}
@@ -1658,7 +1669,7 @@ bool CanPlayerTakeAction()
 bool CanAutomapBeToggledOff()
 {
 	// check if every window is closed - if yes, automap can be toggled off
-	if (!QuestLogIsOpen && !IsWithdrawGoldOpen && !IsStashOpen && !CharFlag
+	if (!QuestLogIsOpen && !IsWithdrawGoldOpen && !IsStashOpen && !IsStoreOpen && !CharFlag
 	    && !SpellbookFlag && !invflag && !isGameMenuOpen && !qtextflag && !SpellSelectFlag
 	    && !ChatLogFlag && !HelpFlag)
 		return true;

@@ -11,6 +11,7 @@ enum class UiPanels : uint8_t {
 	Spell,
 	Inventory,
 	Stash,
+	Store,
 };
 
 } // namespace devilution

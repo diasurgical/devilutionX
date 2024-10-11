@@ -14,6 +14,7 @@
 #include "gmenu.h"
 #include "options.h"
 #include "panels/spell_list.hpp"
+#include "qol/guistore.h"
 #include "qol/stash.h"
 #include "stores.h"
 
@@ -228,6 +229,22 @@ void PressControllerButton(ControllerButton button)
 			return;
 		default:
 			break;
+		}
+	}
+
+	if (IsStoreOpen) {
+		switch (button) {
+		case ControllerButton_BUTTON_BACK:
+			// GUISTORE: Special action?
+			return;
+		case ControllerButton_BUTTON_LEFTSHOULDER:
+			// GUISTORE: Previous tab
+			return;
+		case ControllerButton_BUTTON_RIGHTSHOULDER:
+			// GUISTORE: Next tab
+			return;
+		default:
+			return;
 		}
 	}
 

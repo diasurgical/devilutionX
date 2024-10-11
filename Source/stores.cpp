@@ -22,6 +22,7 @@
 #include "init.h"
 #include "minitext.h"
 #include "panels/info_box.hpp"
+#include "qol/guistore.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
@@ -1723,6 +1724,7 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 		SetupScreenElements(store);
 		SetupItemList(store);
 		UpdateItemStatFlags(store);
+		IsStoreOpen = true;
 		break;
 	case TalkID::Sell:
 	case TalkID::Repair:
