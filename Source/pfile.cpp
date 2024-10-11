@@ -35,7 +35,6 @@
 #ifdef __DREAMCAST__
 #include <dc/vmu_pkg.h>
 #include <kos/fs.h>
-#include <kos/fs_ramdisk.h>
 #include <libgen.h>
 #endif
 
@@ -54,28 +53,6 @@ namespace devilution {
 
 bool gbValidSaveFile;
 
-#ifdef __DREAMCAST__
-void listdir(const char *dir, int depth)
-{
-	file_t d = fs_open(dir, O_RDONLY | O_DIR);
-	dirent_t *entry;
-	printf("============ %s ============\n", dir);
-	while (NULL != (entry = fs_readdir(d))) {
-		char absolutePath[1024];
-		strcpy(absolutePath, dir);
-		strcat(absolutePath, "/");
-		strcat(absolutePath, entry->name);
-		bool isDir = entry->size == -1;
-		printf("[%s]\t%.2f kB\t%s\n", isDir ? "DIR" : "FIL", entry->size / 1024.0, entry->name);
-		if (isDir) {
-			printf("absolutePath = %s, depth = %d\n", absolutePath, depth);
-			listdir(absolutePath, depth + 1);
-		}
-	}
-	fs_close(d);
-	printf("============ %s ============\n\n\n", dir);
-}
-#endif
 namespace {
 
 /** List of character names for the character selection screen. */
@@ -83,10 +60,10 @@ char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, std::string_view savePrefix = {})
 {
-	// shorter names to get around VMU filename size limits
 	return StrCat(paths::PrefPath(), savePrefix,
 	    gbIsSpawn
 #ifdef __DREAMCAST__
+	        // shorter names to get around VMU filename size limits
 	        ? (gbIsMultiplayer ? "M" : "S")
 	        : (gbIsMultiplayer ? "m" : "s"),
 #else
@@ -188,11 +165,7 @@ bool ReadHero(SaveReader &archive, PlayerPack *pPack)
 	}
 
 #ifdef __DREAMCAST__
-	Log("{} == sizeof(*pPack) ({}) = {}", read, sizeof(*pPack), read == sizeof(*pPack));
 	Log("Read player {}", pPack->pName);
-	// Log("\tpHPBase = {}", pPack->pHPBase);
-	listdir("/ram", 0);
-	listdir("/vmu/a1", 0);
 #endif
 	return ret;
 }
@@ -636,31 +609,6 @@ std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::siz
 	return result;
 }
 
-/*
- * todo: add bzip compression to the inventory data (hitms)
-std::byte* compressHeroItems(std::byte *data, size_t size)
-{
-    int bzBuffToBuffCompress( char*         dest,
-                             unsigned int* destLen,
-                             char*         source,
-                             unsigned int  sourceLen,
-                             int           blockSize100k,
-                             int           verbosity,
-                             int           workFactor );
-
-    char *compressed = malloc(sizeof(std::byte) * size);
-    size_t compressedLength;
-    if(BZ_OK != bzBuffToBuffCompress(
-            compressed,
-            &compressedLength,
-            data,
-            size,
-
-    )) {
-        free(compressed);
-    }
-}*/
-
 bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t size)
 {
 	Log("SaveWriter::WriteFile(\"{}\", data[], {})", filename, size);
@@ -668,6 +616,7 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 	Log("dir_ = {}", dir_);
 	Log("path = {}", path);
 	const char *baseName = basename(path.c_str());
+
 	// vmu code
 	if (dir_.starts_with("/vmu")) {
 		vmu_pkg_t package;
@@ -715,32 +664,8 @@ bool SaveWriter::WriteFile(const char *filename, const std::byte *data, size_t s
 		}
 		delete[] package.data;
 		free(contents);
-		listdir("/vmu/a1", 0);
 		return true;
 	}
-
-	// ramdisk code
-	bool exists = FileExists(baseName);
-	if (exists) {
-		Log("{} exists, removing it", path);
-		void *toFree;
-		size_t ignore;
-		int detach_result = fs_ramdisk_detach(baseName, &toFree, &ignore);
-		free(toFree);
-		Log("fs_ramdisk_detach result = {}", detach_result);
-		if (detach_result == -1) {
-			return false;
-		}
-	}
-	Log("\tAllocating {} bytes for path {}", size, baseName);
-	void *buffer = malloc(size);
-	memcpy(buffer, data, size);
-	Log("\tMallocation succeeded ? {}", buffer != NULL);
-	int attach_result = fs_ramdisk_attach(baseName, buffer, size);
-	Log("\tAttach result: {}", attach_result);
-	Log("Current ramdisk contents:");
-	listdir("/ram", 0);
-	return attach_result != -1;
 }
 #else
 std::unique_ptr<std::byte[]> SaveReader::ReadFile(const char *filename, std::size_t &fileSize, int32_t &error)
@@ -984,17 +909,9 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	{
 		std::optional<SaveReader> archive = OpenSaveArchive(saveNum);
 		if (!archive) {
-#ifdef __DREAMCAST__
-			listdir("/ram", 0);
-			listdir("/vmu/a1", 0);
-#endif
 			app_fatal(_("Unable to open archive"));
 		}
 		if (!ReadHero(*archive, &pkplr)) {
-#ifdef __DREAMCAST__
-			listdir("/ram", 0);
-			listdir("/vmu/a1", 0);
-#endif
 			app_fatal(_("Unable to load character"));
 		}
 
