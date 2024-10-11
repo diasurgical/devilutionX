@@ -246,7 +246,10 @@ void LeftMouseCmd(bool bShift)
 	if (leveltype == DTYPE_TOWN) {
 		CloseGoldWithdraw();
 		CloseStash();
-		CloseStore();
+		if (IsStoreOpen) {
+			CloseStore();
+			return;
+		}
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
@@ -381,6 +384,7 @@ void LeftMouseDown(uint16_t modState)
 				CheckStashButtonPress(MousePosition);
 			} else if (IsStoreOpen && GetLeftPanel().contains(MousePosition)) {
 				CheckStoreItem(MousePosition, isShiftHeld, isCtrlHeld);
+				CheckGUIStoreButtonPress(MousePosition);
 			} else if (SpellbookFlag && GetRightPanel().contains(MousePosition)) {
 				CheckSBook();
 			} else if (!MyPlayer->HoldItem.isEmpty()) {
@@ -403,7 +407,8 @@ void LeftMouseDown(uint16_t modState)
 			CheckInvScrn(isShiftHeld, isCtrlHeld);
 		CheckMainPanelButton();
 		CheckStashButtonPress(MousePosition);
-		CheckStoreButtonPress(MousePosition);
+		if (IsStoreOpen)
+			CheckGUIStoreButtonPress(MousePosition);
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
 	}
@@ -416,7 +421,8 @@ void LeftMouseUp(uint16_t modState)
 	if (MainPanelButtonDown)
 		CheckMainPanelButtonUp();
 	CheckStashButtonRelease(MousePosition);
-	CheckStoreButtonRelease(MousePosition);
+	if (IsStoreOpen)
+		CheckGUIStoreButtonRelease(MousePosition);
 	if (CharPanelButtonActive) {
 		const bool isShiftHeld = (modState & KMOD_SHIFT) != 0;
 		ReleaseChrBtns(isShiftHeld);

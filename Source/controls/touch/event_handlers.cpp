@@ -136,9 +136,9 @@ void HandleStorePanelInteraction(const SDL_Event &event)
 		return;
 
 	if (event.type != SDL_FINGERUP) {
-		CheckStoreButtonPress(MousePosition);
+		CheckGUIStoreButtonPress(MousePosition);
 	} else {
-		CheckStoreButtonRelease(MousePosition);
+		CheckGUIStoreButtonRelease(MousePosition);
 	}
 }
 

@@ -582,6 +582,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	OptionEntryBoolean disableCripplingShrines;
+	/** @brief Use GUI based towner stores instead of list based towner stores for trading items. */
+	OptionEntryBoolean useGUIStores;
 	/** @brief Spell hotkeys instantly cast the spell. */
 	OptionEntryBoolean quickCast;
 	/** @brief Number of Healing potions to pick up automatically */

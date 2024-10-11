@@ -52,8 +52,6 @@ constexpr Size StoreGridSize { 10, 10 };
 constexpr PointsInRectangle<int> StoreGridRange { { { 0, 0 }, StoreGridSize } };
 
 OptionalOwnedClxSpriteList StorePanelArt;
-OptionalOwnedClxSpriteList StoreNavButtonArt;
-
 /**
  * @param page The store page index.
  * @param position Position to add the item to.
@@ -245,15 +243,13 @@ Point GetStoreSlotCoord(Point slot)
 
 void FreeStoreGFX()
 {
-	StoreNavButtonArt = std::nullopt;
 	StorePanelArt = std::nullopt;
 }
 
 void InitStore()
 {
 	if (!HeadlessMode) {
-		StorePanelArt = LoadClx("data\\stash.clx");
-		StoreNavButtonArt = LoadClx("data\\stashnavbtns.clx");
+		StorePanelArt = LoadClx("data\\store.clx");
 	}
 }
 
@@ -280,7 +276,7 @@ void GUIBuyItem(Player &player, uint16_t itemId)
 
 int StoreButtonPressed = -1;
 
-void CheckStoreButtonRelease(Point mousePosition)
+void CheckGUIStoreButtonRelease(Point mousePosition)
 {
 	if (StoreButtonPressed == -1)
 		return;
@@ -309,7 +305,7 @@ void CheckStoreButtonRelease(Point mousePosition)
 	StoreButtonPressed = -1;
 }
 
-void CheckStoreButtonPress(Point mousePosition)
+void CheckGUIStoreButtonPress(Point mousePosition)
 {
 	Rectangle storeButton;
 
@@ -331,7 +327,7 @@ void DrawGUIStore(const Surface &out)
 
 	if (StoreButtonPressed != -1) {
 		Point storeButton = GetPanelPosition(UiPanels::Store, StoreButtonRect[StoreButtonPressed].position);
-		RenderClxSprite(out, (*StoreNavButtonArt)[StoreButtonPressed], storeButton);
+		// RenderClxSprite(out, (*StoreNavButtonArt)[StoreButtonPressed], storeButton);
 	}
 
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };

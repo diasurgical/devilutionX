@@ -2196,6 +2196,7 @@ void CloseStore()
 	}
 
 	IsStoreOpen = false;
+	StartStore(TalkID::MainMenu);
 }
 
 void DoTelekinesis()

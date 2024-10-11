@@ -79,8 +79,8 @@ void GUIBuyItem(Player &player, uint16_t itemId);
 void DrawGUIStore(const Surface &out);
 void CheckStoreItem(Point mousePosition, bool isShiftHeld = false, bool isCtrlHeld = false);
 uint16_t CheckStoreHLight(Point mousePosition);
-void CheckStoreButtonRelease(Point mousePosition);
-void CheckStoreButtonPress(Point mousePosition);
+void CheckGUIStoreButtonRelease(Point mousePosition);
+void CheckGUIStoreButtonPress(Point mousePosition);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's store.

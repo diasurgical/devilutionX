@@ -1721,10 +1721,20 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 		break;
 	case TalkID::BasicBuy:
 	case TalkID::Buy:
-		// SetupScreenElements(store);
-		// SetupItemList(store);
-		// UpdateItemStatFlags(store);
-		IsStoreOpen = true;
+		if (*sgOptions.Gameplay.useGUIStores) {
+			IsStoreOpen = true;
+			Store.RefreshItemStatFlags();
+			invflag = true;
+			if (ControlMode != ControlTypes::KeyboardAndMouse) {
+				if (pcurs == CURSOR_DISARM)
+					NewCursor(CURSOR_HAND);
+				FocusOnInventory();
+			}
+		} else {
+			SetupScreenElements(store);
+			SetupItemList(store);
+			UpdateItemStatFlags(store);
+		}
 		break;
 	case TalkID::Sell:
 	case TalkID::Repair:
@@ -2076,6 +2086,8 @@ void ReleaseStoreButton()
 
 bool IsPlayerInStore()
 {
+	if (IsStoreOpen)
+		return false; // Player currently doesn't have the text based store active.
 	return ActiveStore != TalkID::Exit;
 }
 
