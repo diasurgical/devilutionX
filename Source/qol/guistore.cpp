@@ -35,19 +35,18 @@ namespace {
 constexpr unsigned CountStorePages = 3;
 constexpr unsigned LastStorePage = CountStorePages - 1;
 
-constexpr Size ButtonSize { 27, 16 };
-/** Contains mappings for the buttons in the store (2 navigation buttons, withdraw gold buttons, 2 navigation buttons) */
+constexpr Size ButtonSize { 71, 19 };
+/** Contains mappings for the buttons in the store */
 constexpr Rectangle StoreButtonRect[] = {
 	// clang-format off
-	{ {  19, 19 }, ButtonSize }, // 10 left
-	{ {  56, 19 }, ButtonSize }, // 1 left
-	{ {  93, 19 }, ButtonSize }, // withdraw gold
-	{ { 242, 19 }, ButtonSize }, // 1 right
-	{ { 279, 19 }, ButtonSize }  // 10 right
+	{ {  49,  13 }, ButtonSize }, // Armor
+	{ { 127,  13 }, ButtonSize }, // Weapons
+	{ { 205,  13 }, ButtonSize }, // Misc
+	{ { 236, 318 }, ButtonSize }, // Repair/Recharge/Identify
 	// clang-format on
 };
 
-constexpr Size StoreGridSize { 10, 10 };
+constexpr Size StoreGridSize { 10, 9 };
 constexpr PointsInRectangle<int> StoreGridRange { { { 0, 0 }, StoreGridSize } };
 
 OptionalOwnedClxSpriteList StorePanelArt;
@@ -257,18 +256,16 @@ void CheckGUIStoreButtonRelease(Point mousePosition)
 	if (storeButton.contains(mousePosition)) {
 		switch (StoreButtonPressed) {
 		case 0:
-			Store.PreviousPage(10);
+			Store.SetPage(0);
 			break;
 		case 1:
-			Store.PreviousPage();
+			Store.SetPage(1);
 			break;
 		case 2:
+			Store.SetPage(2);
 			break;
 		case 3:
-			Store.NextPage();
-			break;
-		case 4:
-			Store.NextPage(10);
+			// GUISTORE: Repair/Recharge/Identify
 			break;
 		}
 	}
