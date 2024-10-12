@@ -1221,6 +1221,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("el", "Ελληνικά");
 	languages.emplace_back("en", "English");
 	languages.emplace_back("es", "Español");
+    languages.emplace_back("et", "Eesti");
 	languages.emplace_back("fr", "Français");
 	languages.emplace_back("hr", "Hrvatski");
 	languages.emplace_back("hu", "Magyar");
