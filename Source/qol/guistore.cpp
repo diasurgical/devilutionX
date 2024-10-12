@@ -32,7 +32,7 @@ StoreStruct Store;
 
 namespace {
 
-constexpr unsigned CountStorePages = 100;
+constexpr unsigned CountStorePages = 3;
 constexpr unsigned LastStorePage = CountStorePages - 1;
 
 constexpr Size ButtonSize { 27, 16 };
@@ -209,7 +209,7 @@ Point GetStoreSlotCoord(Point slot)
 {
 	constexpr int StoreNextCell = INV_SLOT_SIZE_PX + 1; // spacing between each cell
 
-	return GetPanelPosition(UiPanels::Store, slot * StoreNextCell + Displacement { 17, 48 });
+	return GetPanelPosition(UiPanels::Store, slot * StoreNextCell + Displacement { 17, 43 });
 }
 
 void FreeStoreGFX()
@@ -328,7 +328,7 @@ void DrawGUIStore(const Surface &out)
 		const Point position = GetStoreSlotCoord(item.position) + offset;
 		const ClxSprite sprite = GetInvItemSprite(frame);
 
-		if (pcursstashitem == itemId) {
+		if (pcursstoreitem == itemId) {
 			uint8_t color = GetOutlineColor(item, true);
 			ClxDrawOutline(out, color, position, sprite);
 		}
