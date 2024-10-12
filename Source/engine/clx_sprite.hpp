@@ -5,21 +5,20 @@
  * @brief CLX format sprites.
  *
  * CLX is a format used for DevilutionX graphics at runtime.
+ * CLX encodes pixel in the same way CL2 but encodes metadata differently.
  *
- * It is identical to CL2, except we use the frame header to store the frame's width and height.
+ * Unlike CL2:
  *
- * CLX frame header (10 bytes, same as CL2):
+ * 1. CLX frame header stores frame width and height.
+ * 2. CLX frame header does not store 32-pixel block offsets.
  *
- *      Bytes |   Type   | Value
- *     :-----:|:--------:|------------------------------------
- *      0..2  | uint16_t | offset to data start (same as CL2)
- *      2..4  | uint16_t | width
- *      4..6  | uint16_t | height
- *      6..10 |    -     | unused
+ * CLX frame header is 6 bytes:
  *
- * The CLX format is otherwise identical to CL2.
- *
- * Since the header is identical to CL2, CL2 can be converted to CLX without reallocation.
+ *  Bytes |   Type   | Value
+ * :-----:|:--------:|-------------
+ *  0..2  | uint16_t | header size
+ *  2..4  | uint16_t | width
+ *  4..6  | uint16_t | height
  *
  * CL2 reference: https://github.com/savagesteel/d1-file-formats/blob/master/PC-Mac/CL2.md#2-file-structure
  */
@@ -42,12 +41,10 @@ class OptionalClxSprite;
  * @brief A single CLX sprite.
  */
 class ClxSprite {
-	static constexpr uint32_t HeaderSize = 10;
-
 public:
 	explicit constexpr ClxSprite(const uint8_t *data, uint32_t dataSize)
 	    : data_(data)
-	    , pixel_data_size_(dataSize - HeaderSize)
+	    , pixel_data_size_(dataSize - LoadLE16(data))
 	{
 		assert(data != nullptr);
 	}
@@ -69,7 +66,7 @@ public:
 	 */
 	[[nodiscard]] constexpr const uint8_t *pixelData() const
 	{
-		return &data_[HeaderSize];
+		return &data_[LoadLE16(data_)];
 	}
 
 	[[nodiscard]] constexpr uint32_t pixelDataSize() const

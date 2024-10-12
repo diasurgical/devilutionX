@@ -6,6 +6,17 @@
 
 namespace devilution {
 
+/**
+ * CLX frame header is 6 bytes:
+ *
+ *  Bytes |   Type   | Value
+ * :-----:|:--------:|-------------
+ *  0..2  | uint16_t | header size
+ *  2..4  | uint16_t | width
+ *  4..6  | uint16_t | height
+ */
+constexpr size_t ClxFrameHeaderSize = 6;
+
 inline void AppendClxTransparentRun(unsigned width, std::vector<uint8_t> &out)
 {
 	while (width >= 0x7F) {

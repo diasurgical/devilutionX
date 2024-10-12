@@ -86,9 +86,8 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 
 			// CLX frame header.
 			const size_t frameHeaderPos = cl2Data.size();
-			constexpr size_t FrameHeaderSize = 10;
-			cl2Data.resize(cl2Data.size() + FrameHeaderSize);
-			WriteLE16(&cl2Data[frameHeaderPos], FrameHeaderSize);
+			cl2Data.resize(cl2Data.size() + ClxFrameHeaderSize);
+			WriteLE16(&cl2Data[frameHeaderPos], ClxFrameHeaderSize);
 			WriteLE16(&cl2Data[frameHeaderPos + 2], frameWidth);
 
 			unsigned transparentRunWidth = 0;
@@ -111,7 +110,6 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 				++frameHeight;
 			}
 			WriteLE16(&cl2Data[frameHeaderPos + 4], static_cast<uint16_t>(frameHeight));
-			memset(&cl2Data[frameHeaderPos + 6], 0, 4);
 			AppendClxTransparentRun(transparentRunWidth, cl2Data);
 		}
 
