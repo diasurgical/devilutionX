@@ -12,6 +12,7 @@
 
 #include "engine/point.hpp"
 #include "items.h"
+#include "stores.h"
 
 namespace devilution {
 
@@ -90,6 +91,7 @@ void CheckGUIStoreButtonPress(Point mousePosition);
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool GUISellItem(Player &player, const Item &item, bool persistItem);
+bool AutoSellItemToStore(Player &player, const Item &item, bool persistItem);
+void PopulateStoreGrid(TalkID talkId);
 
 } // namespace devilution

@@ -46,6 +46,8 @@ _talker_id TownerId; // The current towner being interacted with
 
 std::vector<IndexedItem> playerItems;
 
+std::unordered_map<_talker_id, TownerStore *> townerStores;
+
 namespace {
 
 constexpr int PaddingTop = 32;
@@ -208,8 +210,6 @@ constexpr int SmallTextHeight = 12;
 // We space out blank lines a bit more to give space to 3-line store items.
 constexpr int LargeLineHeight = SmallLineHeight + 1;
 constexpr int LargeTextHeight = 18;
-
-std::unordered_map<_talker_id, TownerStore *> townerStores;
 
 void InitializeTownerStores()
 {
@@ -552,50 +552,6 @@ void SetupErrorScreen(TalkID talkId)
 	}
 
 	SetLineText(0, 14, text, UiFlags::ColorWhite | UiFlags::AlignCenter, true);
-}
-
-int GetItemBuyValue(const Item &item)
-{
-	int price = item._iIdentified ? item._iIvalue : item._ivalue;
-
-	if (TownerId == TOWN_PEGBOY) {
-		price = gbIsHellfire ? price - (price / 4) : price + (price / 2);
-	}
-
-	return price;
-}
-
-int GetItemSellValue(const Item &item)
-{
-	int price = item._iIdentified ? item._iIvalue : item._ivalue;
-
-	return price / 4;
-}
-
-int GetItemRepairCost(const Item &item)
-{
-	int dur = item._iMaxDur - item._iDurability;
-	int repairCost = 0;
-
-	if (item._iMagical != ITEM_QUALITY_NORMAL && item._iIdentified) {
-		repairCost = 30 * item._iIvalue * dur / (item._iMaxDur * 100 * 2);
-	} else {
-		repairCost = std::max(item._ivalue * dur / (item._iMaxDur * 2), 1);
-	}
-
-	return repairCost;
-}
-
-int GetItemRechargeCost(const Item &item)
-{
-	int rechargeCost = GetSpellData(item._iSpell).staffCost();
-	rechargeCost = (rechargeCost * (item._iMaxCharges - item._iCharges)) / (item._iMaxCharges * 2);
-	return rechargeCost;
-}
-
-int GetItemIdentifyCost()
-{
-	return 100;
 }
 
 void SetupConfirmScreen()
@@ -1723,6 +1679,7 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 	case TalkID::Buy:
 		if (*sgOptions.Gameplay.useGUIStores) {
 			IsStoreOpen = true;
+			PopulateStoreGrid(store);
 			Store.RefreshItemStatFlags();
 			invflag = true;
 			if (ControlMode != ControlTypes::KeyboardAndMouse) {
@@ -2089,6 +2046,50 @@ bool IsPlayerInStore()
 	if (IsStoreOpen)
 		return false; // Player currently doesn't have the text based store active.
 	return ActiveStore != TalkID::Exit;
+}
+
+int GetItemBuyValue(const Item &item)
+{
+	int price = item._iIdentified ? item._iIvalue : item._ivalue;
+
+	if (TownerId == TOWN_PEGBOY) {
+		price = gbIsHellfire ? price - (price / 4) : price + (price / 2);
+	}
+
+	return price;
+}
+
+int GetItemSellValue(const Item &item)
+{
+	int price = item._iIdentified ? item._iIvalue : item._ivalue;
+
+	return price / 4;
+}
+
+int GetItemRepairCost(const Item &item)
+{
+	int dur = item._iMaxDur - item._iDurability;
+	int repairCost = 0;
+
+	if (item._iMagical != ITEM_QUALITY_NORMAL && item._iIdentified) {
+		repairCost = 30 * item._iIvalue * dur / (item._iMaxDur * 100 * 2);
+	} else {
+		repairCost = std::max(item._ivalue * dur / (item._iMaxDur * 2), 1);
+	}
+
+	return repairCost;
+}
+
+int GetItemRechargeCost(const Item &item)
+{
+	int rechargeCost = GetSpellData(item._iSpell).staffCost();
+	rechargeCost = (rechargeCost * (item._iMaxCharges - item._iCharges)) / (item._iMaxCharges * 2);
+	return rechargeCost;
+}
+
+int GetItemIdentifyCost()
+{
+	return 100;
 }
 
 } // namespace devilution

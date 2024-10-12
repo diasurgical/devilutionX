@@ -20,7 +20,6 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "minitext.h"
-#include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
@@ -100,9 +99,10 @@ std::optional<Point> FindTargetSlotUnderItemCursor(Point cursorPosition, Size it
 	return {};
 }
 
+// GUISTORE: Borrow from filter function
 bool IsItemAllowedInStore(const Item &item)
 {
-	return item._iMiscId != IMISC_ARENAPOT;
+	return item._iMiscId != IMISC_ARENAPOT && IsNoneOf(item._iClass, ICLASS_GOLD, ICLASS_QUEST, ICLASS_NONE);
 }
 
 void CheckStorePaste(Point cursorPosition)
@@ -118,46 +118,17 @@ void CheckStorePaste(Point cursorPosition)
 	if (!targetSlot)
 		return;
 
-	Point firstSlot = *targetSlot;
+	PlaySFX(ItemInvSnds[ItemCAnimTbl[ICURS_GOLD_SMALL]]);
 
-	// Check that no more than 1 item is replaced by the move
-	StoreStruct::StoreCell storeIndex = StoreStruct::EmptyCell;
-	for (Point point : PointsInRectangle(Rectangle { firstSlot, itemSize })) {
-		StoreStruct::StoreCell iv = Store.GetItemIdAtPosition(point);
-		if (iv == StoreStruct::EmptyCell || storeIndex == iv)
-			continue;
-		if (storeIndex == StoreStruct::EmptyCell) {
-			storeIndex = iv; // Found first item
-			continue;
-		}
-		return; // Found a second item
-	}
+	Item &itemToSell = player.HoldItem;
 
-	PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
+	int price = GetItemSellValue(itemToSell);
 
-	// Need to set the item anchor position to the bottom left so drawing code functions correctly.
-	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
+	// Add the gold to the player's inventory
+	AddGoldToInventory(*MyPlayer, price);
+	MyPlayer->_pGold += price;
 
-	if (storeIndex == StoreStruct::EmptyCell) {
-		Store.storeList.emplace_back(player.HoldItem.pop());
-		// storeList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
-		storeIndex = static_cast<uint16_t>(Store.storeList.size() - 1);
-	} else {
-		// swap the held item and whatever was in the store at this position
-		std::swap(Store.storeList[storeIndex], player.HoldItem);
-		// then clear the space occupied by the old item
-		for (auto &row : Store.GetCurrentGrid()) {
-			for (auto &itemId : row) {
-				if (itemId - 1 == storeIndex)
-					itemId = 0;
-			}
-		}
-	}
-
-	// Finally mark the area now occupied by the pasted item in the current page/grid.
-	AddItemToStoreGrid(Store.GetPage(), firstSlot, storeIndex, itemSize);
-
-	Store.dirty = true;
+	player.HoldItem.clear();
 
 	NewCursor(player.HoldItem);
 }
@@ -491,7 +462,7 @@ void StoreStruct::RefreshItemStatFlags()
 	}
 }
 
-bool GUISellItem(Player &player, const Item &item, bool persistItem)
+bool AutoSellItemToStore(Player &player, const Item &item, bool persistItem)
 {
 	if (!IsItemAllowedInStore(item))
 		return false;
@@ -529,6 +500,74 @@ bool GUISellItem(Player &player, const Item &item, bool persistItem)
 	}
 
 	return false;
+}
+
+void PopulateStoreGrid(TalkID talkId)
+{
+	// Get the current towner store (determined by global TownerId)
+	TownerStore *towner = townerStores[TownerId];
+
+	// Clear the store grids to start fresh
+	Store.storeGrids.clear();
+	Store.storeList.clear();
+
+	// Function to add an item to the store grid for the given page
+	auto addItemToGrid = [](unsigned pageIndex, const Item &item) {
+		Size itemSize = GetInventorySize(item);
+
+		// Search for a position in the page's grid
+		for (auto storePosition : PointsInRectangle(Rectangle { { 0, 0 }, Size { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
+			// Check if all needed slots for the item are free
+			bool isSpaceFree = true;
+			for (auto itemPoint : PointsInRectangle(Rectangle { storePosition, itemSize })) {
+				if (Store.storeGrids[pageIndex][itemPoint.x][itemPoint.y] != 0) {
+					isSpaceFree = false; // Slot is occupied
+					break;
+				}
+			}
+
+			if (!isSpaceFree)
+				continue;
+
+			// Place the item in the grid if space is available
+			Store.storeList.push_back(item);
+			uint16_t storeIndex = static_cast<uint16_t>(Store.storeList.size() - 1);
+
+			// Set the item's position in the grid
+			Store.storeList[storeIndex].position = storePosition + Displacement { 0, itemSize.height - 1 };
+
+			// Mark the grid cells as occupied by this item
+			AddItemToStoreGrid(pageIndex, storePosition, storeIndex, itemSize);
+
+			Store.dirty = true;
+			return;
+		}
+	};
+
+	// Determine the item vector to use based on the TalkID
+	const std::vector<Item> &itemsToProcess = (talkId == TalkID::BasicBuy) ? towner->basicItems : towner->items;
+
+	// Iterate through the selected item vector and place them in the correct page
+	for (const Item &item : itemsToProcess) {
+		// Determine the page based on the item class
+		unsigned pageIndex;
+		switch (item._iClass) {
+		case ICLASS_ARMOR:
+			pageIndex = 0; // Armor tab
+			break;
+		case ICLASS_WEAPON:
+			pageIndex = 1; // Weapon tab
+			break;
+		case ICLASS_MISC:
+			pageIndex = 2; // Misc tab
+			break;
+		default:
+			continue; // Skip items that don't belong in any of these categories
+		}
+
+		// Add the item to the correct grid page
+		addItemToGrid(pageIndex, item);
+	}
 }
 
 } // namespace devilution

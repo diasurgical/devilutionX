@@ -125,6 +125,8 @@ extern TownerStore Boy;
 extern TownerStore Storyteller;
 extern TownerStore Barmaid;
 
+extern std::unordered_map<_talker_id, TownerStore *> townerStores;
+
 /* Clears premium items sold by Griswold and Wirt. */
 void InitStores();
 /* Spawns items sold by vendors, including premium items sold by Griswold and Wirt. */
@@ -147,5 +149,10 @@ void StoreEnter();
 void CheckStoreButton();
 void ReleaseStoreButton();
 bool IsPlayerInStore();
+int GetItemBuyValue(const Item &item);
+int GetItemSellValue(const Item &item);
+int GetItemRepairCost(const Item &item);
+int GetItemRechargeCost(const Item &item);
+int GetItemIdentifyCost();
 
 } // namespace devilution
