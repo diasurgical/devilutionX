@@ -64,7 +64,7 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			unsigned transparentRunWidth = 0;
 			int_fast16_t xOffset = 0;
 			size_t frameHeight = 0;
-			const uint8_t *src = frameBegin + FrameHeaderSize;
+			const uint8_t *src = frameBegin + LoadLE16(frameBegin);
 			while (src != frameEnd) {
 				auto remainingWidth = static_cast<int_fast16_t>(frameWidth) - xOffset;
 				while (remainingWidth > 0) {
