@@ -38,7 +38,6 @@ OwnedClxSpriteList SurfaceToClx(const Surface &surface, unsigned numFrames,
 		WriteLE16(&clxData[frameHeaderPos], ClxFrameHeaderSize);
 		WriteLE16(&clxData[frameHeaderPos + 2], static_cast<uint16_t>(width));
 		WriteLE16(&clxData[frameHeaderPos + 4], static_cast<uint16_t>(frameHeight));
-		memset(&clxData[frameHeaderPos + 6], 0, 4);
 
 		unsigned transparentRunWidth = 0;
 		size_t line = 0;
