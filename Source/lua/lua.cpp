@@ -44,10 +44,10 @@ function requireGen(env, loaded, loadFn)
       local p = loaded[packageName]
       if p == nil then
           local loader = loadFn(packageName)
-          setEnvironment(loader, env)
           if type(loader) == "string" then
             error(loader)
           end
+          setEnvironment(env, loader)
           p = loader(packageName)
           loaded[packageName] = p
       end
