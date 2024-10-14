@@ -46,3 +46,5 @@ set(JOY_BUTTON_START 3)
 #GPF SDL files
 set(SDL_INCLUDE_DIR /usr/include/SDL/)
 set(SDL_LIBRARY /usr/lib/libSDL.a)
+
+add_compile_options(-flto=none)
