@@ -865,9 +865,20 @@ void LoadItem(LoadHelper &file, Item &item)
 	GetItemFrm(item);
 }
 
-void LoadPremium(LoadHelper &file, int i)
+void LoadPremiumItems(LoadHelper &file)
 {
-	LoadAndValidateItemData(file, PremiumItems[i]);
+	// Resize the vector to the expected number of items in the save file
+	Blacksmith.items.resize(giNumberOfSmithPremiumItems);
+
+	for (int i = 0; i < giNumberOfSmithPremiumItems; ++i) {
+		LoadAndValidateItemData(file, Blacksmith.items[i]);
+	}
+
+	// Remove any empty/null items from the vector after loading
+	Blacksmith.items.erase(std::remove_if(Blacksmith.items.begin(), Blacksmith.items.end(), [](const Item &item) {
+		return item._itype == ItemType::None;
+	}),
+	    Blacksmith.items.end());
 }
 
 void LoadQuest(LoadHelper *file, int i)
@@ -2523,11 +2534,11 @@ void LoadGame(bool firstflag)
 		memset(dLight, 0, sizeof(dLight));
 	}
 
-	PremiumItemCount = file.NextBE<int32_t>();
-	PremiumItemLevel = file.NextBE<int32_t>();
+	file.Skip(4); // Blacksmith.itemCount
+	Blacksmith.itemLevel = file.NextBE<int32_t>();
 
-	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
-		LoadPremium(file, i);
+	LoadPremiumItems(file);
+
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
 		SpawnPremium(myPlayer);
 
@@ -2786,11 +2797,21 @@ void SaveGameData(SaveWriter &saveWriter)
 		}
 	}
 
-	file.WriteBE<int32_t>(PremiumItemCount);
-	file.WriteBE<int32_t>(PremiumItemLevel);
+	file.WriteBE<int32_t>(Blacksmith.items.size());
+	file.WriteBE<int32_t>(Blacksmith.itemLevel);
 
-	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
-		SaveItem(file, PremiumItems[i]);
+	// Save Smith premium items with a fixed count
+	for (int i = 0; i < giNumberOfSmithPremiumItems; ++i) {
+		if (i < Blacksmith.items.size()) {
+			// Save the item from the vector
+			SaveItem(file, Blacksmith.items[i]);
+		} else {
+			// Save an empty item if the vector has fewer items
+			Item emptyItem;
+			emptyItem.clear(); // Make the item null
+			SaveItem(file, emptyItem);
+		}
+	}
 
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);
