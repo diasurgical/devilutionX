@@ -458,6 +458,8 @@ void RightMouseDown(bool isShiftHeld)
 	}
 	if (IsPlayerInStore())
 		return;
+	if (IsStoreOpen)
+		return;
 	if (SpellSelectFlag) {
 		SetSpell();
 		return;
@@ -593,7 +595,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if ((modState & KMOD_ALT) != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
-		} else if (IsPlayerInStore()) {
+		} else if (IsPlayerInStore() || GUIConfirmFlag) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {
 			QuestlogEnter();
@@ -602,7 +604,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 	case SDLK_UP:
-		if (IsPlayerInStore()) {
+		if (IsPlayerInStore() || GUIConfirmFlag) {
 			StoreUp();
 		} else if (QuestLogIsOpen) {
 			QuestlogUp();
@@ -619,7 +621,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		return;
 	case SDLK_DOWN:
-		if (IsPlayerInStore()) {
+		if (IsPlayerInStore() || GUIConfirmFlag) {
 			StoreDown();
 		} else if (QuestLogIsOpen) {
 			QuestlogDown();
@@ -773,7 +775,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDL_MOUSEWHEEL:
 		if (event.wheel.y > 0) { // Up
-			if (IsPlayerInStore()) {
+			if (IsPlayerInStore() || GUIConfirmFlag) {
 				StoreUp();
 			} else if (QuestLogIsOpen) {
 				QuestlogUp();
@@ -789,7 +791,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				sgOptions.Keymapper.KeyPressed(MouseScrollUpButton);
 			}
 		} else if (event.wheel.y < 0) { // down
-			if (IsPlayerInStore()) {
+			if (IsPlayerInStore() || GUIConfirmFlag) {
 				StoreDown();
 			} else if (QuestLogIsOpen) {
 				QuestlogDown();
@@ -1517,7 +1519,7 @@ void HelpKeyPressed()
 {
 	if (HelpFlag) {
 		HelpFlag = false;
-	} else if (IsPlayerInStore()) {
+	} else if (IsPlayerInStore() || IsStoreOpen) {
 		InfoString = StringOrView {};
 		AddInfoBoxString(_("No help available")); /// BUGFIX: message isn't displayed
 		AddInfoBoxString(_("while in stores"));
@@ -1541,7 +1543,7 @@ void HelpKeyPressed()
 
 void InventoryKeyPressed()
 {
-	if (IsPlayerInStore())
+	if (IsPlayerInStore() || IsStoreOpen)
 		return;
 	invflag = !invflag;
 	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
