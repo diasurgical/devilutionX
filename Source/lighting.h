@@ -87,4 +87,7 @@ void lighting_color_cycling();
 
 constexpr int MaxCrawlRadius = 18;
 
+DVL_ALWAYS_INLINE bool IsFullyDark(const uint8_t *tbl) { return tbl == FullyDarkLightTable; }
+DVL_ALWAYS_INLINE bool IsFullyLit(const uint8_t *tbl) { return tbl == FullyLitLightTable; }
+
 } // namespace devilution

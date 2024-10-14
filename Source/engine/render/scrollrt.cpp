@@ -5,6 +5,8 @@
  */
 #include "engine/render/scrollrt.h"
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -549,56 +551,14 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 	targetBufferPosition.y -= TILE_HEIGHT;
 
 	for (uint_fast8_t i = 2, n = MicroTileLen; i < n; i += 2) {
-		{
-			const LevelCelBlock levelCelBlock { pMap->mt[i] };
-			if (levelCelBlock.hasValue()) {
-				RenderTile(out, targetBufferPosition,
-				    levelCelBlock,
-				    transparency ? MaskType::Transparent : MaskType::Solid, tbl);
-			}
+		if (const LevelCelBlock levelCelBlock { pMap->mt[i] }; levelCelBlock.hasValue()) {
+			RenderTile(out, targetBufferPosition, levelCelBlock, transparency ? MaskType::Transparent : MaskType::Solid, tbl);
 		}
-		{
-			const LevelCelBlock levelCelBlock { pMap->mt[i + 1] };
-			if (levelCelBlock.hasValue()) {
-				RenderTile(out, targetBufferPosition + RightFrameDisplacement,
-				    levelCelBlock,
-				    transparency ? MaskType::Transparent : MaskType::Solid, tbl);
-			}
+		if (const LevelCelBlock levelCelBlock { pMap->mt[i + 1] }; levelCelBlock.hasValue()) {
+			RenderTile(out, targetBufferPosition + RightFrameDisplacement,
+			    levelCelBlock, transparency ? MaskType::Transparent : MaskType::Solid, tbl);
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
-	}
-}
-
-/**
- * @brief Render a floor tile.
- * @param out Target buffer
- * @param tilePosition dPiece coordinates
- * @param targetBufferPosition Target buffer coordinate
- */
-void DrawFloorTile(const Surface &out, Point tilePosition, Point targetBufferPosition)
-{
-	const int lightTableIndex = dLight[tilePosition.x][tilePosition.y];
-
-	const uint8_t *tbl = LightTables[lightTableIndex].data();
-#ifdef _DEBUG
-	if (DebugPath && MyPlayer->IsPositionInPath(tilePosition))
-		tbl = GetPauseTRN();
-#endif
-
-	const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
-	{
-		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[0] };
-		if (levelCelBlock.hasValue()) {
-			RenderTileFrame(out, targetBufferPosition, TileType::LeftTriangle,
-			    GetDunFrame(levelCelBlock.frame()), DunFrameTriangleHeight, MaskType::Solid, tbl);
-		}
-	}
-	{
-		const LevelCelBlock levelCelBlock { DPieceMicros[levelPieceId].mt[1] };
-		if (levelCelBlock.hasValue()) {
-			RenderTileFrame(out, targetBufferPosition + RightFrameDisplacement, TileType::RightTriangle,
-			    GetDunFrame(levelCelBlock.frame()), DunFrameTriangleHeight, MaskType::Solid, tbl);
-		}
 	}
 }
 
@@ -830,8 +790,103 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 }
 
+constexpr int MinFloorTileToBakeLight = 2;
+constexpr size_t FloorTilesPerLightBufferSize = 96;
+constexpr size_t FloorBufferNumLightingLevels = NumLightingLevels
+#ifdef DEBUG_
+    + 1
+#endif
+    ;
+
+struct FloorTilesBufferEntry {
+	PointOf<int16_t> targetBufferPosition;
+	uint16_t levelPieceId;
+
+	bool operator<(const FloorTilesBufferEntry &other) const
+	{
+		return levelPieceId < other.levelPieceId;
+	}
+};
+
+struct FloorTilesBuffer {
+	using BufferForLightLevel = StaticVector<FloorTilesBufferEntry, FloorTilesPerLightBufferSize>;
+
+	std::array<BufferForLightLevel, FloorBufferNumLightingLevels> perLightLevel;
+};
+
+const uint8_t *GetLightTableFromIndex(uint8_t lightTableIndex)
+{
+	return
+#ifdef _DEBUG
+	    lightTableIndex == NumLightingLevels
+	    ? GetPauseTRN()
+	    :
+#endif
+	    LightTables[lightTableIndex].data();
+}
+
+void DrawIdenticalFloorTiles(const Surface &out, const uint8_t *lightTable, FloorTilesBufferEntry *begin, FloorTilesBufferEntry *end)
+{
+	if (begin == end) return;
+	const uint16_t levelPieceId = begin->levelPieceId;
+	if (begin + MinFloorTileToBakeLight >= end) {
+		{
+			const uint8_t *src = GetDunFrame(DPieceMicros[levelPieceId].mt[0].frame());
+			for (FloorTilesBufferEntry *it = begin; it != end; ++it) {
+				RenderTileFrame(out, it->targetBufferPosition, TileType::LeftTriangle,
+				    src, DunFrameTriangleHeight, MaskType::Solid, lightTable);
+			}
+		}
+		{
+			const uint8_t *src = GetDunFrame(DPieceMicros[levelPieceId].mt[1].frame());
+			for (FloorTilesBufferEntry *it = begin; it != end; ++it) {
+				RenderTileFrame(out, it->targetBufferPosition + RightFrameDisplacement, TileType::RightTriangle,
+				    src, DunFrameTriangleHeight, MaskType::Solid, lightTable);
+			}
+		}
+	} else {
+		// Doesn't matter what `FullyLitLightTable` light table points to, as long as it's not `nullptr`.
+		uint8_t *fullyLitBefore = FullyLitLightTable;
+		FullyLitLightTable = LightTables[0].data();
+
+		uint8_t bakedLightTile[ReencodedTriangleFrameSize];
+
+		DunTriangleTileApplyTrans(bakedLightTile, GetDunFrame(DPieceMicros[levelPieceId].mt[0].frame()), lightTable);
+		for (FloorTilesBufferEntry *it = begin; it != end; ++it) {
+			RenderTileFrame(out, it->targetBufferPosition, TileType::LeftTriangle,
+			    bakedLightTile, DunFrameTriangleHeight, MaskType::Solid, FullyLitLightTable);
+		}
+		DunTriangleTileApplyTrans(bakedLightTile, GetDunFrame(DPieceMicros[levelPieceId].mt[1].frame()), lightTable);
+		for (FloorTilesBufferEntry *it = begin; it != end; ++it) {
+			RenderTileFrame(out, it->targetBufferPosition + RightFrameDisplacement, TileType::RightTriangle,
+			    bakedLightTile, DunFrameTriangleHeight, MaskType::Solid, FullyLitLightTable);
+		}
+
+		FullyLitLightTable = fullyLitBefore;
+	}
+}
+
+void DrawFloorBuffer(const Surface &out, const uint8_t *lightTable, FloorTilesBuffer::BufferForLightLevel &buffer)
+{
+	if (buffer.size() > 2) std::sort(buffer.begin(), buffer.end());
+	uint16_t prevLevelPieceId = buffer[0].levelPieceId;
+	size_t prevBegin = 0;
+	FloorTilesBufferEntry *arr = buffer.begin();
+	for (size_t i = 1, n = buffer.size(); i < n; ++i) {
+		const uint16_t frame = buffer[i].levelPieceId;
+		if (prevLevelPieceId != frame) {
+			DrawIdenticalFloorTiles(out, lightTable, &arr[prevBegin], &arr[i]);
+			prevLevelPieceId = frame;
+			prevBegin = i;
+		}
+	}
+	if (prevBegin != buffer.size()) {
+		DrawIdenticalFloorTiles(out, lightTable, &arr[prevBegin], buffer.end());
+	}
+}
+
 /**
- * @brief Render a row of tiles
+ * @brief Renders the floor tiles
  * @param out Buffer to render to
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Target buffer coordinates
@@ -840,31 +895,60 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition, int rows, int columns)
 {
+	FloorTilesBuffer tilesBuffer;
+	PointOf<int16_t> position = targetBufferPosition;
 	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < columns; j++, tilePosition += Direction::East, targetBufferPosition.x += TILE_WIDTH) {
+		for (int j = 0; j < columns; ++j, tilePosition += Direction::East, position.x += TILE_WIDTH) {
 			if (!InDungeonBounds(tilePosition)) {
-				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
+				world_draw_black_tile(out, position.x, position.y);
 				continue;
 			}
-			if (IsFloor(tilePosition)) {
-				DrawFloorTile(out, tilePosition, targetBufferPosition);
+			const uint16_t levelPieceId = dPiece[tilePosition.x][tilePosition.y];
+			assert(DPieceMicros[levelPieceId].mt[0].hasValue() == DPieceMicros[levelPieceId].mt[1].hasValue());
+			if (!DPieceMicros[levelPieceId].mt[0].hasValue()) continue;
+
+			const uint8_t lightTableIndex =
+#ifdef _DEBUG
+			    DebugPath && MyPlayer->IsPositionInPath(tilePosition)
+			    ? NumLightingLevels
+			    :
+#endif
+			    dLight[tilePosition.x][tilePosition.y];
+			const auto *lightTable = GetLightTableFromIndex(lightTableIndex);
+			if (IsFullyLit(lightTable) || IsFullyDark(lightTable)) {
+				RenderTileFrame(out, position, TileType::LeftTriangle,
+				    GetDunFrame(DPieceMicros[levelPieceId].mt[0].frame()), DunFrameTriangleHeight, MaskType::Solid, lightTable);
+				RenderTileFrame(out, position + RightFrameDisplacement, TileType::RightTriangle,
+				    GetDunFrame(DPieceMicros[levelPieceId].mt[1].frame()), DunFrameTriangleHeight, MaskType::Solid, lightTable);
+			} else {
+				FloorTilesBuffer::BufferForLightLevel &buffer = tilesBuffer.perLightLevel[lightTableIndex];
+				if (buffer.size() == FloorTilesPerLightBufferSize) {
+					DrawFloorBuffer(out, lightTable, buffer);
+					buffer.clear();
+				}
+				buffer.emplace_back(FloorTilesBufferEntry { position, levelPieceId });
 			}
 		}
+
 		// Return to start of row
 		tilePosition += Displacement(Direction::West) * columns;
-		targetBufferPosition.x -= columns * TILE_WIDTH;
+		position.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
-		targetBufferPosition.y += TILE_HEIGHT / 2;
+		position.y += TILE_HEIGHT / 2;
 		if ((i & 1) != 0) {
 			tilePosition.x++;
 			columns--;
-			targetBufferPosition.x += TILE_WIDTH / 2;
+			position.x += TILE_WIDTH / 2;
 		} else {
 			tilePosition.y++;
 			columns++;
-			targetBufferPosition.x -= TILE_WIDTH / 2;
+			position.x -= TILE_WIDTH / 2;
 		}
+	}
+	for (uint8_t lightTableIndex = 0; lightTableIndex < FloorBufferNumLightingLevels; ++lightTableIndex) {
+		FloorTilesBuffer::BufferForLightLevel &buffer = tilesBuffer.perLightLevel[lightTableIndex];
+		if (!buffer.empty()) DrawFloorBuffer(out, GetLightTableFromIndex(lightTableIndex), buffer);
 	}
 }
 

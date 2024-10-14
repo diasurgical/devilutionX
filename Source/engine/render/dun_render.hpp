@@ -11,6 +11,7 @@
 #include "engine/surface.hpp"
 #include "levels/dun_tile.hpp"
 #include "levels/gendung.h"
+#include "lighting.h"
 #include "utils/attributes.h"
 
 // #define DUN_RENDER_STATS
@@ -145,11 +146,16 @@ DVL_ALWAYS_INLINE void RenderTileFoliage(const Surface &out, const Point &positi
 }
 
 /**
- * @brief Render a black 64x31 tile ◆
+ * @brief Renders a black 64x31 tile ◆
  * @param out Target buffer
  * @param sx Target buffer coordinate (left corner of the tile)
  * @param sy Target buffer coordinate (bottom corner of the tile)
  */
 void world_draw_black_tile(const Surface &out, int sx, int sy);
+
+/**
+ * @brief Writes a tile with the color swaps from `tbl` to `dst`.
+ */
+void DunTriangleTileApplyTrans(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, const uint8_t *tbl);
 
 } // namespace devilution
