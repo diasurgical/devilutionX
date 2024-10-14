@@ -44,6 +44,8 @@ constexpr int NumStoreLines = 104;
 
 extern _talker_id TownerId;
 
+extern Item TempItem; // Temporary item used to hold the item being traded
+
 enum class TalkID : uint8_t {
 	Exit,
 	MainMenu,
@@ -139,6 +141,7 @@ void DrawSTextHelp();
 void ClearTextLines(int start, int end);
 void StartStore(TalkID s = TalkID::MainMenu);
 void DrawStore(const Surface &out);
+void DrawGUIConfirm(const Surface &out);
 void StoreESC();
 void StoreUp();
 void StoreDown();
@@ -147,6 +150,7 @@ void StoreNext();
 void TakePlrsMoney(int cost);
 void StoreEnter();
 void CheckStoreButton();
+void CheckGUIConfirm();
 void ReleaseStoreButton();
 bool IsPlayerInStore();
 int GetItemBuyValue(const Item &item);
@@ -154,5 +158,6 @@ int GetItemSellValue(const Item &item);
 int GetItemRepairCost(const Item &item);
 int GetItemRechargeCost(const Item &item);
 int GetItemIdentifyCost();
+bool GiveItemToPlayer(Item &item, bool persistItem);
 
 } // namespace devilution

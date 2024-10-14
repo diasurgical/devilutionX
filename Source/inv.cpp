@@ -2143,7 +2143,6 @@ void CloseInventory()
 {
 	CloseGoldWithdraw();
 	CloseStash();
-	CloseStore();
 	invflag = false;
 }
 

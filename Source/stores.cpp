@@ -48,6 +48,8 @@ std::vector<IndexedItem> playerItems;
 
 std::unordered_map<_talker_id, TownerStore *> townerStores;
 
+Item TempItem; // Temporary item used to hold the item being traded
+
 namespace {
 
 constexpr int PaddingTop = 32;
@@ -60,6 +62,7 @@ constexpr int MainMenuDividerLine = 5;
 constexpr int BuySellMenuDividerLine = 3;
 constexpr int ItemLineSpace = 4;
 constexpr int ConfirmLine = 18;
+constexpr int GUIConfirmLine = 3; // GUISTORE: Move?
 
 constexpr int WirtDialogueDrawLine = 12;
 
@@ -111,8 +114,6 @@ int8_t CountdownScrollUp;   // Countdown for the push state of the scroll up but
 int8_t CountdownScrollDown; // Countdown for the push state of the scroll down button
 
 TalkID OldActiveStore; // Remember current store while displaying a dialog
-
-Item TempItem; // Temporary item used to hold the item being traded
 
 std::vector<std::pair<int, TalkID>> LineActionMappings;
 int CurrentMenuDrawLine;
@@ -272,9 +273,13 @@ bool HasScrollbar()
 int BackButtonLine()
 {
 	if (IsSmallFontTall()) {
-		return HasScrollbar() ? 21 : 20;
+		if (HasScrollbar()) {
+			GUIConfirmFlag ? 3 : 21;
+		} else {
+			GUIConfirmFlag ? 2 : 20;
+		}
 	}
-	return 22;
+	return GUIConfirmFlag ? 4 : 22;
 }
 
 int LineHeight()
@@ -445,20 +450,6 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags, bool cursIndent = fa
 	SetLineText(40, l++, productLine, flags, false, -1, cursIndent);
 }
 
-bool GiveItemToPlayer(Item &item, bool persistItem)
-{
-
-	if (AutoEquipEnabled(*MyPlayer, item) && AutoEquip(*MyPlayer, item, persistItem, true)) {
-		return true;
-	}
-
-	if (AutoPlaceItemInBelt(*MyPlayer, item, persistItem, true)) {
-		return true;
-	}
-
-	return AutoPlaceItemInInventory(*MyPlayer, item, persistItem, true);
-}
-
 void SetupScreenElements(TalkID talkId)
 {
 	IsTextFullSize = true;
@@ -599,6 +590,31 @@ void SetupConfirmScreen()
 	SetLineText(0, ConfirmLine - TripleLineSpace, prompt, UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 	SetLineText(0, ConfirmLine, _("Yes"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 	SetLineText(0, ConfirmLine + DoubleLineSpace, _("No"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
+}
+
+void SetupGUIConfirmScreen()
+{
+	ClearTextLines(0, NumStoreLines);
+
+	Item &item = Store.storeList[GUITempItemId];
+
+	// Line 1: "Buy"
+	SetLineText(0, 0, _("Buy"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+
+	// Line 2: Item name
+	SetLineText(0, 1, item._iIName, UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+
+	// Line 3: Gold cost
+	SetLineText(0, 2, fmt::format(fmt::runtime(_("Gold: {:d}")), item._iIvalue), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+
+	// Line 4: "Yes" option (selectable)
+	SetLineText(0, 3, _("Yes"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, true);
+
+	// Line 5: "No" option (selectable)
+	SetLineText(0, 4, _("No"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, true);
+
+	// Set cursor to "Yes" by default
+	CurrentTextLine = 3;
 }
 
 void SetupGossipScreen()
@@ -1244,7 +1260,7 @@ void RepairEnter()
 }
 
 /**
- * @brief Purchases an item from the witch.
+ * @brief Purchases an item.
  */
 void BuyItem(Item &item)
 {
@@ -1376,11 +1392,15 @@ void IdentifyItem()
 
 void ConfirmEnter(Item &item)
 {
-	if (CurrentTextLine == ConfirmLine) {
+	if (CurrentTextLine == (GUIConfirmFlag ? GUIConfirmLine : ConfirmLine)) {
 		switch (OldActiveStore) {
 		case TalkID::BasicBuy:
 		case TalkID::Buy:
-			BuyItem(item);
+			if (IsStoreOpen) {
+				Store.BuyItem();
+			} else {
+				BuyItem(item);
+			}
 			break;
 		case TalkID::Sell:
 			SellItem();
@@ -1649,8 +1669,6 @@ void ClearTextLines(int start, int end)
 		TextLine[i].type = STextStruct::Label;
 		TextLine[i]._sval = 0;
 	}
-
-	// std::fill(storeLineMapping.begin(), storeLineMapping.end(), TalkID::None);
 }
 
 void StartStore(TalkID store /*= TalkID::MainMenu*/)
@@ -1679,8 +1697,7 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 	case TalkID::Buy:
 		if (*sgOptions.Gameplay.useGUIStores) {
 			IsStoreOpen = true;
-			PopulateStoreGrid(store);
-			Store.RefreshItemStatFlags();
+			PopulateStoreGrid();
 			invflag = true;
 			if (ControlMode != ControlTypes::KeyboardAndMouse) {
 				if (pcurs == CURSOR_DISARM)
@@ -1709,7 +1726,10 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 		SetupErrorScreen(store);
 		break;
 	case TalkID::Confirm:
-		SetupConfirmScreen();
+		if (IsStoreOpen)
+			SetupGUIConfirmScreen();
+		else
+			SetupConfirmScreen();
 		break;
 	case TalkID::Exit:
 		break;
@@ -1755,6 +1775,46 @@ void DrawStore(const Surface &out)
 
 	if (HasScrollbar())
 		DrawScrollbar(out, 4, 20);
+}
+
+void PrintGUIConfirmString(const Surface &out, const Point &position, int line, std::string_view text, UiFlags flags)
+{
+	// Calculate the vertical position for each line
+	const int yOffset = line * TextHeight(); // Adjust line height as needed for each line
+
+	const Rectangle rect { position + Displacement { 0, yOffset }, { 180, 20 } }; // Adjust width and height based on your text
+
+	// Draw the text string in the confirmation box
+	DrawString(out, text, rect, { .flags = flags });
+
+	// If the current line is selected, draw the selector around it
+	if (CurrentTextLine == line) {
+		DrawSelector(out, rect, text, flags);
+	}
+}
+
+void DrawGUIConfirm(const Surface &out)
+{
+	Item &item = Store.storeList[GUITempItemId];
+	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
+	const Point position = GetStoreSlotCoord(item.position) + offset;
+
+	// Define the size and position of the transparent black box
+	constexpr int boxWidth = 200;
+	constexpr int boxHeight = 120;
+	const Rectangle boxRect { position, { boxWidth, boxHeight } };
+
+	// Draw the half-transparent rectangle (black box)
+	DrawHalfTransparentRectTo(out, boxRect.position.x, boxRect.position.y, boxWidth, boxHeight);
+
+	// Draw each line of the prompt using the new PrintGUIConfirmString function
+	const Point textStartPos = position + Displacement { 10, 10 };
+
+	PrintGUIConfirmString(out, textStartPos, 0, _("Buy"), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	PrintGUIConfirmString(out, textStartPos, 1, item._iIName, UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	PrintGUIConfirmString(out, textStartPos, 2, fmt::format(fmt::runtime(_("Gold: {:d}")), item._iIvalue), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	PrintGUIConfirmString(out, textStartPos, 3, _("Yes"), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	PrintGUIConfirmString(out, textStartPos, 4, _("No"), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 }
 
 void StoreESC()
@@ -2035,6 +2095,60 @@ void CheckStoreButton()
 	}
 }
 
+void CheckGUIConfirm()
+{
+	// Define the item and get its position in the store
+	Item &item = Store.storeList[GUITempItemId];
+	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
+	const Point position = GetStoreSlotCoord(item.position) + offset;
+
+	// Define the size and position of the confirmation dialog box
+	constexpr int boxWidth = 200;
+	constexpr int boxHeight = 120;
+	const Rectangle boxRect { position, { boxWidth, boxHeight } };
+
+	// Check if the mouse click is outside the confirmation dialog
+	if (!boxRect.contains(MousePosition)) {
+		GUIConfirmFlag = false; // Close the confirmation dialog
+		return;
+	}
+
+	// Calculate the relative Y position of the mouse click within the dialog box
+	const int relativeY = MousePosition.y - position.y - 10;
+
+	// Calculate the height of each line (based on the store's font/text height system)
+	const int lineHeight = TextHeight(); // Use the existing function for consistent line height
+
+	// Determine which line was clicked (line 3 is "Yes", line 4 is "No")
+	int lineClicked = relativeY / lineHeight;
+
+	// Large small fonts draw beyond LineHeight. Check if the click was on the overflow text.
+	if (IsSmallFontTall() && lineClicked > 0 && lineClicked < NumStoreLines
+	    && TextLine[lineClicked - 1].hasText() && !TextLine[lineClicked].hasText()
+	    && relativeY < TextLine[lineClicked - 1].y + LargeTextHeight) {
+		--lineClicked;
+	}
+
+	if (lineClicked >= 1) {
+		if (lineClicked >= BackButtonLine() + 1)
+			lineClicked = BackButtonLine();
+		if (lineClicked <= 5 && !TextLine[lineClicked].isSelectable()) {
+			if (TextLine[lineClicked - 2].isSelectable()) {
+				lineClicked -= 2;
+			} else if (TextLine[lineClicked - 1].isSelectable()) {
+				lineClicked--;
+			}
+		}
+		if (TextLine[lineClicked].isSelectable() || lineClicked == BackButtonLine()) {
+			CurrentTextLine = lineClicked;
+			StoreEnter();
+		}
+	}
+
+	// Reset the confirmation flag after the action
+	GUIConfirmFlag = false;
+}
+
 void ReleaseStoreButton()
 {
 	CountdownScrollUp = -1;
@@ -2090,6 +2204,20 @@ int GetItemRechargeCost(const Item &item)
 int GetItemIdentifyCost()
 {
 	return 100;
+}
+
+bool GiveItemToPlayer(Item &item, bool persistItem)
+{
+
+	if (AutoEquipEnabled(*MyPlayer, item) && AutoEquip(*MyPlayer, item, persistItem, true)) {
+		return true;
+	}
+
+	if (AutoPlaceItemInBelt(*MyPlayer, item, persistItem, true)) {
+		return true;
+	}
+
+	return AutoPlaceItemInInventory(*MyPlayer, item, persistItem, true);
 }
 
 } // namespace devilution

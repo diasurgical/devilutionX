@@ -1200,6 +1200,8 @@ void DrawView(const Surface &out, Point startPosition)
 
 	if (IsPlayerInStore() && !qtextflag)
 		DrawStore(out);
+	if (GUIConfirmFlag)
+		DrawGUIConfirm(out);
 	if (invflag) {
 		DrawInv(out);
 	} else if (SpellbookFlag) {
@@ -1217,6 +1219,8 @@ void DrawView(const Surface &out, Point startPosition)
 	} else if (IsStoreOpen) {
 		DrawGUIStore(out);
 	}
+	if (GUIConfirmFlag)
+		DrawGUIConfirm(out);
 	DrawLevelButton(out);
 	if (ShowUniqueItemInfoBox) {
 		DrawUniqueInfo(out);

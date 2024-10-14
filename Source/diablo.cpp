@@ -363,6 +363,11 @@ void LeftMouseDown(uint16_t modState)
 		return;
 	}
 
+	if (GUIConfirmFlag) {
+		CheckGUIConfirm();
+		return;
+	}
+
 	const bool isShiftHeld = (modState & KMOD_SHIFT) != 0;
 	const bool isCtrlHeld = (modState & KMOD_CTRL) != 0;
 
@@ -1558,7 +1563,7 @@ void InventoryKeyPressed()
 
 void CharacterSheetKeyPressed()
 {
-	if (IsPlayerInStore())
+	if (IsPlayerInStore() || IsStoreOpen)
 		return;
 	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
 		if (CharFlag) { // We are closing the character sheet
@@ -1576,7 +1581,7 @@ void CharacterSheetKeyPressed()
 
 void QuestLogKeyPressed()
 {
-	if (IsPlayerInStore())
+	if (IsPlayerInStore() || IsStoreOpen)
 		return;
 	if (!QuestLogIsOpen) {
 		StartQuestlog();
@@ -1602,7 +1607,7 @@ void QuestLogKeyPressed()
 
 void DisplaySpellsKeyPressed()
 {
-	if (IsPlayerInStore())
+	if (IsPlayerInStore() || IsStoreOpen)
 		return;
 	CloseCharPanel();
 	QuestLogIsOpen = false;
@@ -1618,7 +1623,7 @@ void DisplaySpellsKeyPressed()
 
 void SpellBookKeyPressed()
 {
-	if (IsPlayerInStore())
+	if (IsPlayerInStore() || IsStoreOpen)
 		return;
 	SpellbookFlag = !SpellbookFlag;
 	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
@@ -1783,7 +1788,7 @@ void InitKeymapActions()
 	    SDLK_F3,
 	    [] { gamemenu_load_game(false); },
 	    nullptr,
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && !IsPlayerInStore() && IsGameRunning(); });
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && !IsPlayerInStore() && !IsStoreOpen && IsGameRunning(); });
 #ifndef NOEXIT
 	sgOptions.Keymapper.AddAction(
 	    "QuitGame",
@@ -2351,7 +2356,7 @@ void InitPadmapActions()
 	    ControllerButton_NONE,
 	    [] { gamemenu_load_game(false); },
 	    nullptr,
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && !IsPlayerInStore() && IsGameRunning(); });
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && !IsPlayerInStore() && !IsStoreOpen && IsGameRunning(); });
 	sgOptions.Padmapper.AddAction(
 	    "Item Highlighting",
 	    N_("Item highlighting"),

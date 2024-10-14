@@ -29,6 +29,8 @@ namespace devilution {
 
 bool IsStoreOpen;
 StoreStruct Store;
+bool GUIConfirmFlag;
+uint16_t GUITempItemId;
 
 namespace {
 
@@ -132,76 +134,6 @@ void CheckStorePaste(Point cursorPosition)
 	NewCursor(player.HoldItem);
 }
 
-void CheckStoreCut(Point cursorPosition, bool automaticMove)
-{
-	Player &player = *MyPlayer;
-
-	Point slot = InvalidStorePoint;
-
-	for (auto point : StoreGridRange) {
-		Rectangle cell {
-			GetStoreSlotCoord(point),
-			InventorySlotSizeInPixels + 1
-		};
-
-		// check which inventory rectangle the mouse is in, if any
-		if (cell.contains(cursorPosition)) {
-			slot = point;
-			break;
-		}
-	}
-
-	if (slot == InvalidStorePoint) {
-		return;
-	}
-
-	Item &holdItem = player.HoldItem;
-	holdItem.clear();
-
-	bool automaticallyMoved = false;
-	bool automaticallyEquipped = false;
-
-	StoreStruct::StoreCell iv = Store.GetItemIdAtPosition(slot);
-	if (iv != StoreStruct::EmptyCell) {
-		holdItem = Store.storeList[iv];
-		if (automaticMove) {
-			if (CanBePlacedOnBelt(player, holdItem)) {
-				automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true, true);
-			} else {
-				automaticallyMoved = AutoEquip(player, holdItem, true, true);
-			}
-		}
-
-		if (!automaticMove || automaticallyMoved) {
-			Store.RemoveStoreItem(iv);
-		}
-	}
-
-	if (!holdItem.isEmpty()) {
-		CalcPlrInv(player, true);
-		holdItem._iStatFlag = player.CanUseItem(holdItem);
-		if (automaticallyEquipped) {
-			PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
-		} else if (!automaticMove || automaticallyMoved) {
-			PlaySFX(SfxID::GrabItem);
-		}
-
-		if (automaticMove) {
-			if (!automaticallyMoved) {
-				if (CanBePlacedOnBelt(player, holdItem)) {
-					player.SaySpecific(HeroSpeech::IHaveNoRoom);
-				} else {
-					player.SaySpecific(HeroSpeech::ICantDoThat);
-				}
-			}
-
-			holdItem.clear();
-		} else {
-			NewCursor(holdItem);
-		}
-	}
-}
-
 } // namespace
 
 Point GetStoreSlotCoord(Point slot)
@@ -223,25 +155,49 @@ void InitStore()
 	}
 }
 
-void GUIBuyItem(Player &player, uint16_t itemId)
+void StoreStruct::BuyItem()
 {
-	if (itemId == StoreStruct::EmptyCell) {
-		return;
+	Item &item = Store.storeList[GUITempItemId];
+
+	// Calculate the number of pinned items based on the current Towner
+	int numPinnedItems = 0;
+	switch (TownerId) {
+	case TOWN_HEALER:
+		numPinnedItems = !gbIsMultiplayer ? NumHealerPinnedItems : NumHealerPinnedItemsMp;
+		break;
+	case TOWN_WITCH:
+		numPinnedItems = NumWitchPinnedItems;
+		break;
 	}
 
-	Item &item = Store.storeList[itemId];
-	if (item.isEmpty()) {
-		return;
+	// If the item is a pinned item (infinite supply), generate a new seed for it
+	if (GUITempItemId < numPinnedItems) {
+		item._iSeed = AdvanceRndSeed();
 	}
 
-	if (!AutoPlaceItemInInventory(player, item, true)) {
-		player.SaySpecific(HeroSpeech::IHaveNoRoom);
-		return;
+	// Non-magical items are unidentified
+	if (item._iMagical == ITEM_QUALITY_NORMAL) {
+		item._iIdentified = false;
 	}
+
+	// Deduct player's gold and add the item to their inventory
+	TakePlrsMoney(item._iIvalue);
+	GiveItemToPlayer(item, true);
+
+	// If the item is not pinned, remove it from the store grid and list
+	if (GUITempItemId >= numPinnedItems) {
+		Store.RemoveStoreItem(GUITempItemId); // Remove item from store
+	}
+
+	// Handle blacksmith's premium items (replace purchased item with a new one)
+	if (TownerId == TOWN_SMITH) {
+		SpawnPremium(*MyPlayer);
+	}
+
+	// Recalculate the player's inventory after the purchase
+	CalcPlrInv(*MyPlayer, true);
 
 	PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
-
-	Store.RemoveStoreItem(itemId);
 }
 
 int StoreButtonPressed = -1;
@@ -342,12 +298,16 @@ void DrawGUIStore(const Surface &out)
 
 void CheckStoreItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 {
+	// If the player is holding an item (from inventory), allow them to sell it (paste it into the store)
 	if (!MyPlayer->HoldItem.isEmpty()) {
-		CheckStorePaste(mousePosition);
-	} else if (isCtrlHeld) {
-		GUIBuyItem(*MyPlayer, pcursstoreitem);
+		CheckStorePaste(mousePosition); // This handles selling an item to the store
 	} else {
-		CheckStoreCut(mousePosition, isShiftHeld);
+		// The player is not holding an item, so they are attempting to buy an item
+		if (pcursstoreitem != StoreStruct::EmptyCell) {
+			GUITempItemId = pcursstoreitem;
+			GUIConfirmFlag = true;
+			StartStore(TalkID::Confirm);
+		}
 	}
 }
 
@@ -394,7 +354,7 @@ uint16_t CheckStoreHLight(Point mousePosition)
 
 void StoreStruct::RemoveStoreItem(StoreStruct::StoreCell iv)
 {
-	// Iterate through storeGrid and remove every reference to item
+	// Iterate through storeGrid and remove every reference to the item
 	for (auto &row : Store.GetCurrentGrid()) {
 		for (StoreStruct::StoreCell &itemId : row) {
 			if (itemId - 1 == iv) {
@@ -405,6 +365,26 @@ void StoreStruct::RemoveStoreItem(StoreStruct::StoreCell iv)
 
 	if (storeList.empty()) {
 		return;
+	}
+
+	Item &removedItem = storeList[iv];
+	bool itemFound = false;
+
+	// Check if the item exists in the towner's basicItems or items vectors and remove it
+	TownerStore *towner = townerStores[TownerId];
+	auto removeMatchingItem = [&removedItem](std::vector<Item> &itemVector) {
+		for (auto it = itemVector.begin(); it != itemVector.end(); ++it) {
+			if (it->_iSeed == removedItem._iSeed && it->_iCreateInfo == removedItem._iCreateInfo) {
+				itemVector.erase(it);
+				return true;
+			}
+		}
+		return false;
+	};
+
+	itemFound = removeMatchingItem(towner->basicItems);
+	if (!itemFound) {
+		removeMatchingItem(towner->items);
 	}
 
 	// If the item at the end of store array isn't the one we removed, we need to swap its position in the array with the removed item
@@ -422,6 +402,7 @@ void StoreStruct::RemoveStoreItem(StoreStruct::StoreCell iv)
 			}
 		}
 	}
+
 	storeList.pop_back();
 	Store.dirty = true;
 }
@@ -499,7 +480,7 @@ bool AutoSellItemToStore(Player &player, const Item &item, bool persistItem)
 	return false;
 }
 
-void PopulateStoreGrid(TalkID talkId)
+void PopulateStoreGrid()
 {
 	// Get the current towner store (determined by global TownerId)
 	TownerStore *towner = townerStores[TownerId];
@@ -542,7 +523,7 @@ void PopulateStoreGrid(TalkID talkId)
 	};
 
 	// Determine the item vector to use based on the TalkID
-	const std::vector<Item> &itemsToProcess = (talkId == TalkID::BasicBuy) ? towner->basicItems : towner->items;
+	const std::vector<Item> &itemsToProcess = (ActiveStore == TalkID::BasicBuy) ? towner->basicItems : towner->items;
 
 	// Iterate through the selected item vector and place them in the correct page
 	for (const Item &item : itemsToProcess) {
@@ -565,6 +546,8 @@ void PopulateStoreGrid(TalkID talkId)
 		// Add the item to the correct grid page
 		addItemToGrid(pageIndex, item);
 	}
+
+	Store.RefreshItemStatFlags();
 }
 
 } // namespace devilution

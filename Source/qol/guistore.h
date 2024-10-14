@@ -16,6 +16,9 @@
 
 namespace devilution {
 
+extern bool GUIConfirmFlag;
+extern uint16_t GUITempItemId;
+
 class StoreStruct {
 public:
 	using StoreCell = uint16_t;
@@ -59,6 +62,7 @@ public:
 
 	/** @brief Updates _iStatFlag for all store items. */
 	void RefreshItemStatFlags();
+	void BuyItem();
 
 private:
 	/** Current Page */
@@ -73,7 +77,6 @@ extern StoreStruct Store;
 Point GetStoreSlotCoord(Point slot);
 void InitStore();
 void FreeStoreGFX();
-void GUIBuyItem(Player &player, uint16_t itemId);
 /**
  * @brief Render the inventory panel to the given buffer.
  */
@@ -92,6 +95,6 @@ void CheckGUIStoreButtonPress(Point mousePosition);
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
 bool AutoSellItemToStore(Player &player, const Item &item, bool persistItem);
-void PopulateStoreGrid(TalkID talkId);
+void PopulateStoreGrid();
 
 } // namespace devilution
