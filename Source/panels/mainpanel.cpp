@@ -90,7 +90,11 @@ void LoadMainPanel()
 	RenderMainButton(*out, 3, _("menu"), 0);
 	RenderMainButton(*out, 4, _("inv"), 1);
 	RenderMainButton(*out, 5, _("spells"), 0);
-	PanelButtonDown = SurfaceToClx(*out, NumButtonSprites);
+	PanelButtonDown = SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    "runtime\\panel_button_down", /*trnName=*/ {},
+#endif
+	    *out, NumButtonSprites);
 	out = std::nullopt;
 
 	if (IsChatAvailable()) {
@@ -128,7 +132,11 @@ void LoadMainPanel()
 		int voiceWidth = GetLineWidth(_("voice"), GameFont12, 2);
 		RenderClxSprite(talkSurface.subregion((talkButtonWidth - voiceWidth) / 2, 39, voiceWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
 		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
-		TalkButton = SurfaceToClx(talkSurface, NumTalkButtonSprites);
+		TalkButton = SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    "runtime\\talk_button", /*trnName=*/ {},
+#endif
+		    talkSurface, NumTalkButtonSprites);
 	}
 
 	PanelButtonDownGrime = std::nullopt;
