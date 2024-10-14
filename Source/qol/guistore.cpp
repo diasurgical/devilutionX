@@ -292,8 +292,17 @@ void DrawGUIStore(const Surface &out)
 	Point position = GetPanelPosition(UiPanels::Store);
 	UiFlags style = UiFlags::VerticalCenter | UiFlags::ColorWhite;
 
-	DrawString(out, StrCat(Store.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } },
+	DrawString(out, _("Armor"), { position + Displacement { 50, 14 }, { 69, 17 } },
 	    { .flags = UiFlags::AlignCenter | style });
+	DrawString(out, _("Weapons"), { position + Displacement { 128, 14 }, { 69, 17 } },
+	    { .flags = UiFlags::AlignCenter | style });
+	DrawString(out, _("Misc"), { position + Displacement { 206, 14 }, { 69, 17 } },
+	    { .flags = UiFlags::AlignCenter | style });
+
+	DrawString(out, _("Gold"), { position + Displacement { 24, 320 }, { 164, 14 } },
+	    { .flags = style });
+	DrawString(out, FormatInteger(GetTotalPlayerGold()), { position + Displacement { 24, 320 }, { 164, 14 } },
+	    { .flags = UiFlags::AlignRight | style });
 }
 
 void CheckStoreItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
@@ -304,6 +313,16 @@ void CheckStoreItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 	} else {
 		// The player is not holding an item, so they are attempting to buy an item
 		if (pcursstoreitem != StoreStruct::EmptyCell) {
+			if (!CanPlayerAfford) {
+				GUIConfirmFlag = true;
+				StartStore(TalkID::NoMoney);
+				return;
+			}
+			if (false) { // GUISTORE: No room!
+				GUIConfirmFlag = true;
+				StartStore(TalkID::NoRoom);
+				return;
+			}
 			GUITempItemId = pcursstoreitem;
 			GUIConfirmFlag = true;
 			StartStore(TalkID::Confirm);

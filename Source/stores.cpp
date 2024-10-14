@@ -1029,16 +1029,6 @@ void UpdateItemStatFlags(TalkID talkId)
 	}
 }
 
-uint32_t GetTotalPlayerGold()
-{
-	return MyPlayer->_pGold + Stash.gold;
-}
-
-bool CanPlayerAfford(uint32_t price)
-{
-	return GetTotalPlayerGold() >= price;
-}
-
 void SetupIdentifyResultScreen()
 {
 	SetupScreenElements(OldActiveStore);
@@ -1678,7 +1668,8 @@ void StartStore(TalkID store /*= TalkID::MainMenu*/)
 		CreateHalfSizeItemSprites();
 	}
 	SpellbookFlag = false;
-	CloseInventory();
+	if (!IsStoreOpen)
+		CloseInventory();
 	CloseCharPanel();
 	RenderGold = false;
 	QuestLogIsOpen = false;
@@ -1800,11 +1791,12 @@ void DrawGUIConfirm(const Surface &out)
 	const Point position = GetStoreSlotCoord(item.position) + offset;
 
 	// Define the size and position of the transparent black box
-	constexpr int boxWidth = 200;
-	constexpr int boxHeight = 120;
+	constexpr int boxWidth = 220;
+	int boxHeight = 20 + TextHeight() * 5;
 	const Rectangle boxRect { position, { boxWidth, boxHeight } };
 
 	// Draw the half-transparent rectangle (black box)
+	DrawHalfTransparentRectTo(out, boxRect.position.x, boxRect.position.y, boxWidth, boxHeight);
 	DrawHalfTransparentRectTo(out, boxRect.position.x, boxRect.position.y, boxWidth, boxHeight);
 
 	// Draw each line of the prompt using the new PrintGUIConfirmString function
@@ -1813,8 +1805,8 @@ void DrawGUIConfirm(const Surface &out)
 	PrintGUIConfirmString(out, textStartPos, 0, _("Buy"), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 	PrintGUIConfirmString(out, textStartPos, 1, item._iIName, UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 	PrintGUIConfirmString(out, textStartPos, 2, fmt::format(fmt::runtime(_("Gold: {:d}")), item._iIvalue), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
-	PrintGUIConfirmString(out, textStartPos, 3, _("Yes"), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
-	PrintGUIConfirmString(out, textStartPos, 4, _("No"), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	PrintGUIConfirmString(out, textStartPos, 3, _("Yes"), UiFlags::ColorWhite | UiFlags::AlignCenter);
+	PrintGUIConfirmString(out, textStartPos, 4, _("No"), UiFlags::ColorWhite | UiFlags::AlignCenter);
 }
 
 void StoreESC()
@@ -2103,8 +2095,8 @@ void CheckGUIConfirm()
 	const Point position = GetStoreSlotCoord(item.position) + offset;
 
 	// Define the size and position of the confirmation dialog box
-	constexpr int boxWidth = 200;
-	constexpr int boxHeight = 120;
+	constexpr int boxWidth = 240;
+	int boxHeight = 20 + TextHeight() * 5;
 	const Rectangle boxRect { position, { boxWidth, boxHeight } };
 
 	// Check if the mouse click is outside the confirmation dialog
@@ -2129,7 +2121,7 @@ void CheckGUIConfirm()
 		--lineClicked;
 	}
 
-	if (lineClicked >= 1) {
+	if (lineClicked >= 3) {
 		if (lineClicked >= BackButtonLine() + 1)
 			lineClicked = BackButtonLine();
 		if (lineClicked <= 5 && !TextLine[lineClicked].isSelectable()) {
@@ -2218,6 +2210,16 @@ bool GiveItemToPlayer(Item &item, bool persistItem)
 	}
 
 	return AutoPlaceItemInInventory(*MyPlayer, item, persistItem, true);
+}
+
+uint32_t GetTotalPlayerGold()
+{
+	return MyPlayer->_pGold + Stash.gold;
+}
+
+bool CanPlayerAfford(uint32_t price)
+{
+	return GetTotalPlayerGold() >= price;
 }
 
 } // namespace devilution

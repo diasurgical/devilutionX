@@ -159,5 +159,7 @@ int GetItemRepairCost(const Item &item);
 int GetItemRechargeCost(const Item &item);
 int GetItemIdentifyCost();
 bool GiveItemToPlayer(Item &item, bool persistItem);
+uint32_t GetTotalPlayerGold();
+bool CanPlayerAfford(uint32_t price);
 
 } // namespace devilution
