@@ -1064,6 +1064,8 @@ GameplayOptions::GameplayOptions()
     , showItemLabels("Show Item Labels", OptionEntryFlags::None, N_("Show Item Labels"), N_("Show labels for items on the ground when enabled."), false)
     , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), false)
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines, Sacred Shrines and Murphy's Shrines are not able to be clicked on and labeled as disabled."), false)
+	, useItemStorage("Enable item storage", OptionEntryFlags::None, N_("Enable item storage"), N_("Gillian will store items and gold for you. Disabling this option will also disable gold in the stash from being visible to stores."), true)
+	, sharedGoldStash("Stashed gold is usable", OptionEntryFlags::None, N_("Stashed gold is usable"), N_("Gold stored in the item stash is visible to stores and usable without withdrawing it."), true)
     , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
     , numHealPotionPickup("Heal Potion Pickup", OptionEntryFlags::None, N_("Heal Potion Pickup"), N_("Number of Healing potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numFullHealPotionPickup("Full Heal Potion Pickup", OptionEntryFlags::None, N_("Full Heal Potion Pickup"), N_("Number of Full Healing potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
@@ -1096,6 +1098,8 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&testBard,
 		&testBarbarian,
 		&experienceBar,
+		&useItemStorage,
+		&sharedGoldStash,
 		&showItemGraphicsInStores,
 		&showHealthValues,
 		&showManaValues,

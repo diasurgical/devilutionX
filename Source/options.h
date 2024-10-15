@@ -546,6 +546,10 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean experienceBar;
 	/** @brief Show item graphics to the left of item descriptions in store menus. */
 	OptionEntryBoolean showItemGraphicsInStores;
+	/** @brief Gold from the stash will be visible to all stores. */
+	OptionEntryBoolean sharedGoldStash;
+	/** @brief Gillian will show the option to use the item stash. */
+	OptionEntryBoolean useItemStorage;
 	/** @brief Display current/max health values on health globe. */
 	OptionEntryBoolean showHealthValues;
 	/** @brief Display current/max mana values on mana globe. */
