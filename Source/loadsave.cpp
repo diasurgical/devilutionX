@@ -2223,7 +2223,12 @@ size_t HotkeysSize(size_t nHotkeys = NumHotkeys)
 
 void LoadHotkeys()
 {
+#ifdef __DREAMCAST__
+	// hotkeys => htks to get around VMU filename size limits
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "htks");
+#else
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "hotkeys");
+#endif
 	if (!file.IsValid())
 		return;
 
@@ -2265,7 +2270,12 @@ void LoadHotkeys()
 
 void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 {
+#ifdef __DREAMCAST__
+	// hotkeys => htks to get around VMU filename size limits
+	SaveHelper file(saveWriter, "htks", HotkeysSize());
+#else
 	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
+#endif
 
 	// Write the number of spell hotkeys
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
@@ -2285,7 +2295,12 @@ void SaveHotkeys(SaveWriter &saveWriter, const Player &player)
 
 void LoadHeroItems(Player &player)
 {
+#ifdef __DREAMCAST__
+	// heroitems => hitms to get around VMU filename size limits
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "hitms");
+#else
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "heroitems");
+#endif
 	if (!file.IsValid())
 		return;
 
@@ -2564,8 +2579,13 @@ void LoadGame(bool firstflag)
 
 void SaveHeroItems(SaveWriter &saveWriter, Player &player)
 {
-	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + InventoryGridCells + MaxBeltItems;
+	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + InventoryGridCells + MaxBeltItems; // 7 + 40 + 8 = 55
+#ifdef __DREAMCAST__
+	// heroitems => hitms to get around VMU filename size limits
+	SaveHelper file(saveWriter, "hitms", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t)); // 55 * 368 + 1 = 20241 bytes
+#else
 	SaveHelper file(saveWriter, "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
+#endif
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 

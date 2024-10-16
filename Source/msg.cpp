@@ -2655,6 +2655,7 @@ void DeltaSaveLevel()
 	if (!gbIsMultiplayer)
 		return;
 
+	Log("DeltaSaveLevel");
 	for (Player &player : Players) {
 		if (&player != MyPlayer)
 			ResetPlayerGFX(player);

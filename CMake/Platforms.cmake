@@ -75,3 +75,7 @@ endif()
 if(NXDK)
   include(platforms/xbox_nxdk)
 endif()
+
+if(PLATFORM_DREAMCAST)
+  include(platforms/dreamcast)
+endif()
