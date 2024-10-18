@@ -500,6 +500,10 @@ if(NINTENDO_3DS)
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
 endif()
 
+if(UBUNTU_TOUCH)
+  target_compile_definitions(libdevilutionx PRIVATE -DUBUNTU_TOUCH=1)
+endif()
+
 if(UWP_LIB)
   target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
 endif()
@@ -590,9 +594,14 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
     set(CPACK_GENERATOR "7Z")
     # Common *nix files
     set(CPACK_STRIP_FILES TRUE)
-    install(TARGETS ${BIN_TARGET} DESTINATION bin)
-    set(desktop_file "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}.desktop")
-    set(desktop_file_hellfire "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}-hellfire.desktop")
+
+    if(UBUNTU_TOUCH)
+      install(TARGETS ${BIN_TARGET} DESTINATION .)
+    else()
+      install(TARGETS ${BIN_TARGET} DESTINATION bin)
+      set(desktop_file "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}.desktop")
+      set(desktop_file_hellfire "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}-hellfire.desktop")
+    endif()
 
     find_program(DFI desktop-file-install)
     if(DFI)
@@ -601,13 +610,22 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
       execute_process(COMMAND ${DFI} --dir=${CMAKE_BINARY_DIR} ${desktop_file_hellfire})
       set(desktop_file_hellfire "${CMAKE_BINARY_DIR}/${project_name}-hellfire.desktop")
     endif()
+    
+    if(UBUNTU_TOUCH)
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Packaging/nix-ubuntutouch/clickable/manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json)
+      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/manifest.json DESTINATION .)
+      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/Packaging/nix-ubuntutouch/clickable/devilutionX.apparmor DESTINATION .)
+      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/Packaging/nix-ubuntutouch/linux/devilutionX.desktop DESTINATION .)
+    endif()
 
-    install(FILES "${desktop_file}"
-      DESTINATION "share/applications"
-    )
-    install(FILES "${desktop_file_hellfire}"
-      DESTINATION "share/applications"
-    )
+    if(NOT UBUNTU_TOUCH)
+        install(FILES "${desktop_file}"
+          DESTINATION "share/applications"
+        )
+        install(FILES "${desktop_file_hellfire}"
+          DESTINATION "share/applications"
+        )
+    endif()
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
