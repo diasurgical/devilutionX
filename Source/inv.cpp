@@ -609,6 +609,28 @@ inv_body_loc MapSlotToInvBodyLoc(inv_xy_slot slot)
 	return static_cast<inv_body_loc>(slot);
 }
 
+std::optional<inv_xy_slot> FindSlotUnderCursor(Point cursorPosition)
+{
+
+	Point testPosition = static_cast<Point>(cursorPosition - GetRightPanel().position);
+	for (std::underlying_type_t<inv_xy_slot> r = SLOTXY_EQUIPPED_FIRST; r != SLOTXY_BELT_FIRST; r++) {
+		// check which body/inventory rectangle the mouse is in, if any
+		if (InvRect[r].contains(testPosition)) {
+			return static_cast<inv_xy_slot>(r);
+		}
+	}
+
+	testPosition = static_cast<Point>(cursorPosition - GetMainPanel().position);
+	for (std::underlying_type_t<inv_xy_slot> r = SLOTXY_BELT_FIRST; r != NUM_XY_SLOTS; r++) {
+		// check which belt rectangle the mouse is in, if any
+		if (InvRect[r].contains(testPosition)) {
+			return static_cast<inv_xy_slot>(r);
+		}
+	}
+
+	return {};
+}
+
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
 	if (player._pmode > PM_WALK_SIDEWAYS) {
@@ -617,25 +639,14 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 
 	CloseGoldDrop();
 
-	uint32_t r = 0;
-	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = GetRightPanel().position.x;
-		int yo = GetRightPanel().position.y;
-		if (r >= SLOTXY_BELT_FIRST) {
-			xo = GetMainPanel().position.x;
-			yo = GetMainPanel().position.y;
-		}
+	std::optional<inv_xy_slot> maybeSlot = FindSlotUnderCursor(cursorPosition);
 
-		// check which inventory rectangle the mouse is in, if any
-		if (InvRect[r].contains(cursorPosition - Displacement(xo, yo))) {
-			break;
-		}
-	}
-
-	if (r == NUM_XY_SLOTS) {
+	if (!maybeSlot) {
 		// not on an inventory slot rectangle
 		return;
 	}
+
+	inv_xy_slot r = *maybeSlot;
 
 	Item &holdItem = player.HoldItem;
 	holdItem.clear();
@@ -645,7 +656,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	bool automaticallyUnequip = false;
 
 	if (r >= SLOTXY_HEAD && r <= SLOTXY_CHEST) {
-		inv_body_loc invloc = MapSlotToInvBodyLoc(static_cast<inv_xy_slot>(r));
+		inv_body_loc invloc = MapSlotToInvBodyLoc(r);
 		if (!player.InvBody[invloc].isEmpty()) {
 			holdItem = player.InvBody[invloc];
 			if (automaticMove) {
