@@ -2967,7 +2967,7 @@ void CreateStartingItem(Player &player, _item_indexes itemData)
 	InitializeItem(item, itemData);
 	GenerateNewSeed(item);
 	item.updateRequiredStatsCacheForPlayer(player);
-	AutoEquip(player, item) || AutoPlaceItemInBelt(player, item, true) || AutoPlaceItemInInventory(player, item, true);
+	AutoEquip(player, item) || AutoPlaceItemInBelt(player, item, true) || AutoPlaceItemInInventory(player, item);
 }
 } // namespace
 

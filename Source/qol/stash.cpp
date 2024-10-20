@@ -293,7 +293,7 @@ void TransferItemToInventory(Player &player, uint16_t itemId)
 		return;
 	}
 
-	if (!AutoPlaceItemInInventory(player, item, true)) {
+	if (!AutoPlaceItemInInventory(player, item)) {
 		player.SaySpecific(HeroSpeech::IHaveNoRoom);
 		return;
 	}

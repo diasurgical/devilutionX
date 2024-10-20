@@ -142,15 +142,21 @@ bool AutoEquip(Player &player, const Item &item, bool persistItem = true, bool s
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory.
- * If 'persistItem' is 'True', the item is also placed in the inventory.
  * @param player The player whose inventory will be checked.
  * @param item The item to be checked.
- * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
- * @param sendNetworkMessage Set to true if you want a network message to be generated if the item is persisted.
- * Should only be set if a local player is placing an item in a play session (not when creating a new game)
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem = false, bool sendNetworkMessage = false);
+bool CanFitItemInInventory(const Player &player, const Item &item);
+
+/**
+ * @brief Attempts to place the given item in the specified player's inventory.
+ * @param player The player whose inventory will be used.
+ * @param item The item to be placed.
+ * @param sendNetworkMessage Set to true if you want a network message to be generated if the item is persisted.
+ * Should only be set if a local player is placing an item in a play session (not when creating a new game)
+ * @return 'True' if the item was placed on the player's inventory and 'False' otherwise.
+ */
+bool AutoPlaceItemInInventory(Player &player, const Item &item, bool sendNetworkMessage = false);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed

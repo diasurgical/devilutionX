@@ -378,7 +378,7 @@ void ChangeTwoHandItem(Player &player)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
 			locationToUnequip = INVLOC_HAND_RIGHT;
 		}
-		if (!AutoPlaceItemInInventory(player, player.InvBody[locationToUnequip], true)) {
+		if (!AutoPlaceItemInInventory(player, player.InvBody[locationToUnequip])) {
 			return;
 		}
 
@@ -661,7 +661,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 			holdItem = player.InvBody[invloc];
 			if (automaticMove) {
 				automaticallyUnequip = true;
-				automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem, true);
+				automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem);
 			}
 
 			if (!automaticMove || automaticallyMoved) {
@@ -725,11 +725,11 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						} else {
 							// Both hands are holding items, we must unequip the right hand item and check that there's
 							// space for the left before trying to auto-equip
-							if (!AutoPlaceItemInInventory(player, player.InvBody[INVLOC_HAND_RIGHT], true)) {
+							if (!AutoPlaceItemInInventory(player, player.InvBody[INVLOC_HAND_RIGHT])) {
 								// No space to move right hand item to inventory, abort.
 								break;
 							}
-							if (!AutoPlaceItemInInventory(player, player.InvBody[INVLOC_HAND_LEFT], false)) {
+							if (!CanFitItemInInventory(player, player.InvBody[INVLOC_HAND_LEFT])) {
 								// No space for left item. Move back right item to right hand and abort.
 								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
 								player.RemoveInvItem(player._pNumInv - 1, false);
@@ -746,7 +746,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 					// Empty the identified InvBody slot (invloc) and hand over to AutoEquip
 					if (invloc != NUM_INVLOC) {
 						if (!player.InvBody[invloc].isEmpty()) {
-							if (AutoPlaceItemInInventory(player, player.InvBody[invloc], true)) {
+							if (AutoPlaceItemInInventory(player, player.InvBody[invloc])) {
 								player.InvBody[invloc].clear();
 							}
 						}
@@ -766,7 +766,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		if (!beltItem.isEmpty()) {
 			holdItem = beltItem;
 			if (automaticMove) {
-				automaticallyMoved = AutoPlaceItemInInventory(player, holdItem, true);
+				automaticallyMoved = AutoPlaceItemInInventory(player, holdItem);
 			}
 
 			if (!automaticMove || automaticallyMoved) {
@@ -1248,19 +1248,16 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 
 namespace {
 /**
- * @brief Checks whether the given item can be placed on the specified player's inventory slot.
- * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @brief Checks whether an item of the given size can be placed on the specified player's inventory slot.
  * @param player The player whose inventory will be checked.
  * @param slotIndex The 0-based index of the slot to put the item on.
- * @param item The item to be checked.
- * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @param itemSize The size of the item to be checked.
  * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
  */
-bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem, bool sendNetworkMessage)
+bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Size &itemSize)
 {
 	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
 
-	Size itemSize = GetInventorySize(item);
 	for (int j = 0; j < itemSize.height; j++) {
 		if (yy >= InventoryGridCells) {
 			return false;
@@ -1274,69 +1271,81 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 		}
 		yy += 10;
 	}
-
-	if (persistItem) {
-		player.InvList[player._pNumInv] = item;
-		player._pNumInv++;
-
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize, sendNetworkMessage);
-		player.CalcScrolls();
-	}
-
 	return true;
 }
-} // namespace
 
-bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem, bool sendNetworkMessage)
+std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
 {
-	Size itemSize = GetInventorySize(item);
-
 	if (itemSize.height == 1) {
 		for (int i = 30; i <= 39; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem, sendNetworkMessage))
-				return true;
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
 		}
 		for (int x = 9; x >= 0; x--) {
 			for (int y = 2; y >= 0; y--) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem, sendNetworkMessage))
-					return true;
+				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
+					return 10 * y + x;
 			}
 		}
-		return false;
+		return {};
 	}
 
 	if (itemSize.height == 2) {
 		for (int x = 10 - itemSize.width; x >= 0; x--) {
 			for (int y = 0; y < 3; y++) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem, sendNetworkMessage))
-					return true;
+				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
+					return 10 * y + x;
 			}
 		}
-		return false;
+		return {};
 	}
 
 	if (itemSize == Size { 1, 3 }) {
 		for (int i = 0; i < 20; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem, sendNetworkMessage))
-				return true;
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
 		}
-		return false;
+		return {};
 	}
 
 	if (itemSize == Size { 2, 3 }) {
 		for (int i = 0; i < 9; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem, sendNetworkMessage))
-				return true;
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
 		}
 
 		for (int i = 10; i < 19; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem, sendNetworkMessage))
-				return true;
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
 		}
-		return false;
+		return {};
 	}
 
 	app_fatal(StrCat("Unknown item size: ", itemSize.width, "x", itemSize.height));
+}
+} // namespace
+
+bool CanFitItemInInventory(const Player &player, const Item &item)
+{
+	return static_cast<bool>(FindSlotForItem(player, GetInventorySize(item)));
+}
+
+bool AutoPlaceItemInInventory(Player &player, const Item &item, bool sendNetworkMessage)
+{
+	Size itemSize = GetInventorySize(item);
+	std::optional<int> targetSlot = FindSlotForItem(player, itemSize);
+
+	if (targetSlot) {
+		player.InvList[player._pNumInv] = item;
+		player._pNumInv++;
+
+		AddItemToInvGrid(player, *targetSlot, player._pNumInv, itemSize, sendNetworkMessage);
+		player.CalcScrolls();
+
+		return true;
+	}
+
+	return false;
 }
 
 std::vector<int> SortItemsBySize(Player &player)
@@ -1388,7 +1397,7 @@ void ReorganizeInventory(Player &player)
 	bool reorganizationFailed = false;
 	for (int index : sortedIndices) {
 		Item &item = tempStorage[index];
-		if (!AutoPlaceItemInInventory(player, item, true, false)) {
+		if (!AutoPlaceItemInInventory(player, item, false)) {
 			reorganizationFailed = true;
 			break;
 		}
@@ -1691,7 +1700,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 			done = AutoPlaceItemInBelt(player, item, true, &player == MyPlayer);
 		}
 		if (!done) {
-			done = AutoPlaceItemInInventory(player, item, true, &player == MyPlayer);
+			done = AutoPlaceItemInInventory(player, item, &player == MyPlayer);
 		}
 	}
 
@@ -2156,7 +2165,7 @@ void CloseStash()
 			NetSendCmdPItem(true, CMD_PUTITEM, *itemTile, myPlayer.HoldItem);
 		} else {
 			if (!AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true, true)
-			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true, true)
+			    && !AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true)
 			    && !AutoPlaceItemInStash(myPlayer, myPlayer.HoldItem, true)) {
 				// This can fail for max gold, arena potions and a stash that has been arranged
 				// to not have room for the item all 3 cases are extremely unlikely
