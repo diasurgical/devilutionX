@@ -631,6 +631,90 @@ std::optional<inv_xy_slot> FindSlotUnderCursor(Point cursorPosition)
 	return {};
 }
 
+/**
+ * @brief Checks whether an item of the given size can be placed on the specified player's inventory slot.
+ * @param player The player whose inventory will be checked.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param itemSize The size of the item to be checked.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
+bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Size &itemSize)
+{
+	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
+
+	for (int j = 0; j < itemSize.height; j++) {
+		if (yy >= InventoryGridCells) {
+			return false;
+		}
+		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
+		for (int i = 0; i < itemSize.width; i++) {
+			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
+				// The item is too wide to fit in the specified column, or one of the cells is occupied
+				return false;
+			}
+			xx++;
+		}
+		yy += 10;
+	}
+	return true;
+}
+
+/**
+ * @brief Finds the first slot that could fit an item of the given size
+ * @param player Player whose inventory will be checked.
+ * @param itemSize Dimensions of the item.
+ * @return The first slot that could fit the item or an empty optional.
+ */
+std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
+{
+	if (itemSize.height == 1) {
+		for (int i = 30; i <= 39; i++) {
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
+		}
+		for (int x = 9; x >= 0; x--) {
+			for (int y = 2; y >= 0; y--) {
+				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
+					return 10 * y + x;
+			}
+		}
+		return {};
+	}
+
+	if (itemSize.height == 2) {
+		for (int x = 10 - itemSize.width; x >= 0; x--) {
+			for (int y = 0; y < 3; y++) {
+				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
+					return 10 * y + x;
+			}
+		}
+		return {};
+	}
+
+	if (itemSize == Size { 1, 3 }) {
+		for (int i = 0; i < 20; i++) {
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
+		}
+		return {};
+	}
+
+	if (itemSize == Size { 2, 3 }) {
+		for (int i = 0; i < 9; i++) {
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
+		}
+
+		for (int i = 10; i < 19; i++) {
+			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+				return i;
+		}
+		return {};
+	}
+
+	app_fatal(StrCat("Unknown item size: ", itemSize.width, "x", itemSize.height));
+}
+
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
 	if (player._pmode > PM_WALK_SIDEWAYS) {
@@ -1245,85 +1329,6 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 
 	return true;
 }
-
-namespace {
-/**
- * @brief Checks whether an item of the given size can be placed on the specified player's inventory slot.
- * @param player The player whose inventory will be checked.
- * @param slotIndex The 0-based index of the slot to put the item on.
- * @param itemSize The size of the item to be checked.
- * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
- */
-bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Size &itemSize)
-{
-	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
-
-	for (int j = 0; j < itemSize.height; j++) {
-		if (yy >= InventoryGridCells) {
-			return false;
-		}
-		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
-		for (int i = 0; i < itemSize.width; i++) {
-			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
-				return false;
-			}
-			xx++;
-		}
-		yy += 10;
-	}
-	return true;
-}
-
-std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
-{
-	if (itemSize.height == 1) {
-		for (int i = 30; i <= 39; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
-				return i;
-		}
-		for (int x = 9; x >= 0; x--) {
-			for (int y = 2; y >= 0; y--) {
-				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
-					return 10 * y + x;
-			}
-		}
-		return {};
-	}
-
-	if (itemSize.height == 2) {
-		for (int x = 10 - itemSize.width; x >= 0; x--) {
-			for (int y = 0; y < 3; y++) {
-				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
-					return 10 * y + x;
-			}
-		}
-		return {};
-	}
-
-	if (itemSize == Size { 1, 3 }) {
-		for (int i = 0; i < 20; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
-				return i;
-		}
-		return {};
-	}
-
-	if (itemSize == Size { 2, 3 }) {
-		for (int i = 0; i < 9; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
-				return i;
-		}
-
-		for (int i = 10; i < 19; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
-				return i;
-		}
-		return {};
-	}
-
-	app_fatal(StrCat("Unknown item size: ", itemSize.width, "x", itemSize.height));
-}
-} // namespace
 
 bool CanFitItemInInventory(const Player &player, const Item &item)
 {
