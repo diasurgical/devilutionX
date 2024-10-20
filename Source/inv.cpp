@@ -735,20 +735,25 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	Item &holdItem = player.HoldItem;
 	holdItem.clear();
 
+	bool attemptedMove = false;
 	bool automaticallyMoved = false;
-	bool automaticallyEquipped = false;
-	bool automaticallyUnequip = false;
+	SfxID successSound = SfxID::None;
+	HeroSpeech failedSpeech = HeroSpeech::ICantDoThat; // Default message if the player attempts to automove an item that can't go anywhere else
 
 	if (r >= SLOTXY_HEAD && r <= SLOTXY_CHEST) {
 		inv_body_loc invloc = MapSlotToInvBodyLoc(r);
 		if (!player.InvBody[invloc].isEmpty()) {
-			holdItem = player.InvBody[invloc];
 			if (automaticMove) {
-				automaticallyUnequip = true;
-				automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(player, holdItem);
-			}
-
-			if (!automaticMove || automaticallyMoved) {
+				attemptedMove = true;
+				automaticallyMoved = AutoPlaceItemInInventory(player, player.InvBody[invloc]);
+				if (automaticallyMoved) {
+					successSound = ItemInvSnds[ItemCAnimTbl[player.InvBody[invloc]._iCurs]];
+					RemoveEquipment(player, invloc, false);
+				} else {
+					failedSpeech = HeroSpeech::IHaveNoRoom;
+				}
+			} else {
+				holdItem = player.InvBody[invloc];
 				RemoveEquipment(player, invloc, false);
 			}
 		}
@@ -758,19 +763,28 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		unsigned ig = r - SLOTXY_INV_FIRST;
 		int iv = std::abs(player.InvGrid[ig]) - 1;
 		if (iv >= 0) {
-			holdItem = player.InvList[iv];
 			if (automaticMove) {
-				if (CanBePlacedOnBelt(player, holdItem)) {
-					automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true, &player == MyPlayer);
-				} else if (CanEquip(holdItem)) {
+				attemptedMove = true;
+				if (CanBePlacedOnBelt(player, player.InvList[iv])) {
+					automaticallyMoved = AutoPlaceItemInBelt(player, player.InvList[iv], true, &player == MyPlayer);
+					if (automaticallyMoved) {
+						successSound = SfxID::GrabItem;
+						player.RemoveInvItem(iv, false);
+					} else {
+						failedSpeech = HeroSpeech::IHaveNoRoom;
+					}
+				} else if (CanEquip(player.InvList[iv])) {
+					failedSpeech = HeroSpeech::IHaveNoRoom; // Default to saying "I have no room" if auto-equip fails
+
 					/*
-					 * Move the respective InvBodyItem to inventory before moving the item from inventory
-					 * to InvBody with AutoEquip. AutoEquip requires the InvBody slot to be empty.
-					 * First identify the correct InvBody slot and store it in invloc.
+					 * If the player shift-clicks an item in the inventory we want to swap it with whatever item may be
+					 * equipped in the target slot. Lifting the item to the hand unconditionally would be ideal, except
+					 * we don't want to leave the item on the hand if the equip attempt failed. We would end up
+					 * generating wasteful network messages if we did the lift first. Instead we work out whatever slot
+					 * needs to be unequipped (if any):
 					 */
-					automaticallyUnequip = true; // Switch to say "I have no room when inventory is too full"
 					int invloc = NUM_INVLOC;
-					switch (player.GetItemLocation(holdItem)) {
+					switch (player.GetItemLocation(player.InvList[iv])) {
 					case ILOC_ARMOR:
 						invloc = INVLOC_CHEST;
 						break;
@@ -782,17 +796,19 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						break;
 					case ILOC_ONEHAND:
 						if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
-						    && (holdItem._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
+						    && (player.InvList[iv]._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
 						        || player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) == ILOC_TWOHAND)) {
 							// The left hand is not empty and we're either trying to equip the same type of item or
 							// it's holding a two handed weapon, so it must be unequipped
 							invloc = INVLOC_HAND_LEFT;
-						} else if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && holdItem._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass) {
+						} else if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvList[iv]._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass) {
 							// The right hand is not empty and we're trying to equip the same type of item, so we need
 							// to unequip that item
 							invloc = INVLOC_HAND_RIGHT;
 						}
-						// otherwise one hand is empty so we can let the auto-equip code put the target item into that hand.
+						// otherwise one hand is empty (and we can let the auto-equip code put the target item into
+						// that hand) or we're playing a bard with two swords equipped and we're trying to auto-equip
+						// a shield (in which case the attempt will fail).
 						break;
 					case ILOC_TWOHAND:
 						// Moving a two-hand item from inventory to InvBody requires emptying both hands.
@@ -824,10 +840,11 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						}
 						break;
 					default:
-						automaticallyUnequip = false; // Switch to say "I can't do that"
+						// If the player is trying to equip a ring we want to say "I can't do that" if they don't already have a ring slot free.
+						failedSpeech = HeroSpeech::ICantDoThat;
 						break;
 					}
-					// Empty the identified InvBody slot (invloc) and hand over to AutoEquip
+					// Then empty the identified InvBody slot (invloc) and hand over to AutoEquip
 					if (invloc != NUM_INVLOC) {
 						if (!player.InvBody[invloc].isEmpty()) {
 							if (AutoPlaceItemInInventory(player, player.InvBody[invloc])) {
@@ -835,11 +852,14 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 							}
 						}
 					}
-					automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem, true, &player == MyPlayer);
+					automaticallyMoved = AutoEquip(player, player.InvList[iv], true, &player == MyPlayer);
+					if (automaticallyMoved) {
+						successSound = ItemInvSnds[ItemCAnimTbl[player.InvList[iv]._iCurs]];
+						player.RemoveInvItem(iv, false);
+					}
 				}
-			}
-
-			if (!automaticMove || automaticallyMoved) {
+			} else {
+				holdItem = player.InvList[iv];
 				player.RemoveInvItem(iv, false);
 			}
 		}
@@ -848,12 +868,17 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 	if (r >= SLOTXY_BELT_FIRST) {
 		Item &beltItem = player.SpdList[r - SLOTXY_BELT_FIRST];
 		if (!beltItem.isEmpty()) {
-			holdItem = beltItem;
 			if (automaticMove) {
-				automaticallyMoved = AutoPlaceItemInInventory(player, holdItem);
-			}
-
-			if (!automaticMove || automaticallyMoved) {
+				attemptedMove = true;
+				automaticallyMoved = AutoPlaceItemInInventory(player, beltItem);
+				if (automaticallyMoved) {
+					successSound = SfxID::GrabItem;
+					player.RemoveSpdBarItem(r - SLOTXY_BELT_FIRST);
+				} else {
+					failedSpeech = HeroSpeech::IHaveNoRoom;
+				}
+			} else {
+				holdItem = beltItem;
 				player.RemoveSpdBarItem(r - SLOTXY_BELT_FIRST);
 			}
 		}
@@ -868,30 +893,23 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 		holdItem._iStatFlag = player.CanUseItem(holdItem);
 
 		if (&player == MyPlayer) {
-			if (automaticallyEquipped) {
-				PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
-			} else if (!automaticMove || automaticallyMoved) {
-				PlaySFX(SfxID::GrabItem);
-			}
-
-			if (automaticMove) {
-				if (!automaticallyMoved) {
-					if (CanBePlacedOnBelt(player, holdItem) || automaticallyUnequip) {
-						player.SaySpecific(HeroSpeech::IHaveNoRoom);
-					} else {
-						player.SaySpecific(HeroSpeech::ICantDoThat);
-					}
-				}
-
-				holdItem.clear();
+			PlaySFX(SfxID::GrabItem);
+			NewCursor(holdItem);
+		}
+		if (dropItem) {
+			TryDropItem();
+		}
+	} else if (automaticMove) {
+		if (automaticallyMoved) {
+			CalcPlrInv(player, true);
+		}
+		if (attemptedMove && &player == MyPlayer) {
+			if (automaticallyMoved) {
+				PlaySFX(successSound);
 			} else {
-				NewCursor(holdItem);
+				player.SaySpecific(failedSpeech);
 			}
 		}
-	}
-
-	if (dropItem && !holdItem.isEmpty()) {
-		TryDropItem();
 	}
 }
 
