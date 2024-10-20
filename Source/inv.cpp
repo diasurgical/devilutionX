@@ -636,9 +636,10 @@ std::optional<inv_xy_slot> FindSlotUnderCursor(Point cursorPosition)
  * @param player The player whose inventory will be checked.
  * @param slotIndex The 0-based index of the slot to put the item on.
  * @param itemSize The size of the item to be checked.
+ * @param itemIndexToIgnore can be used to check if an item of the given size would fit if the item with the given (positive) ID was removed.
  * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
  */
-bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Size &itemSize)
+bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Size &itemSize, int itemIndexToIgnore)
 {
 	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
 
@@ -648,8 +649,8 @@ bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Siz
 		}
 		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
 		for (int i = 0; i < itemSize.width; i++) {
-			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
-				// The item is too wide to fit in the specified column, or one of the cells is occupied
+			if (xx >= 10 || !(player.InvGrid[xx + yy] == 0 || std::abs(player.InvGrid[xx + yy]) - 1 == itemIndexToIgnore)) {
+				// The item is too wide to fit in the specified column, or one of the cells is occupied (and not by the item we're planning on removing)
 				return false;
 			}
 			xx++;
@@ -663,18 +664,19 @@ bool CheckItemFitsInInventorySlot(const Player &player, int slotIndex, const Siz
  * @brief Finds the first slot that could fit an item of the given size
  * @param player Player whose inventory will be checked.
  * @param itemSize Dimensions of the item.
+ * @param itemIndexToIgnore Can be used if you want to find whether the new item would fit with this item removed, without performing unnecessary actions.
  * @return The first slot that could fit the item or an empty optional.
  */
-std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
+std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize, int itemIndexToIgnore = -1)
 {
 	if (itemSize.height == 1) {
 		for (int i = 30; i <= 39; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+			if (CheckItemFitsInInventorySlot(player, i, itemSize, itemIndexToIgnore))
 				return i;
 		}
 		for (int x = 9; x >= 0; x--) {
 			for (int y = 2; y >= 0; y--) {
-				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
+				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize, itemIndexToIgnore))
 					return 10 * y + x;
 			}
 		}
@@ -684,7 +686,7 @@ std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
 	if (itemSize.height == 2) {
 		for (int x = 10 - itemSize.width; x >= 0; x--) {
 			for (int y = 0; y < 3; y++) {
-				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize))
+				if (CheckItemFitsInInventorySlot(player, 10 * y + x, itemSize, itemIndexToIgnore))
 					return 10 * y + x;
 			}
 		}
@@ -693,7 +695,7 @@ std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
 
 	if (itemSize == Size { 1, 3 }) {
 		for (int i = 0; i < 20; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+			if (CheckItemFitsInInventorySlot(player, i, itemSize, itemIndexToIgnore))
 				return i;
 		}
 		return {};
@@ -701,18 +703,30 @@ std::optional<int> FindSlotForItem(const Player &player, const Size &itemSize)
 
 	if (itemSize == Size { 2, 3 }) {
 		for (int i = 0; i < 9; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+			if (CheckItemFitsInInventorySlot(player, i, itemSize, itemIndexToIgnore))
 				return i;
 		}
 
 		for (int i = 10; i < 19; i++) {
-			if (CheckItemFitsInInventorySlot(player, i, itemSize))
+			if (CheckItemFitsInInventorySlot(player, i, itemSize, itemIndexToIgnore))
 				return i;
 		}
 		return {};
 	}
 
 	app_fatal(StrCat("Unknown item size: ", itemSize.width, "x", itemSize.height));
+}
+
+/**
+ * @brief Checks if the given item could be placed on the specified players inventory if the other item was removed.
+ * @param player The player whose inventory will be checked.
+ * @param item The item to be checked.
+ * @param itemIndexToIgnore The inventory index of the item that we assume will be removed.
+ * @return 'True' if the item could fit with the other item removed and 'False' otherwise.
+ */
+bool CouldFitItemInInventory(const Player &player, const Item &item, int itemIndexToIgnore)
+{
+	return static_cast<bool>(FindSlotForItem(player, GetInventorySize(item), itemIndexToIgnore));
 }
 
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
@@ -829,7 +843,7 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 								// No space to move right hand item to inventory, abort.
 								break;
 							}
-							if (!CanFitItemInInventory(player, player.InvBody[INVLOC_HAND_LEFT])) {
+							if (!CouldFitItemInInventory(player, player.InvBody[INVLOC_HAND_LEFT], iv)) {
 								// No space for left item. Move back right item to right hand and abort.
 								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
 								player.RemoveInvItem(player._pNumInv - 1, false);
@@ -845,17 +859,23 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 						break;
 					}
 					// Then empty the identified InvBody slot (invloc) and hand over to AutoEquip
-					if (invloc != NUM_INVLOC) {
-						if (!player.InvBody[invloc].isEmpty()) {
-							if (AutoPlaceItemInInventory(player, player.InvBody[invloc])) {
-								player.InvBody[invloc].clear();
-							}
-						}
+					if (invloc != NUM_INVLOC
+					    && !player.InvBody[invloc].isEmpty()
+					    && CouldFitItemInInventory(player, player.InvBody[invloc], iv)) {
+						holdItem = player.InvBody[invloc].pop();
 					}
 					automaticallyMoved = AutoEquip(player, player.InvList[iv], true, &player == MyPlayer);
 					if (automaticallyMoved) {
 						successSound = ItemInvSnds[ItemCAnimTbl[player.InvList[iv]._iCurs]];
 						player.RemoveInvItem(iv, false);
+
+						// If we're holding an item at this point we just lifted it from a body slot to make room for the original item, so we need to put it into the inv
+						if (!holdItem.isEmpty() && AutoPlaceItemInInventory(player, holdItem)) {
+							holdItem.clear();
+						} // there should never be a situation where holdItem is not empty but we fail to place it into the inventory given the checks earlier... leave it on the hand in this case.
+					} else if (!holdItem.isEmpty()) {
+						// We somehow failed to equip the item in the slot we already checked should hold it? Better put this item back...
+						player.InvBody[invloc] = holdItem.pop();
 					}
 				}
 			} else {
