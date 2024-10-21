@@ -837,20 +837,25 @@ void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool 
 							// the left hand), invloc isn't used there.
 							invloc = INVLOC_HAND_RIGHT;
 						} else {
-							// Both hands are holding items, we must unequip the right hand item and check that there's
-							// space for the left before trying to auto-equip
-							if (!AutoPlaceItemInInventory(player, player.InvBody[INVLOC_HAND_RIGHT])) {
-								// No space to move right hand item to inventory, abort.
-								break;
+							// Both hands are holding items, we must unequip one of the items and check that there's
+							// space for the other before trying to auto-equip
+							inv_body_loc mainHand = INVLOC_HAND_LEFT;
+							inv_body_loc offHand = INVLOC_HAND_RIGHT;
+							if (!AutoPlaceItemInInventory(player, player.InvBody[offHand])) {
+								// No space to move right hand item to inventory, can we move the left instead?
+								std::swap(mainHand, offHand);
+								if (!AutoPlaceItemInInventory(player, player.InvBody[offHand])) {
+									break;
+								}
 							}
-							if (!CouldFitItemInInventory(player, player.InvBody[INVLOC_HAND_LEFT], iv)) {
-								// No space for left item. Move back right item to right hand and abort.
-								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
+							if (!CouldFitItemInInventory(player, player.InvBody[mainHand], iv)) {
+								// No space for the main hand item. Move the other item back to the off hand and abort.
+								player.InvBody[offHand] = player.InvList[player._pNumInv - 1];
 								player.RemoveInvItem(player._pNumInv - 1, false);
 								break;
 							}
-							RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
-							invloc = INVLOC_HAND_LEFT;
+							RemoveEquipment(player, offHand, false);
+							invloc = mainHand;
 						}
 						break;
 					default:
