@@ -47,7 +47,7 @@ bool DoPickup(Item item)
 		return true;
 
 	if (item._itype == ItemType::Misc
-	    && (AutoPlaceItemInInventory(*MyPlayer, item) || AutoPlaceItemInBelt(*MyPlayer, item))) {
+	    && (CanFitItemInInventory(*MyPlayer, item) || AutoPlaceItemInBelt(*MyPlayer, item))) {
 		switch (item._iMiscId) {
 		case IMISC_HEAL:
 			return *sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);

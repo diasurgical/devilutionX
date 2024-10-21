@@ -42,6 +42,13 @@ struct PointOf {
 	}
 
 	template <typename PointCoordT>
+	DVL_ALWAYS_INLINE explicit constexpr PointOf(DisplacementOf<PointCoordT> other)
+	    : x(other.deltaX)
+	    , y(other.deltaY)
+	{
+	}
+
+	template <typename PointCoordT>
 	DVL_ALWAYS_INLINE constexpr bool operator==(const PointOf<PointCoordT> &other) const
 	{
 		return x == other.x && y == other.y;

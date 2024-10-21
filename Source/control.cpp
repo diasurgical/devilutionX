@@ -473,7 +473,7 @@ std::string TextCmdArenaPot(const std::string_view parameter)
 		GenerateNewSeed(item);
 		item.updateRequiredStatsCacheForPlayer(myPlayer);
 
-		if (!AutoPlaceItemInBelt(myPlayer, item, true, true) && !AutoPlaceItemInInventory(myPlayer, item, true, true)) {
+		if (!AutoPlaceItemInBelt(myPlayer, item, true, true) && !AutoPlaceItemInInventory(myPlayer, item, true)) {
 			break; // inventory is full
 		}
 	}

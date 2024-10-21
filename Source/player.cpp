@@ -2729,7 +2729,7 @@ void StripTopGold(Player &player)
 		return;
 	if (AutoEquip(player, player.HoldItem, false))
 		return;
-	if (AutoPlaceItemInInventory(player, player.HoldItem))
+	if (CanFitItemInInventory(player, player.HoldItem))
 		return;
 	if (AutoPlaceItemInBelt(player, player.HoldItem))
 		return;
