@@ -45,7 +45,7 @@ constexpr std::string_view HelpText =
 std::optional<tl::expected<AssetData, std::string>> ConsolePrelude;
 
 bool IsConsoleVisible;
-char ConsoleInputBuffer[4096];
+char ConsoleInputBuffer[16384];
 TextInputCursorState ConsoleInputCursor;
 TextInputState ConsoleInputState {
 	TextInputState::Options {
