@@ -124,8 +124,7 @@ const std::string &AssetsPath()
 		find_directory(B_SYSTEM_DATA_DIRECTORY, dev_for_path("/boot"), false, buffer, B_PATH_NAME_LENGTH);
 		strcat(buffer, "/devilutionx/");
 		assetsPath.emplace(strdup(buffer));
-#endif
-#if __EMSCRIPTEN__
+#elif __EMSCRIPTEN__
 		assetsPath.emplace("assets/");
 #elif defined(NXDK)
 		assetsPath.emplace("D:\\assets\\");
