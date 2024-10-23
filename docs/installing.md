@@ -225,3 +225,19 @@ If you'd like to use this option, scan the QR code below.
 - Copy the contents of the released .zip-file onto the root of your SD card
 - Copy the MPQ files to `/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/`
 </details>
+
+<details><summary>Sega Dreamcast</summary>
+
+**Shareware version**
+
+- Download and extract [devilutionx-dreamcast.cdi.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-dreamcast.cdi.zip)
+- Burn it to a CD using a tool like [IMGBURN](https://www.imgburn.com/index.php?act=download) or [dcdib](https://alex-free.github.io/dcdib/)
+
+**Full version** (requires that you provide diabdat.mpq)
+
+- Download [devilutionx-dreamcast.zip](https://github.com/azihassan/devilutionX/releases/download/latest/devilutionx-dreamcast.zip)
+- Extract it and copy diabdat.mpq in the data/ directory
+- Package it into a .cdi file using [mkdcdisc](https://gitlab.com/simulant/mkdcdisc) with the following command: `mkdcdisc -e devilutionx.elf -o devilutionx.cdi --name 'Diablo 1' -d data/`
+- Burn it to a CD using a tool like [IMGBURN](https://www.imgburn.com/index.php?act=download) or [dcdib](https://alex-free.github.io/dcdib/)
+
+</details>

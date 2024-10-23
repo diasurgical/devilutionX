@@ -123,6 +123,9 @@ std::vector<std::string> GetMPQSearchPaths()
 {
 	std::vector<std::string> paths;
 	paths.push_back(paths::BasePath());
+#if defined(__DREAMCAST__)
+	return paths;
+#endif
 	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
@@ -216,7 +219,13 @@ bool IsDevilutionXMpqOutOfDate(MpqArchive &archive)
 #ifdef UNPACKED_MPQS
 bool AreExtraFontsOutOfDate(const std::string &path)
 {
+#ifdef __DREAMCAST__
+	// handle ISO 9660 trailing period
+	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION.";
+#else
 	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+#endif
+
 	if (versionPath.size() + 1 > AssetRef::PathBufSize)
 		app_fatal("Path too long");
 	AssetRef ref;
@@ -242,6 +251,7 @@ bool AreExtraFontsOutOfDate(MpqArchive &archive)
 void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
+		Log("init_cleanup() gbIsMultiplayer && gbRunGame");
 		pfile_write_hero(/*writeGameData=*/false);
 		sfile_write_stash();
 	}
@@ -276,7 +286,7 @@ void LoadCoreArchives()
 #ifdef UNPACKED_MPQS
 	font_data_path = FindUnpackedMpqData(paths, "fonts");
 #else // !UNPACKED_MPQS
-#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__) && !defined(__SWITCH__)
+#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__) && !defined(__SWITCH__) && !defined(__DREAMCAST__)
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
 #endif
