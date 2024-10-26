@@ -345,7 +345,11 @@ bool StoreAutoPlace(Item &item, bool persistItem)
 		return true;
 	}
 
-	return AutoPlaceItemInInventory(player, item, persistItem, true);
+	if (persistItem) {
+		return AutoPlaceItemInInventory(player, item, true);
+	}
+
+	return CanFitItemInInventory(player, item);
 }
 
 void ScrollVendorStore(Item *itemData, int storeLimit, int idx, int selling = true)

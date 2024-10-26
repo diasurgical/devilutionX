@@ -56,15 +56,14 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			const uint16_t frameWidth = widthOrWidths.HoldsPointer() ? widthOrWidths.AsPointer()[frame - 1] : widthOrWidths.AsValue();
 
 			const size_t frameHeaderPos = clxData.size();
-			constexpr size_t FrameHeaderSize = 10;
-			clxData.resize(clxData.size() + FrameHeaderSize);
-			WriteLE16(&clxData[frameHeaderPos], FrameHeaderSize);
+			clxData.resize(clxData.size() + ClxFrameHeaderSize);
+			WriteLE16(&clxData[frameHeaderPos], ClxFrameHeaderSize);
 			WriteLE16(&clxData[frameHeaderPos + 2], frameWidth);
 
 			unsigned transparentRunWidth = 0;
 			int_fast16_t xOffset = 0;
 			size_t frameHeight = 0;
-			const uint8_t *src = frameBegin + FrameHeaderSize;
+			const uint8_t *src = frameBegin + LoadLE16(frameBegin);
 			while (src != frameEnd) {
 				auto remainingWidth = static_cast<int_fast16_t>(frameWidth) - xOffset;
 				while (remainingWidth > 0) {
@@ -104,7 +103,6 @@ uint16_t Cl2ToClx(const uint8_t *data, size_t size,
 			AppendClxTransparentRun(transparentRunWidth, clxData);
 
 			WriteLE16(&clxData[frameHeaderPos + 4], static_cast<uint16_t>(frameHeight));
-			memset(&clxData[frameHeaderPos + 6], 0, 4);
 		}
 
 		WriteLE32(&clxData[clxDataOffset + 4 * (1 + static_cast<size_t>(numFrames))], static_cast<uint32_t>(clxData.size() - clxDataOffset));
