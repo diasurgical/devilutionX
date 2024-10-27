@@ -120,7 +120,7 @@ const std::string &AssetsPath()
 {
 	if (!assetsPath) {
 #if defined(__HAIKU__)
-		char buffer[B_PATH_NAME_LENGTH+10];
+		char buffer[B_PATH_NAME_LENGTH + 10];
 		find_directory(B_SYSTEM_DATA_DIRECTORY, dev_for_path("/boot"), false, buffer, B_PATH_NAME_LENGTH);
 		strcat(buffer, "/devilutionx/");
 		assetsPath.emplace(strdup(buffer));
