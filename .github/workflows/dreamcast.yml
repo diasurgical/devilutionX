@@ -6,7 +6,6 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
       - dreamcast
-      - fix/ISSUE-15-unpacked-mpqs
     paths-ignore:
       - '*.md'
       - 'docs/**'
@@ -46,13 +45,13 @@ jobs:
           #devilutionx-assets spawn.mpq fails with unpack_and_minify_mpq
           #curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/spawn.mpq
           curl -LO https://raw.githubusercontent.com/d07RiV/diabloweb/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq
-          unpack_and_minify_mpq spawn.mpq --output-dir data
+          unpack_and_minify_mpq spawn.mpq
           rm spawn.mpq
 
       - name: Download and unpack fonts.mpq
         run: |
           curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/fonts.mpq && \
-          unpack_and_minify_mpq fonts.mpq --output-dir data/fonts && \
+          unpack_and_minify_mpq fonts.mpq && \
           rm fonts.mpq
 
       - name: Uninstall kos-ports SDL 1.2
@@ -88,8 +87,8 @@ jobs:
       - name: Generate .cdi
         run: |
           source /opt/toolchains/dc/kos/environ.sh && \
-          mv data/spawn build/data/spawn && \
-          mv data/fonts/fonts/fonts/ build/data/fonts/ && \
+          mv spawn build/data/spawn && \
+          mv fonts/fonts/ build/data/fonts/ && \
           mkdcdisc -e build/devilutionx.elf -o build/devilutionx.cdi --name 'Diablo 1' -d build/data/
 
       - name: Prepare elf package

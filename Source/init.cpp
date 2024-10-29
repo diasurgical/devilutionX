@@ -219,11 +219,16 @@ bool IsDevilutionXMpqOutOfDate(MpqArchive &archive)
 #ifdef UNPACKED_MPQS
 bool AreExtraFontsOutOfDate(const std::string &path)
 {
-#ifdef __DREAMCAST__
-	// handle ISO 9660 trailing period
-	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION.";
-#else
+#ifndef __DREAMCAST__
 	const std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+#else
+	std::string versionPath = path + "fonts" DIRECTORY_SEPARATOR_STR "VERSION";
+	if (!FileExists(versionPath)) {
+		Log("{} not found, appending trailing period", versionPath);
+		// handle ISO 9660 trailing period
+		versionPath += ".";
+		Log("New versionPath: {}", versionPath);
+	}
 #endif
 
 	if (versionPath.size() + 1 > AssetRef::PathBufSize)
