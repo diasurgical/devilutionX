@@ -1,4 +1,4 @@
-FROM alpine-kallistios:no-gdb
+FROM azihassan/kallistios:fdffe33635239d46bcccf0d5c4d59bb7d2d91f38
 
 RUN echo "Building unpack_and_minify_mpq..."
 RUN git clone https://github.com/diasurgical/devilutionx-mpq-tools/ && \
@@ -27,13 +27,18 @@ RUN git clone -b SDL-dreamhal--GLDC https://github.com/GPF/SDL-1.2 && \
 WORKDIR /opt/toolchains/dc/kos/devilutionX
 RUN echo "Downloading and unpacking spawn.mpq..."
 RUN curl -LO https://raw.githubusercontent.com/d07RiV/diabloweb/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq && \
-    unpack_and_minify_mpq spawn.mpq --output-dir data && \
+    unpack_and_minify_mpq spawn.mpq && \
     rm spawn.mpq
 
 RUN echo "Downloading and unpacking fonts.mpq..."
 RUN curl -LO https://github.com/diasurgical/devilutionx-assets/releases/download/v4/fonts.mpq && \
-    unpack_and_minify_mpq fonts.mpq --output-dir data/fonts && \
+    unpack_and_minify_mpq fonts.mpq && \
     rm fonts.mpq
+
+#WORKDIR /opt/toolchains/dc/kos/devilutionX
+#RUN echo "Copying and unpacking diabdat.mpq..."
+#COPY DIABDAT.MPQ .
+#RUN unpack_and_minify_mpq DIABDAT.MPQ
 
 RUN echo "Configuring CMake..."
 RUN source /opt/toolchains/dc/kos/environ.sh && \
@@ -47,8 +52,9 @@ RUN source /opt/toolchains/dc/kos/environ.sh && cd build && kos-make
 
 RUN echo "Generating CDI"
 RUN source /opt/toolchains/dc/kos/environ.sh && \
-    mv data/spawn build/data/spawn && \
-    mv data/fonts/fonts/fonts/ build/data/fonts && \
+    mv spawn build/data/spawn && \
+    mv fonts/fonts/ build/data/fonts/ && \
+    #mv diabdat build/data/diabdat && \
     mkdcdisc -e build/devilutionx.elf -o build/devilutionx.cdi --name 'Diablo 1' -d build/data/
 
 ENTRYPOINT ["sh", "-c", "source /opt/toolchains/dc/kos/environ.sh && \"$@\"", "-s"]
