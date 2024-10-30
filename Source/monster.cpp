@@ -1582,17 +1582,11 @@ void FollowTheLeader(Monster &monster)
 	if (leader == nullptr)
 		return;
 
-	if (leader->activeForTicks > monster.activeForTicks) {
-		monster.position.last = leader->position.tile;
-		monster.activeForTicks = leader->activeForTicks - 1;
-	}
+	if (monster.activeForTicks >= leader->activeForTicks)
+		return;
 
-	if (monster.ai != MonsterAIID::Gargoyle || (monster.flags & MFLAG_ALLOW_SPECIAL) == 0)
-		return;
-	if (leader->mode == MonsterMode::SpecialMeleeAttack && (leader->flags & MFLAG_ALLOW_SPECIAL) != 0)
-		return;
-	monster.flags &= ~MFLAG_ALLOW_SPECIAL;
-	monster.mode = MonsterMode::SpecialMeleeAttack;
+	monster.position.last = leader->position.tile;
+	monster.activeForTicks = leader->activeForTicks - 1;
 }
 
 void GroupUnity(Monster &monster)
