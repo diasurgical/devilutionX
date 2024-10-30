@@ -1589,7 +1589,7 @@ void FollowTheLeader(Monster &monster)
 
 	if (monster.ai != MonsterAIID::Gargoyle || (monster.flags & MFLAG_ALLOW_SPECIAL) == 0)
 		return;
-	if (leader->mode == MonsterMode::SpecialMeleeAttack && (leader->flags & MFLAG_ALLOW_SPECIAL) != 0)
+	if (leader->mode == MonsterMode::SpecialMeleeAttack)
 		return;
 	monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 	monster.mode = MonsterMode::SpecialMeleeAttack;
