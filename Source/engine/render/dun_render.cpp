@@ -17,11 +17,10 @@
 #include <climits>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 
 #include "engine/render/blit_impl.hpp"
 #include "levels/dun_tile.hpp"
-#include "lighting.h"
-#include "options.h"
 #include "utils/attributes.h"
 #ifdef DEBUG_STR
 #include "engine/render/text_render.hpp"
@@ -240,16 +239,6 @@ DVL_ALWAYS_INLINE Clip CalculateClip(int_fast16_t x, int_fast16_t y, int_fast16_
 	clip.width = w - clip.left - clip.right;
 	clip.height = h - clip.top - clip.bottom;
 	return clip;
-}
-
-DVL_ALWAYS_INLINE bool IsFullyDark(const uint8_t *DVL_RESTRICT tbl)
-{
-	return tbl == FullyDarkLightTable;
-}
-
-DVL_ALWAYS_INLINE bool IsFullyLit(const uint8_t *DVL_RESTRICT tbl)
-{
-	return tbl == FullyLitLightTable;
 }
 
 template <LightType Light, bool Transparent>
@@ -1101,6 +1090,11 @@ void world_draw_black_tile(const Surface &out, int sx, int sy)
 		uint8_t *dst = out.at(static_cast<int>(sx + Width + clipRight.left), static_cast<int>(sy - clipRight.bottom));
 		RenderRightTriangle<LightType::FullyDark, /*Transparent=*/false>(dst, dstPitch, nullptr, nullptr, clipRight);
 	}
+}
+
+void DunTriangleTileApplyTrans(uint8_t *DVL_RESTRICT dst, const uint8_t *DVL_RESTRICT src, const uint8_t *tbl)
+{
+	BlitPixelsWithMap(dst, src, ReencodedTriangleFrameSize, tbl);
 }
 
 } // namespace devilution
