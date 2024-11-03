@@ -536,8 +536,8 @@ void CalcSelfItems(Player &player)
 			}
 
 			if (currstr < equipment._iMinStr
-			    && currmag < equipment._iMinMag
-			    && currdex < equipment._iMinDex)
+			    || currmag < equipment._iMinMag
+			    || currdex < equipment._iMinDex)
 				isValid = false;
 
 			if (isValid)

@@ -189,6 +189,7 @@ TEST(Player, CreatePlayer)
 	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
 
 	LoadPlayerDataFiles();
+	LoadMonsterData();
 	LoadItemData();
 	Players.resize(1);
 	CreatePlayer(Players[0], HeroClass::Rogue);
