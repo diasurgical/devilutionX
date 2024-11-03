@@ -512,13 +512,35 @@ void CalcSelfItems(Player &player)
 		const int currdex = std::max(0, da + player._pBaseDex);
 
 		changeflag = false;
+		// Iterate over equipped items and remove stat bonuses if they are not valid
 		for (Item &equipment : EquippedPlayerItemsRange(player)) {
 			if (!equipment._iStatFlag)
 				continue;
 
-			if (currstr >= equipment._iMinStr
-			    && currmag >= equipment._iMinMag
-			    && currdex >= equipment._iMinDex)
+			bool isValid = true;
+
+			if (equipment.IDidx != IDI_GOLD) {
+				if (!IsCreationFlagComboValid(equipment._iCreateInfo))
+					isValid = false;
+			}
+
+			if ((equipment._iCreateInfo & CF_TOWN) != 0) {
+				if (!IsTownItemValid(equipment._iCreateInfo, player.getMaxCharacterLevel()))
+					isValid = false;
+			} else if ((equipment._iCreateInfo & CF_USEFUL) == CF_UPER15) {
+				if (!IsUniqueMonsterItemValid(equipment._iCreateInfo, equipment.dwBuff))
+					isValid = false;
+			} else {
+				if (!IsDungeonItemValid(equipment._iCreateInfo, equipment.dwBuff))
+					isValid = false;
+			}
+
+			if (currstr < equipment._iMinStr
+			    && currmag < equipment._iMinMag
+			    && currdex < equipment._iMinDex)
+				isValid = false;
+
+			if (isValid)
 				continue;
 
 			changeflag = true;

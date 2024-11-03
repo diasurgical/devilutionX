@@ -55,6 +55,8 @@ set(libdevilutionx_SRCS
   towners.cpp
   track.cpp
 
+  common/validation.cpp
+
   controls/axis_direction.cpp
   controls/controller.cpp
   controls/controller_buttons.cpp

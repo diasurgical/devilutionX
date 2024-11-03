@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <array>
 
+#include "common/validation.h"
 #include "diablo.h"
 #include "engine.h"
 #include "engine/actor_position.hpp"
@@ -400,6 +401,22 @@ public:
 
 	bool CanUseItem(const Item &item) const
 	{
+		if (item.IDidx != IDI_GOLD) {
+			if (!IsCreationFlagComboValid(item._iCreateInfo))
+				return false;
+		}
+
+		if ((item._iCreateInfo & CF_TOWN) != 0) {
+			if (!IsTownItemValid(item._iCreateInfo, getMaxCharacterLevel()))
+				return false;
+		} else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15) {
+			if (!IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff))
+				return false;
+		} else {
+			if (!IsDungeonItemValid(item._iCreateInfo, item.dwBuff))
+				return false;
+		}
+
 		return _pStrength >= item._iMinStr
 		    && _pMagic >= item._iMinMag
 		    && _pDexterity >= item._iMinDex;
