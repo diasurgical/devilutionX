@@ -43,6 +43,7 @@ set(standalone_tests
   crawl_test
   file_util_test
   format_int_test
+  ini_test
   parse_int_test
   str_cat_test
   utf8_test
@@ -93,6 +94,7 @@ target_link_libraries(crawl_benchmark PRIVATE libdevilutionx_crawl)
 target_link_libraries(dun_render_benchmark PRIVATE libdevilutionx_so)
 target_link_libraries(file_util_test PRIVATE libdevilutionx_file_util app_fatal_for_testing)
 target_link_libraries(format_int_test PRIVATE libdevilutionx_format_int language_for_testing)
+target_link_libraries(ini_test PRIVATE libdevilutionx_ini app_fatal_for_testing)
 target_link_libraries(parse_int_test PRIVATE libdevilutionx_parse_int)
 target_link_libraries(str_cat_test PRIVATE libdevilutionx_strings)
 target_link_libraries(utf8_test PRIVATE libdevilutionx_utf8)

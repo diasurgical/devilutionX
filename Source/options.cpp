@@ -5,13 +5,14 @@
  */
 
 #include <algorithm>
+#include <cerrno>
 #include <cstdint>
 #include <cstdio>
+#include <optional>
+#include <span>
 
+#include <expected.hpp>
 #include <fmt/format.h>
-
-#define SI_NO_CONVERSION
-#include <SimpleIni.h>
 
 #include "control.h"
 #include "controls/controller.h"
@@ -28,8 +29,10 @@
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/file_util.h"
+#include "utils/ini.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/logged_fstream.hpp"
 #include "utils/paths.h"
 #include "utils/str_cat.hpp"
 #include "utils/str_split.hpp"
@@ -58,6 +61,8 @@ namespace devilution {
 
 namespace {
 
+std::optional<Ini> ini;
+
 #if defined(__ANDROID__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1)
 constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::Invisible;
 #else
@@ -79,167 +84,45 @@ std::string GetIniPath()
 	return path;
 }
 
-CSimpleIni &GetIni()
+void LoadIni()
 {
-	static CSimpleIni ini;
-	static bool isIniLoaded = false;
-	if (!isIniLoaded) {
-		auto path = GetIniPath();
-		FILE *file = OpenFile(path.c_str(), "rb");
-		ini.SetSpaces(false);
-		ini.SetMultiKey();
-		if (file != nullptr) {
-			ini.LoadFile(file);
-			std::fclose(file);
+	std::vector<char> buffer;
+	auto path = GetIniPath();
+	FILE *file = OpenFile(path.c_str(), "rb");
+	if (file != nullptr) {
+		uintmax_t size;
+		if (GetFileSize(path.c_str(), &size)) {
+			buffer.resize(size);
+			if (std::fread(buffer.data(), size, 1, file) != 1) {
+				const char *errorMessage = std::strerror(errno);
+				if (errorMessage == nullptr) errorMessage = "";
+				LogError(LogCategory::System, "std::fread: failed with \"{}\"", errorMessage);
+				buffer.clear();
+			}
 		}
-		isIniLoaded = true;
+		std::fclose(file);
 	}
-	return ini;
-}
-
-bool IniChanged = false;
-
-/**
- * @brief Checks if a ini entry is changed by comparing value before and after
- */
-class IniChangedChecker {
-public:
-	IniChangedChecker(const char *sectionName, const char *keyName)
-	{
-		this->sectionName_ = sectionName;
-		this->keyName_ = keyName;
-		oldValue_ = GetValue();
-		if (!oldValue_) {
-			// No entry found in original ini => new entry => changed
-			IniChanged = true;
-		}
-	}
-	~IniChangedChecker()
-	{
-		auto newValue = GetValue();
-		if (oldValue_ != newValue)
-			IniChanged = true;
-	}
-
-private:
-	std::optional<std::string> GetValue()
-	{
-		std::list<CSimpleIni::Entry> values;
-		if (!GetIni().GetAllValues(sectionName_, keyName_, values))
-			return std::nullopt;
-		std::string ret;
-		for (auto &entry : values) {
-			if (entry.pItem != nullptr)
-				ret.append(entry.pItem);
-			ret.append("\n");
-		}
-		return ret;
-	}
-
-	std::optional<std::string> oldValue_;
-	const char *sectionName_;
-	const char *keyName_;
-};
-
-int GetIniInt(const char *keyname, const char *valuename, int defaultValue)
-{
-	return GetIni().GetLongValue(keyname, valuename, defaultValue);
-}
-
-bool GetIniBool(const char *sectionName, const char *keyName, bool defaultValue)
-{
-	return GetIni().GetBoolValue(sectionName, keyName, defaultValue);
-}
-
-float GetIniFloat(const char *sectionName, const char *keyName, float defaultValue)
-{
-	return (float)GetIni().GetDoubleValue(sectionName, keyName, defaultValue);
-}
-
-bool GetIniValue(std::string_view sectionName, std::string_view keyName, char *string, size_t stringSize, const char *defaultString = "")
-{
-	std::string sectionNameStr { sectionName };
-	std::string keyNameStr { keyName };
-	const char *value = GetIni().GetValue(sectionNameStr.c_str(), keyNameStr.c_str());
-	if (value == nullptr) {
-		CopyUtf8(string, defaultString, stringSize);
-		return false;
-	}
-	CopyUtf8(string, value, stringSize);
-	return true;
-}
-
-bool GetIniStringVector(const char *sectionName, const char *keyName, std::vector<std::string> &stringValues)
-{
-	std::list<CSimpleIni::Entry> values;
-	if (!GetIni().GetAllValues(sectionName, keyName, values)) {
-		return false;
-	}
-	for (auto &entry : values) {
-		stringValues.emplace_back(entry.pItem);
-	}
-	return true;
-}
-
-void SetIniValue(const char *keyname, const char *valuename, int value)
-{
-	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
-}
-
-void SetIniValue(const char *keyname, const char *valuename, bool value)
-{
-	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value ? 1 : 0, nullptr, false, true);
-}
-
-void SetIniValue(const char *keyname, const char *valuename, float value)
-{
-	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetDoubleValue(keyname, valuename, value, nullptr, true);
-}
-
-void SetIniValue(const char *sectionName, const char *keyName, const char *value)
-{
-	IniChangedChecker changedChecker(sectionName, keyName);
-	auto &ini = GetIni();
-	ini.SetValue(sectionName, keyName, value, nullptr, true);
-}
-
-void SetIniValue(std::string_view sectionName, std::string_view keyName, std::string_view value)
-{
-	std::string sectionNameStr { sectionName };
-	std::string keyNameStr { keyName };
-	std::string valueStr { value };
-	SetIniValue(sectionNameStr.c_str(), keyNameStr.c_str(), valueStr.c_str());
-}
-
-void SetIniValue(const char *keyname, const char *valuename, const std::vector<std::string> &stringValues)
-{
-	IniChangedChecker changedChecker(keyname, valuename);
-	bool firstSet = true;
-	for (auto &value : stringValues) {
-		GetIni().SetValue(keyname, valuename, value.c_str(), nullptr, firstSet);
-		firstSet = false;
-	}
-	if (firstSet)
-		GetIni().SetValue(keyname, valuename, "", nullptr, true);
+	tl::expected<Ini, std::string> result = Ini::parse(std::string_view(buffer.data(), buffer.size()));
+	if (!result.has_value()) app_fatal(result.error());
+	ini.emplace(std::move(result).value());
 }
 
 void SaveIni()
 {
-	if (!IniChanged)
-		return;
+	if (!ini.has_value()) return;
+	if (!ini->changed()) return;
 	RecursivelyCreateDir(paths::ConfigPath().c_str());
 	const std::string iniPath = GetIniPath();
-	FILE *file = OpenFile(iniPath.c_str(), "wb");
-	if (file != nullptr) {
-		GetIni().SaveFile(file, true);
-		std::fclose(file);
-	} else {
-		LogError("Failed to write ini file to {}: {}", iniPath, std::strerror(errno));
+	LoggedFStream out;
+	if (!out.Open(iniPath.c_str(), "wb")) {
+		LogError("Failed to open ini file for writing at {}: {}", iniPath, std::strerror(errno));
+		return;
 	}
-	IniChanged = false;
+	const std::string newContents = ini->serialize();
+	if (out.Write(newContents.data(), newContents.size())) {
+		ini->markAsUnchanged();
+	}
+	out.Close();
 }
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -353,25 +236,32 @@ bool HardwareCursorSupported()
 
 void LoadOptions()
 {
+	LoadIni();
 	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
 		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
 			pEntry->LoadFromIni(pCategory->GetKey());
 		}
 	}
 
-	GetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
+	ini->getUtf8Buf("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem));
+	ini->getUtf8Buf("Network", "Bind Address", "0.0.0.0", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress));
+	ini->getUtf8Buf("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame, sizeof(sgOptions.Network.szPreviousZTGame));
+	ini->getUtf8Buf("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost));
 
-	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
-	GetIniValue("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame, sizeof(sgOptions.Network.szPreviousZTGame), "");
-	GetIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
+	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
+		std::span<const Ini::Value> values = ini->get("NetMsg", QuickMessages[i].key);
+		std::vector<std::string> &result = sgOptions.Chat.szHotKeyMsgs[i];
+		result.clear();
+		result.reserve(values.size());
+		for (const Ini::Value &value : values) {
+			result.emplace_back(value.value);
+		}
+	}
 
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
-		GetIniStringVector("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
-
-	GetIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
-	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07F);
+	ini->getUtf8Buf("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping));
+	sgOptions.Controller.fDeadzone = ini->getFloat("Controller", "deadzone", 0.07F);
 #ifdef __vita__
-	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
+	sgOptions.Controller.bRearTouch = ini->getBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
 	if (demo::IsRunning())
@@ -389,19 +279,20 @@ void SaveOptions()
 		}
 	}
 
-	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
+	ini->set("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 
-	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
-	SetIniValue("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame);
-	SetIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
+	ini->set("Network", "Bind Address", sgOptions.Network.szBindAddress);
+	ini->set("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame);
+	ini->set("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
-		SetIniValue("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
+	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
+		ini->set("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
+	}
 
-	SetIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
-	SetIniValue("Controller", "deadzone", sgOptions.Controller.fDeadzone);
+	ini->set("Controller", "Mapping", sgOptions.Controller.szMapping);
+	ini->set("Controller", "deadzone", sgOptions.Controller.fDeadzone);
 #ifdef __vita__
-	SetIniValue("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
+	ini->set("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
 
 	SaveIni();
@@ -431,11 +322,11 @@ void OptionEntryBase::NotifyValueChanged()
 
 void OptionEntryBoolean::LoadFromIni(std::string_view category)
 {
-	value = GetIniBool(category.data(), key.data(), defaultValue);
+	value = ini->getBool(category, key, defaultValue);
 }
 void OptionEntryBoolean::SaveToIni(std::string_view category) const
 {
-	SetIniValue(category.data(), key.data(), value);
+	ini->set(category, key, value);
 }
 void OptionEntryBoolean::SetValue(bool value)
 {
@@ -462,11 +353,11 @@ std::string_view OptionEntryListBase::GetValueDescription() const
 
 void OptionEntryEnumBase::LoadFromIni(std::string_view category)
 {
-	value = GetIniInt(category.data(), key.data(), defaultValue);
+	value = ini->getInt(category, key, defaultValue);
 }
 void OptionEntryEnumBase::SaveToIni(std::string_view category) const
 {
-	SetIniValue(category.data(), key.data(), value);
+	ini->set(category, key, value);
 }
 void OptionEntryEnumBase::SetValueInternal(int value)
 {
@@ -501,7 +392,7 @@ void OptionEntryEnumBase::SetActiveListIndex(size_t index)
 
 void OptionEntryIntBase::LoadFromIni(std::string_view category)
 {
-	value = GetIniInt(category.data(), key.data(), defaultValue);
+	value = ini->getInt(category, key, defaultValue);
 	if (c_find(entryValues, value) == entryValues.end()) {
 		entryValues.insert(c_lower_bound(entryValues, value), value);
 		entryNames.clear();
@@ -509,7 +400,7 @@ void OptionEntryIntBase::LoadFromIni(std::string_view category)
 }
 void OptionEntryIntBase::SaveToIni(std::string_view category) const
 {
-	SetIniValue(category.data(), key.data(), value);
+	ini->set(category, key, value);
 }
 void OptionEntryIntBase::SetValueInternal(int value)
 {
@@ -675,12 +566,12 @@ OptionEntryResolution::OptionEntryResolution()
 }
 void OptionEntryResolution::LoadFromIni(std::string_view category)
 {
-	size = { GetIniInt(category.data(), "Width", DEFAULT_WIDTH), GetIniInt(category.data(), "Height", DEFAULT_HEIGHT) };
+	size = { ini->getInt(category, "Width", DEFAULT_WIDTH), ini->getInt(category, "Height", DEFAULT_HEIGHT) };
 }
 void OptionEntryResolution::SaveToIni(std::string_view category) const
 {
-	SetIniValue(category.data(), "Width", size.width);
-	SetIniValue(category.data(), "Height", size.height);
+	ini->set(category, "Width", size.width);
+	ini->set(category, "Height", size.height);
 }
 
 void OptionEntryResolution::InvalidateList()
@@ -821,8 +712,8 @@ OptionEntryResampler::OptionEntryResampler()
 }
 void OptionEntryResampler::LoadFromIni(std::string_view category)
 {
-	char resamplerStr[32];
-	if (GetIniValue(category, key, resamplerStr, sizeof(resamplerStr))) {
+	std::string_view resamplerStr = ini->getString(category, key);
+	if (!resamplerStr.empty()) {
 		std::optional<Resampler> resampler = ResamplerFromString(resamplerStr);
 		if (resampler) {
 			resampler_ = *resampler;
@@ -836,7 +727,7 @@ void OptionEntryResampler::LoadFromIni(std::string_view category)
 
 void OptionEntryResampler::SaveToIni(std::string_view category) const
 {
-	SetIniValue(category, key, ResamplerToString(resampler_));
+	ini->set(category, key, ResamplerToString(resampler_));
 }
 
 size_t OptionEntryResampler::GetListSize() const
@@ -878,15 +769,13 @@ OptionEntryAudioDevice::OptionEntryAudioDevice()
 }
 void OptionEntryAudioDevice::LoadFromIni(std::string_view category)
 {
-	char deviceStr[100];
-	GetIniValue(category, key, deviceStr, sizeof(deviceStr), "");
-	deviceName_ = deviceStr;
+	deviceName_ = ini->getString(category, key);
 }
 
 void OptionEntryAudioDevice::SaveToIni(std::string_view category) const
 {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	SetIniValue(category, key, deviceName_);
+	ini->set(category, key, deviceName_);
 #endif
 }
 
@@ -1162,11 +1051,10 @@ OptionEntryLanguageCode::OptionEntryLanguageCode()
 }
 void OptionEntryLanguageCode::LoadFromIni(std::string_view category)
 {
-	if (GetIniValue(category, key, szCode, sizeof(szCode))) {
-		if (HasTranslation(szCode)) {
-			// User preferred language is available
-			return;
-		}
+	ini->getUtf8Buf(category, key, szCode, sizeof(szCode));
+	if (szCode[0] != '\0' && HasTranslation(szCode)) {
+		// User preferred language is available
+		return;
 	}
 
 	// Might be a first run or the user has attempted to load a translation that doesn't exist via manual ini edit. Try
@@ -1205,7 +1093,7 @@ void OptionEntryLanguageCode::LoadFromIni(std::string_view category)
 }
 void OptionEntryLanguageCode::SaveToIni(std::string_view category) const
 {
-	SetIniValue(category, key, szCode);
+	ini->set(category, key, szCode);
 }
 
 void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
@@ -1391,22 +1279,22 @@ std::string_view KeymapperOptions::Action::GetName() const
 
 void KeymapperOptions::Action::LoadFromIni(std::string_view category)
 {
-	std::array<char, 64> result;
-	if (!GetIniValue(category.data(), key.data(), result.data(), result.size())) {
+	const std::span<const Ini::Value> iniValues = ini->get(category, key);
+	if (iniValues.empty()) {
 		SetValue(defaultKey);
 		return; // Use the default key if no key has been set.
 	}
 
-	std::string readKey = result.data();
-	if (readKey.empty()) {
+	const std::string_view iniValue = iniValues.back().value;
+	if (iniValue.empty()) {
 		SetValue(SDLK_UNKNOWN);
 		return;
 	}
 
-	auto keyIt = sgOptions.Keymapper.keyNameToKeyID.find(readKey);
+	auto keyIt = sgOptions.Keymapper.keyNameToKeyID.find(iniValue);
 	if (keyIt == sgOptions.Keymapper.keyNameToKeyID.end()) {
 		// Use the default key if the key is unknown.
-		Log("Keymapper: unknown key '{}'", readKey);
+		Log("Keymapper: unknown key '{}'", iniValue);
 		SetValue(defaultKey);
 		return;
 	}
@@ -1419,7 +1307,7 @@ void KeymapperOptions::Action::SaveToIni(std::string_view category) const
 {
 	if (boundKey == SDLK_UNKNOWN) {
 		// Just add an empty config entry if the action is unbound.
-		SetIniValue(category.data(), key.data(), "");
+		ini->set(category, key, std::string {});
 		return;
 	}
 	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
@@ -1427,7 +1315,7 @@ void KeymapperOptions::Action::SaveToIni(std::string_view category) const
 		LogVerbose("Keymapper: no name found for key {} bound to {}", boundKey, key);
 		return;
 	}
-	SetIniValue(category.data(), key.data(), keyNameIt->second.c_str());
+	ini->set(category, key, keyNameIt->second);
 }
 
 std::string_view KeymapperOptions::Action::GetValueDescription() const
@@ -1611,15 +1499,16 @@ std::string_view PadmapperOptions::Action::GetName() const
 
 void PadmapperOptions::Action::LoadFromIni(std::string_view category)
 {
-	std::array<char, 64> result;
-	if (!GetIniValue(category.data(), key.data(), result.data(), result.size())) {
+	const std::span<const Ini::Value> iniValues = ini->get(category, key);
+	if (iniValues.empty()) {
 		SetValue(defaultInput);
 		return; // Use the default button combo if no mapping has been set.
 	}
+	const std::string_view iniValue = iniValues.back().value;
 
 	std::string modName;
 	std::string buttonName;
-	auto parts = SplitByChar(result.data(), '+');
+	auto parts = SplitByChar(iniValue, '+');
 	auto it = parts.begin();
 	if (it == parts.end()) {
 		SetValue(ControllerButtonCombo {});
@@ -1660,7 +1549,7 @@ void PadmapperOptions::Action::SaveToIni(std::string_view category) const
 {
 	if (boundInput.button == ControllerButton_NONE) {
 		// Just add an empty config entry if the action is unbound.
-		SetIniValue(category.data(), key.data(), "");
+		ini->set(category, key, "");
 		return;
 	}
 	std::string inputName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.button)];
@@ -1676,7 +1565,7 @@ void PadmapperOptions::Action::SaveToIni(std::string_view category) const
 		}
 		inputName = StrCat(modifierName, "+", inputName);
 	}
-	SetIniValue(category.data(), key.data(), inputName.data());
+	ini->set(category, key, inputName.data());
 }
 
 void PadmapperOptions::Action::UpdateValueDescription() const

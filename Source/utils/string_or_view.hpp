@@ -14,6 +14,7 @@ public:
 	{
 	}
 
+	StringOrView(const StringOrView &) = default;
 	StringOrView(StringOrView &&) noexcept = default;
 
 	StringOrView(std::string &&str)

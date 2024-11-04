@@ -41,7 +41,11 @@ std::string_view TruncateUtf8(std::string_view str, std::size_t len)
 void CopyUtf8(char *dest, std::string_view source, std::size_t bytes)
 {
 	source = TruncateUtf8(source, bytes - 1);
-	std::memcpy(dest, source.data(), source.size());
+	// source.empty() can mean source.data() == nullptr.
+	// It is UB to pass a null pointer to memcpy, so we guard against it.
+	if (!source.empty()) {
+		std::memcpy(dest, source.data(), source.size());
+	}
 	dest[source.size()] = '\0';
 }
 

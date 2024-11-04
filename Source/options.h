@@ -16,6 +16,7 @@
 #include "engine/sound_defs.hpp"
 #include "pack.h"
 #include "utils/enum_traits.h"
+#include "utils/string_view_hash.hpp"
 
 namespace devilution {
 
@@ -710,7 +711,7 @@ private:
 	std::forward_list<Action> actions;
 	ankerl::unordered_dense::segmented_map<uint32_t, std::reference_wrapper<Action>> keyIDToAction;
 	ankerl::unordered_dense::segmented_map<uint32_t, std::string> keyIDToKeyName;
-	ankerl::unordered_dense::segmented_map<std::string, uint32_t> keyNameToKeyID;
+	ankerl::unordered_dense::segmented_map<std::string, uint32_t, StringViewHash, StringViewEquals> keyNameToKeyID;
 };
 
 /** The Padmapper maps gamepad buttons to actions. */
@@ -782,7 +783,7 @@ private:
 	std::forward_list<Action> actions;
 	std::array<const Action *, enum_size<ControllerButton>::value> buttonToReleaseAction;
 	std::array<std::string, enum_size<ControllerButton>::value> buttonToButtonName;
-	ankerl::unordered_dense::segmented_map<std::string, ControllerButton> buttonNameToButton;
+	ankerl::unordered_dense::segmented_map<std::string, ControllerButton, StringViewHash, StringViewEquals> buttonNameToButton;
 	bool committed = false;
 
 	const Action *FindAction(ControllerButton button) const;
