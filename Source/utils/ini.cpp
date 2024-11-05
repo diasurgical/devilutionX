@@ -4,6 +4,7 @@
 #include <charconv>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <span>
 #include <string>
@@ -226,7 +227,9 @@ float Ini::getFloat(std::string_view section, std::string_view key, float defaul
 {
 	const std::span<const Ini::Value> xs = get(section, key);
 	if (xs.empty() || xs.back().value.empty()) return defaultValue;
-	const std::string_view str = xs.back().value;
+	const std::string &str = xs.back().value;
+
+#if __cpp_lib_to_chars >= 201611L
 	float value;
 	const std::from_chars_result result = std::from_chars(str.data(), str.data() + str.size(), value);
 	if (result.ec != std::errc()) {
@@ -234,6 +237,9 @@ float Ini::getFloat(std::string_view section, std::string_view key, float defaul
 		return defaultValue;
 	}
 	return value;
+#else
+	return strtof(str.data(), nullptr);
+#endif
 }
 
 void Ini::getUtf8Buf(std::string_view section, std::string_view key, std::string_view defaultValue, char *dst, size_t dstSize) const
@@ -346,6 +352,7 @@ void Ini::set(std::string_view section, std::string_view key, bool value)
 
 void Ini::set(std::string_view section, std::string_view key, float value)
 {
+#if __cpp_lib_to_chars >= 201611L
 	constexpr size_t BufSize = 64;
 	char buf[BufSize] {};
 	const std::to_chars_result result = std::to_chars(buf, buf + BufSize, value);
@@ -353,6 +360,9 @@ void Ini::set(std::string_view section, std::string_view key, float value)
 		app_fatal("float->string failed"); // should never happen
 	}
 	set(section, key, std::string_view(buf, result.ptr - buf));
+#else
+	set(section, key, fmt::format("{}", value));
+#endif
 }
 
 namespace {
