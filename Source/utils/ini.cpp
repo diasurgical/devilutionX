@@ -127,7 +127,7 @@ tl::expected<Ini, std::string> Ini::parse(std::string_view buffer)
 		}
 		std::string_view comment;
 		if (commentBegin != nullptr) {
-			comment = std::string_view { commentBegin, lineBegin };
+			comment = std::string_view(commentBegin, lineBegin - commentBegin);
 		}
 
 		if (*keyBegin == '[') {
@@ -136,12 +136,12 @@ tl::expected<Ini, std::string> Ini::parse(std::string_view buffer)
 				++keyEnd;
 			}
 			if (keyEnd == lineEnd) {
-				return tl::make_unexpected(fmt::format("line {}: unclosed section name {}", lineNum, std::string_view(keyBegin, keyEnd)));
+				return tl::make_unexpected(fmt::format("line {}: unclosed section name {}", lineNum, std::string_view(keyBegin, keyEnd - keyBegin)));
 			}
 			if (const char *after = SkipTrailingWhitespace(keyEnd + 1, lineEnd); after != lineEnd) {
-				return tl::make_unexpected(fmt::format("line {}: content after section [{}]: {}", lineNum, std::string_view(keyBegin, keyEnd), std::string_view(after, lineEnd)));
+				return tl::make_unexpected(fmt::format("line {}: content after section [{}]: {}", lineNum, std::string_view(keyBegin, keyEnd - keyBegin), std::string_view(after, lineEnd - after)));
 			}
-			const std::string_view sectionName = std::string_view(keyBegin, keyEnd);
+			const std::string_view sectionName = std::string_view(keyBegin, keyEnd - keyBegin);
 			auto it = fileData.sections.find(sectionName);
 			if (it == fileData.sections.end()) {
 				it = fileData.sections.emplace_hint(it, sectionName,
@@ -159,10 +159,12 @@ tl::expected<Ini, std::string> Ini::parse(std::string_view buffer)
 		if (sectionEntries == nullptr) return tl::unexpected(fmt::format("line {}: key not in any section", lineNum));
 		const char *eqPos = static_cast<const char *>(memchr(keyBegin, '=', lineEnd - keyBegin));
 		if (eqPos == nullptr) {
-			return tl::make_unexpected(fmt::format("line {}: key {} has no value", lineNum, std::string_view(keyBegin, lineEnd)));
+			return tl::make_unexpected(fmt::format("line {}: key {} has no value", lineNum, std::string_view(keyBegin, lineEnd - keyBegin)));
 		}
-		const std::string_view key = std::string_view(keyBegin, SkipTrailingWhitespace(keyBegin, eqPos));
-		const std::string_view value = std::string_view(SkipLeadingWhitespace(eqPos + 1, lineEnd), lineEnd);
+		const char *keyEnd = SkipTrailingWhitespace(keyBegin, eqPos);
+		const std::string_view key = std::string_view(keyBegin, keyEnd - keyBegin);
+		const char *valueBegin = SkipLeadingWhitespace(eqPos + 1, lineEnd);
+		const std::string_view value = std::string_view(valueBegin, lineEnd - valueBegin);
 		if (const auto it = sectionEntries->find(key); it != sectionEntries->end()) {
 			it->second.values.append(Value { std::string(comment), std::string(value) });
 		} else {
@@ -350,7 +352,7 @@ void Ini::set(std::string_view section, std::string_view key, float value)
 	if (result.ec != std::errc()) {
 		app_fatal("float->string failed"); // should never happen
 	}
-	set(section, key, std::string_view(buf, result.ptr));
+	set(section, key, std::string_view(buf, result.ptr - buf));
 }
 
 namespace {
