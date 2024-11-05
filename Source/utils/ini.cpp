@@ -373,30 +373,29 @@ bool OrderByValueIndex(const std::pair<std::string, T> &a, const std::pair<std::
 	return a.second.index < b.second.index;
 };
 
-// Appends a possibly multi-line comment, converting \r\n to \n.
+// Appends a possibly multi-line comment, converting \n to \r\n.
 void AppendComment(std::string_view comment, std::string &out)
 {
 	bool prevR = false;
 	for (const char c : comment) {
-		if (prevR) {
-			prevR = c != '\r';
-			out += c;
-		} else if (c == '\r') {
+		if (c == '\r') {
 			prevR = true;
 		} else {
-			out += c;
+			if (c == '\n' && !prevR) out += '\r';
+			prevR = false;
 		}
+		out += c;
 	}
 }
 
 void AppendSection(std::string_view sectionName, std::string &out)
 {
-	out.append("[").append(sectionName).append("]\n");
+	out.append("[").append(sectionName).append("]\r\n");
 }
 
 void AppendKeyValue(std::string_view key, std::string_view value, std::string &out)
 {
-	out.append(key).append("=").append(value).append("\n");
+	out.append(key).append("=").append(value).append("\r\n");
 }
 
 } // namespace
@@ -409,7 +408,7 @@ std::string Ini::serialize() const
 
 	std::vector<std::pair<std::string, ValuesData>> entries;
 	for (auto &[sectionName, section] : sections) {
-		if (!result.empty()) result += '\n';
+		if (!result.empty()) result.append("\r\n");
 		if (!section.comment.empty()) AppendComment(section.comment, result);
 		AppendSection(sectionName, result);
 		entries.assign(section.entries.begin(), section.entries.end());
