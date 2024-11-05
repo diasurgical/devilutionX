@@ -12,6 +12,22 @@ using ::testing::ElementsAre;
 using ::testing::Eq;
 using ::testing::Field;
 
+std::string ReplaceNewlines(std::string_view s)
+{
+	std::string out;
+	bool prevR = false;
+	for (const char c : s) {
+		if (c == '\r') {
+			prevR = true;
+		} else {
+			if (c == '\n' && !prevR) out += '\r';
+			prevR = false;
+		}
+		out += c;
+	}
+	return out;
+}
+
 } // namespace
 
 TEST(IniTest, BasicTest)
@@ -59,7 +75,7 @@ key = value
 	const std::vector<std::string> newMulti { "x", "y", "z" };
 	result->set("sectionA", "multi", newMulti);
 	result->set("sectionA", "float", 10.5F);
-	EXPECT_EQ(result->serialize(), std::string_view(R"(; Section A comment
+	EXPECT_EQ(result->serialize(), ReplaceNewlines(R"(; Section A comment
 [sectionA]
 key1=newValue
 key2=value2
