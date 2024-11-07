@@ -19,7 +19,11 @@
 
 namespace devilution {
 
+#ifdef __DREAMCAST__
+#define MAX_CHARACTERS 1 // todo restore me to 99
+#else
 #define MAX_CHARACTERS 99
+#endif
 
 extern bool gbValidSaveFile;
 

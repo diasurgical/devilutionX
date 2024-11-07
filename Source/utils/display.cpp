@@ -43,6 +43,19 @@
 #endif
 #endif
 
+#ifdef __DREAMCAST__
+#include <SDL_dreamcast.h>
+
+void enable_dma_driver()
+{
+	SDL_DC_VerticalWait(SDL_FALSE);
+	SDL_DC_ShowAskHz(SDL_TRUE);
+	SDL_DC_EmulateKeyboard(SDL_FALSE);
+	SDL_DC_EmulateMouse(SDL_FALSE);
+	SDL_DC_SetVideoDriver(SDL_DC_DMA_VIDEO);
+}
+#endif
+
 namespace devilution {
 
 extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
@@ -307,6 +320,9 @@ bool SpawnWindow(const char *lpWindowName)
 	initFlags |= SDL_INIT_GAMECONTROLLER;
 
 	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#endif
+#ifdef __DREAMCAST__
+	enable_dma_driver();
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();

@@ -47,6 +47,10 @@
 #endif
 #endif
 
+#ifdef __DREAMCAST__
+#include <kos/fs.h>
+#endif
+
 namespace devilution {
 
 #if defined(_WIN32) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
@@ -102,6 +106,20 @@ bool FileExists(const char *path)
 		return false;
 	}
 	return true;
+#elif defined(__DREAMCAST__)
+	// ramdisk access doesn't work with SDL_RWFromFile or std::filesystem::exists
+	// todo check to see if this is needed with vmu fs
+	int file = fs_open(path, O_RDONLY);
+	if (file != -1) {
+		fs_close(file);
+		return true;
+	}
+	file = fs_open(path, O_RDONLY | O_DIR);
+	if (file != -1) {
+		fs_close(file);
+		return true;
+	}
+	return false;
 #elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
 	return ::access(path, F_OK) == 0;
 #elif defined(DVL_HAS_FILESYSTEM)
@@ -166,7 +184,7 @@ bool FileExistsAndIsWriteable(const char *path)
 #ifdef _WIN32
 	const DWORD attr = WindowsGetFileAttributes(path);
 	return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_READONLY) == 0;
-#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
+#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__) && !defined(__DREAMCAST__)
 	return ::access(path, W_OK) == 0;
 #else
 	if (!FileExists(path))
@@ -297,6 +315,25 @@ void RecursivelyCreateDir(const char *path)
 #endif
 }
 
+#ifdef __DREAMCAST__
+bool TruncateFile(const char *path, off_t size)
+{
+	Log("TruncateFile(\"{}\", {})", path, size);
+	void *contents;
+	size_t read = fs_load(path, &contents);
+	if (read == -1) {
+		return false;
+	}
+
+	fs_unlink(path);
+	file_t fh = fs_open(path, O_WRONLY);
+	int result = fs_write(fh, contents, size);
+	fs_close(fh);
+	free(contents);
+	return result != -1;
+}
+#endif
+
 bool ResizeFile(const char *path, std::uintmax_t size)
 {
 #ifdef _WIN32
@@ -350,6 +387,8 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 	}
 	::CloseHandle(file);
 	return true;
+#elif __DREAMCAST__
+	return TruncateFile(path, static_cast<off_t>(size));
 #elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 	return ::truncate(path, static_cast<off_t>(size)) == 0;
 #else

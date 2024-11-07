@@ -79,9 +79,16 @@ inline int SDLC_SetSurfaceAndPaletteColors(SDL_Surface *surface, SDL_Palette *pa
 	SDL_SetColors(videoSurface, colors, firstcolor, ncolors);
 	if (videoSurface == surface) return 0;
 #endif
+
+#ifdef __DREAMCAST__
+	// todo figure out why the SDL_SetPalette call crashes on dreamcast
+	return 0;
+#else
 	// In SDL1, the surface always has its own distinct palette, so we need to
 	// update it as well.
 	return SDL_SetPalette(surface, SDL_LOGPAL, colors, firstcolor, ncolors) - 1;
+#endif // defined(__DREAMCAST__)
+
 #else // !USE_SDL1
 	if (SDL_SetPaletteColors(palette, colors, firstcolor, ncolors) < 0)
 		return -1;
