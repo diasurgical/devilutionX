@@ -2479,6 +2479,11 @@ bool IsUniqueAvailable(int i)
 	return gbIsHellfire || i <= 89;
 }
 
+void ClearUniqueItemFlags()
+{
+	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
+}
+
 void InitItemGFX()
 {
 	char arglist[64];
@@ -2488,7 +2493,6 @@ void InitItemGFX()
 		*BufCopy(arglist, "items\\", ItemDropNames[i]) = '\0';
 		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
-	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
 
 void InitItems()
