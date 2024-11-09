@@ -6,6 +6,7 @@
 
 #include <array>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 #include <SDL_endian.h>
@@ -53,7 +54,7 @@ bool LoadPcxMeta(AssetHandle &handle, int &width, int &height, uint8_t &bpp)
 
 } // namespace
 
-OptionalOwnedClxSpriteList PcxToClx(AssetHandle &handle, size_t fileSize, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
+OptionalOwnedClxSpriteList PcxToClx(std::string_view name, AssetHandle &handle, size_t fileSize, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
 {
 	int width;
 	int height;
@@ -182,7 +183,12 @@ OptionalOwnedClxSpriteList PcxToClx(AssetHandle &handle, size_t fileSize, int nu
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 	std::cout << "\t" << pixelDataSize << "\t" << cl2Data.size() << "\t" << std::setprecision(1) << std::fixed << (static_cast<int>(cl2Data.size()) - static_cast<int>(pixelDataSize)) / ((float)pixelDataSize) * 100 << "%" << std::endl;
 #endif
-	return OwnedClxSpriteList { std::move(out) };
+	return OwnedClxSpriteList {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		name, /*trnName=*/ {},
+#endif
+		std::move(out)
+	};
 }
 
 } // namespace devilution

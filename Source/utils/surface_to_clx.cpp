@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <string>
 #include <vector>
 
 #include "utils/clx_encode.hpp"
@@ -14,7 +15,11 @@
 
 namespace devilution {
 
-OwnedClxSpriteList SurfaceToClx(const Surface &surface, unsigned numFrames,
+OwnedClxSpriteList SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+    std::string &&name, std::string &&trnName,
+#endif
+    const Surface &surface, unsigned numFrames,
     std::optional<uint8_t> transparentColor)
 {
 	// CLX header: frame count, frame offset for each frame, file size
@@ -84,7 +89,12 @@ OwnedClxSpriteList SurfaceToClx(const Surface &surface, unsigned numFrames,
 	          << std::setprecision(1) << std::fixed << (static_cast<int>(clxData.size()) - surfaceSize) / ((float)surfaceSize) * 100 << "%" << std::endl;
 #endif
 
-	return OwnedClxSpriteList { std::move(out) };
+	return OwnedClxSpriteList {
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		std::move(name), std::move(trnName),
+#endif
+		std::move(out)
+	};
 }
 
 } // namespace devilution

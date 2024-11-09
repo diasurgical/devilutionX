@@ -100,6 +100,7 @@ set(libdevilutionx_SRCS
   engine/animationinfo.cpp
   engine/assets.cpp
   engine/backbuffer_state.cpp
+  engine/resource_store.cpp
   engine/direction.cpp
   engine/dx.cpp
   engine/events.cpp
@@ -148,6 +149,7 @@ set(libdevilutionx_SRCS
   lua/modules/dev/player/stats.cpp
   lua/modules/dev/quests.cpp
   lua/modules/dev/search.cpp
+  lua/modules/dev/resources.cpp
   lua/modules/dev/towners.cpp
   lua/modules/log.cpp
   lua/modules/render.cpp

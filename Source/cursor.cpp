@@ -482,7 +482,7 @@ void CreateHalfSizeItemSprites()
 	OwnedSurface ownedItemSurface { MaxWidth, MaxHeight };
 	OwnedSurface ownedHalfSurface { MaxWidth / 2, MaxHeight / 2 };
 
-	const auto createHalfSize = [&, redTrn](const ClxSprite itemSprite, size_t outputIndex) {
+	const auto createHalfSize = [&, redTrn](const ClxSprite itemSprite, size_t outputIndex, int cursId) {
 		if (itemSprite.width() <= 28 && itemSprite.height() <= 28) {
 			// Skip creating half-size sprites for 1x1 items because we always render them at full size anyway.
 			return;
@@ -496,22 +496,33 @@ void CreateHalfSizeItemSprites()
 		const Surface halfSurface = ownedHalfSurface.subregion(0, 0, itemSurface.w() / 2, itemSurface.h() / 2);
 		SDL_Rect halfSurfaceRect = MakeSdlRect(0, 0, halfSurface.w(), halfSurface.h());
 		SDL_SetClipRect(halfSurface.surface, &halfSurfaceRect);
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		std::string name = StrCat("runtime\\objcurs_half_size\\", cursId);
+#endif
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-		HalfSizeItemSprites[outputIndex].emplace(SurfaceToClx(halfSurface, 1, 1));
+		HalfSizeItemSprites[outputIndex].emplace(SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    std::string(name), /*trnName=*/ {},
+#endif
+		    halfSurface, 1, 1));
 
 		SDL_FillRect(itemSurface.surface, nullptr, 1);
 		ClxDrawTRN(itemSurface, { 0, itemSurface.h() }, itemSprite, redTrn);
 		BilinearDownscaleByHalf8(itemSurface.surface, paletteTransparencyLookup, halfSurface.surface, 1);
-		HalfSizeItemSpritesRed[outputIndex].emplace(SurfaceToClx(halfSurface, 1, 1));
+		HalfSizeItemSpritesRed[outputIndex].emplace(SurfaceToClx(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+		    std::move(name), /*trnName=*/"red",
+#endif
+		    halfSurface, 1, 1));
 	};
 
 	size_t outputIndex = 0;
 	for (size_t i = static_cast<int>(CURSOR_FIRSTITEM) - 1, n = pCursCels->numSprites(); i < n; ++i, ++outputIndex) {
-		createHalfSize((*pCursCels)[i], outputIndex);
+		createHalfSize((*pCursCels)[i], outputIndex, i + 1);
 	}
 	if (gbIsHellfire) {
 		for (size_t i = 0, n = pCursCels2->numSprites(); i < n; ++i, ++outputIndex) {
-			createHalfSize((*pCursCels2)[i], outputIndex);
+			createHalfSize((*pCursCels2)[i], outputIndex, i + pCursCels->numSprites() + 1);
 		}
 	}
 }

@@ -68,7 +68,7 @@ OptionalOwnedClxSpriteList LoadPcxSpriteList(const char *filename, int numFrames
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 	std::cout << filename;
 #endif
-	OptionalOwnedClxSpriteList result = PcxToClx(handle, fileSize, numFramesOrFrameHeight, transparentColor, outPalette);
+	OptionalOwnedClxSpriteList result = PcxToClx(filename, handle, fileSize, numFramesOrFrameHeight, transparentColor, outPalette);
 	if (!result)
 		return std::nullopt;
 	return result;

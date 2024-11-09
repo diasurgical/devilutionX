@@ -9,13 +9,15 @@
 #endif
 
 #include "engine/assets.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_file.hpp"
 
 namespace devilution {
 
 OptionalOwnedClxSpriteListOrSheet LoadOptionalClxListOrSheet(const char *path)
 {
-	AssetRef ref = FindAsset(path);
+	std::string_view pathStrView = path;
+	AssetRef ref = FindAsset(pathStrView);
 	if (!ref.ok())
 		return std::nullopt;
 	const size_t size = ref.size();
@@ -25,14 +27,25 @@ OptionalOwnedClxSpriteListOrSheet LoadOptionalClxListOrSheet(const char *path)
 		if (!handle.ok() || !handle.read(data.get(), size))
 			return std::nullopt;
 	}
-	return OwnedClxSpriteListOrSheet::FromBuffer(std::move(data), size);
+	pathStrView.remove_suffix(4);
+	return OwnedClxSpriteListOrSheet::fromBuffer(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    pathStrView, /*trnName=*/ {},
+#endif
+	    std::move(data), size);
 }
 
 OwnedClxSpriteListOrSheet LoadClxListOrSheet(const char *path)
 {
 	size_t size;
 	std::unique_ptr<uint8_t[]> data = LoadFileInMem<uint8_t>(path, &size);
-	return OwnedClxSpriteListOrSheet::FromBuffer(std::move(data), size);
+	std::string_view pathStrView = path;
+	pathStrView.remove_suffix(4);
+	return OwnedClxSpriteListOrSheet::fromBuffer(
+#ifdef DEVILUTIONX_RESOURCE_TRACKING_ENABLED
+	    pathStrView, /*trnName=*/ {},
+#endif
+	    std::move(data), size);
 }
 
 } // namespace devilution
