@@ -60,17 +60,17 @@ void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256
 void DecreaseGamma();
 int UpdateGamma(int gamma);
 void BlackPalette();
-void SetFadeLevel(int fadeval, bool updateHardwareCursor = true);
+void SetFadeLevel(int fadeval, bool updateHardwareCursor = true, const std::array<SDL_Color, 256> &srcPalette = logical_palette);
 /**
  * @brief Fade screen from black
  * @param fr Steps per 50ms
  */
-void PaletteFadeIn(int fr);
+void PaletteFadeIn(int fr, const std::array<SDL_Color, 256> &srcPalette = orig_palette);
 /**
  * @brief Fade screen to black
  * @param fr Steps per 50ms
  */
-void PaletteFadeOut(int fr);
+void PaletteFadeOut(int fr, const std::array<SDL_Color, 256> &srcPalette = logical_palette);
 void palette_update_caves();
 void palette_update_crypt();
 void palette_update_hive();
