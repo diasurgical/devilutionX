@@ -2884,6 +2884,7 @@ void LoadGameLevelFirstFlagEntry()
 	qtextflag = false;
 	if (!HeadlessMode) {
 		InitInv();
+		ClearUniqueItemFlags();
 		InitQuestText();
 		InitInfoBoxGfx();
 		InitHelp();
