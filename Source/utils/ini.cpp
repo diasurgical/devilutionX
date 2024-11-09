@@ -117,7 +117,7 @@ tl::expected<Ini, std::string> Ini::parse(std::string_view buffer)
 			nextLineBegin = eof;
 		} else {
 			nextLineBegin = lineEnd + 1;
-			if (lineBegin + 1 < lineEnd && *(lineEnd - 1) == '\r') --lineEnd;
+			if (lineBegin + 1 <= lineEnd && *(lineEnd - 1) == '\r') --lineEnd;
 		}
 		const char *keyBegin = SkipLeadingWhitespace(lineBegin, lineEnd);
 		if (keyBegin == lineEnd) continue;
