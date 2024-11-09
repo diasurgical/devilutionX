@@ -966,6 +966,7 @@ GameplayOptions::GameplayOptions()
               { FloatingNumbers::Random, N_("Random Angles") },
               { FloatingNumbers::Vertical, N_("Vertical Only") },
           })
+    , skipLoadingScreenThresholdMs("Skip loading screen threshold, ms", OptionEntryFlags::Invisible, "", "", 0)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -1012,6 +1013,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&adriaRefillsMana,
 		&grabInput,
 		&pauseOnFocusLoss,
+		&skipLoadingScreenThresholdMs,
 	};
 }
 

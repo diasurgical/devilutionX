@@ -296,15 +296,15 @@ int UpdateGamma(int gamma)
 	return 130 - *sgOptions.Graphics.gammaCorrection;
 }
 
-void SetFadeLevel(int fadeval, bool updateHardwareCursor)
+void SetFadeLevel(int fadeval, bool updateHardwareCursor, const std::array<SDL_Color, 256> &srcPalette)
 {
 	if (HeadlessMode)
 		return;
 
 	for (int i = 0; i < 256; i++) {
-		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
-		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
-		system_palette[i].b = (fadeval * logical_palette[i].b) / 256;
+		system_palette[i].r = (fadeval * srcPalette[i].r) / 256;
+		system_palette[i].g = (fadeval * srcPalette[i].g) / 256;
+		system_palette[i].b = (fadeval * srcPalette[i].b) / 256;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		system_palette[i].a = SDL_ALPHA_OPAQUE;
 #endif
@@ -323,14 +323,14 @@ void BlackPalette()
 	SetFadeLevel(0, /*updateHardwareCursor=*/false);
 }
 
-void PaletteFadeIn(int fr)
+void PaletteFadeIn(int fr, const std::array<SDL_Color, 256> &srcPalette)
 {
 	if (HeadlessMode)
 		return;
 	if (demo::IsRunning())
 		fr = 0;
 
-	ApplyGamma(logical_palette, orig_palette, 256);
+	ApplyGamma(logical_palette, srcPalette, 256);
 
 	if (fr > 0) {
 		const uint32_t tc = SDL_GetTicks();
@@ -339,7 +339,7 @@ void PaletteFadeIn(int fr)
 		for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 			if (i != prevFadeValue) {
 				// We can skip hardware cursor update for fade level 0 (everything is black).
-				SetFadeLevel(i, /*updateHardwareCursor=*/i != 0u);
+				SetFadeLevel(i, /*updateHardwareCursor=*/i != 0u, logical_palette);
 				prevFadeValue = i;
 			}
 			BltFast(nullptr, nullptr);
@@ -352,12 +352,12 @@ void PaletteFadeIn(int fr)
 		RenderPresent();
 	}
 
-	logical_palette = orig_palette;
+	logical_palette = srcPalette;
 
 	sgbFadedIn = true;
 }
 
-void PaletteFadeOut(int fr)
+void PaletteFadeOut(int fr, const std::array<SDL_Color, 256> &srcPalette)
 {
 	if (!sgbFadedIn || HeadlessMode)
 		return;
@@ -370,15 +370,15 @@ void PaletteFadeOut(int fr)
 		uint32_t prevFadeValue = 0;
 		for (uint32_t i = 0; i < 256; i = fr * (SDL_GetTicks() - tc) / 50) {
 			if (i != prevFadeValue) {
-				SetFadeLevel(256 - i);
+				SetFadeLevel(256 - i, /*updateHardwareCursor=*/true, srcPalette);
 				prevFadeValue = i;
 			}
 			BltFast(nullptr, nullptr);
 			RenderPresent();
 		}
-		SetFadeLevel(0);
+		SetFadeLevel(0, /*updateHardwareCursor=*/true, srcPalette);
 	} else {
-		SetFadeLevel(0);
+		SetFadeLevel(0, /*updateHardwareCursor=*/true, srcPalette);
 		BltFast(nullptr, nullptr);
 		RenderPresent();
 	}

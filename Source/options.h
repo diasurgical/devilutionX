@@ -599,6 +599,13 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numFullRejuPotionPickup;
 	/** @brief Enable floating numbers. */
 	OptionEntryEnum<FloatingNumbers> enableFloatingNumbers;
+
+	/**
+	 * @brief If loading takes less than this value, skips displaying the loading screen.
+	 *
+	 * Advanced option, not displayed in the UI.
+	 */
+	OptionEntryInt<int> skipLoadingScreenThresholdMs;
 };
 
 struct ControllerOptions : OptionCategoryBase {
