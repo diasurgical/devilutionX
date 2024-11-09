@@ -23,6 +23,9 @@ bool Dummy_GetHeroInfo(_uiheroinfo *pInfo)
 
 void RunTimedemo(std::string timedemoFolderName)
 {
+	if (SDL_Init(SDL_INIT_EVENTS) <= -1) {
+		ErrSdl();
+	}
 	std::string unitTestFolderCompletePath = paths::BasePath() + "/test/fixtures/timedemo/" + timedemoFolderName;
 	paths::SetPrefPath(unitTestFolderCompletePath);
 	paths::SetConfigPath(unitTestFolderCompletePath);
@@ -72,6 +75,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	ASSERT_FALSE(gbRunGame);
 	gbRunGame = false;
 	init_cleanup();
+	SDL_Quit();
 }
 
 } // namespace

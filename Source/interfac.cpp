@@ -12,12 +12,10 @@
 #include "control.h"
 #include "engine.h"
 #include "engine/clx_sprite.hpp"
-#include "engine/demomode.h"
 #include "engine/dx.h"
 #include "engine/events.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_clx.hpp"
-#include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "hwcursor.hpp"
@@ -26,12 +24,18 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "utils/sdl_geometry.h"
+#include "utils/sdl_thread.h"
+
+#ifndef USE_SDL1
+#include "controls/touch/renderers.h"
+#endif
 
 namespace devilution {
 
 namespace {
 
 constexpr uint32_t MaxProgress = 534;
+constexpr uint32_t ProgressStepSize = 23;
 
 OptionalOwnedClxSpriteList sgpBackCel;
 
@@ -225,118 +229,18 @@ void DrawCutsceneForeground()
 	RenderPresent();
 }
 
-} // namespace
-
-void RegisterCustomEvents()
+void DoLoad(interface_mode uMsg)
 {
-#ifndef USE_SDL1
-	CustomEventsBegin = SDL_RegisterEvents(NumCustomEvents);
-#endif
-}
-
-bool IsCustomEvent(SdlEventType eventType)
-{
-	return eventType >= CustomEventsBegin && eventType < CustomEventsBegin + NumCustomEvents;
-}
-
-interface_mode GetCustomEvent(SdlEventType eventType)
-{
-	return static_cast<interface_mode>(eventType - CustomEventsBegin);
-}
-
-SdlEventType CustomEventToSdlEvent(interface_mode eventType)
-{
-	return CustomEventsBegin + eventType;
-}
-
-void interface_msg_pump()
-{
-	SDL_Event event;
-	uint16_t modState;
-	while (FetchMessage(&event, &modState)) {
-		if (event.type != SDL_QUIT) {
-			HandleMessage(event, modState);
-		}
-	}
-}
-
-void IncProgress()
-{
-	if (!HeadlessMode && !demo::IsRunning())
-		interface_msg_pump();
-	if (!IsProgress)
-		return;
-	sgdwProgress += 23;
-	if (sgdwProgress > MaxProgress)
-		sgdwProgress = MaxProgress;
-	if (!HeadlessMode && !demo::IsRunning())
-		DrawCutsceneForeground();
-}
-
-void CompleteProgress()
-{
-	if (HeadlessMode)
-		return;
-	if (!IsProgress)
-		return;
-	while (sgdwProgress < MaxProgress)
-		IncProgress();
-}
-
-void ShowProgress(interface_mode uMsg)
-{
-	IsProgress = true;
-
-	gbSomebodyWonGameKludge = false;
-	uint32_t delayStart = SDL_GetTicks();
-
-	EventHandler previousHandler = SetEventHandler(DisableInputEventHandler);
-
-	if (!HeadlessMode) {
-		assert(ghMainWnd);
-
-		interface_msg_pump();
-		ClearScreenBuffer();
-		scrollrt_draw_game_screen();
-
-		if (IsHardwareCursor())
-			SetHardwareCursorVisible(false);
-
-		BlackPalette();
-
-		// Blit the background once and then free it.
-		LoadCutsceneBackground(uMsg);
-		DrawCutsceneBackground();
-		if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
-			// Render into all the backbuffers if there are multiple.
-			const void *initialPixels = PalSurface->pixels;
-			if (DiabloUiSurface() == PalSurface)
-				BltFast(nullptr, nullptr);
-			RenderPresent();
-			while (PalSurface->pixels != initialPixels) {
-				DrawCutsceneBackground();
-				if (DiabloUiSurface() == PalSurface)
-					BltFast(nullptr, nullptr);
-				RenderPresent();
-			}
-		}
-		FreeCutsceneBackground();
-
-		PaletteFadeIn(8);
-		IncProgress();
-		sound_init();
-		IncProgress();
-	}
+	IncProgress();
+	sound_init();
+	IncProgress();
 
 	Player &myPlayer = *MyPlayer;
-
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
-		IncProgress();
-		IncProgress();
+		IncProgress(2);
 		LoadGame(true);
-		IncProgress();
-		IncProgress();
+		IncProgress(2);
 		break;
 	case WM_DIABNEWGAME:
 		myPlayer.pOriginalCathedral = !gbIsHellfire;
@@ -477,37 +381,228 @@ void ShowProgress(interface_mode uMsg)
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
 		break;
+	default:
+		app_fatal("Unknown progress mode");
 	}
+
+	SDL_Event event;
+	event.type = CustomEventToSdlEvent(WM_DONE);
+	SDL_PushEvent(&event);
+}
+
+struct {
+	uint32_t delayStart;
+	EventHandler prevHandler;
+	bool done;
+	std::array<SDL_Color, 256> palette;
+} ProgressEventHandlerState;
+
+void ProgressEventHandler(const SDL_Event &event, uint16_t modState)
+{
+	DisableInputEventHandler(event, modState);
+	if (!IsCustomEvent(event.type)) return;
+
+	static uint32_t drawnProgress;
+	drawnProgress = 0;
+
+	const interface_mode customEvent = GetCustomEvent(event.type);
+	switch (customEvent) {
+	case WM_PROGRESS:
+		if (!HeadlessMode && drawnProgress != sgdwProgress) {
+			DrawCutsceneForeground();
+			drawnProgress = sgdwProgress;
+		}
+		break;
+	case WM_DONE: {
+		// We may have loaded a new palette.
+		// Temporarily switch back to the load screen palette for fade out.
+		std::array<SDL_Color, 256> prevPalette;
+		if (!HeadlessMode) {
+			prevPalette = orig_palette;
+			orig_palette = ProgressEventHandlerState.palette;
+			ApplyGamma(logical_palette, orig_palette, 256);
+		}
+		NewCursor(CURSOR_HAND);
+
+		if (!HeadlessMode) {
+			assert(ghMainWnd);
+
+			if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
+				// Ensure that all back buffers have the full progress bar.
+				const void *initialPixels = PalSurface->pixels;
+				do {
+					DrawCutsceneForeground();
+					if (DiabloUiSurface() == PalSurface)
+						BltFast(nullptr, nullptr);
+					RenderPresent();
+				} while (PalSurface->pixels != initialPixels);
+			}
+
+			PaletteFadeOut(8);
+			orig_palette = prevPalette;
+			ApplyGamma(logical_palette, orig_palette, 256);
+		}
+
+		[[maybe_unused]] EventHandler prevHandler = SetEventHandler(ProgressEventHandlerState.prevHandler);
+		assert(prevHandler == ProgressEventHandler);
+		ProgressEventHandlerState.prevHandler = nullptr;
+		IsProgress = false;
+
+		Player &myPlayer = *MyPlayer;
+		NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);
+		DelayPlrMessages(SDL_GetTicks() - ProgressEventHandlerState.delayStart);
+
+		if (gbSomebodyWonGameKludge && myPlayer.isOnLevel(16)) {
+			PrepDoEnding();
+		}
+
+		gbSomebodyWonGameKludge = false;
+		ProgressEventHandlerState.done = true;
+
+#if !defined(USE_SDL1) && !defined(__vita__)
+		if (renderer != nullptr) {
+			InitVirtualGamepadTextures(*renderer);
+		}
+#endif
+	} break;
+	default:
+		app_fatal("Unknown progress mode");
+		break;
+	}
+}
+
+} // namespace
+
+void RegisterCustomEvents()
+{
+#ifndef USE_SDL1
+	CustomEventsBegin = SDL_RegisterEvents(NumCustomEvents);
+#endif
+}
+
+bool IsCustomEvent(SdlEventType eventType)
+{
+	return eventType >= CustomEventsBegin && eventType < CustomEventsBegin + NumCustomEvents;
+}
+
+interface_mode GetCustomEvent(SdlEventType eventType)
+{
+	return static_cast<interface_mode>(eventType - CustomEventsBegin);
+}
+
+SdlEventType CustomEventToSdlEvent(interface_mode eventType)
+{
+	return CustomEventsBegin + eventType;
+}
+
+void interface_msg_pump()
+{
+	SDL_Event event;
+	uint16_t modState;
+	while (FetchMessage(&event, &modState)) {
+		if (event.type != SDL_QUIT) {
+			HandleMessage(event, modState);
+		}
+	}
+}
+
+void IncProgress(uint32_t steps)
+{
+	if (!IsProgress)
+		return;
+	const uint32_t prevProgress = sgdwProgress;
+	sgdwProgress += ProgressStepSize * steps;
+	if (sgdwProgress > MaxProgress)
+		sgdwProgress = MaxProgress;
+	if (!HeadlessMode && sgdwProgress != prevProgress) {
+		SDL_Event event;
+		event.type = CustomEventToSdlEvent(WM_PROGRESS);
+		SDL_PushEvent(&event);
+	}
+}
+
+void CompleteProgress()
+{
+	if (HeadlessMode)
+		return;
+	if (!IsProgress)
+		return;
+	if (sgdwProgress < MaxProgress) {
+		IncProgress((MaxProgress - sgdwProgress) / ProgressStepSize);
+	}
+}
+
+void ShowProgress(interface_mode uMsg)
+{
+	IsProgress = true;
+	gbSomebodyWonGameKludge = false;
+
+	ProgressEventHandlerState.delayStart = SDL_GetTicks();
+	ProgressEventHandlerState.prevHandler = SetEventHandler(ProgressEventHandler);
+	ProgressEventHandlerState.done = false;
+
+#ifndef USE_SDL1
+	DeactivateVirtualGamepad();
+	FreeVirtualGamepadTextures();
+#endif
 
 	if (!HeadlessMode) {
 		assert(ghMainWnd);
 
+		interface_msg_pump();
+		ClearScreenBuffer();
+		scrollrt_draw_game_screen();
+
+		if (IsHardwareCursor())
+			SetHardwareCursorVisible(false);
+
+		BlackPalette();
+
+		// Blit the background once and then free it.
+		LoadCutsceneBackground(uMsg);
+		DrawCutsceneBackground();
+		ProgressEventHandlerState.palette = orig_palette;
 		if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
-			// Ensure that all back buffers have the full progress bar.
+			// Render into all the backbuffers if there are multiple.
 			const void *initialPixels = PalSurface->pixels;
-			do {
-				DrawCutsceneForeground();
+			if (DiabloUiSurface() == PalSurface)
+				BltFast(nullptr, nullptr);
+			RenderPresent();
+			while (PalSurface->pixels != initialPixels) {
+				DrawCutsceneBackground();
 				if (DiabloUiSurface() == PalSurface)
 					BltFast(nullptr, nullptr);
 				RenderPresent();
-			} while (PalSurface->pixels != initialPixels);
+			}
 		}
-
-		PaletteFadeOut(8);
+		FreeCutsceneBackground();
 	}
 
-	previousHandler = SetEventHandler(previousHandler);
-	assert(previousHandler == DisableInputEventHandler);
-	IsProgress = false;
+	// Begin loading
+	static interface_mode loadTarget;
+	loadTarget = uMsg;
+	SdlThread loadThread = SdlThread([]() {
+		DoLoad(loadTarget);
+	});
 
-	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);
-	DelayPlrMessages(SDL_GetTicks() - delayStart);
-
-	if (gbSomebodyWonGameKludge && myPlayer.isOnLevel(16)) {
-		PrepDoEnding();
+	if (!HeadlessMode) {
+		PaletteFadeIn(8);
 	}
 
-	gbSomebodyWonGameKludge = false;
+	while (true) {
+		SDL_Event event;
+		// We use the real `SDL_PollEvent` here instead of `FetchEvent`
+		// to process real events rather than the recorded ones in demo mode.
+		while (SDL_PollEvent(&event)) {
+			if (event.type != SDL_QUIT) {
+				HandleMessage(event, SDL_GetModState());
+			}
+			if (ProgressEventHandlerState.done) {
+				loadThread.join();
+				return;
+			}
+		}
+	}
 }
 
 } // namespace devilution
