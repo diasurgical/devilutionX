@@ -1324,7 +1324,7 @@ void LoadAllGFX()
 {
 	IncProgress();
 #if !defined(USE_SDL1) && !defined(__vita__)
-	InitVirtualGamepadGFX(renderer);
+	InitVirtualGamepadGFX();
 #endif
 	IncProgress();
 	InitObjectGFX();
@@ -3044,7 +3044,7 @@ void LoadGameLevelSetLevel(bool firstflag, lvl_entry lvldir, const Player &myPla
 	IncProgress();
 	if (!HeadlessMode) {
 #if !defined(USE_SDL1) && !defined(__vita__)
-		InitVirtualGamepadGFX(renderer);
+		InitVirtualGamepadGFX();
 #endif
 		InitMissileGFX(gbIsHellfire);
 		IncProgress();
@@ -3101,7 +3101,7 @@ void LoadGameLevelStandardLevel(bool firstflag, lvl_entry lvldir, const Player &
 		IncProgress();
 
 #if !defined(USE_SDL1) && !defined(__vita__)
-		InitVirtualGamepadGFX(renderer);
+		InitVirtualGamepadGFX();
 #endif
 
 		IncProgress();
