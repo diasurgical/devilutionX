@@ -10,7 +10,9 @@
 
 #include <array>
 #include <functional>
+#include <string>
 
+#include <expected.hpp>
 #include <function_ref.hpp>
 
 #include "engine.h"
@@ -479,21 +481,21 @@ extern size_t ActiveMonsterCount;
 extern int MonsterKillCounts[NUM_MTYPES];
 extern bool sgbSaveSoundOn;
 
-void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
+tl::expected<void, std::string> PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
-void GetLevelMTypes();
-size_t AddMonsterType(_monster_id type, placeflag placeflag);
-inline size_t AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
+tl::expected<void, std::string> GetLevelMTypes();
+tl::expected<size_t, std::string> AddMonsterType(_monster_id type, placeflag placeflag);
+inline tl::expected<size_t, std::string> AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
 {
 	return AddMonsterType(UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype, placeflag);
 }
-void InitMonsterSND(CMonster &monsterType);
-void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData = {});
-void InitAllMonsterGFX();
+tl::expected<void, std::string> InitMonsterSND(CMonster &monsterType);
+tl::expected<void, std::string> InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData = {});
+tl::expected<void, std::string> InitAllMonsterGFX();
 void WeakenNaKrul();
 void InitGolems();
-void InitMonsters();
-void SetMapMonsters(const uint16_t *dunData, Point startPosition);
+tl::expected<void, std::string> InitMonsters();
+tl::expected<void, std::string> SetMapMonsters(const uint16_t *dunData, Point startPosition);
 Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
 /**
  * @brief Spawns a new monsters (dynamically/not on level load).
@@ -534,7 +536,7 @@ bool DirOK(const Monster &monster, Direction mdir);
 bool PosOkMissile(Point position);
 bool LineClearMissile(Point startPoint, Point endPoint);
 bool LineClear(tl::function_ref<bool(Point)> clear, Point startPoint, Point endPoint);
-void SyncMonsterAnim(Monster &monster);
+tl::expected<void, std::string> SyncMonsterAnim(Monster &monster);
 void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();

@@ -62,6 +62,9 @@ bool Init(std::string_view caption, std::string_view text, bool error, bool rend
 				LogError("{}", SDL_GetError());
 		}
 	}
+	if (!IsHardwareCursor() && !ArtCursor) {
+		ArtCursor = LoadPcx("ui_art\\cursor", /*transparentColor=*/0);
+	}
 	LoadDialogButtonGraphics();
 
 	OptionalClxSprite dialogSprite = LoadDialogSprite(!caption.empty(), error);

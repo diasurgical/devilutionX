@@ -7,6 +7,7 @@
 
 #include <array>
 #include <cstdint>
+#include <string>
 #include <vector>
 
 #include <expected.hpp>
@@ -17,6 +18,7 @@
 #include "missiles.h"
 #include "mpq/mpq_common.hpp"
 #include "utils/file_name_generator.hpp"
+#include "utils/status_macros.hpp"
 #include "utils/str_cat.hpp"
 
 #ifdef UNPACKED_MPQS
@@ -397,28 +399,31 @@ uint8_t MissileFileData::animLen(uint8_t dir) const
 	return MissileAnimLengths[animLenIdx][dir];
 }
 
-void MissileFileData::LoadGFX()
+tl::expected<void, std::string> MissileFileData::LoadGFX()
 {
 	if (sprites)
-		return;
+		return {};
 
 	if (name[0] == '\0')
-		return;
+		return {};
 
 #ifdef UNPACKED_MPQS
 	char path[MaxMpqPathSize];
 	*BufCopy(path, "missiles\\", name, ".clx") = '\0';
-	sprites.emplace(LoadClxListOrSheet(path));
+	ASSIGN_OR_RETURN(sprites, LoadClxListOrSheetWithStatus(path));
 #else
 	if (animFAmt == 1) {
 		char path[MaxMpqPathSize];
 		*BufCopy(path, "missiles\\", name) = '\0';
-		sprites.emplace(OwnedClxSpriteListOrSheet { LoadCl2(path, animWidth) });
+		ASSIGN_OR_RETURN(OwnedClxSpriteList spriteList, LoadCl2WithStatus(path, animWidth));
+		sprites.emplace(OwnedClxSpriteListOrSheet { std::move(spriteList) });
 	} else {
 		FileNameGenerator pathGenerator({ "missiles\\", name }, DEVILUTIONX_CL2_EXT);
-		sprites.emplace(OwnedClxSpriteListOrSheet { LoadMultipleCl2Sheet<16>(pathGenerator, animFAmt, animWidth) });
+		ASSIGN_OR_RETURN(OwnedClxSpriteSheet spriteSheet, LoadMultipleCl2Sheet<16>(pathGenerator, animFAmt, animWidth));
+		sprites.emplace(OwnedClxSpriteListOrSheet { std::move(spriteSheet) });
 	}
 #endif
+	return {};
 }
 
 MissileFileData &GetMissileSpriteData(MissileGraphicID graphicId)
@@ -437,18 +442,19 @@ const MissileData &GetMissileData(MissileID missileId)
 	return MissilesData[static_cast<std::underlying_type_t<MissileID>>(missileId)];
 }
 
-void InitMissileGFX(bool loadHellfireGraphics)
+tl::expected<void, std::string> InitMissileGFX(bool loadHellfireGraphics)
 {
 	if (HeadlessMode)
-		return;
+		return {};
 
 	for (size_t mi = 0; mi < MissileSpriteData.size(); ++mi) {
 		if (!loadHellfireGraphics && mi >= static_cast<uint8_t>(MissileGraphicID::HorkSpawn))
 			break;
 		if (MissileSpriteData[mi].flags == MissileGraphicsFlags::MonsterOwned)
 			continue;
-		MissileSpriteData[mi].LoadGFX();
+		RETURN_IF_ERROR(MissileSpriteData[mi].LoadGFX());
 	}
+	return {};
 }
 
 void FreeMissileGFX()

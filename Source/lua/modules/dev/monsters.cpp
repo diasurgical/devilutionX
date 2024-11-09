@@ -58,7 +58,9 @@ std::string DebugCmdSpawnUniqueMonster(std::string name, std::optional<unsigned>
 	if (!found) {
 		if (LevelMonsterTypeCount == MaxLvlMTypes)
 			LevelMonsterTypeCount--; // we are running out of monster types, so override last used monster type
-		id = AddMonsterType(uniqueIndex, PLACE_SCATTER);
+		tl::expected<size_t, std::string> idResult = AddMonsterType(uniqueIndex, PLACE_SCATTER);
+		if (!idResult.has_value()) return std::move(idResult).error();
+		id = idResult.value();
 		CMonster &monsterType = LevelMonsterTypes[id];
 		InitMonsterGFX(monsterType);
 		monsterType.corpseId = 1;
@@ -131,7 +133,9 @@ std::string DebugCmdSpawnMonster(std::string name, std::optional<unsigned> count
 	if (!found) {
 		if (LevelMonsterTypeCount == MaxLvlMTypes)
 			LevelMonsterTypeCount--; // we are running out of monster types, so override last used monster type
-		id = AddMonsterType(static_cast<_monster_id>(mtype), PLACE_SCATTER);
+		tl::expected<size_t, std::string> idResult = AddMonsterType(static_cast<_monster_id>(mtype), PLACE_SCATTER);
+		if (!idResult.has_value()) return std::move(idResult).error();
+		id = idResult.value();
 		CMonster &monsterType = LevelMonsterTypes[id];
 		InitMonsterGFX(monsterType);
 		monsterType.corpseId = 1;

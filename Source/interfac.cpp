@@ -6,8 +6,10 @@
 
 #include <cstdint>
 #include <optional>
+#include <string>
 
 #include <SDL.h>
+#include <expected.hpp>
 
 #include "control.h"
 #include "engine.h"
@@ -236,11 +238,12 @@ void DoLoad(interface_mode uMsg)
 	IncProgress();
 
 	Player &myPlayer = *MyPlayer;
+	tl::expected<void, std::string> loadResult;
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
 		IncProgress(2);
-		LoadGame(true);
-		IncProgress(2);
+		loadResult = LoadGame(true);
+		if (loadResult.has_value()) IncProgress(2);
 		break;
 	case WM_DIABNEWGAME:
 		myPlayer.pOriginalCathedral = !gbIsHellfire;
@@ -249,8 +252,8 @@ void DoLoad(interface_mode uMsg)
 		IncProgress();
 		pfile_remove_temp_files();
 		IncProgress();
-		LoadGameLevel(true, ENTRY_MAIN);
-		IncProgress();
+		loadResult = LoadGameLevel(true, ENTRY_MAIN);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABNEXTLVL:
 		IncProgress();
@@ -265,8 +268,8 @@ void DoLoad(interface_mode uMsg)
 		currlevel = myPlayer.plrlevel;
 		leveltype = GetLevelType(currlevel);
 		IncProgress();
-		LoadGameLevel(false, ENTRY_MAIN);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_MAIN);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABPREVLVL:
 		IncProgress();
@@ -281,8 +284,8 @@ void DoLoad(interface_mode uMsg)
 		leveltype = GetLevelType(currlevel);
 		assert(myPlayer.isOnActiveLevel());
 		IncProgress();
-		LoadGameLevel(false, ENTRY_PREV);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_PREV);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABSETLVL:
 		// Note: ReturnLevel, ReturnLevelType and ReturnLvlPosition is only set to ensure vanilla compatibility
@@ -301,8 +304,8 @@ void DoLoad(interface_mode uMsg)
 		currlevel = static_cast<uint8_t>(setlvlnum);
 		FreeGameMem();
 		IncProgress();
-		LoadGameLevel(false, ENTRY_SETLVL);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_SETLVL);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABRTNLVL:
 		IncProgress();
@@ -317,8 +320,8 @@ void DoLoad(interface_mode uMsg)
 		IncProgress();
 		currlevel = GetMapReturnLevel();
 		leveltype = GetLevelType(currlevel);
-		LoadGameLevel(false, ENTRY_RTNLVL);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_RTNLVL);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABWARPLVL:
 		IncProgress();
@@ -331,8 +334,8 @@ void DoLoad(interface_mode uMsg)
 		FreeGameMem();
 		GetPortalLevel();
 		IncProgress();
-		LoadGameLevel(false, ENTRY_WARPLVL);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_WARPLVL);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABTOWNWARP:
 		IncProgress();
@@ -347,8 +350,8 @@ void DoLoad(interface_mode uMsg)
 		currlevel = myPlayer.plrlevel;
 		leveltype = GetLevelType(currlevel);
 		IncProgress();
-		LoadGameLevel(false, ENTRY_TWARPDN);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_TWARPDN);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABTWARPUP:
 		IncProgress();
@@ -362,8 +365,8 @@ void DoLoad(interface_mode uMsg)
 		currlevel = myPlayer.plrlevel;
 		leveltype = GetLevelType(currlevel);
 		IncProgress();
-		LoadGameLevel(false, ENTRY_TWARPUP);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_TWARPUP);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	case WM_DIABRETOWN:
 		IncProgress();
@@ -378,11 +381,20 @@ void DoLoad(interface_mode uMsg)
 		currlevel = myPlayer.plrlevel;
 		leveltype = GetLevelType(currlevel);
 		IncProgress();
-		LoadGameLevel(false, ENTRY_MAIN);
-		IncProgress();
+		loadResult = LoadGameLevel(false, ENTRY_MAIN);
+		if (loadResult.has_value()) IncProgress();
 		break;
 	default:
-		app_fatal("Unknown progress mode");
+		loadResult = tl::make_unexpected<std::string>("Unknown progress mode");
+		break;
+	}
+
+	if (!loadResult.has_value()) {
+		SDL_Event event;
+		event.type = CustomEventToSdlEvent(WM_ERROR);
+		event.user.data1 = new std::string(std::move(loadResult).error());
+		SDL_PushEvent(&event);
+		return;
 	}
 
 	SDL_Event event;
@@ -412,6 +424,9 @@ void ProgressEventHandler(const SDL_Event &event, uint16_t modState)
 			DrawCutsceneForeground();
 			drawnProgress = sgdwProgress;
 		}
+		break;
+	case WM_ERROR:
+		app_fatal(*static_cast<std::string *>(event.user.data1));
 		break;
 	case WM_DONE: {
 		// We may have loaded a new palette.

@@ -10,6 +10,7 @@
 #include <string_view>
 
 #include <ankerl/unordered_dense.h>
+#include <expected.hpp>
 #include <fmt/core.h>
 
 #include "codec.h"
@@ -778,10 +779,10 @@ void pfile_save_level()
 	SaveLevel(saveWriter);
 }
 
-void pfile_convert_levels()
+tl::expected<void, std::string> pfile_convert_levels()
 {
 	SaveWriter saveWriter = GetSaveWriter(gSaveNumber);
-	ConvertLevels(saveWriter);
+	return ConvertLevels(saveWriter);
 }
 
 void pfile_remove_temp_files()

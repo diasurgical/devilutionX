@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <cstdint>
 #include <numeric>
+#include <string>
+
+#include <expected.hpp>
 
 #include "automap.h"
 #include "diablo.h"
@@ -15,6 +18,7 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "player.h"
 #include "utils/attributes.h"
+#include "utils/status_macros.hpp"
 
 namespace devilution {
 
@@ -260,11 +264,11 @@ void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool
 	}
 }
 
-void LoadTrns()
+tl::expected<void, std::string> LoadTrns()
 {
-	LoadFileInMem("plrgfx\\infra.trn", InfravisionTable);
-	LoadFileInMem("plrgfx\\stone.trn", StoneTable);
-	LoadFileInMem("gendata\\pause.trn", PauseTable);
+	RETURN_IF_ERROR(LoadFileInMemWithStatus("plrgfx\\infra.trn", InfravisionTable));
+	RETURN_IF_ERROR(LoadFileInMemWithStatus("plrgfx\\stone.trn", StoneTable));
+	return LoadFileInMemWithStatus("gendata\\pause.trn", PauseTable);
 }
 
 void MakeLightTable()

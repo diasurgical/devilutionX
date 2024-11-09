@@ -11,8 +11,10 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <string>
 
 #include <SDL.h>
+#include <expected.hpp>
 
 #include "engine/assets.hpp"
 #include "init.h"
@@ -20,6 +22,7 @@
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/sdl_mutex.h"
+#include "utils/status_macros.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/stubs.h"
@@ -46,7 +49,7 @@ std::string GetMp3Path(const char *path)
 	return mp3Path;
 }
 
-bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample &result)
+tl::expected<void, std::string> LoadAudioFile(const char *path, bool stream, SoundSample &result)
 {
 	bool isMp3 = true;
 	std::string foundPath = GetMp3Path(path);
@@ -56,8 +59,9 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 		foundPath = path;
 		isMp3 = false;
 	}
-	if (!ref.ok())
-		ErrDlg("Audio file not found", StrCat(path, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
+	if (!ref.ok()) {
+		return tl::make_unexpected(StrCat("Audio file not found\n", path, "\n", SDL_GetError(), "\n" __FILE__ ":", __LINE__));
+	}
 
 #ifdef STREAM_ALL_AUDIO_MIN_FILE_SIZE
 #if STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
@@ -73,10 +77,7 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 
 	if (stream) {
 		if (result.SetChunkStream(foundPath, isMp3, /*logErrors=*/true) != 0) {
-			if (errorDialog) {
-				ErrDlg("Failed to load audio file", StrCat(foundPath, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
-			}
-			return false;
+			return tl::make_unexpected(StrCat("Failed to load audio file\n", foundPath, "\n", SDL_GetError(), "\n" __FILE__ ":", __LINE__));
 		}
 	} else {
 #if !defined(STREAM_ALL_AUDIO_MIN_FILE_SIZE) || STREAM_ALL_AUDIO_MIN_FILE_SIZE == 0
@@ -84,24 +85,18 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 #endif
 		AssetHandle handle = OpenAsset(std::move(ref));
 		if (!handle.ok()) {
-			if (errorDialog)
-				ErrDlg("Failed to load audio file", StrCat(foundPath, "\n", SDL_GetError(), "\n"), __FILE__, __LINE__);
-			return false;
+			return tl::make_unexpected(StrCat("Failed to load audio file\n", foundPath, "\n", SDL_GetError(), "\n" __FILE__ ":", __LINE__));
 		}
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(size);
 		if (!handle.read(waveFile.get(), size)) {
-			if (errorDialog)
-				ErrDlg("Failed to read file", StrCat(foundPath, ": ", SDL_GetError()), __FILE__, __LINE__);
-			return false;
+			return tl::make_unexpected(StrCat("Failed to read file\n", foundPath, ": ", SDL_GetError(), __FILE__ ":", __LINE__));
 		}
 		const int error = result.SetChunk(waveFile, size, isMp3);
 		if (error != 0) {
-			if (errorDialog)
-				ErrSdl();
-			return false;
+			return tl::make_unexpected(SDL_GetError());
 		}
 	}
-	return true;
+	return {};
 }
 
 std::list<std::unique_ptr<SoundSample>> duplicateSounds;
@@ -185,14 +180,21 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	pSnd->start_tc = tc;
 }
 
-std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
+tl::expected<std::unique_ptr<TSnd>, std::string> SoundFileLoadWithStatus(const char *path, bool stream)
 {
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
 #ifndef NOSOUND
-	LoadAudioFile(path, stream, /*errorDialog=*/true, snd->DSB);
+	RETURN_IF_ERROR(LoadAudioFile(path, stream, snd->DSB));
 #endif
 	return snd;
+}
+
+std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
+{
+	tl::expected<std::unique_ptr<TSnd>, std::string> result = SoundFileLoadWithStatus(path, stream);
+	if (!result.has_value()) app_fatal(result.error());
+	return std::move(result).value();
 }
 
 TSnd::~TSnd()
@@ -281,7 +283,7 @@ void music_start(_music_id nTrack)
 #else
 	const bool stream = true;
 #endif
-	if (!LoadAudioFile(trackPath, stream, /*errorDialog=*/false, music)) {
+	if (!LoadAudioFile(trackPath, stream, music).has_value()) {
 		music_stop();
 		return;
 	}

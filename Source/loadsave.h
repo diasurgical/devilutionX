@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <expected.hpp>
+
 #include "pfile.h"
 #include "player.h"
 #include "utils/attributes.h"
@@ -34,14 +36,14 @@ void RemoveEmptyInventory(Player &player);
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
  */
-void LoadGame(bool firstflag);
+tl::expected<void, std::string> LoadGame(bool firstflag);
 void SaveHotkeys(SaveWriter &saveWriter, const Player &player);
 void SaveHeroItems(SaveWriter &saveWriter, Player &player);
 void SaveGameData(SaveWriter &saveWriter);
 void SaveGame();
 void SaveLevel(SaveWriter &saveWriter);
-void LoadLevel();
-void ConvertLevels(SaveWriter &saveWriter);
+tl::expected<void, std::string> LoadLevel();
+tl::expected<void, std::string> ConvertLevels(SaveWriter &saveWriter);
 void LoadStash();
 void SaveStash(SaveWriter &stashWriter);
 

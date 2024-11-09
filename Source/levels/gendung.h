@@ -325,7 +325,7 @@ struct Miniset {
 	return HasAnyOf(SOLData[dPiece[coords.x][coords.y]], property);
 }
 
-void LoadLevelSOLData();
+tl::expected<void, std::string> LoadLevelSOLData();
 void SetDungeonMicros();
 void DRLG_InitTrans();
 void DRLG_MRectTrans(WorldTilePosition origin, WorldTilePosition extent);

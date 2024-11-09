@@ -11,6 +11,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <expected.hpp>
 #include <function_ref.hpp>
 
 #include "automap.h"
@@ -65,7 +66,7 @@ void DoUnLight(Point position, uint8_t radius);
 void DoLighting(Point position, uint8_t radius, DisplacementOf<int8_t> offset);
 void DoUnVision(Point position, uint8_t radius);
 void DoVision(Point position, uint8_t radius, MapExplorationType doAutomap, bool visible);
-void LoadTrns();
+tl::expected<void, std::string> LoadTrns();
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();

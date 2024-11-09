@@ -7,9 +7,11 @@
 #include <cmath>
 #include <cstdint>
 #include <ctime>
+#include <string>
 
 #include <algorithm>
 
+#include <expected.hpp>
 #include <fmt/core.h>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -3671,10 +3673,10 @@ bool IsItemBlockingObjectAtPosition(Point position)
 	return false;
 }
 
-void LoadLevelObjects(uint16_t filesWidths[65])
+tl::expected<void, std::string> LoadLevelObjects(uint16_t filesWidths[65])
 {
 	if (HeadlessMode)
-		return;
+		return {};
 
 	for (const ObjectData objectData : AllObjects) {
 		if (leveltype == objectData.olvltype) {
@@ -3690,12 +3692,13 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
 		*BufCopy(filestr, "objects\\", ObjMasterLoadList[i]) = '\0';
-		pObjCels[numobjfiles] = LoadCel(filestr, filesWidths[i]);
+		ASSIGN_OR_RETURN(pObjCels[numobjfiles], LoadCelWithStatus(filestr, filesWidths[i]));
 		numobjfiles++;
 	}
+	return {};
 }
 
-void InitObjectGFX()
+tl::expected<void, std::string> InitObjectGFX()
 {
 	uint16_t filesWidths[65] = {};
 
@@ -3728,7 +3731,7 @@ void InitObjectGFX()
 		}
 	}
 
-	LoadLevelObjects(filesWidths);
+	return LoadLevelObjects(filesWidths);
 }
 
 void FreeObjectGFX()

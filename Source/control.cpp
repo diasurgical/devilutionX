@@ -56,6 +56,7 @@
 #include "utils/screen_reader.hpp"
 #include "utils/sdl_geometry.h"
 #include "utils/sdl_ptrs.h"
+#include "utils/status_macros.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
@@ -876,22 +877,22 @@ void UpdateLifeManaPercent()
 	MyPlayer->UpdateHitPointPercentage();
 }
 
-void InitMainPanel()
+tl::expected<void, std::string> InitMainPanel()
 {
 	if (!HeadlessMode) {
 		BottomBuffer.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + PanelPaddingHeight) * (IsChatAvailable() ? 2 : 1));
 		pManaBuff.emplace(88, 88);
 		pLifeBuff.emplace(88, 88);
 
-		LoadCharPanel();
-		LoadLargeSpellIcons();
+		RETURN_IF_ERROR(LoadCharPanel());
+		RETURN_IF_ERROR(LoadLargeSpellIcons());
 		{
-			const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\panel8", GetMainPanel().size.width);
+			ASSIGN_OR_RETURN(const OwnedClxSpriteList sprite, LoadCelWithStatus("ctrlpan\\panel8", GetMainPanel().size.width));
 			ClxDraw(*BottomBuffer, { 0, (GetMainPanel().size.height + PanelPaddingHeight) - 1 }, sprite[0]);
 		}
 		{
 			const Point bulbsPosition { 0, 87 };
-			const OwnedClxSpriteList statusPanel = LoadCel("ctrlpan\\p8bulbs", 88);
+			ASSIGN_OR_RETURN(const OwnedClxSpriteList statusPanel, LoadCelWithStatus("ctrlpan\\p8bulbs", 88));
 			ClxDraw(*pLifeBuff, bulbsPosition, statusPanel[0]);
 			ClxDraw(*pManaBuff, bulbsPosition, statusPanel[1]);
 		}
@@ -901,7 +902,7 @@ void InitMainPanel()
 	if (IsChatAvailable()) {
 		if (!HeadlessMode) {
 			{
-				const OwnedClxSpriteList sprite = LoadCel("ctrlpan\\talkpanl", GetMainPanel().size.width);
+				ASSIGN_OR_RETURN(const OwnedClxSpriteList sprite, LoadCelWithStatus("ctrlpan\\talkpanl", GetMainPanel().size.width));
 				ClxDraw(*BottomBuffer, { 0, (GetMainPanel().size.height + PanelPaddingHeight) * 2 - 1 }, sprite[0]);
 			}
 			multiButtons = LoadCel("ctrlpan\\p8but2", 33);
@@ -917,11 +918,11 @@ void InitMainPanel()
 	MainPanelFlag = false;
 	LevelButtonDown = false;
 	if (!HeadlessMode) {
-		LoadMainPanel();
-		pMainPanelButtons = LoadCel("ctrlpan\\panel8bu", 71);
+		RETURN_IF_ERROR(LoadMainPanel());
+		ASSIGN_OR_RETURN(pMainPanelButtons, LoadCelWithStatus("ctrlpan\\panel8bu", 71));
 
 		static const uint16_t CharButtonsFrameWidths[9] { 95, 41, 41, 41, 41, 41, 41, 41, 41 };
-		pChrButtons = LoadCel("data\\charbut", CharButtonsFrameWidths);
+		ASSIGN_OR_RETURN(pChrButtons, LoadCelWithStatus("data\\charbut", CharButtonsFrameWidths));
 	}
 	ResetMainPanelButtons();
 	if (!HeadlessMode)
@@ -939,14 +940,16 @@ void InitMainPanel()
 
 	if (!HeadlessMode) {
 		InitSpellBook();
-		pQLogCel = LoadCel("data\\quest", static_cast<uint16_t>(SidePanelSize.width));
-		GoldBoxBuffer = LoadCel("ctrlpan\\golddrop", 261);
+		ASSIGN_OR_RETURN(pQLogCel, LoadCelWithStatus("data\\quest", static_cast<uint16_t>(SidePanelSize.width)));
+		ASSIGN_OR_RETURN(GoldBoxBuffer, LoadCelWithStatus("ctrlpan\\golddrop", 261));
 	}
 	CloseGoldDrop();
 	CalculatePanelAreas();
 
 	if (!HeadlessMode)
 		InitModifierHints();
+
+	return {};
 }
 
 void DrawMainPanel(const Surface &out)
