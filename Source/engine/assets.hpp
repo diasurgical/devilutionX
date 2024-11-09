@@ -221,9 +221,11 @@ struct AssetHandle {
 };
 #endif
 
+std::string FailedToOpenFileErrorMessage(std::string_view path, std::string_view error);
+
 [[noreturn]] inline void FailedToOpenFileError(std::string_view path, std::string_view error)
 {
-	app_fatal(fmt::format(fmt::runtime(_("Failed to open file:\n{:s}\n\n{:s}\n\nThe MPQ file(s) might be damaged. Please check the file integrity.")), path, error));
+	app_fatal(FailedToOpenFileErrorMessage(path, error));
 }
 
 inline bool ValidatAssetRef(std::string_view path, const AssetRef &ref)

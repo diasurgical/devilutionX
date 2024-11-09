@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+
+#include <expected.hpp>
 
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
@@ -106,10 +109,10 @@ void DrawSmallSpellIconBorder(const Surface &out, Point position);
  */
 void SetSpellTrans(SpellType t);
 
-void LoadLargeSpellIcons();
+tl::expected<void, std::string> LoadLargeSpellIcons();
 void FreeLargeSpellIcons();
 
-void LoadSmallSpellIcons();
+tl::expected<void, std::string> LoadSmallSpellIcons();
 void FreeSmallSpellIcons();
 
 } // namespace devilution

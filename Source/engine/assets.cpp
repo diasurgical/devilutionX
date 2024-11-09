@@ -233,4 +233,9 @@ tl::expected<AssetData, std::string> LoadAsset(std::string_view path)
 	return AssetData { std::move(data), size };
 }
 
+std::string FailedToOpenFileErrorMessage(std::string_view path, std::string_view error)
+{
+	return fmt::format(fmt::runtime(_("Failed to open file:\n{:s}\n\n{:s}\n\nThe MPQ file(s) might be damaged. Please check the file integrity.")), path, error);
+}
+
 } // namespace devilution

@@ -84,24 +84,25 @@ const SpellIcon SpellITbl[] = {
 
 } // namespace
 
-void LoadLargeSpellIcons()
+tl::expected<void, std::string> LoadLargeSpellIcons()
 {
 	if (!gbIsHellfire) {
 #ifdef UNPACKED_MPQS
-		LargeSpellIcons = LoadClx("ctrlpan\\spelicon_fg.clx");
-		LargeSpellIconsBackground = LoadClx("ctrlpan\\spelicon_bg.clx");
+		ASSIGN_OR_RETURN(LargeSpellIcons, LoadClxWithStatus("ctrlpan\\spelicon_fg.clx"));
+		ASSIGN_OR_RETURN(LargeSpellIconsBackground, LoadClxWithStatus("ctrlpan\\spelicon_bg.clx"));
 #else
-		LargeSpellIcons = LoadCel("ctrlpan\\spelicon", SPLICONLENGTH);
+		ASSIGN_OR_RETURN(LargeSpellIcons, LoadCelWithStatus("ctrlpan\\spelicon", SPLICONLENGTH));
 #endif
 	} else {
 #ifdef UNPACKED_MPQS
-		LargeSpellIcons = LoadClx("data\\spelicon_fg.clx");
-		LargeSpellIconsBackground = LoadClx("data\\spelicon_bg.clx");
+		ASSIGN_OR_RETURN(LargeSpellIcons, LoadClxWithStatus("data\\spelicon_fg.clx"));
+		ASSIGN_OR_RETURN(LargeSpellIconsBackground, LoadClxWithStatus("data\\spelicon_bg.clx"));
 #else
-		LargeSpellIcons = LoadCel("data\\spelicon", SPLICONLENGTH);
+		ASSIGN_OR_RETURN(LargeSpellIcons, LoadCelWithStatus("data\\spelicon", SPLICONLENGTH));
 #endif
 	}
 	SetSpellTrans(SpellType::Skill);
+	return {};
 }
 
 void FreeLargeSpellIcons()
@@ -112,14 +113,15 @@ void FreeLargeSpellIcons()
 	LargeSpellIcons = std::nullopt;
 }
 
-void LoadSmallSpellIcons()
+tl::expected<void, std::string> LoadSmallSpellIcons()
 {
 #ifdef UNPACKED_MPQS
-	SmallSpellIcons = LoadClx("data\\spelli2_fg.clx");
-	SmallSpellIconsBackground = LoadClx("data\\spelli2_bg.clx");
+	ASSIGN_OR_RETURN(SmallSpellIcons, LoadClxWithStatus("data\\spelli2_fg.clx"));
+	ASSIGN_OR_RETURN(SmallSpellIconsBackground, LoadClxWithStatus("data\\spelli2_bg.clx"));
 #else
-	SmallSpellIcons = LoadCel("data\\spelli2", 37);
+	ASSIGN_OR_RETURN(SmallSpellIcons, LoadCelWithStatus("data\\spelli2", 37));
 #endif
+	return {};
 }
 
 void FreeSmallSpellIcons()

@@ -2,6 +2,9 @@
 
 #include <cstdint>
 #include <optional>
+#include <string>
+
+#include <expected.hpp>
 
 #include "control.h"
 #include "engine/clx_sprite.hpp"
@@ -12,6 +15,7 @@
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
+#include "utils/status_macros.hpp"
 #include "utils/surface_to_clx.hpp"
 
 namespace devilution {
@@ -66,12 +70,12 @@ void RenderMainButton(const Surface &out, int buttonId, std::string_view text, i
 
 } // namespace
 
-void LoadMainPanel()
+tl::expected<void, std::string> LoadMainPanel()
 {
 	std::optional<OwnedSurface> out;
 	constexpr uint16_t NumButtonSprites = 6;
 	{
-		OptionalOwnedClxSpriteList background = LoadClx("data\\panel8bucp.clx");
+		ASSIGN_OR_RETURN(OptionalOwnedClxSpriteList background, LoadClxWithStatus("data\\panel8bucp.clx"));
 		out.emplace((*background)[0].width(), (*background)[0].height() * NumButtonSprites);
 		int y = 0;
 		for (ClxSprite sprite : ClxSpriteList(*background)) {
@@ -134,6 +138,7 @@ void LoadMainPanel()
 	PanelButtonDownGrime = std::nullopt;
 	PanelButtonGrime = std::nullopt;
 	PanelButton = std::nullopt;
+	return {};
 }
 
 void FreeMainPanel()

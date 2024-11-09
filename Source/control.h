@@ -8,9 +8,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
+#include <string>
 #include <string_view>
 
 #include <SDL.h>
+#include <expected.hpp>
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -127,7 +129,7 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
  */
 void UpdateLifeManaPercent();
 
-void InitMainPanel();
+tl::expected<void, std::string> InitMainPanel();
 void DrawMainPanel(const Surface &out);
 
 /**

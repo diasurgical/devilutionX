@@ -4,10 +4,12 @@
 #include <cstdint>
 #include <memory>
 #include <stack>
+#include <string>
 #include <utility>
 #include <vector>
 
 #include <ankerl/unordered_dense.h>
+#include <expected.hpp>
 
 #include "engine/clx_sprite.hpp"
 #include "engine/load_file.hpp"
@@ -24,6 +26,7 @@
 #include "options.h"
 #include "utils/bitset2d.hpp"
 #include "utils/log.hpp"
+#include "utils/status_macros.hpp"
 
 namespace devilution {
 
@@ -426,17 +429,18 @@ void CreateDungeon(uint32_t rseed, lvl_entry entry)
 	Make_SetPC(SetPiece);
 }
 
-void LoadLevelSOLData()
+tl::expected<void, std::string> LoadLevelSOLData()
 {
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		if (gbIsHellfire)
-			LoadFileInMem("nlevels\\towndata\\town.sol", SOLData);
-		else
-			LoadFileInMem("levels\\towndata\\town.sol", SOLData);
+		if (gbIsHellfire) {
+			RETURN_IF_ERROR(LoadFileInMemWithStatus("nlevels\\towndata\\town.sol", SOLData));
+		} else {
+			RETURN_IF_ERROR(LoadFileInMemWithStatus("levels\\towndata\\town.sol", SOLData));
+		}
 		break;
 	case DTYPE_CATHEDRAL:
-		LoadFileInMem("levels\\l1data\\l1.sol", SOLData);
+		RETURN_IF_ERROR(LoadFileInMemWithStatus("levels\\l1data\\l1.sol", SOLData));
 		// Fix incorrectly marked arched tiles
 		SOLData[9] |= TileProperties::BlockLight | TileProperties::BlockMissile;
 		SOLData[15] |= TileProperties::BlockLight | TileProperties::BlockMissile;
@@ -464,28 +468,29 @@ void LoadLevelSOLData()
 		SOLData[450] |= TileProperties::BlockLight | TileProperties::BlockMissile;
 		break;
 	case DTYPE_CATACOMBS:
-		LoadFileInMem("levels\\l2data\\l2.sol", SOLData);
+		RETURN_IF_ERROR(LoadFileInMemWithStatus("levels\\l2data\\l2.sol", SOLData));
 		break;
 	case DTYPE_CAVES:
-		LoadFileInMem("levels\\l3data\\l3.sol", SOLData);
+		RETURN_IF_ERROR(LoadFileInMemWithStatus("levels\\l3data\\l3.sol", SOLData));
 		// The graphics for tile 48 sub-tile 171 frame 461 are partly incorrect, as they
 		// have a few pixels that should belong to the solid tile 49 instead.
 		// Marks the sub-tile as "BlockMissile" to avoid treating it as a floor during rendering.
 		SOLData[170] |= TileProperties::BlockMissile;
 		break;
 	case DTYPE_HELL:
-		LoadFileInMem("levels\\l4data\\l4.sol", SOLData);
+		RETURN_IF_ERROR(LoadFileInMemWithStatus("levels\\l4data\\l4.sol", SOLData));
 		SOLData[210] = TileProperties::None; // Tile is incorrectly marked as being solid
 		break;
 	case DTYPE_NEST:
-		LoadFileInMem("nlevels\\l6data\\l6.sol", SOLData);
+		RETURN_IF_ERROR(LoadFileInMemWithStatus("nlevels\\l6data\\l6.sol", SOLData));
 		break;
 	case DTYPE_CRYPT:
-		LoadFileInMem("nlevels\\l5data\\l5.sol", SOLData);
+		RETURN_IF_ERROR(LoadFileInMemWithStatus("nlevels\\l5data\\l5.sol", SOLData));
 		break;
 	default:
-		app_fatal("LoadLevelSOLData");
+		return tl::make_unexpected("LoadLevelSOLData");
 	}
+	return {};
 }
 
 void SetDungeonMicros()

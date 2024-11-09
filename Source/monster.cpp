@@ -12,8 +12,10 @@
 #include <algorithm>
 #include <array>
 #include <numeric>
+#include <string>
 #include <string_view>
 
+#include <expected.hpp>
 #include <fmt/core.h>
 #include <fmt/format.h>
 
@@ -48,6 +50,7 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/static_vector.hpp"
+#include "utils/status_macros.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -405,7 +408,7 @@ Point GetUniqueMonstPosition(UniqueMonsterType uniqindex)
 	return position;
 }
 
-void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspacksize)
+tl::expected<void, std::string> PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspacksize)
 {
 	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
 	const size_t typeIndex = GetMonsterTypeIndex(uniqueMonsterData.mtype);
@@ -414,7 +417,7 @@ void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspa
 
 	Monster &monster = Monsters[ActiveMonsterCount];
 	ActiveMonsterCount++;
-	PrepareUniqueMonst(monster, uniqindex, minionType, bosspacksize, uniqueMonsterData);
+	return PrepareUniqueMonst(monster, uniqindex, minionType, bosspacksize, uniqueMonsterData);
 }
 
 void ClearMVars(Monster &monster)
@@ -445,7 +448,7 @@ void ClrAllMonsters()
 	}
 }
 
-void PlaceUniqueMonsters()
+tl::expected<void, std::string> PlaceUniqueMonsters()
 {
 	for (size_t u = 0; u < UniqueMonstersData.size(); ++u) {
 		if (UniqueMonstersData[u].mlevel != currlevel)
@@ -467,21 +470,22 @@ void PlaceUniqueMonsters()
 		if (uniqueType == UniqueMonsterType::WarlordOfBlood && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
 			continue;
 
-		PlaceUniqueMonst(uniqueType, minionType, 8);
+		RETURN_IF_ERROR(PlaceUniqueMonst(uniqueType, minionType, 8));
 	}
+	return {};
 }
 
-void PlaceQuestMonsters()
+tl::expected<void, std::string> PlaceQuestMonsters()
 {
 	if (!setlevel) {
 		if (Quests[Q_BUTCHER].IsAvailable()) {
-			PlaceUniqueMonst(UniqueMonsterType::Butcher, 0, 0);
+			RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::Butcher, 0, 0));
 		}
 
 		if (currlevel == Quests[Q_SKELKING]._qlevel && UseMultiplayerQuests()) {
 			for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 				if (IsSkel(LevelMonsterTypes[i].type)) {
-					PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, i, 30);
+					RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, i, 30));
 					break;
 				}
 			}
@@ -489,40 +493,40 @@ void PlaceQuestMonsters()
 
 		if (Quests[Q_LTBANNER].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("levels\\l1data\\banner1.dun");
-			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
+			RETURN_IF_ERROR(SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld()));
 		}
 		if (Quests[Q_BLOOD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blood2.dun");
-			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
+			RETURN_IF_ERROR(SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld()));
 		}
 		if (Quests[Q_BLIND].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blind2.dun");
-			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
+			RETURN_IF_ERROR(SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld()));
 		}
 		if (Quests[Q_ANVIL].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("levels\\l3data\\anvil.dun");
-			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld() + Displacement { 2, 2 });
+			RETURN_IF_ERROR(SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld() + Displacement { 2, 2 }));
 		}
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
-			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
-			AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_SCATTER);
+			RETURN_IF_ERROR(SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld()));
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_SCATTER));
 		}
 		if (Quests[Q_VEIL].IsAvailable()) {
-			AddMonsterType(UniqueMonsterType::Lachdan, PLACE_SCATTER);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::Lachdan, PLACE_SCATTER));
 		}
 		if (Quests[Q_ZHAR].IsAvailable() && zharlib == -1) {
 			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
 		if (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests()) {
-			AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
-			AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
-			PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
-			PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
-			PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE));
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE));
+			RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0));
+			RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0));
+			RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0));
 			auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
-			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
+			RETURN_IF_ERROR(SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld()));
 		}
 
 		if (currlevel == 24) {
@@ -538,38 +542,40 @@ void PlaceQuestMonsters()
 				}
 			}
 			if (UberDiabloMonsterIndex == -1)
-				PlaceUniqueMonst(UniqueMonsterType::NaKrul, 0, 0);
+				RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::NaKrul, 0, 0));
 		}
 	} else if (setlvlnum == SL_SKELKING) {
-		PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, 0, 0);
+		RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, 0, 0));
 	} else if (setlvlnum == SL_VILEBETRAYER) {
-		AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonsterType::BlackJade, PLACE_UNIQUE);
-		PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
-		PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
-		PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
+		RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE));
+		RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE));
+		RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::BlackJade, PLACE_UNIQUE));
+		RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0));
+		RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0));
+		RETURN_IF_ERROR(PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0));
 	}
+	return {};
 }
 
-void LoadDiabMonsts()
+tl::expected<void, std::string> LoadDiabMonsts()
 {
 	{
-		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab1.dun");
-		SetMapMonsters(dunData.get(), DiabloQuad1.megaToWorld());
+		ASSIGN_OR_RETURN(auto dunData, LoadFileInMemWithStatus<uint16_t>("levels\\l4data\\diab1.dun"));
+		RETURN_IF_ERROR(SetMapMonsters(dunData.get(), DiabloQuad1.megaToWorld()));
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab2a.dun");
-		SetMapMonsters(dunData.get(), DiabloQuad2.megaToWorld());
+		ASSIGN_OR_RETURN(auto dunData, LoadFileInMemWithStatus<uint16_t>("levels\\l4data\\diab2a.dun"));
+		RETURN_IF_ERROR(SetMapMonsters(dunData.get(), DiabloQuad2.megaToWorld()));
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab3a.dun");
-		SetMapMonsters(dunData.get(), DiabloQuad3.megaToWorld());
+		ASSIGN_OR_RETURN(auto dunData, LoadFileInMemWithStatus<uint16_t>("levels\\l4data\\diab3a.dun"));
+		RETURN_IF_ERROR(SetMapMonsters(dunData.get(), DiabloQuad3.megaToWorld()));
 	}
 	{
-		auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\diab4a.dun");
-		SetMapMonsters(dunData.get(), DiabloQuad4.megaToWorld());
+		ASSIGN_OR_RETURN(auto dunData, LoadFileInMemWithStatus<uint16_t>("levels\\l4data\\diab4a.dun"));
+		RETURN_IF_ERROR(SetMapMonsters(dunData.get(), DiabloQuad4.megaToWorld()));
 	}
+	return {};
 }
 
 void DeleteMonster(size_t activeIndex)
@@ -3126,7 +3132,7 @@ void EnsureMonsterIndexIsActive(size_t monsterId)
 
 } // namespace
 
-size_t AddMonsterType(_monster_id type, placeflag placeflag)
+tl::expected<size_t, std::string> AddMonsterType(_monster_id type, placeflag placeflag)
 {
 	const size_t typeIndex = GetMonsterTypeIndex(type);
 	CMonster &monsterType = LevelMonsterTypes[typeIndex];
@@ -3147,21 +3153,22 @@ size_t AddMonsterType(_monster_id type, placeflag placeflag)
 			}
 		}
 
-		InitMonsterSND(monsterType);
+		RETURN_IF_ERROR(InitMonsterSND(monsterType));
 	}
 
 	monsterType.placeFlags |= placeflag;
 	return typeIndex;
 }
 
-void InitTRNForUniqueMonster(Monster &monster)
+tl::expected<void, std::string> InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
 	*BufCopy(filestr, R"(monsters\monsters\)", UniqueMonstersData[static_cast<size_t>(monster.uniqueType)].mTrnName, ".trn") = '\0';
-	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
+	ASSIGN_OR_RETURN(monster.uniqueMonsterTRN, LoadFileInMemWithStatus<uint8_t>(filestr));
+	return {};
 }
 
-void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t minionType, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
+tl::expected<void, std::string> PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t minionType, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
 	monster.uniqueType = monsterType;
 	monster.maxHitPoints = uniqueMonsterData.mmaxhp << 6;
@@ -3219,7 +3226,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 	}
 
-	InitTRNForUniqueMonster(monster);
+	RETURN_IF_ERROR(InitTRNForUniqueMonster(monster));
 	monster.uniqTrans = uniquetrans++;
 
 	if (uniqueMonsterData.customToHit != 0) {
@@ -3251,6 +3258,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 		monster.mode = MonsterMode::Stand;
 	}
+	return {};
 }
 
 void InitLevelMonsters()
@@ -3270,46 +3278,46 @@ void InitLevelMonsters()
 	uniquetrans = 0;
 }
 
-void GetLevelMTypes()
+tl::expected<void, std::string> GetLevelMTypes()
 {
-	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
+	RETURN_IF_ERROR(AddMonsterType(MT_GOLEM, PLACE_SPECIAL));
 	if (currlevel == 16) {
-		AddMonsterType(MT_ADVOCATE, PLACE_SCATTER);
-		AddMonsterType(MT_RBLACK, PLACE_SCATTER);
-		AddMonsterType(MT_DIABLO, PLACE_SPECIAL);
-		return;
+		RETURN_IF_ERROR(AddMonsterType(MT_ADVOCATE, PLACE_SCATTER));
+		RETURN_IF_ERROR(AddMonsterType(MT_RBLACK, PLACE_SCATTER));
+		RETURN_IF_ERROR(AddMonsterType(MT_DIABLO, PLACE_SPECIAL));
+		return {};
 	}
 
 	if (currlevel == 18)
-		AddMonsterType(MT_HORKSPWN, PLACE_SCATTER);
+		RETURN_IF_ERROR(AddMonsterType(MT_HORKSPWN, PLACE_SCATTER));
 	if (currlevel == 19) {
-		AddMonsterType(MT_HORKSPWN, PLACE_SCATTER);
-		AddMonsterType(MT_HORKDMN, PLACE_UNIQUE);
+		RETURN_IF_ERROR(AddMonsterType(MT_HORKSPWN, PLACE_SCATTER));
+		RETURN_IF_ERROR(AddMonsterType(MT_HORKDMN, PLACE_UNIQUE));
 	}
 	if (currlevel == 20)
-		AddMonsterType(MT_DEFILER, PLACE_UNIQUE);
+		RETURN_IF_ERROR(AddMonsterType(MT_DEFILER, PLACE_UNIQUE));
 	if (currlevel == 24) {
-		AddMonsterType(MT_ARCHLICH, PLACE_SCATTER);
-		AddMonsterType(MT_NAKRUL, PLACE_SPECIAL);
+		RETURN_IF_ERROR(AddMonsterType(MT_ARCHLICH, PLACE_SCATTER));
+		RETURN_IF_ERROR(AddMonsterType(MT_NAKRUL, PLACE_SPECIAL));
 	}
 
 	if (!setlevel) {
 		if (Quests[Q_BUTCHER].IsAvailable())
-			AddMonsterType(MT_CLEAVER, PLACE_SPECIAL);
+			RETURN_IF_ERROR(AddMonsterType(MT_CLEAVER, PLACE_SPECIAL));
 		if (Quests[Q_GARBUD].IsAvailable())
-			AddMonsterType(UniqueMonsterType::Garbud, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::Garbud, PLACE_UNIQUE));
 		if (Quests[Q_ZHAR].IsAvailable())
-			AddMonsterType(UniqueMonsterType::Zhar, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::Zhar, PLACE_UNIQUE));
 		if (Quests[Q_LTBANNER].IsAvailable())
-			AddMonsterType(UniqueMonsterType::SnotSpill, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::SnotSpill, PLACE_UNIQUE));
 		if (Quests[Q_VEIL].IsAvailable())
-			AddMonsterType(UniqueMonsterType::Lachdan, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::Lachdan, PLACE_UNIQUE));
 		if (Quests[Q_WARLORD].IsAvailable())
-			AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_UNIQUE));
 
 		if (UseMultiplayerQuests() && currlevel == Quests[Q_SKELKING]._qlevel) {
 
-			AddMonsterType(MT_SKING, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(MT_SKING, PLACE_UNIQUE));
 
 			int skeletonTypeCount = 0;
 			_monster_id skeltypes[NUM_MTYPES];
@@ -3319,7 +3327,7 @@ void GetLevelMTypes()
 
 				skeltypes[skeletonTypeCount++] = skeletonType;
 			}
-			AddMonsterType(skeltypes[GenerateRnd(skeletonTypeCount)], PLACE_SCATTER);
+			RETURN_IF_ERROR(AddMonsterType(skeltypes[GenerateRnd(skeletonTypeCount)], PLACE_SCATTER));
 		}
 
 		_monster_id typelist[MaxMonsters];
@@ -3344,21 +3352,22 @@ void GetLevelMTypes()
 
 			if (nt != 0) {
 				int i = GenerateRnd(nt);
-				AddMonsterType(typelist[i], PLACE_SCATTER);
+				RETURN_IF_ERROR(AddMonsterType(typelist[i], PLACE_SCATTER));
 				typelist[i] = typelist[--nt];
 			}
 		}
 	} else {
 		if (setlvlnum == SL_SKELKING) {
-			AddMonsterType(MT_SKING, PLACE_UNIQUE);
+			RETURN_IF_ERROR(AddMonsterType(MT_SKING, PLACE_UNIQUE));
 		}
 	}
+	return {};
 }
 
-void InitMonsterSND(CMonster &monsterType)
+tl::expected<void, std::string> InitMonsterSND(CMonster &monsterType)
 {
 	if (!gbSndInited)
-		return;
+		return {};
 
 	const char *prefixes[] {
 		"a", // Attack
@@ -3378,15 +3387,16 @@ void InitMonsterSND(CMonster &monsterType)
 		for (int j = 0; j < 2; j++) {
 			char path[64];
 			*BufCopy(path, "monsters\\", soundSuffix, prefix, j + 1, ".wav") = '\0';
-			monsterType.sounds[i][j] = sound_file_load(path);
+			ASSIGN_OR_RETURN(monsterType.sounds[i][j], SoundFileLoadWithStatus(path));
 		}
 	}
+	return {};
 }
 
-void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData)
+tl::expected<void, std::string> InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData)
 {
 	if (HeadlessMode)
-		return;
+		return {};
 
 	const _monster_id mtype = monsterType.type;
 	const MonsterData &monsterData = MonstersData[mtype];
@@ -3413,52 +3423,54 @@ void InitMonsterGFX(CMonster &monsterType, MonsterSpritesData &&spritesData)
 	}
 
 	if (IsAnyOf(mtype, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA))
-		GetMissileSpriteData(MissileGraphicID::MagmaBall).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::MagmaBall).LoadGFX());
 	if (IsAnyOf(mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL))
-		GetMissileSpriteData(MissileGraphicID::ThinLightning).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::ThinLightning).LoadGFX());
 	if (mtype == MT_SNOWWICH) {
-		GetMissileSpriteData(MissileGraphicID::BloodStarBlue).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::BloodStarBlueExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BloodStarBlue).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BloodStarBlueExplosion).LoadGFX());
 	}
 	if (mtype == MT_HLSPWN) {
-		GetMissileSpriteData(MissileGraphicID::BloodStarRed).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::BloodStarRedExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BloodStarRed).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BloodStarRedExplosion).LoadGFX());
 	}
 	if (mtype == MT_SOLBRNR) {
-		GetMissileSpriteData(MissileGraphicID::BloodStarYellow).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::BloodStarYellowExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BloodStarYellow).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BloodStarYellowExplosion).LoadGFX());
 	}
 	if (IsAnyOf(mtype, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD)) {
-		GetMissileSpriteData(MissileGraphicID::Acid).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::AcidSplat).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::AcidPuddle).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::Acid).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::AcidSplat).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::AcidPuddle).LoadGFX());
 	}
 	if (mtype == MT_LICH) {
-		GetMissileSpriteData(MissileGraphicID::OrangeFlare).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::OrangeFlareExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::OrangeFlare).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::OrangeFlareExplosion).LoadGFX());
 	}
 	if (mtype == MT_ARCHLICH) {
-		GetMissileSpriteData(MissileGraphicID::YellowFlare).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::YellowFlareExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::YellowFlare).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::YellowFlareExplosion).LoadGFX());
 	}
 	if (IsAnyOf(mtype, MT_PSYCHORB, MT_BONEDEMN))
-		GetMissileSpriteData(MissileGraphicID::BlueFlare2).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BlueFlare2).LoadGFX());
 	if (mtype == MT_NECRMORB) {
-		GetMissileSpriteData(MissileGraphicID::RedFlare).LoadGFX();
-		GetMissileSpriteData(MissileGraphicID::RedFlareExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::RedFlare).LoadGFX());
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::RedFlareExplosion).LoadGFX());
 	}
 	if (mtype == MT_PSYCHORB)
-		GetMissileSpriteData(MissileGraphicID::BlueFlareExplosion).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BlueFlareExplosion).LoadGFX());
 	if (mtype == MT_BONEDEMN)
-		GetMissileSpriteData(MissileGraphicID::BlueFlareExplosion2).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::BlueFlareExplosion2).LoadGFX());
 	if (mtype == MT_DIABLO)
-		GetMissileSpriteData(MissileGraphicID::DiabloApocalypseBoom).LoadGFX();
+		RETURN_IF_ERROR(GetMissileSpriteData(MissileGraphicID::DiabloApocalypseBoom).LoadGFX());
+
+	return {};
 }
 
-void InitAllMonsterGFX()
+tl::expected<void, std::string> InitAllMonsterGFX()
 {
 	if (HeadlessMode)
-		return;
+		return {};
 
 	using LevelMonsterTypeIndices = StaticVector<size_t, 8>;
 	std::vector<LevelMonsterTypeIndices> monstersBySprite(GetNumMonsterSprites());
@@ -3478,12 +3490,12 @@ void InitAllMonsterGFX()
 		for (size_t i = 1; i < monsterTypes.size(); ++i) {
 			MonsterSpritesData spritesDataCopy { std::unique_ptr<std::byte[]> { new std::byte[spritesDataSize] }, spritesData.offsets };
 			memcpy(spritesDataCopy.data.get(), spritesData.data.get(), spritesDataSize);
-			InitMonsterGFX(LevelMonsterTypes[monsterTypes[i]], std::move(spritesDataCopy));
+			RETURN_IF_ERROR(InitMonsterGFX(LevelMonsterTypes[monsterTypes[i]], std::move(spritesDataCopy)));
 		}
 		LogVerbose("Loaded monster graphics: {:15s} {:>4d} KiB   x{:d}", firstMonster.data().spritePath(), spritesDataSize / 1024, monsterTypes.size());
 		totalUniqueBytes += spritesDataSize;
 		totalBytes += spritesDataSize * monsterTypes.size();
-		InitMonsterGFX(firstMonster, std::move(spritesData));
+		RETURN_IF_ERROR(InitMonsterGFX(firstMonster, std::move(spritesData)));
 	}
 	LogVerbose(" Total monster graphics:                 {:>4d} KiB {:>4d} KiB", totalUniqueBytes / 1024, totalBytes / 1024);
 
@@ -3492,9 +3504,10 @@ void InitAllMonsterGFX()
 		for (size_t i = 0; i < ActiveMonsterCount; i++) {
 			Monster &monster = Monsters[ActiveMonsters[i]];
 			if (!monster.animInfo.sprites)
-				SyncMonsterAnim(monster);
+				RETURN_IF_ERROR(SyncMonsterAnim(monster));
 		}
 	}
+	return {};
 }
 
 void WeakenNaKrul()
@@ -3519,7 +3532,7 @@ void InitGolems()
 	}
 }
 
-void InitMonsters()
+tl::expected<void, std::string> InitMonsters()
 {
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
 		LoadDiabMonsts();
@@ -3534,10 +3547,10 @@ void InitMonsters()
 		}
 	}
 	if (!gbIsSpawn)
-		PlaceQuestMonsters();
+		RETURN_IF_ERROR(PlaceQuestMonsters());
 	if (!setlevel) {
 		if (!gbIsSpawn)
-			PlaceUniqueMonsters();
+			RETURN_IF_ERROR(PlaceUniqueMonsters());
 		size_t na = 0;
 		for (int s = 16; s < 96; s++) {
 			for (int t = 16; t < 96; t++) {
@@ -3577,12 +3590,12 @@ void InitMonsters()
 		}
 	}
 
-	InitAllMonsterGFX();
+	return InitAllMonsterGFX();
 }
 
-void SetMapMonsters(const uint16_t *dunData, Point startPosition)
+tl::expected<void, std::string> SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
-	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
+	RETURN_IF_ERROR(AddMonsterType(MT_GOLEM, PLACE_SPECIAL));
 	if (setlevel)
 		for (int i = 0; i < MAX_PLRS; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
@@ -3600,11 +3613,12 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 		for (WorldTileCoord i = 0; i < size.width; i++) {
 			auto monsterId = static_cast<uint8_t>(SDL_SwapLE16(monsterLayer[j * size.width + i]));
 			if (monsterId != 0) {
-				const size_t typeIndex = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
+				ASSIGN_OR_RETURN(const size_t typeIndex, AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL));
 				PlaceMonster(ActiveMonsterCount++, typeIndex, startPosition + Displacement { i, j });
 			}
 		}
 	}
+	return {};
 }
 
 Monster *AddMonster(Point position, Direction dir, size_t typeIndex, bool inMap)
@@ -4232,18 +4246,18 @@ bool LineClear(tl::function_ref<bool(Point)> clear, Point startPoint, Point endP
 	return position == endPoint;
 }
 
-void SyncMonsterAnim(Monster &monster)
+tl::expected<void, std::string> SyncMonsterAnim(Monster &monster)
 {
 #ifdef _DEBUG
 	// fix for saves with debug monsters having type originally not on the level
 	CMonster &monsterType = LevelMonsterTypes[monster.levelType];
 	if (monsterType.corpseId == 0) {
-		InitMonsterGFX(monsterType);
+		RETURN_IF_ERROR(InitMonsterGFX(monsterType));
 		monsterType.corpseId = 1;
 	}
 #endif
 	if (monster.isUnique()) {
-		InitTRNForUniqueMonster(monster);
+		RETURN_IF_ERROR(InitTRNForUniqueMonster(monster));
 	}
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 
@@ -4285,6 +4299,7 @@ void SyncMonsterAnim(Monster &monster)
 	}
 
 	monster.changeAnimationData(graphic);
+	return {};
 }
 
 void M_FallenFear(Point position)

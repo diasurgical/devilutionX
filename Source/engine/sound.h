@@ -9,6 +9,8 @@
 #include <memory>
 #include <string>
 
+#include <expected.hpp>
+
 #include "levels/gendung.h"
 #include "utils/attributes.h"
 
@@ -56,6 +58,7 @@ extern _music_id sgnMusicTrack;
 void ClearDuplicateSounds();
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);
+tl::expected<std::unique_ptr<TSnd>, std::string> SoundFileLoadWithStatus(const char *path, bool stream = false);
 void snd_init();
 void snd_deinit();
 _music_id GetLevelMusic(dungeon_type dungeonType);

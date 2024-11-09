@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+
+#include <expected.hpp>
+
 #include "engine/clx_sprite.hpp"
 
 namespace devilution {
@@ -7,7 +11,7 @@ namespace devilution {
 extern OptionalOwnedClxSpriteList PanelButtonDown;
 extern OptionalOwnedClxSpriteList TalkButton;
 
-void LoadMainPanel();
+tl::expected<void, std::string> LoadMainPanel();
 void FreeMainPanel();
 
 } // namespace devilution

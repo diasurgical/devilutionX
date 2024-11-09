@@ -28,6 +28,7 @@ enum interface_mode : uint8_t {
 
 	// Asynchronous loading events.
 	WM_PROGRESS,
+	WM_ERROR,
 	WM_DONE,
 
 	WM_FIRST = WM_DIABNEXTLVL,

@@ -90,6 +90,8 @@
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"
 #include "utils/screen_reader.hpp"
+#include "utils/sdl_thread.h"
+#include "utils/status_macros.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -1269,68 +1271,77 @@ void DiabloDeinit()
 		SDL_Quit();
 }
 
-void LoadLvlGFX()
+tl::expected<void, std::string> LoadLvlGFX()
 {
 	assert(pDungeonCels == nullptr);
 	constexpr int SpecialCelWidth = 64;
 
+	const auto loadAll = [](const char *cel, const char *til, const char *special) -> tl::expected<void, std::string> {
+		ASSIGN_OR_RETURN(pDungeonCels, LoadFileInMemWithStatus(cel));
+		ASSIGN_OR_RETURN(pMegaTiles, LoadFileInMemWithStatus<MegaTile>(til));
+		ASSIGN_OR_RETURN(pSpecialCels, LoadCelWithStatus(special, SpecialCelWidth));
+		return {};
+	};
+
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		if (gbIsHellfire) {
-			pDungeonCels = LoadFileInMem("nlevels\\towndata\\town.cel");
-			pMegaTiles = LoadFileInMem<MegaTile>("nlevels\\towndata\\town.til");
-		} else {
-			pDungeonCels = LoadFileInMem("levels\\towndata\\town.cel");
-			pMegaTiles = LoadFileInMem<MegaTile>("levels\\towndata\\town.til");
+			return loadAll(
+			    "nlevels\\towndata\\town.cel",
+			    "nlevels\\towndata\\town.til",
+			    "levels\\towndata\\towns");
 		}
-		pSpecialCels = LoadCel("levels\\towndata\\towns", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "levels\\towndata\\town.cel",
+		    "levels\\towndata\\town.til",
+		    "levels\\towndata\\towns");
 	case DTYPE_CATHEDRAL:
-		pDungeonCels = LoadFileInMem("levels\\l1data\\l1.cel");
-		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l1data\\l1.til");
-		pSpecialCels = LoadCel("levels\\l1data\\l1s", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "levels\\l1data\\l1.cel",
+		    "levels\\l1data\\l1.til",
+		    "levels\\l1data\\l1s");
 	case DTYPE_CATACOMBS:
-		pDungeonCels = LoadFileInMem("levels\\l2data\\l2.cel");
-		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l2data\\l2.til");
-		pSpecialCels = LoadCel("levels\\l2data\\l2s", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "levels\\l2data\\l2.cel",
+		    "levels\\l2data\\l2.til",
+		    "levels\\l2data\\l2s");
 	case DTYPE_CAVES:
-		pDungeonCels = LoadFileInMem("levels\\l3data\\l3.cel");
-		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l3data\\l3.til");
-		pSpecialCels = LoadCel("levels\\l1data\\l1s", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "levels\\l3data\\l3.cel",
+		    "levels\\l3data\\l3.til",
+		    "levels\\l1data\\l1s");
 	case DTYPE_HELL:
-		pDungeonCels = LoadFileInMem("levels\\l4data\\l4.cel");
-		pMegaTiles = LoadFileInMem<MegaTile>("levels\\l4data\\l4.til");
-		pSpecialCels = LoadCel("levels\\l2data\\l2s", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "levels\\l4data\\l4.cel",
+		    "levels\\l4data\\l4.til",
+		    "levels\\l2data\\l2s");
 	case DTYPE_NEST:
-		pDungeonCels = LoadFileInMem("nlevels\\l6data\\l6.cel");
-		pMegaTiles = LoadFileInMem<MegaTile>("nlevels\\l6data\\l6.til");
-		pSpecialCels = LoadCel("levels\\l1data\\l1s", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "nlevels\\l6data\\l6.cel",
+		    "nlevels\\l6data\\l6.til",
+		    "levels\\l1data\\l1s");
 	case DTYPE_CRYPT:
-		pDungeonCels = LoadFileInMem("nlevels\\l5data\\l5.cel");
-		pMegaTiles = LoadFileInMem<MegaTile>("nlevels\\l5data\\l5.til");
-		pSpecialCels = LoadCel("nlevels\\l5data\\l5s", SpecialCelWidth);
-		break;
+		return loadAll(
+		    "nlevels\\l5data\\l5.cel",
+		    "nlevels\\l5data\\l5.til",
+		    "nlevels\\l5data\\l5s");
 	default:
-		app_fatal("LoadLvlGFX");
+		return tl::make_unexpected("LoadLvlGFX");
 	}
 }
 
-void LoadAllGFX()
+tl::expected<void, std::string> LoadAllGFX()
 {
 	IncProgress();
 #if !defined(USE_SDL1) && !defined(__vita__)
 	InitVirtualGamepadGFX();
 #endif
 	IncProgress();
-	InitObjectGFX();
+	RETURN_IF_ERROR(InitObjectGFX());
 	IncProgress();
-	InitMissileGFX(gbIsHellfire);
+	RETURN_IF_ERROR(InitMissileGFX(gbIsHellfire));
 	IncProgress();
+	return {};
 }
 
 /**
@@ -2911,7 +2922,7 @@ void LoadGameLevelStash()
 	gbIsHellfireSaveGame = isHellfireSaveGame;
 }
 
-void LoadGameLevelDungeon(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
+tl::expected<void, std::string> LoadGameLevelDungeon(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
 {
 	if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 		HoldThemeRooms();
@@ -2922,7 +2933,7 @@ void LoadGameLevelDungeon(bool firstflag, lvl_entry lvldir, const Player &myPlay
 
 		IncProgress();
 
-		InitMonsters();
+		RETURN_IF_ERROR(InitMonsters());
 		InitItems();
 		CreateThemeRooms();
 
@@ -2943,16 +2954,17 @@ void LoadGameLevelDungeon(bool firstflag, lvl_entry lvldir, const Player &myPlay
 	} else {
 		HoldThemeRooms();
 		InitGolems();
-		InitMonsters();
+		RETURN_IF_ERROR(InitMonsters());
 		InitMissiles();
 		InitCorpses();
 
 		IncProgress();
 
-		LoadLevel();
+		RETURN_IF_ERROR(LoadLevel());
 
 		IncProgress();
 	}
+	return {};
 }
 
 void LoadGameLevelSyncPlayerEntry(lvl_entry lvldir)
@@ -3006,7 +3018,7 @@ void LoadGameLevelSetVisited()
 	}
 }
 
-void LoadGameLevelTown(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
+tl::expected<void, std::string> LoadGameLevelTown(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
 {
 	for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -3022,7 +3034,7 @@ void LoadGameLevelTown(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
 	IncProgress();
 
 	if (!firstflag && lvldir != ENTRY_LOAD && myPlayer._pLvlVisited[currlevel] && !gbIsMultiplayer)
-		LoadLevel();
+		RETURN_IF_ERROR(LoadLevel());
 	if (gbIsMultiplayer)
 		DeltaLoadLevel();
 
@@ -3031,22 +3043,23 @@ void LoadGameLevelTown(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
 	for (int x = 0; x < DMAXX; x++)
 		for (int y = 0; y < DMAXY; y++)
 			UpdateAutomapExplorer({ x, y }, MAP_EXP_SELF);
+	return {};
 }
 
-void LoadGameLevelSetLevel(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
+tl::expected<void, std::string> LoadGameLevelSetLevel(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
 {
 	LoadSetMap();
 	IncProgress();
-	GetLevelMTypes();
+	RETURN_IF_ERROR(GetLevelMTypes());
 	IncProgress();
 	InitGolems();
-	InitMonsters();
+	RETURN_IF_ERROR(InitMonsters());
 	IncProgress();
 	if (!HeadlessMode) {
 #if !defined(USE_SDL1) && !defined(__vita__)
 		InitVirtualGamepadGFX();
 #endif
-		InitMissileGFX(gbIsHellfire);
+		RETURN_IF_ERROR(InitMissileGFX(gbIsHellfire));
 		IncProgress();
 	}
 	InitCorpses();
@@ -3071,7 +3084,7 @@ void LoadGameLevelSetLevel(bool firstflag, lvl_entry lvldir, const Player &myPla
 		InitItems();
 		SavePreLighting();
 	} else {
-		LoadLevel();
+		RETURN_IF_ERROR(LoadLevel());
 	}
 	if (gbIsMultiplayer) {
 		DeltaLoadLevel();
@@ -3082,9 +3095,10 @@ void LoadGameLevelSetLevel(bool firstflag, lvl_entry lvldir, const Player &myPla
 	PlayDungMsgs();
 	InitMissiles();
 	IncProgress();
+	return {};
 }
 
-void LoadGameLevelStandardLevel(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
+tl::expected<void, std::string> LoadGameLevelStandardLevel(bool firstflag, lvl_entry lvldir, const Player &myPlayer)
 {
 	CreateLevel(lvldir);
 
@@ -3093,10 +3107,10 @@ void LoadGameLevelStandardLevel(bool firstflag, lvl_entry lvldir, const Player &
 	SetRndSeedForDungeonLevel();
 
 	if (leveltype != DTYPE_TOWN) {
-		GetLevelMTypes();
+		RETURN_IF_ERROR(GetLevelMTypes());
 		InitThemes();
 		if (!HeadlessMode)
-			LoadAllGFX();
+			RETURN_IF_ERROR(LoadAllGFX());
 	} else if (!HeadlessMode) {
 		IncProgress();
 
@@ -3106,7 +3120,7 @@ void LoadGameLevelStandardLevel(bool firstflag, lvl_entry lvldir, const Player &
 
 		IncProgress();
 
-		InitMissileGFX(gbIsHellfire);
+		RETURN_IF_ERROR(InitMissileGFX(gbIsHellfire));
 
 		IncProgress();
 		IncProgress();
@@ -3144,6 +3158,7 @@ void LoadGameLevelStandardLevel(bool firstflag, lvl_entry lvldir, const Player &
 		ResyncMPQuests();
 	else
 		ResyncQuests();
+	return {};
 }
 
 void LoadGameLevelCrypt()
@@ -3166,7 +3181,7 @@ void LoadGameLevelCalculateCursor()
 	CheckCursMove();
 }
 
-void LoadGameLevel(bool firstflag, lvl_entry lvldir)
+tl::expected<void, std::string> LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
 	_music_id neededTrack = GetLevelMusic(leveltype);
 
@@ -3177,13 +3192,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	IncProgress();
 
-	LoadTrns();
+	RETURN_IF_ERROR(LoadTrns());
 	MakeLightTable();
-	LoadLevelSOLData();
+	RETURN_IF_ERROR(LoadLevelSOLData());
 
 	IncProgress();
 
-	LoadLvlGFX();
+	RETURN_IF_ERROR(LoadLvlGFX());
 	SetDungeonMicros();
 	ClearClxDrawCache();
 
@@ -3216,9 +3231,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	Player &myPlayer = *MyPlayer;
 
 	if (setlevel) {
-		LoadGameLevelSetLevel(firstflag, lvldir, myPlayer);
+		RETURN_IF_ERROR(LoadGameLevelSetLevel(firstflag, lvldir, myPlayer));
 	} else {
-		LoadGameLevelStandardLevel(firstflag, lvldir, myPlayer);
+		RETURN_IF_ERROR(LoadGameLevelStandardLevel(firstflag, lvldir, myPlayer));
 	}
 
 	SyncPortals();
@@ -3228,7 +3243,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 
 	if (firstflag) {
-		InitMainPanel();
+		RETURN_IF_ERROR(InitMainPanel());
 	}
 
 	IncProgress();
@@ -3250,6 +3265,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	CompleteProgress();
 
 	LoadGameLevelCalculateCursor();
+	return {};
 }
 
 bool game_loop(bool bStartup)

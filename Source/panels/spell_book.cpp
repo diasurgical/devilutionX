@@ -2,7 +2,9 @@
 
 #include <cstdint>
 #include <optional>
+#include <string>
 
+#include <expected.hpp>
 #include <fmt/format.h>
 
 #include "control.h"
@@ -20,6 +22,7 @@
 #include "player.h"
 #include "spelldat.h"
 #include "utils/language.h"
+#include "utils/status_macros.hpp"
 
 namespace devilution {
 
@@ -130,11 +133,11 @@ StringOrView GetSpellPowerText(SpellID spell, int spellLevel)
 
 } // namespace
 
-void InitSpellBook()
+tl::expected<void, std::string> InitSpellBook()
 {
-	spellBookBackground = LoadCel("data\\spellbk", static_cast<uint16_t>(SidePanelSize.width));
-	spellBookButtons = LoadCel("data\\spellbkb", SpellBookButtonWidth());
-	LoadSmallSpellIcons();
+	ASSIGN_OR_RETURN(spellBookBackground, LoadCelWithStatus("data\\spellbk", static_cast<uint16_t>(SidePanelSize.width)));
+	ASSIGN_OR_RETURN(spellBookButtons, LoadCelWithStatus("data\\spellbkb", SpellBookButtonWidth()));
+	return LoadSmallSpellIcons();
 }
 
 void FreeSpellBook()
