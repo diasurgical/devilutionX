@@ -1704,14 +1704,12 @@ msgid "Displays chat log."
 msgstr "Wyświetla dziennik czatu."
 
 #: Source/diablo.cpp:1968 Source/diablo.cpp:2445
-#, fuzzy
-#| msgid "Inventory"
 msgid "Sort Inventory"
-msgstr "Ekwipunek"
+msgstr "Sortuj ekwipunek"
 
 #: Source/diablo.cpp:1969 Source/diablo.cpp:2446
 msgid "Sorts the inventory."
-msgstr ""
+msgstr "Sortuje ekwipunek."
 
 #: Source/diablo.cpp:1977
 msgid "Console"
