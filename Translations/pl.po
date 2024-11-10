@@ -4627,7 +4627,7 @@ msgstr "Złoto"
 
 #: Source/panels/charpanel.cpp:176
 msgid "Armor class"
-msgstr "Obrona"
+msgstr "Klasa pancerza"
 
 #: Source/panels/charpanel.cpp:178
 msgid "To hit"
@@ -4973,7 +4973,7 @@ msgstr "Obrażenia: {:d}-{:d}  "
 #: Source/stores.cpp:311
 #, c++-format
 msgid "Armor: {:d}  "
-msgstr "Obrona: {:d}  "
+msgstr "Pancerz: {:d}  "
 
 #: Source/stores.cpp:313
 #, fuzzy, c++-format
