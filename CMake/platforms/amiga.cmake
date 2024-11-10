@@ -14,6 +14,10 @@ set(DEVILUTIONX_SYSTEM_ZLIB OFF)
 # As this build uses an older compiler, there are lots of them.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
 
+# Lower the optimization level to O2 because there are issues with O3.
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+
 # `fseeko` fails to link on Amiga.
 add_definitions(-Dfseeko=fseek)
 
