@@ -1477,24 +1477,20 @@ msgid "Hotkey for skill or spell."
 msgstr "Ustawianie skrótu klawiszowego umiejętności."
 
 #: Source/diablo.cpp:1722
-#, fuzzy
-#| msgid "Previous Menu"
 msgid "Previous quick spell"
-msgstr "Powrót"
+msgstr "Poprzedni szybki czar"
 
 #: Source/diablo.cpp:1723
 msgid "Selects the previous quick spell (cycles)."
-msgstr ""
+msgstr "Wybiera poprzedni szybki czar (w kolejności)."
 
 #: Source/diablo.cpp:1730
-#, fuzzy
-#| msgid "Quick spell {}"
 msgid "Next quick spell"
-msgstr "Szybki czar {}"
+msgstr "Następny szybki czar"
 
 #: Source/diablo.cpp:1731
 msgid "Selects the next quick spell (cycles)."
-msgstr ""
+msgstr "Wybiera następny szybki czar (w kolejności)."
 
 #: Source/diablo.cpp:1738 Source/diablo.cpp:2142
 msgid "Use health potion"
