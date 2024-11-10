@@ -401,14 +401,14 @@ msgstr ""
 
 #: Source/DiabloUI/hero/selhero.cpp:282 Source/DiabloUI/hero/selhero.cpp:285
 msgid "Enter Name"
-msgstr "Wpisz Imię"
+msgstr "Wpisz Nazwę"
 
 #: Source/DiabloUI/hero/selhero.cpp:314
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr ""
-"Niepoprawne imię. Nazwa nie może zawierać spacji, znaków specjalnych i "
+"Niepoprawna nazwa. Nie może ona zawierać spacji, znaków specjalnych i "
 "niektórych słów.\n"
 
 #. TRANSLATORS: Error Message
@@ -733,7 +733,7 @@ msgid ""
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
 "Piekło\n"
-"Najpotężniejsze kreautry podziemi strzegą piekielnych bram. Tylko "
+"Najpotężniejsze kreatury podziemi strzegą piekielnych bram. Tylko "
 "najbardziej doświadczone postacie mogą zapuścić się w głąb tego świata."
 
 #: Source/DiabloUI/multi/selgame.cpp:415
@@ -794,7 +794,7 @@ msgid ""
 msgstr ""
 "Szybsza Gra\n"
 "Większość potworów będzie usiłować dorwać cię szybciej niż zwykle. Tylko "
-"doświadczony czempion powinien spróbować swych sił na tej prędkości."
+"doświadczony bohater powinien spróbować swych sił na tej prędkości."
 
 #: Source/DiabloUI/multi/selgame.cpp:530
 msgid ""
@@ -803,7 +803,7 @@ msgid ""
 "true speed demon should enter at this pace."
 msgstr ""
 "Najszybsza Gra\n"
-"Sługi piekielne będą nieustannie się za tobą uganiać. Tylko dla prawdziwych "
+"Sługi piekielne ruszą do ataku bez wahania. Tylko dla prawdziwych "
 "demonów prędkości."
 
 #: Source/DiabloUI/multi/selgame.cpp:574 Source/DiabloUI/multi/selgame.cpp:579
@@ -832,7 +832,7 @@ msgstr "Naciśnij przycisk na kontrolerze aby zmienić."
 
 #: Source/DiabloUI/settingsmenu.cpp:423
 msgid "Bound key:"
-msgstr "Powiązany klawisz:"
+msgstr "Przypisany klawisz:"
 
 #: Source/DiabloUI/settingsmenu.cpp:459
 msgid "Press any key to change."
@@ -840,15 +840,15 @@ msgstr "Naciśnij dowolny klawisz by zmienić."
 
 #: Source/DiabloUI/settingsmenu.cpp:461
 msgid "Unbind key"
-msgstr "Usuń wiązanie klawisza"
+msgstr "Usuń przypisany klawisz"
 
 #: Source/DiabloUI/settingsmenu.cpp:465
 msgid "Bound button combo:"
-msgstr ""
+msgstr "Przypisana kombinacja klawiszy:"
 
 #: Source/DiabloUI/settingsmenu.cpp:474
 msgid "Unbind button combo"
-msgstr ""
+msgstr "Usuń kombinację klawiszy"
 
 #: Source/DiabloUI/settingsmenu.cpp:518 Source/gamemenu.cpp:68
 msgid "Previous Menu"
@@ -874,7 +874,7 @@ msgstr ""
 "DevilutionX jest zarządzane przez Diasurgical, wszelkie problemy należy "
 "przesyłać na adres https://github.com/diasurgical/devilutionX Abyśmy mogli "
 "Ci lepiej pomóc, pamiętaj o podaniu numeru wersji, systemu operacyjnego i "
-"typu problemu."
+"rodzaju problemu."
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "Disclaimer:"
@@ -4631,7 +4631,7 @@ msgstr "menu"
 
 #: Source/panels/mainpanel.cpp:91
 msgid "inv"
-msgstr "ekwipunek"
+msgstr "inw"
 
 #: Source/panels/mainpanel.cpp:92
 msgid "spells"
@@ -5200,7 +5200,7 @@ msgstr "Witaj"
 
 #: Source/stores.cpp:382
 msgid "Blacksmith's shop"
-msgstr "Warsztat Kowala"
+msgstr "w kuźni Griswolda"
 
 #: Source/stores.cpp:383 Source/stores.cpp:680 Source/stores.cpp:1031
 #: Source/stores.cpp:1074 Source/stores.cpp:1250 Source/stores.cpp:1262
@@ -5258,7 +5258,7 @@ msgstr "Który przedmiot naprawić?"
 
 #: Source/stores.cpp:679
 msgid "Witch's shack"
-msgstr "Chata Wiedźmy"
+msgstr "w Chacie Adrii"
 
 #: Source/stores.cpp:681
 msgid "Talk to Adria"
@@ -5355,7 +5355,7 @@ msgstr "Wyjdź"
 
 #: Source/stores.cpp:1030
 msgid "Healer's home"
-msgstr "Dom Uzdrowiciela"
+msgstr "w domu Pepina"
 
 #: Source/stores.cpp:1032
 msgid "Talk to Pepin"
@@ -5421,7 +5421,7 @@ msgstr "Plotki"
 
 #: Source/stores.cpp:1249
 msgid "Rising Sun"
-msgstr "Wschodzące Słońce"
+msgstr "w Tawernie Ogdena"
 
 #: Source/stores.cpp:1251
 msgid "Talk to Ogden"
