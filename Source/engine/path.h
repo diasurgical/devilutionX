@@ -48,7 +48,7 @@ int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point des
  *
  * @return true if step is allowed
  */
-bool path_solid_pieces(Point startPosition, Point destinationPosition);
+bool CanStep(Point startPosition, Point destinationPosition);
 
 /** For iterating over the 8 possible movement directions */
 const Displacement PathDirs[8] = {

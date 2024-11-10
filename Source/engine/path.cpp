@@ -56,7 +56,7 @@ PathNode PathNodes[MaxPathNodes];
 PathNode *Path2Nodes;
 
 /**
- * @brief return a node for a position on the frontier, or NULL if not found
+ * @brief return a node for a position on the frontier, or `PathNode::InvalidIndex` if not found
  */
 uint16_t GetNode1(Point targetPosition)
 {
@@ -161,18 +161,30 @@ uint16_t PopActiveStep()
 }
 
 /**
- * @brief return 2 if pPath is horizontally/vertically aligned with (dx,dy), else 3
+ * @brief Returns the distance between 2 adjacent nodes.
+ *
+ * The distance is 2 for nodes in the same row or column,
+ * and 3 for diagonally adjacent nodes.
  *
  * This approximates that diagonal movement on a square grid should have a cost
  * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
  * except diagonal steps which are times 3
  */
-int CheckEqual(Point startPosition, Point destinationPosition)
+int GetDistance(Point startPosition, Point destinationPosition)
 {
 	if (startPosition.x == destinationPosition.x || startPosition.y == destinationPosition.y)
 		return 2;
 
 	return 3;
+}
+
+/**
+ * @brief heuristic, estimated cost from startPosition to destinationPosition.
+ */
+int GetHeuristicCost(Point startPosition, Point destinationPosition)
+{
+	// see GetDistance for why this is times 2
+	return 2 * startPosition.ManhattanDistance(destinationPosition);
 }
 
 /**
@@ -190,10 +202,10 @@ void SetCoords(uint16_t pPath)
 				break;
 			PathNode &pathAct = PathNodes[childIndex];
 
-			if (pathOld.g + CheckEqual(pathOld.position(), pathAct.position()) < pathAct.g) {
-				if (path_solid_pieces(pathOld.position(), pathAct.position())) {
+			if (pathOld.g + GetDistance(pathOld.position(), pathAct.position()) < pathAct.g) {
+				if (CanStep(pathOld.position(), pathAct.position())) {
 					pathAct.parentIndex = pathOldIndex;
-					pathAct.g = pathOld.g + CheckEqual(pathOld.position(), pathAct.position());
+					pathAct.g = pathOld.g + GetDistance(pathOld.position(), pathAct.position());
 					pathAct.f = pathAct.g + pathAct.h;
 					PushActiveStep(childIndex);
 				}
@@ -220,15 +232,6 @@ int8_t GetPathDirection(Point startPosition, Point destinationPosition)
 }
 
 /**
- * @brief heuristic, estimated cost from startPosition to destinationPosition.
- */
-int GetHeuristicCost(Point startPosition, Point destinationPosition)
-{
-	// see path_check_equal for why this is times 2
-	return 2 * startPosition.ManhattanDistance(destinationPosition);
-}
-
-/**
  * @brief add a step from pPath to destination, return 1 if successful, and update the frontier/visited nodes accordingly
  *
  * @param pathIndex index of the current path node
@@ -236,10 +239,10 @@ int GetHeuristicCost(Point startPosition, Point destinationPosition)
  * @param destinationPosition where we hope to end up
  * @return true if step successfully added, false if we ran out of nodes to use
  */
-bool ParentPath(uint16_t pathIndex, Point candidatePosition, Point destinationPosition)
+bool ExploreFrontier(uint16_t pathIndex, Point candidatePosition, Point destinationPosition)
 {
 	PathNode &path = PathNodes[pathIndex];
-	int nextG = path.g + CheckEqual(path.position(), candidatePosition);
+	int nextG = path.g + GetDistance(path.position(), candidatePosition);
 
 	// 3 cases to consider
 	// case 1: (dx,dy) is already on the frontier
@@ -248,7 +251,7 @@ bool ParentPath(uint16_t pathIndex, Point candidatePosition, Point destinationPo
 		path.addChild(dxdyIndex);
 		PathNode &dxdy = PathNodes[dxdyIndex];
 		if (nextG < dxdy.g) {
-			if (path_solid_pieces(path.position(), candidatePosition)) {
+			if (CanStep(path.position(), candidatePosition)) {
 				// we'll explore it later, just update
 				dxdy.parentIndex = pathIndex;
 				dxdy.g = nextG;
@@ -261,7 +264,7 @@ bool ParentPath(uint16_t pathIndex, Point candidatePosition, Point destinationPo
 		if (dxdyIndex != PathNode::InvalidIndex) {
 			path.addChild(dxdyIndex);
 			PathNode &dxdy = PathNodes[dxdyIndex];
-			if (nextG < dxdy.g && path_solid_pieces(path.position(), candidatePosition)) {
+			if (nextG < dxdy.g && CanStep(path.position(), candidatePosition)) {
 				// update the node
 				dxdy.parentIndex = pathIndex;
 				dxdy.g = nextG;
@@ -300,8 +303,8 @@ bool GetPath(tl::function_ref<bool(Point)> posOk, uint16_t pathIndex, Point dest
 		const PathNode &path = PathNodes[pathIndex];
 		const Point tile = path.position() + dir;
 		const bool ok = posOk(tile);
-		if ((ok && path_solid_pieces(path.position(), tile)) || (!ok && tile == destination)) {
-			if (!ParentPath(pathIndex, tile, destination))
+		if ((ok && CanStep(path.position(), tile)) || (!ok && tile == destination)) {
+			if (!ExploreFrontier(pathIndex, tile, destination))
 				return false;
 		}
 	}
@@ -416,7 +419,7 @@ int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point des
 	return 0;
 }
 
-bool path_solid_pieces(Point startPosition, Point destinationPosition)
+bool CanStep(Point startPosition, Point destinationPosition)
 {
 	// These checks are written as if working backwards from the destination to the source, given
 	// both tiles are expected to be adjacent this doesn't matter beyond being a bit confusing

@@ -351,7 +351,7 @@ void FindMeleeTarget()
 				continue;
 			}
 
-			if (path_solid_pieces({ node.x, node.y }, { dx, dy })) {
+			if (CanStep({ node.x, node.y }, { dx, dy })) {
 				queue.push_back({ dx, dy, node.steps + 1 });
 				visited[dx][dy] = true;
 			}
