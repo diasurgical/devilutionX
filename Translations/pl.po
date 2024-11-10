@@ -200,7 +200,7 @@ msgstr "Sprzedaż Międzynarodowa"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
-msgstr "Sprzedaż w U.S."
+msgstr "Sprzedaż w Stanach Zjednoczonych"
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
