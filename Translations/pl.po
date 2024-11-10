@@ -434,7 +434,7 @@ msgstr "Zręczność:"
 
 #: Source/DiabloUI/hero/selhero.cpp:490
 msgid "Vitality:"
-msgstr "Żywotność:"
+msgstr "Witalność:"
 
 #: Source/DiabloUI/hero/selhero.cpp:492
 msgid "Savegame:"
@@ -2772,7 +2772,7 @@ msgstr "zwiększa zręczność"
 
 #: Source/items.cpp:1712
 msgid "increase vitality"
-msgstr "zwiększa żywotność"
+msgstr "zwiększa witalność"
 
 #: Source/items.cpp:1715
 msgid "restore some life and mana"
@@ -4620,7 +4620,7 @@ msgstr "Zręczność"
 
 #: Source/panels/charpanel.cpp:163
 msgid "Vitality"
-msgstr "Żywotność"
+msgstr "Witalność"
 
 #: Source/panels/charpanel.cpp:166
 msgid "Points to distribute"
