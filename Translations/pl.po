@@ -2552,7 +2552,7 @@ msgstr "Pomoc Diablo"
 
 #: Source/help.cpp:234 Source/qol/chatlog.cpp:200
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr "ESC - wyjście, Strzałki - przewijanie"
+msgstr "Naciśnij ESC aby wyjść lub strzałki aby przewijać."
 
 #: Source/init.cpp:321 Source/init.cpp:361
 msgid "diabdat.mpq or spawn.mpq"
