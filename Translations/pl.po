@@ -4976,16 +4976,13 @@ msgid "Armor: {:d}  "
 msgstr "Pancerz: {:d}  "
 
 #: Source/stores.cpp:313
-#, fuzzy, c++-format
-#| msgid "Dur: {:d}/{:d},  "
+#, c++-format
 msgid "Dur: {:d}/{:d}"
-msgstr "Wyt: {:d}/{:d},  "
+msgstr "Wyt: {:d}/{:d}"
 
 #: Source/stores.cpp:315
-#, fuzzy
-#| msgid "indestructible"
 msgid "Indestructible"
-msgstr "niezniszczalność"
+msgstr "Niezniszczalne"
 
 #: Source/stores.cpp:385 Source/stores.cpp:1033 Source/stores.cpp:1252
 msgid "Welcome to the"
