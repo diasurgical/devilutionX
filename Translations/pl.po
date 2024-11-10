@@ -1098,7 +1098,7 @@ msgstr "Inspekcja gracza: "
 
 #: Source/control.cpp:584
 msgid "Prints help overview or help for a specific command."
-msgstr ""
+msgstr "Wypisuje przegląd pomocy lub pomoc dla konkretnego polecenia."
 
 #: Source/control.cpp:584
 msgid "[command]"
@@ -1130,7 +1130,7 @@ msgstr "<nazwa gracza>"
 
 #: Source/control.cpp:588
 msgid "Show seed infos for current level."
-msgstr ""
+msgstr "Pokaż informację o ziarnie dla aktualnego poziomu."
 
 #: Source/control.cpp:1084
 msgid "Player friendly"
