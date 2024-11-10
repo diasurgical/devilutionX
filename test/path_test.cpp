@@ -58,46 +58,46 @@ TEST(PathTest, Solid)
 	EXPECT_FALSE(IsTileNotSolid({ -1, 1 })) << "Out of bounds tiles are also not not solid";
 }
 
-TEST(PathTest, SolidPieces)
+TEST(PathTest, CanStepTest)
 {
 	dPiece[0][0] = 0;
 	dPiece[0][1] = 0;
 	dPiece[1][0] = 0;
 	dPiece[1][1] = 0;
 	SOLData[0] = TileProperties::None;
-	EXPECT_TRUE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "A step in open space is free of solid pieces";
-	EXPECT_TRUE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "A step in open space is free of solid pieces";
-	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "A step in open space is free of solid pieces";
-	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(CanStep({ 0, 0 }, { 1, 1 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(CanStep({ 1, 1 }, { 0, 0 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(CanStep({ 1, 0 }, { 0, 1 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(CanStep({ 0, 1 }, { 1, 0 })) << "A step in open space is free of solid pieces";
 
 	SOLData[1] = TileProperties::Solid;
 	dPiece[1][0] = 1;
-	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can path to a destination which is solid";
-	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can path from a starting position which is solid";
-	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
-	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
-	EXPECT_TRUE(path_solid_pieces({ 0, 0 }, { 1, 0 })) << "Stepping in a cardinal direction ignores solid pieces";
-	EXPECT_TRUE(path_solid_pieces({ 1, 1 }, { 1, 0 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(CanStep({ 0, 1 }, { 1, 0 })) << "Can path to a destination which is solid";
+	EXPECT_TRUE(CanStep({ 1, 0 }, { 0, 1 })) << "Can path from a starting position which is solid";
+	EXPECT_TRUE(CanStep({ 0, 1 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(CanStep({ 1, 0 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(CanStep({ 0, 0 }, { 1, 0 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(CanStep({ 1, 1 }, { 1, 0 })) << "Stepping in a cardinal direction ignores solid pieces";
 
-	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
 	dPiece[0][1] = 1;
-	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't walk through the boundary between two corners";
-	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(CanStep({ 0, 0 }, { 1, 1 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(CanStep({ 1, 1 }, { 0, 0 })) << "Can't walk through the boundary between two corners";
 	dPiece[1][0] = 0;
-	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
 	dPiece[0][1] = 0;
 
 	dPiece[0][0] = 1;
-	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
 	dPiece[1][1] = 1;
-	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't walk through the boundary between two corners";
-	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(CanStep({ 1, 0 }, { 0, 1 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(CanStep({ 0, 1 }, { 1, 0 })) << "Can't walk through the boundary between two corners";
 	dPiece[0][0] = 0;
-	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(CanStep({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
 	dPiece[1][1] = 0;
 }
 
