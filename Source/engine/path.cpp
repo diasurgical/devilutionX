@@ -5,297 +5,172 @@
  */
 #include "engine/path.h"
 
+#include <algorithm>
+#include <array>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <limits>
 #include <optional>
+#include <utility>
 
 #include <function_ref.hpp>
 
 #include "appfat.h"
 #include "crawl.hpp"
-#include "engine/direction.hpp"
+#include "engine/displacement.hpp"
 #include "engine/point.hpp"
+#include "utils/algorithm/container.hpp"
+#include "utils/static_vector.hpp"
 
 namespace devilution {
+
+// The frame times for axis-aligned and diagonal steps are actually the same.
+//
+// However, we set the diagonal step cost a bit higher to avoid
+// excessive diagonal movement. For example, the frame times for these
+// two paths are the same: ↑↑ and ↗↖. However, ↑↑ looks more natural.
+const int PathAxisAlignedStepCost = 100;
+const int PathDiagonalStepCost = 101;
+
 namespace {
 
-constexpr size_t MaxPathNodes = 300;
+constexpr size_t MaxPathNodes = 1024;
 
-struct PathNode {
-	static constexpr uint16_t InvalidIndex = std::numeric_limits<uint16_t>::max();
-	static constexpr size_t MaxChildren = 8;
+using NodeIndexType = uint16_t;
+using CoordType = uint8_t;
+using CostType = uint16_t;
+using PointT = PointOf<CoordType>;
 
-	int16_t x = 0;
-	int16_t y = 0;
-	uint16_t parentIndex = InvalidIndex;
-	uint16_t childIndices[MaxChildren] = { InvalidIndex, InvalidIndex, InvalidIndex, InvalidIndex, InvalidIndex, InvalidIndex, InvalidIndex, InvalidIndex };
-	uint16_t nextNodeIndex = InvalidIndex;
-	uint8_t f = 0;
-	uint8_t h = 0;
-	uint8_t g = 0;
+struct FrontierNode {
+	PointT position;
 
-	[[nodiscard]] Point position() const
-	{
-		return Point { x, y };
-	}
-
-	void addChild(uint16_t childIndex)
-	{
-		size_t index = 0;
-		for (; index < MaxChildren; ++index) {
-			if (childIndices[index] == InvalidIndex)
-				break;
-		}
-		assert(index < MaxChildren);
-		childIndices[index] = childIndex;
-	}
+	// Current best guess of the cost of the path to destination
+	// if it goes through this node.
+	CostType f;
 };
 
-PathNode PathNodes[MaxPathNodes];
+struct ExploredNode {
+	// Preceding node (needed to reconstruct the path at the end).
+	PointT prev;
 
-/** A linked list of the A* frontier, sorted by distance */
-PathNode *Path2Nodes;
+	// The current lowest cost from start to this node (0 for the start node).
+	CostType g;
+};
 
-/**
- * @brief return a node for a position on the frontier, or `PathNode::InvalidIndex` if not found
- */
-uint16_t GetNode1(Point targetPosition)
-{
-	uint16_t result = Path2Nodes->nextNodeIndex;
-	while (result != PathNode::InvalidIndex) {
-		if (PathNodes[result].position() == targetPosition)
-			return result;
-		result = PathNodes[result].nextNodeIndex;
+// A simple map with a fixed number of buckets and static storage.
+class ExploredNodes {
+	static const size_t NumBuckets = 64;
+	static const size_t BucketCapacity = 3 * MaxPathNodes / NumBuckets;
+	using Entry = std::pair<uint16_t, ExploredNode>;
+	using Bucket = StaticVector<Entry, BucketCapacity>;
+
+public:
+	using value_type = Entry;
+	using iterator = value_type *;
+	using const_iterator = const value_type *;
+
+	[[nodiscard]] const_iterator find(const PointT &point) const
+	{
+		const Bucket &b = bucket(point);
+		const auto it = c_find_if(b, [r = repr(point)](const Entry &e) { return e.first == r; });
+		if (it == b.end()) return nullptr;
+		return it;
 	}
-	return PathNode::InvalidIndex;
-}
-
-/**
- * @brief insert `front` node into the frontier (keeping the frontier sorted by total distance)
- */
-void NextNode(uint16_t front)
-{
-	if (Path2Nodes->nextNodeIndex == PathNode::InvalidIndex) {
-		Path2Nodes->nextNodeIndex = front;
-		return;
-	}
-
-	PathNode *current = Path2Nodes;
-	uint16_t nextIndex = Path2Nodes->nextNodeIndex;
-	const uint8_t maxF = PathNodes[front].f;
-	while (nextIndex != PathNode::InvalidIndex && PathNodes[nextIndex].f < maxF) {
-		current = &PathNodes[nextIndex];
-		nextIndex = current->nextNodeIndex;
-	}
-	PathNodes[front].nextNodeIndex = nextIndex;
-	current->nextNodeIndex = front;
-}
-
-/** A linked list of all visited nodes */
-PathNode *VisitedNodes;
-
-/**
- * @brief return a node for this position if it was visited, or NULL if not found
- */
-uint16_t GetNode2(Point targetPosition)
-{
-	uint16_t result = VisitedNodes->nextNodeIndex;
-	while (result != PathNode::InvalidIndex) {
-		if (PathNodes[result].position() == targetPosition)
-			return result;
-		result = PathNodes[result].nextNodeIndex;
-	}
-	return result;
-}
-
-/**
- * @brief get the next node on the A* frontier to explore (estimated to be closest to the goal), mark it as visited, and return it
- */
-uint16_t GetNextPath()
-{
-	uint16_t result = Path2Nodes->nextNodeIndex;
-	if (result == PathNode::InvalidIndex) {
-		return result;
+	[[nodiscard]] iterator find(const PointT &point)
+	{
+		Bucket &b = bucket(point);
+		auto it = c_find_if(b, [r = repr(point)](const Entry &e) { return e.first == r; });
+		if (it == b.end()) return nullptr;
+		return it;
 	}
 
-	Path2Nodes->nextNodeIndex = PathNodes[result].nextNodeIndex;
-	PathNodes[result].nextNodeIndex = VisitedNodes->nextNodeIndex;
-	VisitedNodes->nextNodeIndex = result;
-	return result;
-}
+	// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+	[[nodiscard]] const_iterator end() const { return nullptr; }
+	// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+	[[nodiscard]] iterator end() { return nullptr; }
 
-/** the number of in-use nodes in path_nodes */
-uint32_t gdwCurNodes;
-/**
- * @brief zero one of the preallocated nodes and return a pointer to it, or NULL if none are available
- */
-uint16_t NewStep()
+	void emplace(const PointT &point, const ExploredNode &exploredNode)
+	{
+		bucket(point).emplace_back(repr(point), exploredNode);
+	}
+
+	[[nodiscard]] bool canInsert(const PointT &point) const
+	{
+		return bucket(point).size() < BucketCapacity;
+	}
+
+private:
+	[[nodiscard]] const Bucket &bucket(const PointT &point) const { return buckets_[bucketIndex(point)]; }
+	[[nodiscard]] Bucket &bucket(const PointT &point) { return buckets_[bucketIndex(point)]; }
+	[[nodiscard]] static size_t bucketIndex(const PointT &point)
+	{
+		return ((point.x & 0b111) << 3) | (point.y & 0b111);
+	}
+
+	[[nodiscard]] static uint16_t repr(const PointT &point)
+	{
+		return (point.x << 8) | point.y;
+	}
+
+	std::array<Bucket, NumBuckets> buckets_;
+};
+
+bool IsDiagonalStep(const Point &a, const Point &b)
 {
-	if (gdwCurNodes >= MaxPathNodes)
-		return PathNode::InvalidIndex;
-
-	PathNodes[gdwCurNodes] = {};
-	return gdwCurNodes++;
-}
-
-/** A stack for recursively searching nodes */
-uint16_t pnode_tblptr[MaxPathNodes];
-/** size of the pnode_tblptr stack */
-uint32_t gdwCurPathStep;
-/**
- * @brief push pPath onto the pnode_tblptr stack
- */
-void PushActiveStep(uint16_t pPath)
-{
-	assert(gdwCurPathStep < MaxPathNodes);
-	pnode_tblptr[gdwCurPathStep] = pPath;
-	gdwCurPathStep++;
-}
-
-/**
- * @brief pop and return a node from the pnode_tblptr stack
- */
-uint16_t PopActiveStep()
-{
-	gdwCurPathStep--;
-	return pnode_tblptr[gdwCurPathStep];
+	return a.x != b.x && a.y != b.y;
 }
 
 /**
  * @brief Returns the distance between 2 adjacent nodes.
- *
- * The distance is 2 for nodes in the same row or column,
- * and 3 for diagonally adjacent nodes.
- *
- * This approximates that diagonal movement on a square grid should have a cost
- * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
- * except diagonal steps which are times 3
  */
-int GetDistance(Point startPosition, Point destinationPosition)
+CostType GetDistance(PointT startPosition, PointT destinationPosition)
 {
-	if (startPosition.x == destinationPosition.x || startPosition.y == destinationPosition.y)
-		return 2;
-
-	return 3;
+	return IsDiagonalStep(startPosition, destinationPosition)
+	    ? PathDiagonalStepCost
+	    : PathAxisAlignedStepCost;
 }
 
 /**
  * @brief heuristic, estimated cost from startPosition to destinationPosition.
  */
-int GetHeuristicCost(Point startPosition, Point destinationPosition)
+CostType GetHeuristicCost(PointT startPosition, PointT destinationPosition)
 {
-	// see GetDistance for why this is times 2
-	return 2 * startPosition.ManhattanDistance(destinationPosition);
+	// This function needs to be admissible, i.e. it should never over-estimate
+	// the distance.
+	//
+	// This calculation assumes we can take diagonal steps until we reach
+	// the same row or column and then take the remaining axis-aligned steps.
+	const int dx = std::abs(static_cast<int>(startPosition.x) - static_cast<int>(destinationPosition.x));
+	const int dy = std::abs(static_cast<int>(startPosition.y) - static_cast<int>(destinationPosition.y));
+	const int diagSteps = std::min(dx, dy);
+
+	// After we've taken `diagSteps`, the remaining steps in one coordinate
+	// will be zero, and in the other coordinate it will be reduced by `diagSteps`.
+	// We then still need to take the remaining steps:
+	//   max(dx, dy) - diagSteps = max(dx, dy) - min(dx, dy) = abs(dx - dy)
+	const int axisAlignedSteps = std::abs(dx - dy);
+	return diagSteps * PathDiagonalStepCost + axisAlignedSteps * PathAxisAlignedStepCost;
 }
 
-/**
- * @brief update all path costs using depth-first search starting at pPath
- */
-void SetCoords(tl::function_ref<bool(Point, Point)> canStep, uint16_t pPath)
+int ReconstructPath(const ExploredNodes &explored, PointT dest, int8_t *path, size_t maxPathLength)
 {
-	PushActiveStep(pPath);
-	// while there are path nodes to check
-	while (gdwCurPathStep > 0) {
-		uint16_t pathOldIndex = PopActiveStep();
-		const PathNode &pathOld = PathNodes[pathOldIndex];
-		for (uint16_t childIndex : pathOld.childIndices) {
-			if (childIndex == PathNode::InvalidIndex)
-				break;
-			PathNode &pathAct = PathNodes[childIndex];
-
-			if (pathOld.g + GetDistance(pathOld.position(), pathAct.position()) < pathAct.g) {
-				if (canStep(pathOld.position(), pathAct.position())) {
-					pathAct.parentIndex = pathOldIndex;
-					pathAct.g = pathOld.g + GetDistance(pathOld.position(), pathAct.position());
-					pathAct.f = pathAct.g + pathAct.h;
-					PushActiveStep(childIndex);
-				}
-			}
+	size_t len = 0;
+	PointT cur = dest;
+	while (true) {
+		const auto it = explored.find(cur);
+		if (it == explored.end()) app_fatal("Failed to reconstruct path");
+		if (it->second.g == 0) break; // reached start
+		path[len++] = GetPathDirection(it->second.prev, cur);
+		cur = it->second.prev;
+		if (len == maxPathLength) {
+			// Path too long.
+			len = 0;
+			break;
 		}
 	}
-}
-
-/**
- * @brief add a step from pPath to destination, return 1 if successful, and update the frontier/visited nodes accordingly
- *
- * @param canStep specifies whether a step between two adjacent points is allowed
- * @param pathIndex index of the current path node
- * @param candidatePosition expected to be a neighbour of the current path node position
- * @param destinationPosition where we hope to end up
- * @return true if step successfully added, false if we ran out of nodes to use
- */
-bool ExploreFrontier(tl::function_ref<bool(Point, Point)> canStep, uint16_t pathIndex, Point candidatePosition, Point destinationPosition)
-{
-	PathNode &path = PathNodes[pathIndex];
-	int nextG = path.g + GetDistance(path.position(), candidatePosition);
-
-	// 3 cases to consider
-	// case 1: (dx,dy) is already on the frontier
-	uint16_t dxdyIndex = GetNode1(candidatePosition);
-	if (dxdyIndex != PathNode::InvalidIndex) {
-		path.addChild(dxdyIndex);
-		PathNode &dxdy = PathNodes[dxdyIndex];
-		if (nextG < dxdy.g) {
-			if (canStep(path.position(), candidatePosition)) {
-				// we'll explore it later, just update
-				dxdy.parentIndex = pathIndex;
-				dxdy.g = nextG;
-				dxdy.f = nextG + dxdy.h;
-			}
-		}
-	} else {
-		// case 2: (dx,dy) was already visited
-		dxdyIndex = GetNode2(candidatePosition);
-		if (dxdyIndex != PathNode::InvalidIndex) {
-			path.addChild(dxdyIndex);
-			PathNode &dxdy = PathNodes[dxdyIndex];
-			if (nextG < dxdy.g && canStep(path.position(), candidatePosition)) {
-				// update the node
-				dxdy.parentIndex = pathIndex;
-				dxdy.g = nextG;
-				dxdy.f = nextG + dxdy.h;
-				// already explored, so re-update others starting from that node
-				SetCoords(canStep, dxdyIndex);
-			}
-		} else {
-			// case 3: (dx,dy) is totally new
-			dxdyIndex = NewStep();
-			if (dxdyIndex == PathNode::InvalidIndex)
-				return false;
-			PathNode &dxdy = PathNodes[dxdyIndex];
-			dxdy.parentIndex = pathIndex;
-			dxdy.g = nextG;
-			dxdy.h = GetHeuristicCost(candidatePosition, destinationPosition);
-			dxdy.f = nextG + dxdy.h;
-			dxdy.x = static_cast<int16_t>(candidatePosition.x);
-			dxdy.y = static_cast<int16_t>(candidatePosition.y);
-			// add it to the frontier
-			NextNode(dxdyIndex);
-			path.addChild(dxdyIndex);
-		}
-	}
-	return true;
-}
-
-/**
- * @brief perform a single step of A* bread-first search by trying to step in every possible direction from pPath with goal (x,y). Check each step with PosOk
- *
- * @return false if we ran out of preallocated nodes to use, else true
- */
-bool GetPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, uint16_t pathIndex, Point destination)
-{
-	for (Displacement dir : PathDirs) {
-		const PathNode &path = PathNodes[pathIndex];
-		const Point tile = path.position() + dir;
-		const bool ok = posOk(tile);
-		if ((ok && canStep(path.position(), tile)) || (!ok && tile == destination)) {
-			if (!ExploreFrontier(canStep, pathIndex, tile, destination))
-				return false;
-		}
-	}
-
-	return true;
+	std::reverse(path, path + len);
+	std::fill(path + len, path + maxPathLength, -1);
+	return len;
 }
 
 } // namespace
@@ -306,54 +181,105 @@ int8_t GetPathDirection(Point startPosition, Point destinationPosition)
 	return PathDirections[3 * (destinationPosition.y - startPosition.y) + 4 + destinationPosition.x - startPosition.x];
 }
 
-int FindPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength])
+int FindPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t *path, size_t maxPathLength)
 {
-	/**
-	 * for reconstructing the path after the A* search is done. The longest
-	 * possible path is actually 24 steps, even though we can fit 25
-	 */
-	static int8_t pnodeVals[MaxPathLength];
+	const PointT start { startPosition };
+	const PointT dest { destinationPosition };
 
-	// clear all nodes, create root nodes for the visited/frontier linked lists
-	gdwCurNodes = 0;
-	Path2Nodes = &PathNodes[NewStep()];
-	VisitedNodes = &PathNodes[NewStep()];
-	gdwCurPathStep = 0;
-	const uint16_t pathStartIndex = NewStep();
-	PathNode &pathStart = PathNodes[pathStartIndex];
-	pathStart.x = static_cast<int16_t>(startPosition.x);
-	pathStart.y = static_cast<int16_t>(startPosition.y);
-	pathStart.f = pathStart.h + pathStart.g;
-	pathStart.h = GetHeuristicCost(startPosition, destinationPosition);
-	pathStart.g = 0;
-	Path2Nodes->nextNodeIndex = pathStartIndex;
-	// A* search until we find (dx,dy) or fail
-	uint16_t nextNodeIndex;
-	while ((nextNodeIndex = GetNextPath()) != PathNode::InvalidIndex) {
-		// reached the end, success!
-		if (PathNodes[nextNodeIndex].position() == destinationPosition) {
-			const PathNode *current = &PathNodes[nextNodeIndex];
-			size_t pathLength = 0;
-			while (current->parentIndex != PathNode::InvalidIndex) {
-				if (pathLength >= MaxPathLength)
-					break;
-				pnodeVals[pathLength++] = GetPathDirection(PathNodes[current->parentIndex].position(), current->position());
-				current = &PathNodes[current->parentIndex];
-			}
-			if (pathLength != MaxPathLength) {
-				size_t i;
-				for (i = 0; i < pathLength; i++)
-					path[i] = pnodeVals[pathLength - i - 1];
-				return static_cast<int>(i);
-			}
-			return 0;
-		}
-		// ran out of nodes, abort!
-		if (!GetPath(canStep, posOk, nextNodeIndex, destinationPosition))
-			return 0;
+	const CostType initialHeuristicCost = GetHeuristicCost(start, dest);
+	if (initialHeuristicCost > PathDiagonalStepCost * maxPathLength) {
+		// Heuristic cost never underestimates the true cost, so we can give up early.
+		return 0;
 	}
-	// frontier is empty, no path!
-	return 0;
+
+	StaticVector<FrontierNode, MaxPathNodes> frontier;
+	ExploredNodes explored;
+	{
+		frontier.emplace_back(FrontierNode { .position = start, .f = initialHeuristicCost });
+		explored.emplace(start, ExploredNode { .prev = {}, .g = 0 });
+	}
+
+	const auto frontierComparator = [&explored, &dest](const FrontierNode &a, const FrontierNode &b) {
+		// We use heap functions from <algorithm> which form a max-heap.
+		// We reverse the comparison sign here to get a min-heap.
+		if (a.f != b.f) return a.f > b.f;
+
+		// For nodes with the same f-score, prefer the ones with lower
+		// heuristic cost (likely to be closer to the goal).
+		const CostType hA = GetHeuristicCost(a.position, dest);
+		const CostType hB = GetHeuristicCost(b.position, dest);
+		if (hA != hB) return hA > hB;
+
+		// Prefer diagonal steps first.
+		const ExploredNode &aInfo = explored.find(a.position)->second;
+		const ExploredNode &bInfo = explored.find(b.position)->second;
+		const bool isDiagonalA = IsDiagonalStep(aInfo.prev, a.position);
+		const bool isDiagonalB = IsDiagonalStep(bInfo.prev, b.position);
+		if (isDiagonalA != isDiagonalB) return isDiagonalB;
+
+		// Finally, disambiguate by coordinate:
+		if (a.position.x != b.position.x) return a.position.x > b.position.x;
+		return a.position.y > b.position.y;
+	};
+
+	while (!frontier.empty()) {
+		const FrontierNode cur = frontier.front(); // argmin(node.f) for node in openSet
+
+		if (cur.position == destinationPosition) {
+			return ReconstructPath(explored, cur.position, path, maxPathLength);
+		}
+
+		std::pop_heap(frontier.begin(), frontier.end(), frontierComparator);
+		frontier.pop_back();
+		const CostType curG = explored.find(cur.position)->second.g;
+
+		// Discard invalid nodes.
+
+		// If this node is already at the maximum number of steps, we can skip processing it.
+		// We don't keep track of the maximum number of steps, so we approximate it.
+		if (curG >= PathDiagonalStepCost * maxPathLength) continue;
+
+		// When we discover a better path to a node, we push the node to the heap
+		// with the new `f` value even if the node is already in the heap.
+		if (curG + GetHeuristicCost(cur.position, dest) > cur.f) continue;
+
+		for (const DisplacementOf<int8_t> d : PathDirs) {
+			// We're using `uint8_t` for coordinates. Avoid underflow:
+			if ((cur.position.x == 0 && d.deltaX < 0) || (cur.position.y == 0 && d.deltaY < 0)) continue;
+			const PointT neighborPos = cur.position + d;
+			const bool ok = posOk(neighborPos);
+			if (ok) {
+				if (!canStep(cur.position, neighborPos)) continue;
+			} else {
+				// We allow targeting a non-walkable node if it is the destination.
+				if (neighborPos != dest) continue;
+			}
+			const CostType g = curG + GetDistance(cur.position, neighborPos);
+			if (curG >= PathDiagonalStepCost * maxPathLength) continue;
+			bool improved = false;
+			if (auto it = explored.find(neighborPos); it == explored.end()) {
+				if (explored.canInsert(neighborPos)) {
+					explored.emplace(neighborPos, ExploredNode { .prev = cur.position, .g = g });
+					improved = true;
+				}
+			} else if (it->second.g > g) {
+				it->second.prev = cur.position;
+				it->second.g = g;
+				improved = true;
+			}
+			if (improved) {
+				const CostType f = g + GetHeuristicCost(neighborPos, dest);
+				if (frontier.size() < MaxPathNodes) {
+					// We always push the node to the heap, even if the same position already exists in it.
+					// When popping from the heap, we discard invalid nodes by checking that `g + h <= f`.
+					frontier.emplace_back(FrontierNode { .position = neighborPos, .f = f });
+					std::push_heap(frontier.begin(), frontier.end(), frontierComparator);
+				}
+			}
+		}
+	}
+
+	return 0; // no path
 }
 
 std::optional<Point> FindClosestValidPosition(tl::function_ref<bool(Point)> posOk, Point startingPosition, unsigned int minimumRadius, unsigned int maximumRadius)

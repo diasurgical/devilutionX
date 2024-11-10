@@ -265,7 +265,7 @@ struct Player {
 	int _pILMaxDam;
 	uint32_t _pExperience;
 	PLR_MODE _pmode;
-	int8_t walkpath[MaxPathLength];
+	int8_t walkpath[MaxPathLengthPlayer];
 	bool plractive;
 	action_id destAction;
 	int destParam1;

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <span>
 
 #include <gmock/gmock.h>
@@ -25,29 +26,29 @@ TEST(PathTest, Heuristics)
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 0) << "Wrong cost for travelling to the same tile";
 
 	destination = source + Direction::NorthEast;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathAxisAlignedStepCost) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::SouthEast;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathAxisAlignedStepCost) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::SouthWest;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathAxisAlignedStepCost) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::NorthWest;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathAxisAlignedStepCost) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 
 	destination = source + Direction::North;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathDiagonalStepCost) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::East;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathDiagonalStepCost) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::South;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathDiagonalStepCost) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::West;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathDiagonalStepCost) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::SouthWest + Direction::SouthEast; // Effectively the same as Direction::South
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathDiagonalStepCost) << "Wrong cost for travelling to diagonally adjacent tile";
 
 	destination = source + Direction::NorthEast + Direction::North;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 6) << "Wrong cost for travelling to a { 2, 1 } offset";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), PathAxisAlignedStepCost + PathDiagonalStepCost) << "Wrong cost for travelling to a { 2, 1 } offset";
 	destination = source + Direction::SouthEast + Direction::SouthEast;
-	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to a { 2, 0 } offset";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2 * PathAxisAlignedStepCost) << "Wrong cost for travelling to a { 2, 0 } offset";
 }
 
 // These symbols are in terms of coordinates (not in terms of on-screen direction).
@@ -90,11 +91,12 @@ std::vector<Dir> ToSyms(std::span<const int8_t> indices)
 
 void CheckPath(Point startPosition, Point destinationPosition, std::vector<std::string> expectedSteps)
 {
+	constexpr size_t MaxPathLength = 25;
 	int8_t pathSteps[MaxPathLength];
 	auto pathLength = FindPath(
 	    /*canStep=*/[](Point, Point) { return true; },
 	    /*posOk=*/[](Point) { return true; },
-	    startPosition, destinationPosition, pathSteps);
+	    startPosition, destinationPosition, pathSteps, MaxPathLength);
 	EXPECT_THAT(ToSyms(std::span<const int8_t>(pathSteps, pathLength)), ElementsAreArray(ToSyms(expectedSteps)))
 	    << "Path steps differs from expectation for a path from "
 	    << startPosition << " to " << destinationPosition;
