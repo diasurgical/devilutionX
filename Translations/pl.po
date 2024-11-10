@@ -844,11 +844,11 @@ msgstr "Usuń wiązanie klawisza"
 
 #: Source/DiabloUI/settingsmenu.cpp:477
 msgid "Bound button combo:"
-msgstr ""
+msgstr "Powiązana kombinacja przycisków:"
 
 #: Source/DiabloUI/settingsmenu.cpp:486
 msgid "Unbind button combo"
-msgstr ""
+msgstr "Usuń powiązanie kombinacji przycisków"
 
 #: Source/DiabloUI/settingsmenu.cpp:530 Source/gamemenu.cpp:72
 msgid "Previous Menu"
