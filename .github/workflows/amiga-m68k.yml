@@ -40,9 +40,10 @@ jobs:
             -S . \
             -B build \
             -G Ninja \
-            -D M68K_COMMON="-s -fbbb=- -ffast-math -O2" \
-            -D M68K_CPU=68040 \
-            -D M68K_FPU=hard
+            -DCMAKE_BUILD_TYPE=Release \
+            -DM68K_COMMON="-s -fbbb=- -ffast-math" \
+            -DM68K_CPU=68040 \
+            -DM68K_FPU=hard
 
       - name: Build DevilutionX
         run: cmake --build build
