@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <optional>
 
@@ -15,7 +16,14 @@
 
 namespace devilution {
 
-constexpr size_t MaxPathLength = 25;
+constexpr size_t MaxPathLengthMonsters = 25;
+constexpr size_t MaxPathLengthPlayer = 100;
+
+// Cost for an axis-aligned step (up/down/left/right). Visible for testing.
+extern const int PathAxisAlignedStepCost;
+
+// Cost for a diagonal step. Visible for testing.
+extern const int PathDiagonalStepCost;
 
 /**
  * @brief Find the shortest path from `startPosition` to `destinationPosition`.
@@ -24,10 +32,11 @@ constexpr size_t MaxPathLength = 25;
  * @param posOk specifies whether a position can be stepped on.
  * @param startPosition
  * @param destinationPosition
- * @param path Resulting path represented as the step directions, which are indices in `PathDirs`. Must have room for `MaxPathLength` steps.
+ * @param path Resulting path represented as the step directions, which are indices in `PathDirs`. Must have room for `maxPathLength` steps.
+ * @param maxPathLength The maximum allowed length of the resulting path.
  * @return The length of the resulting path, or 0 if there is no valid path.
  */
-int FindPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength]);
+int FindPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t *path, size_t maxPathLength);
 
 /** For iterating over the 8 possible movement directions */
 const Displacement PathDirs[8] = {

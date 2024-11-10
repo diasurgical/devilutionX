@@ -6,6 +6,7 @@
 #include "loadsave.h"
 
 #include <climits>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <numeric>
@@ -50,6 +51,7 @@ uint8_t giNumberOfLevels;
 namespace {
 
 constexpr size_t MaxMissilesForSaveGame = 125;
+constexpr size_t PlayerWalkPathSizeForSaveGame = 25;
 
 uint8_t giNumberQuests;
 uint8_t giNumberOfSmithPremiumItems;
@@ -345,9 +347,11 @@ void LoadPlayer(LoadHelper &file, Player &player)
 {
 	player._pmode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
 
-	for (int8_t &step : player.walkpath) {
-		step = file.NextLE<int8_t>();
+	for (size_t i = 0; i < PlayerWalkPathSizeForSaveGame; ++i) {
+		player.walkpath[i] = file.NextLE<int8_t>();
 	}
+	player.walkpath[PlayerWalkPathSizeForSaveGame] = WALK_NONE;
+
 	player.plractive = file.NextBool8();
 	file.Skip(2); // Alignment
 	player.destAction = static_cast<action_id>(file.NextLE<int32_t>());
@@ -1147,8 +1151,9 @@ void SaveItem(SaveHelper &file, const Item &item)
 void SavePlayer(SaveHelper &file, const Player &player)
 {
 	file.WriteLE<int32_t>(player._pmode);
-	for (int8_t step : player.walkpath)
-		file.WriteLE<int8_t>(step);
+	for (size_t i = 0; i < PlayerWalkPathSizeForSaveGame; ++i) {
+		file.WriteLE<int8_t>(player.walkpath[i]);
+	}
 	file.WriteLE<uint8_t>(player.plractive ? 1 : 0);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(player.destAction);

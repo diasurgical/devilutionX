@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <cstdint>
 
 #include <benchmark/benchmark.h>
@@ -37,10 +38,11 @@ void BenchmarkMap(const Map &map, benchmark::State &state)
 {
 	const auto [start, dest] = FindStartDest(map);
 	const auto posOk = /*posOk=*/[&map](Point p) { return map[p] != '#'; };
+	constexpr size_t MaxPathLength = 25;
 	for (auto _ : state) {
 		int8_t path[MaxPathLength];
 		int result = FindPath(/*canStep=*/[](Point, Point) { return true; },
-		    posOk, start, dest, path);
+		    posOk, start, dest, path, MaxPathLength);
 		benchmark::DoNotOptimize(result);
 	}
 }
