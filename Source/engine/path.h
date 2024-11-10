@@ -19,6 +19,12 @@ namespace devilution {
 
 constexpr size_t MaxPathLength = 25;
 
+// Cost for an axis-aligned step (up/down/left/right). Visible for testing.
+extern const int PathAxisAlignedStepCost;
+
+// Cost for a diagonal step. Visible for testing.
+extern const int PathDiagonalStepCost;
+
 bool IsTileNotSolid(Point position);
 bool IsTileSolid(Point position);
 
