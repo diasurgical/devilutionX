@@ -1082,11 +1082,11 @@ msgstr "Aby wejść na arenę musisz być w mieście lub na innej arenie."
 
 #: Source/control.cpp:489
 msgid "Inspecting only supported in multiplayer."
-msgstr ""
+msgstr "Inspekcja graczy jest obsługiwana tylko w grach wieloosobowych."
 
 #: Source/control.cpp:494 Source/control.cpp:781
 msgid "Stopped inspecting players."
-msgstr ""
+msgstr "Zakończono inspekcję graczy."
 
 #: Source/control.cpp:509
 msgid "No players found with such a name"
@@ -1094,7 +1094,7 @@ msgstr "Nie znaleziono graczy z tą nazwą"
 
 #: Source/control.cpp:515
 msgid "Inspecting player: "
-msgstr ""
+msgstr "Inspekcja gracza: "
 
 #: Source/control.cpp:584
 msgid "Prints help overview or help for a specific command."
@@ -1122,7 +1122,7 @@ msgstr "<liczba>"
 
 #: Source/control.cpp:587
 msgid "Inspects stats and equipment of another player."
-msgstr ""
+msgstr "Przeprowadza inspekcję statystyk i ekwipunku innego gracza."
 
 #: Source/control.cpp:587
 msgid "<player name>"
