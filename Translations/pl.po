@@ -4586,7 +4586,7 @@ msgstr "Poziom"
 
 #: Source/panels/charpanel.cpp:135
 msgid "Experience"
-msgstr "Doświadczenie"
+msgstr "Doświad."
 
 #: Source/panels/charpanel.cpp:140
 msgid "Next level"
