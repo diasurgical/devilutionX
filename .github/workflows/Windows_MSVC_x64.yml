@@ -42,7 +42,7 @@ jobs:
     - name: Restore or setup vcpkg
       uses: lukka/run-vcpkg@v11.5
       with:
-        vcpkgGitCommitId: '29b2ea2d4b6197e66ef346e62ccbba35b55b7de5'
+        vcpkgGitCommitId: '813a241fb83adad503a391facaa6aa634631accc'
 
     - name: Fetch test data
       run: |
