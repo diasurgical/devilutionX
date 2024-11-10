@@ -477,9 +477,17 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 	const MICROS *pMap = &DPieceMicros[levelPieceId];
 
 	const uint8_t *tbl = LightTables[lightTableIndex].data();
+	const uint8_t *foliageTbl = tbl;
 #ifdef _DEBUG
-	if (DebugPath && MyPlayer->IsPositionInPath(tilePosition))
-		tbl = GetPauseTRN();
+	int walkpathIdx = -1;
+	Point originalTargetBufferPosition;
+	if (DebugPath) {
+		walkpathIdx = MyPlayer->GetPositionPathIndex(tilePosition);
+		if (walkpathIdx != -1) {
+			originalTargetBufferPosition = targetBufferPosition;
+			tbl = GetPauseTRN();
+		}
+	}
 #endif
 
 	bool transparency = TileHasAny(tilePosition, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
@@ -529,7 +537,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		const TileType tileType = levelCelBlock.type();
 		if (!isFloor || tileType == TileType::TransparentSquare) {
 			if (isFloor && tileType == TileType::TransparentSquare) {
-				RenderTileFoliage(out, targetBufferPosition, levelCelBlock, tbl);
+				RenderTileFoliage(out, targetBufferPosition, levelCelBlock, foliageTbl);
 			} else {
 				RenderTile(out, targetBufferPosition, levelCelBlock, getFirstTileMaskLeft(tileType), tbl);
 			}
@@ -539,7 +547,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 		const TileType tileType = levelCelBlock.type();
 		if (!isFloor || tileType == TileType::TransparentSquare) {
 			if (isFloor && tileType == TileType::TransparentSquare) {
-				RenderTileFoliage(out, targetBufferPosition + RightFrameDisplacement, levelCelBlock, tbl);
+				RenderTileFoliage(out, targetBufferPosition + RightFrameDisplacement, levelCelBlock, foliageTbl);
 			} else {
 				RenderTile(out, targetBufferPosition + RightFrameDisplacement,
 				    levelCelBlock, getFirstTileMaskRight(tileType), tbl);
@@ -554,7 +562,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition,
 				    levelCelBlock,
-				    transparency ? MaskType::Transparent : MaskType::Solid, tbl);
+				    transparency ? MaskType::Transparent : MaskType::Solid, foliageTbl);
 			}
 		}
 		{
@@ -562,11 +570,21 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 			if (levelCelBlock.hasValue()) {
 				RenderTile(out, targetBufferPosition + RightFrameDisplacement,
 				    levelCelBlock,
-				    transparency ? MaskType::Transparent : MaskType::Solid, tbl);
+				    transparency ? MaskType::Transparent : MaskType::Solid, foliageTbl);
 			}
 		}
 		targetBufferPosition.y -= TILE_HEIGHT;
 	}
+
+#ifdef _DEBUG
+	if (DebugPath && walkpathIdx != -1) {
+		DrawString(out, StrCat(walkpathIdx),
+		    Rectangle(originalTargetBufferPosition + Displacement { 0, -TILE_HEIGHT }, Size { TILE_WIDTH, TILE_HEIGHT }),
+		    TextRenderOptions {
+		        .flags = UiFlags::AlignCenter | UiFlags::VerticalCenter
+		            | (IsTileSolid(tilePosition) ? UiFlags::ColorYellow : UiFlags::ColorWhite) });
+	}
+#endif
 }
 
 /**
@@ -581,7 +599,7 @@ void DrawFloorTile(const Surface &out, Point tilePosition, Point targetBufferPos
 
 	const uint8_t *tbl = LightTables[lightTableIndex].data();
 #ifdef _DEBUG
-	if (DebugPath && MyPlayer->IsPositionInPath(tilePosition))
+	if (DebugPath && MyPlayer->GetPositionPathIndex(tilePosition) != -1)
 		tbl = GetPauseTRN();
 #endif
 

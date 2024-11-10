@@ -1653,21 +1653,21 @@ Point Player::GetTargetPosition() const
 	return target;
 }
 
-bool Player::IsPositionInPath(Point pos)
+int Player::GetPositionPathIndex(Point pos)
 {
 	constexpr Displacement DirectionOffset[8] = { { 0, -1 }, { -1, 0 }, { 1, 0 }, { 0, 1 }, { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 } };
 	Point target = position.future;
+	int i = 0;
 	for (auto step : walkpath) {
-		if (target == pos) {
-			return true;
-		}
+		if (target == pos) return i;
 		if (step == WALK_NONE)
 			break;
 		if (step > 0) {
 			target += DirectionOffset[step - 1];
 		}
+		++i;
 	}
-	return false;
+	return -1;
 }
 
 void Player::Say(HeroSpeech speechId) const

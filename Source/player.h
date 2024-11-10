@@ -520,9 +520,9 @@ public:
 	Point GetTargetPosition() const;
 
 	/**
-	 * @brief Check if position is in player's path.
+	 * @brief Returns the index of the given position in `walkpath`, or -1 if not found.
 	 */
-	bool IsPositionInPath(Point position);
+	int GetPositionPathIndex(Point position);
 
 	/**
 	 * @brief Says a speech line.
