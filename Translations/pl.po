@@ -4649,18 +4649,15 @@ msgstr "Mana"
 
 #: Source/panels/charpanel.cpp:196
 msgid "Resist magic"
-msgstr ""
-"Odporności:\n"
-"Magia\n"
-" "
+msgstr "Odp. na magię"
 
 #: Source/panels/charpanel.cpp:198
 msgid "Resist fire"
-msgstr "Ogień"
+msgstr "Odp. na ogień"
 
 #: Source/panels/charpanel.cpp:200
 msgid "Resist lightning"
-msgstr "Błyskawice"
+msgstr "Odp. na błysk."
 
 #: Source/panels/mainpanel.cpp:91
 msgid "char"
