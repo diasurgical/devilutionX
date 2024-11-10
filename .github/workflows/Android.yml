@@ -39,6 +39,10 @@ jobs:
     - name: Accept SDK licenses
       run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
+    - name: Install CMake
+      run: |
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;3.31.0" 
+
     - name: Cache CMake build folder
       uses: actions/cache@v4
       with:
