@@ -1,4 +1,4 @@
-include(functions/FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_ExcludeFromAll_backport)
 include(FetchContent)
 
 find_package(Patch REQUIRED)
@@ -7,18 +7,18 @@ set(Discord_SDK_URL "https://dl-game-sdk.discordapp.net/3.2.1/discord_game_sdk.z
 set(Discord_SDK_HASH "73e5e1b3f8413a2c7184ef17476822f2")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  FetchContent_Declare(discordsrc
+  FetchContent_Declare_ExcludeFromAll(discordsrc
     URL ${Discord_SDK_URL}
     URL_HASH MD5=${Discord_SDK_HASH}
   )
 else()
-  FetchContent_Declare(discordsrc
+  FetchContent_Declare_ExcludeFromAll(discordsrc
     URL ${Discord_SDK_URL}
     URL_HASH MD5=${Discord_SDK_HASH}
     PATCH_COMMAND "${Patch_EXECUTABLE}" -p1 -N < "${CMAKE_CURRENT_LIST_DIR}/fixes.patch" || true
   )
 endif()
-FetchContent_MakeAvailableExcludeFromAll(discordsrc)
+FetchContent_MakeAvailable_ExcludeFromAll(discordsrc)
 
 file(GLOB discord_SRCS ${discordsrc_SOURCE_DIR}/cpp/*.cpp)
 add_library(discord STATIC ${discord_SRCS})

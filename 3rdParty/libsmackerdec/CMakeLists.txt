@@ -1,11 +1,11 @@
-include(functions/FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_ExcludeFromAll_backport)
 
 include(FetchContent)
-FetchContent_Declare(libsmackerdec
+FetchContent_Declare_ExcludeFromAll(libsmackerdec
     URL https://github.com/diasurgical/libsmackerdec/archive/91e732bb6953489077430572f43fc802bf2c75b2.tar.gz
     URL_HASH MD5=c3b1ecbe702266e149b158178a03e2b3
 )
-FetchContent_MakeAvailableExcludeFromAll(libsmackerdec)
+FetchContent_MakeAvailable_ExcludeFromAll(libsmackerdec)
 
 add_library(libsmackerdec STATIC
   ${libsmackerdec_SOURCE_DIR}/src/BitReader.cpp

@@ -1,4 +1,4 @@
-include(functions/FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_ExcludeFromAll_backport)
 
 if(DEVILUTIONX_STATIC_SDL_AUDIOLIB)
   set(BUILD_SHARED_LIBS OFF)
@@ -37,10 +37,10 @@ set(USE_DEC_ADLMIDI OFF)
 set(USE_DEC_DRMP3 ON)
 
 include(FetchContent)
-FetchContent_Declare(SDL_audiolib
+FetchContent_Declare_ExcludeFromAll(SDL_audiolib
   URL https://github.com/realnc/SDL_audiolib/archive/cc1bb6af8d4cf5e200259072bde1edd1c8c5137e.tar.gz
   URL_HASH MD5=0e8174264ac9c6b314c6b2d9a5f72efd)
-FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)
+FetchContent_MakeAvailable_ExcludeFromAll(SDL_audiolib)
 
 add_library(SDL_audiolib::SDL_audiolib ALIAS SDL_audiolib)
 
