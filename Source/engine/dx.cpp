@@ -114,6 +114,7 @@ void dx_cleanup()
 	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
 	texture = nullptr;
+	FreeVirtualGamepadTextures();
 	if (*sgOptions.Graphics.upscale)
 		SDL_DestroyRenderer(renderer);
 #endif
