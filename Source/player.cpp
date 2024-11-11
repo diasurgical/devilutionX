@@ -3127,15 +3127,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 
 	if (spellID == SpellID::Teleport && myPlayer.executedSpell.spellId == SpellID::Teleport) {
 		// Check if the player is attempting to queue Teleport onto a tile that is currently being targeted with Teleport, or a nearby tile
-		if (IsAnyOf(cursPosition, myPlayer.position.temp,
-		        myPlayer.position.temp + Direction::North,
-		        myPlayer.position.temp + Direction::NorthEast,
-		        myPlayer.position.temp + Direction::East,
-		        myPlayer.position.temp + Direction::SouthEast,
-		        myPlayer.position.temp + Direction::South,
-		        myPlayer.position.temp + Direction::SouthWest,
-		        myPlayer.position.temp + Direction::West,
-		        myPlayer.position.temp + Direction::NorthWest)) {
+		if (cursPosition.WalkingDistance(myPlayer.position.temp) <= 1) {
 			// Get the relative displacement from the player's current position to the cursor position
 			WorldTileDisplacement relativeMove = cursPosition - static_cast<Point>(myPlayer.position.tile);
 			// Target the tile the relative distance away from the player's targeted Teleport tile
