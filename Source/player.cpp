@@ -3125,7 +3125,7 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 
 	Point targetedTile = cursPosition;
 
-	if (spellID == SpellID::Teleport) {
+	if (spellID == SpellID::Teleport && myPlayer.executedSpell.spellId == SpellID::Teleport) {
 		// Check if the player is attempting to queue Teleport onto a tile that is currently being targeted with Teleport, or a nearby tile
 		if (IsAnyOf(cursPosition, myPlayer.position.temp,
 		        myPlayer.position.temp + Direction::North,
