@@ -1,11 +1,11 @@
-include(functions/FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_ExcludeFromAll_backport)
 
 include(FetchContent)
-FetchContent_Declare(Tolk
+FetchContent_Declare_ExcludeFromAll(Tolk
     URL https://github.com/sig-a11y/tolk/archive/89de98779e3b6365dc1688538d5de4ecba3fdbab.tar.gz
     URL_HASH MD5=724f6022186573dd9c5c2c92ed9e21e6
 )
-FetchContent_MakeAvailableExcludeFromAll(Tolk)
+FetchContent_MakeAvailable_ExcludeFromAll(Tolk)
 
 target_include_directories(Tolk PUBLIC ${libTolk_SOURCE_DIR}/src)
 

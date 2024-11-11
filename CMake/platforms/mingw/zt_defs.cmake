@@ -1,9 +1,9 @@
 option(MINGW_STDTHREADS_GENERATE_STDHEADERS "" ON)
 
-FetchContent_Declare(mingw-std-threads
+FetchContent_Declare_ExcludeFromAll(mingw-std-threads
   GIT_REPOSITORY https://github.com/meganz/mingw-std-threads
   GIT_TAG bee085c0a6cb32c59f0b55c7bba976fe6dcfca7f)
-FetchContent_MakeAvailableExcludeFromAll(mingw-std-threads)
+FetchContent_MakeAvailable_ExcludeFromAll(mingw-std-threads)
 
 target_compile_definitions(libnatpmp_obj PRIVATE -D_WIN32_WINNT=0x601 -DSTATICLIB)
 target_compile_definitions(zto_obj PRIVATE -D_WIN32_WINNT=0x601)

@@ -1,4 +1,4 @@
-include(functions/FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_ExcludeFromAll_backport)
 
 if(NOT DISABLE_LTO)
   # Force CMake to raise an error if INTERPROCEDURAL_OPTIMIZATION
@@ -24,11 +24,11 @@ if(APPLE AND "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "arm64")
 endif()
 
 include(FetchContent)
-FetchContent_Declare(libpng
+FetchContent_Declare_ExcludeFromAll(libpng
   URL https://github.com/glennrp/libpng/archive/0a158f3506502dfa23edfc42790dfaed82efba17.tar.gz
   URL_HASH MD5=6d705417242732e8e081bff752c98c18
 )
-FetchContent_MakeAvailableExcludeFromAll(libpng)
+FetchContent_MakeAvailable_ExcludeFromAll(libpng)
 
 target_include_directories(${PNG_LIBRARY} INTERFACE
   $<BUILD_INTERFACE:${libpng_SOURCE_DIR}>
