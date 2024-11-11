@@ -7,7 +7,7 @@ if (buildAsApplication) {
 }
 
 android {
-	ndkVersion '26.1.10909125'
+	ndkVersion '28.0.12433566'
 	compileSdk 35
 	defaultConfig {
 		if (buildAsApplication) {
@@ -45,7 +45,7 @@ android {
 		externalNativeBuild {
 			cmake {
 				path '../../CMakeLists.txt'
-				version "3.22.1+"
+				version "3.31.0+"
 				buildStagingDirectory System.env.DevilutionX_Android_StagingDirectory
 			}
 		}
