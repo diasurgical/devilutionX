@@ -10,6 +10,7 @@
 
 #include "items.h"
 #include "monstdat.h"
+#include "player.h"
 
 namespace devilution {
 
@@ -116,6 +117,23 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	// Diablo doesn't have containers that drop items in dungeon level 16, therefore we decrement by 1
 	diabloMaxDungeonLevel--;
 	return level <= (diabloMaxDungeonLevel * 2);
+}
+
+bool IsItemValid(const Player &player, const Item &item)
+{
+	bool isValid = true;
+
+	if (item.IDidx != IDI_GOLD)
+		isValid = isValid && IsCreationFlagComboValid(item._iCreateInfo);
+
+	if ((item._iCreateInfo & CF_TOWN) != 0)
+		isValid = isValid && IsTownItemValid(item._iCreateInfo, player.getMaxCharacterLevel());
+	else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15)
+		isValid = isValid && IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff);
+
+	isValid = isValid && IsDungeonItemValid(item._iCreateInfo, item.dwBuff);
+
+	return isValid;
 }
 
 } // namespace devilution

@@ -517,23 +517,7 @@ void CalcSelfItems(Player &player)
 			if (!equipment._iStatFlag)
 				continue;
 
-			bool isValid = true;
-
-			if (equipment.IDidx != IDI_GOLD) {
-				if (!IsCreationFlagComboValid(equipment._iCreateInfo))
-					isValid = false;
-			}
-
-			if ((equipment._iCreateInfo & CF_TOWN) != 0) {
-				if (!IsTownItemValid(equipment._iCreateInfo, player.getMaxCharacterLevel()))
-					isValid = false;
-			} else if ((equipment._iCreateInfo & CF_USEFUL) == CF_UPER15) {
-				if (!IsUniqueMonsterItemValid(equipment._iCreateInfo, equipment.dwBuff))
-					isValid = false;
-			} else {
-				if (!IsDungeonItemValid(equipment._iCreateInfo, equipment.dwBuff))
-					isValid = false;
-			}
+			bool isValid = IsItemValid(player, equipment);
 
 			if (currstr < equipment._iMinStr
 			    || currmag < equipment._iMinMag
