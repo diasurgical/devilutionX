@@ -135,19 +135,21 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 
 bool IsItemValid(const Player &player, const Item &item)
 {
-	bool isValid = true;
+	if (item.IDidx != IDI_GOLD && !IsCreationFlagComboValid(item._iCreateInfo))
+		return false;
 
-	if (item.IDidx != IDI_GOLD)
-		isValid = isValid && IsCreationFlagComboValid(item._iCreateInfo);
+	if ((item._iCreateInfo & CF_TOWN) != 0) {
+		if (!IsTownItemValid(item._iCreateInfo, player) || !IsShopPriceValid(item))
+			return false;
+	} else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15) {
+		if (!IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff))
+			return false;
+	}
 
-	if ((item._iCreateInfo & CF_TOWN) != 0)
-		isValid = isValid && IsTownItemValid(item._iCreateInfo, player) && IsShopPriceValid(item);
-	else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15)
-		isValid = isValid && IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff);
+	if (!IsDungeonItemValid(item._iCreateInfo, item.dwBuff))
+		return false;
 
-	isValid = isValid && IsDungeonItemValid(item._iCreateInfo, item.dwBuff);
-
-	return isValid;
+	return true;
 }
 
 } // namespace devilution
