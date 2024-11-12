@@ -80,12 +80,6 @@ enum _item_indexes : int16_t { // TODO defines all indexes in AllItemsList
 	IDI_NONE = -1,
 };
 
-enum item_drop_rate : uint8_t {
-	IDROP_NEVER,
-	IDROP_REGULAR,
-	IDROP_DOUBLE,
-};
-
 enum item_class : uint8_t {
 	ICLASS_NONE,
 	ICLASS_WEAPON,
@@ -489,7 +483,7 @@ enum item_misc_id : int8_t {
 };
 
 struct ItemData {
-	enum item_drop_rate iRnd;
+	uint8_t dropRate;
 	enum item_class iClass;
 	enum item_equip_type iLoc;
 	enum item_cursor_graphic iCurs;

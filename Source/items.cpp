@@ -1365,13 +1365,13 @@ _item_indexes GetItemIndexForDroppableItem(bool considerDropRate, tl::function_r
 		if (!IsItemAvailable(i))
 			continue;
 		const ItemData &item = AllItemsList[i];
-		if (item.iRnd == IDROP_NEVER)
+		if (item.dropRate == 0)
 			continue;
 		if (IsAnyOf(item.iSpell, SpellID::Resurrect, SpellID::HealOther) && !gbIsMultiplayer)
 			continue;
 		if (!isItemOkay(item))
 			continue;
-		cumulativeWeight += considerDropRate ? static_cast<unsigned>(item.iRnd) : 1;
+		cumulativeWeight += considerDropRate ? item.dropRate : 1;
 		ril.push_back({ static_cast<_item_indexes>(i), cumulativeWeight });
 	}
 	unsigned targetWeight = static_cast<unsigned>(RandomIntLessThan(static_cast<int>(cumulativeWeight)));

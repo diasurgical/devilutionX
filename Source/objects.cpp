@@ -4353,7 +4353,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 _item_indexes ItemMiscIdIdx(item_misc_id imiscid)
 {
 	std::underlying_type_t<_item_indexes> i = IDI_GOLD;
-	while (AllItemsList[i].iRnd == IDROP_NEVER || AllItemsList[i].iMiscId != imiscid) {
+	while (AllItemsList[i].dropRate == 0 || AllItemsList[i].iMiscId != imiscid) {
 		i++;
 	}
 

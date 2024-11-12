@@ -33,17 +33,6 @@ std::vector<PLStruct> ItemSuffixes;
 
 namespace {
 
-tl::expected<item_drop_rate, std::string> ParseItemDropRate(std::string_view value)
-{
-	if (value == "Never") return IDROP_NEVER;
-	if (value == "Regular") return IDROP_REGULAR;
-	if (value == "Double") return IDROP_DOUBLE;
-	ParseIntResult<std::underlying_type_t<item_drop_rate>> numericValue = ParseInt<std::underlying_type_t<item_drop_rate>>(value);
-	if (numericValue.has_value()) return static_cast<item_drop_rate>(numericValue.value());
-	if (numericValue.error() == ParseIntError::OutOfRange) return tl::make_unexpected("Value too large");
-	return tl::make_unexpected("Unknown enum value");
-}
-
 tl::expected<item_class, std::string> ParseItemClass(std::string_view value)
 {
 	if (value == "None") return ICLASS_NONE;
@@ -537,7 +526,7 @@ void LoadItemDat()
 		RecordReader reader { record, filename };
 		ItemData &item = AllItemsList.emplace_back();
 		reader.advance(); // Skip the first column (item ID).
-		reader.read("dropRate", item.iRnd, ParseItemDropRate);
+		reader.readInt("dropRate", item.dropRate);
 		reader.read("class", item.iClass, ParseItemClass);
 		reader.read("equipType", item.iLoc, ParseItemEquipType);
 		reader.read("cursorGraphic", item.iCurs, ParseItemCursorGraphic);
