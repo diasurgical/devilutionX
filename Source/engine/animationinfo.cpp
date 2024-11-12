@@ -59,7 +59,7 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 	return absoluteAnimationFrame;
 }
 
-uint8_t AnimationInfo::getAnimationProgress()
+uint8_t AnimationInfo::getAnimationProgress() const
 {
 	int16_t ticksSinceSequenceStarted = std::max<int16_t>(0, ticksSinceSequenceStarted_);
 	int32_t tickModifier = tickModifier_;
@@ -67,12 +67,11 @@ uint8_t AnimationInfo::getAnimationProgress()
 	if (relevantFramesForDistributing_ <= 0) {
 		if (ticksPerFrame <= 0) {
 			Log("getAnimationProgress: Invalid ticksPerFrame {}", ticksPerFrame);
-			ticksPerFrame = 1;
 		}
 		// This logic is used if animation distribution is not active (see getFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		ticksSinceSequenceStarted = ((currentFrame * ticksPerFrame) + tickCounterOfCurrentFrame) * baseValueFraction;
-		tickModifier = baseValueFraction / ticksPerFrame;
+		ticksSinceSequenceStarted = ((currentFrame * std::max(static_cast<int8_t>(1), ticksPerFrame)) + tickCounterOfCurrentFrame) * baseValueFraction;
+		tickModifier = baseValueFraction / std::max(static_cast<int8_t>(1), ticksPerFrame);
 	}
 
 	int32_t totalTicksForCurrentAnimationSequence = getProgressToNextGameTick() + ticksSinceSequenceStarted;
