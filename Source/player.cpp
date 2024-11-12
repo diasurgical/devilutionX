@@ -3123,18 +3123,6 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 		return;
 	}
 
-	Point targetedTile = cursPosition;
-
-	if (spellID == SpellID::Teleport && myPlayer.executedSpell.spellId == SpellID::Teleport) {
-		// Check if the player is attempting to queue Teleport onto a tile that is currently being targeted with Teleport, or a nearby tile
-		if (cursPosition.WalkingDistance(myPlayer.position.temp) <= 1) {
-			// Get the relative displacement from the player's current position to the cursor position
-			WorldTileDisplacement relativeMove = cursPosition - static_cast<Point>(myPlayer.position.tile);
-			// Target the tile the relative distance away from the player's targeted Teleport tile
-			targetedTile = myPlayer.position.temp + relativeMove;
-		}
-	}
-
 	if (!addflag) {
 		if (spellType == SpellType::Spell) {
 			switch (spellcheck) {
@@ -3166,6 +3154,16 @@ void CheckPlrSpell(bool isShiftHeld, SpellID spellID, SpellType spellType)
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		NetSendCmdParam5(true, CMD_SPELLPID, PlayerUnderCursor->getId(), static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	} else {
+		Point targetedTile = cursPosition;
+		if (spellID == SpellID::Teleport && myPlayer.executedSpell.spellId == SpellID::Teleport) {
+			// Check if the player is attempting to queue Teleport onto a tile that is currently being targeted with Teleport, or a nearby tile
+			if (cursPosition.WalkingDistance(myPlayer.position.temp) <= 1) {
+				// Get the relative displacement from the player's current position to the cursor position
+				WorldTileDisplacement relativeMove = cursPosition - static_cast<Point>(myPlayer.position.tile);
+				// Target the tile the relative distance away from the player's targeted Teleport tile
+				targetedTile = myPlayer.position.temp + relativeMove;
+			}
+		}
 		LastMouseButtonAction = MouseActionType::Spell;
 		NetSendCmdLocParam4(true, CMD_SPELLXY, targetedTile, static_cast<int8_t>(spellID), static_cast<uint8_t>(spellType), spellLevel, spellFrom);
 	}
