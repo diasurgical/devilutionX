@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+// Forward declared structs to avoid circular dependencies
 struct Item;
 struct Player;
 

@@ -399,15 +399,7 @@ public:
 
 	void CalcScrolls();
 
-	bool CanUseItem(const Item &item) const
-	{
-		if (!IsItemValid(*this, item))
-			return false;
-
-		return _pStrength >= item._iMinStr
-		    && _pMagic >= item._iMinMag
-		    && _pDexterity >= item._iMinDex;
-	}
+	bool CanUseItem(const Item &item) const;
 
 	bool CanCleave()
 	{
