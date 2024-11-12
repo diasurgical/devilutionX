@@ -1044,7 +1044,7 @@ bool IsPItemValid(const TCmdPItem &message, const Player &player)
 		if (idx != IDI_GOLD)
 			ValidateField(creationFlags, IsCreationFlagComboValid(creationFlags));
 		if ((creationFlags & CF_TOWN) != 0)
-			ValidateField(creationFlags, IsTownItemValid(creationFlags, player.getMaxCharacterLevel()));
+			ValidateField(creationFlags, IsTownItemValid(creationFlags, player));
 		else if ((creationFlags & CF_USEFUL) == CF_UPER15)
 			ValidateFields(creationFlags, dwBuff, IsUniqueMonsterItemValid(creationFlags, dwBuff));
 		else if ((dwBuff & CF_HELLFIRE) != 0 && AllItemsList[idx].iMiscId == IMISC_BOOK)

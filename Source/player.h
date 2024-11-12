@@ -407,7 +407,7 @@ public:
 		}
 
 		if ((item._iCreateInfo & CF_TOWN) != 0) {
-			if (!IsTownItemValid(item._iCreateInfo, getMaxCharacterLevel()))
+			if (!IsTownItemValid(item._iCreateInfo, *this))
 				return false;
 		} else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15) {
 			if (!IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff))

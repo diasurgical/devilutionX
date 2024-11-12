@@ -43,14 +43,14 @@ bool IsCreationFlagComboValid(uint16_t iCreateInfo)
 	return true;
 }
 
-bool IsTownItemValid(uint16_t iCreateInfo, uint8_t maxCharacterLevel)
+bool IsTownItemValid(uint16_t iCreateInfo, const Player &player)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
 	const bool isBoyItem = (iCreateInfo & CF_BOY) != 0;
 	const uint8_t maxTownItemLevel = 30;
 
 	// Wirt items in multiplayer are equal to the level of the player, therefore they cannot exceed the max character level
-	if (isBoyItem && level <= maxCharacterLevel)
+	if (isBoyItem && level <= player.getMaxCharacterLevel())
 		return true;
 
 	return level <= maxTownItemLevel;
@@ -141,7 +141,7 @@ bool IsItemValid(const Player &player, const Item &item)
 		isValid = isValid && IsCreationFlagComboValid(item._iCreateInfo);
 
 	if ((item._iCreateInfo & CF_TOWN) != 0)
-		isValid = isValid && IsTownItemValid(item._iCreateInfo, player.getMaxCharacterLevel()) && IsShopPriceValid(item);
+		isValid = isValid && IsTownItemValid(item._iCreateInfo, player) && IsShopPriceValid(item);
 	else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15)
 		isValid = isValid && IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff);
 
