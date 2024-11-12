@@ -7,6 +7,9 @@
 
 #include <cstdint>
 
+struct Item;
+struct Player;
+
 namespace devilution {
 
 bool IsCreationFlagComboValid(uint16_t iCreateInfo);
