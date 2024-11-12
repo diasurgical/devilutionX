@@ -1350,11 +1350,17 @@ void GetItemBonus(const Player &player, Item &item, int minlvl, int maxlvl, bool
 	}
 }
 
+struct WeightedItemIndex {
+	_item_indexes index;
+	unsigned cumulativeWeight;
+};
+
 _item_indexes GetItemIndexForDroppableItem(bool considerDropRate, tl::function_ref<bool(const ItemData &item)> isItemOkay)
 {
-	static std::array<_item_indexes, IDI_LAST * 2> ril;
+	static std::vector<WeightedItemIndex> ril;
+	ril.clear();
 
-	size_t ri = 0;
+	unsigned cumulativeWeight = 0;
 	for (std::underlying_type_t<_item_indexes> i = IDI_GOLD; i <= IDI_LAST; i++) {
 		if (!IsItemAvailable(i))
 			continue;
@@ -1365,15 +1371,11 @@ _item_indexes GetItemIndexForDroppableItem(bool considerDropRate, tl::function_r
 			continue;
 		if (!isItemOkay(item))
 			continue;
-		ril[ri] = static_cast<_item_indexes>(i);
-		ri++;
-		if (item.iRnd == IDROP_DOUBLE && considerDropRate) {
-			ril[ri] = static_cast<_item_indexes>(i);
-			ri++;
-		}
+		cumulativeWeight += considerDropRate ? static_cast<unsigned>(item.iRnd) : 1;
+		ril.push_back({ static_cast<_item_indexes>(i), cumulativeWeight });
 	}
-
-	return ril[GenerateRnd(static_cast<int>(ri))];
+	unsigned targetWeight = static_cast<unsigned>(RandomIntLessThan(static_cast<int>(cumulativeWeight)));
+	return std::upper_bound(ril.begin(), ril.end(), targetWeight, [](unsigned target, const WeightedItemIndex &value) { return target < value.cumulativeWeight; })->index;
 }
 
 _item_indexes RndUItem(Monster *monster)

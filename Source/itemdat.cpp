@@ -38,6 +38,9 @@ tl::expected<item_drop_rate, std::string> ParseItemDropRate(std::string_view val
 	if (value == "Never") return IDROP_NEVER;
 	if (value == "Regular") return IDROP_REGULAR;
 	if (value == "Double") return IDROP_DOUBLE;
+	ParseIntResult<std::underlying_type_t<item_drop_rate>> numericValue = ParseInt<std::underlying_type_t<item_drop_rate>>(value);
+	if (numericValue.has_value()) return static_cast<item_drop_rate>(numericValue.value());
+	if (numericValue.error() == ParseIntError::OutOfRange) return tl::make_unexpected("Value too large");
 	return tl::make_unexpected("Unknown enum value");
 }
 
