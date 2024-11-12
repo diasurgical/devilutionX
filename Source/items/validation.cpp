@@ -56,6 +56,20 @@ bool IsTownItemValid(uint16_t iCreateInfo, uint8_t maxCharacterLevel)
 	return level <= maxTownItemLevel;
 }
 
+bool IsShopPriceValid(const Item &item)
+{
+	const int boyPriceLimit = gbIsHellfire ? MAX_BOY_VALUE_HF : MAX_BOY_VALUE;
+	if ((item._iCreateInfo & CF_BOY) != 0 && item._iIvalue > boyPriceLimit)
+		return false;
+
+	const uint16_t smithOrWitch = CF_SMITH | CF_SMITHPREMIUM | CF_WITCH;
+	const int smithAndWitchPriceLimit = gbIsHellfire ? MAX_VENDOR_VALUE_HF : MAX_VENDOR_VALUE;
+	if ((item._iCreateInfo & smithOrWitch) != 0 && item._iIvalue > smithAndWitchPriceLimit)
+		return false;
+
+	return true;
+}
+
 bool IsUniqueMonsterItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 {
 	const uint8_t level = iCreateInfo & CF_LEVEL;
@@ -127,7 +141,7 @@ bool IsItemValid(const Player &player, const Item &item)
 		isValid = isValid && IsCreationFlagComboValid(item._iCreateInfo);
 
 	if ((item._iCreateInfo & CF_TOWN) != 0)
-		isValid = isValid && IsTownItemValid(item._iCreateInfo, player.getMaxCharacterLevel());
+		isValid = isValid && IsTownItemValid(item._iCreateInfo, player.getMaxCharacterLevel()) && IsShopPriceValid(item);
 	else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15)
 		isValid = isValid && IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff);
 
