@@ -80,7 +80,7 @@ public:
 	/**
 	 * @brief Calculates the progress of the current animation as a fraction (see baseValueFraction)
 	 */
-	[[nodiscard]] uint8_t getAnimationProgress() const;
+	[[nodiscard]] uint8_t getAnimationProgress();
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
