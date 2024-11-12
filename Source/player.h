@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <array>
 
-#include "common/validation.h"
 #include "diablo.h"
 #include "engine.h"
 #include "engine/actor_position.hpp"
@@ -21,6 +20,7 @@
 #include "engine/point.hpp"
 #include "interfac.h"
 #include "items.h"
+#include "items/validation.h"
 #include "levels/gendung.h"
 #include "multi.h"
 #include "playerdat.hpp"

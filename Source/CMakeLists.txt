@@ -55,8 +55,6 @@ set(libdevilutionx_SRCS
   towners.cpp
   track.cpp
 
-  common/validation.cpp
-
   controls/axis_direction.cpp
   controls/controller.cpp
   controls/controller_buttons.cpp
@@ -121,6 +119,8 @@ set(libdevilutionx_SRCS
   engine/render/dun_render.cpp
   engine/render/scrollrt.cpp
   engine/render/text_render.cpp
+
+  items/validation.cpp
 
   levels/crypt.cpp
   levels/drlg_l1.cpp

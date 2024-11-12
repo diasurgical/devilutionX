@@ -7,9 +7,9 @@
 
 #include <cstdint>
 
-#include "common/validation.h"
 #include "engine/random.hpp"
 #include "init.h"
+#include "items/validation.h"
 #include "loadsave.h"
 #include "playerdat.hpp"
 #include "plrmsg.h"
