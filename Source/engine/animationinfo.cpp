@@ -72,7 +72,6 @@ uint8_t AnimationInfo::getAnimationProgress() const
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
 		ticksSinceSequenceStarted = ((currentFrame * std::max<int8_t>(1, ticksPerFrame)) + tickCounterOfCurrentFrame) * baseValueFraction;
 		tickModifier = baseValueFraction / std::max<int8_t>(1, ticksPerFrame);
-
 	}
 
 	int32_t totalTicksForCurrentAnimationSequence = getProgressToNextGameTick() + ticksSinceSequenceStarted;
