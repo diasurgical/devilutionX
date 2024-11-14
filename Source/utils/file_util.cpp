@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && DARWIN_MAJOR_VERSION >= 9
 #include <copyfile.h>
 #endif
 
@@ -397,7 +397,7 @@ void CopyFileOverwrite(const char *from, const char *to)
 		LogError("Failed to copy {} to {}", from, to);
 	}
 #endif // _WIN32
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && DARWIN_MAJOR_VERSION >= 9
 	::copyfile(from, to, nullptr, COPYFILE_ALL);
 #elif defined(DVL_HAS_FILESYSTEM)
 	std::error_code error;

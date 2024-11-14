@@ -75,3 +75,17 @@ endif()
 if(NXDK)
   include(platforms/xbox_nxdk)
 endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+  # Some notable Darwin (macOS kernel) versions are:
+  #   8.x == macOS 10.4 (Tiger)
+  #   9.x == macOS 10.5 (Leopard)
+  #
+  # Importantly, a lot of the APIs first appeared in version 9, including
+  # the feature availability API (the <Availability.h> header).
+  #
+  # For Darwin 8 and below, we have to rely on the kernel version
+  # to detect available APIs.
+  string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*$" "\\1" DARWIN_MAJOR_VERSION "${CMAKE_SYSTEM_VERSION}")
+  string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*$" "\\2" DARWIN_MINOR_VERSION "${CMAKE_SYSTEM_VERSION}")
+endif()
