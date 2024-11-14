@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && DARWIN_MAJOR_VERSION >= 9
 #include <Availability.h>
 #if (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < 101500) \
     || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 130000)
