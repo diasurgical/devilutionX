@@ -161,7 +161,7 @@ std::vector<std::string> GetLocales()
 		locales.push_back(std::move(locale));
 	}
 #endif
-#elif defined(__APPLE__) && defined(USE_COREFOUNDATION)
+#elif defined(__APPLE__) && defined(USE_COREFOUNDATION) && DARWIN_MAJOR_VERSION >= 9
 	// Get the user's language list (in order of preference)
 	CFArrayRef languages = CFLocaleCopyPreferredLanguages();
 	CFIndex numLanguages = CFArrayGetCount(languages);
