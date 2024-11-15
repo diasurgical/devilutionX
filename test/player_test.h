@@ -10,9 +10,9 @@
 
 using namespace devilution;
 
-static size_t CountItems(Item *items, int n)
+static size_t CountItems(devilution::Item *items, int n)
 {
-	return std::count_if(items, items + n, [](Item x) { return !x.isEmpty(); });
+	return std::count_if(items, items + n, [](devilution::Item x) { return !x.isEmpty(); });
 }
 
 static size_t Count8(int8_t *ints, int n)

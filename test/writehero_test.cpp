@@ -386,6 +386,7 @@ TEST(Writehero, pfile_write_hero)
 
 	LoadSpellData();
 	LoadPlayerDataFiles();
+	LoadMonsterData();
 	LoadItemData();
 	_uiheroinfo info {};
 	info.heroclass = HeroClass::Rogue;
