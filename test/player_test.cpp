@@ -10,7 +10,7 @@ extern bool TestPlayerDoGotHit(Player &player);
 
 int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
-	Player &player = Players[0];
+	devilution::Player &player = Players[0];
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;
@@ -84,7 +84,7 @@ TEST(Player, PM_DoGotHit)
 	}
 }
 
-static void AssertPlayer(Player &player)
+static void AssertPlayer(devilution::Player &player)
 {
 	ASSERT_EQ(CountU8(player._pSplLvl, 64), 0);
 	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 1);
