@@ -438,7 +438,7 @@ Packaging/cpi-gamesh/build.sh
 
 to install dependencies and build the code.
 
-Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
+Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](../Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](../Packaging/cpi-gamesh/readme.md) for more details.
 </details>
 
 <details><summary>Amiga via Docker</summary>
