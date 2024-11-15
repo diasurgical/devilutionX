@@ -369,11 +369,16 @@ tl::expected<void, PacketError> base_protocol<P>::recv_decrypted(packet &pkt, en
 			return {};
 		std::vector<std::string> playerNames;
 		for (size_t i = 0; i < Players.size(); i++) {
-			std::string playerName;
-			const char *playerNamePointer = reinterpret_cast<const char *>(infoBuffer.data() + sizeof(GameData) + (i * PlayerNameLength));
-			playerName.append(playerNamePointer, strnlen(playerNamePointer, PlayerNameLength));
-			if (!playerName.empty())
-				playerNames.push_back(playerName);
+			std::string_view playerNameBuffer {
+				reinterpret_cast<const char *>(infoBuffer.data() + sizeof(GameData) + (i * PlayerNameLength)),
+				PlayerNameLength
+			};
+			if (const size_t nullPos = playerNameBuffer.find('\0'); nullPos != std::string_view::npos) {
+				playerNameBuffer.remove_suffix(playerNameBuffer.size() - nullPos);
+			}
+			if (!playerNameBuffer.empty()) {
+				playerNames.emplace_back(playerNameBuffer);
+			}
 		}
 		std::string gameName;
 		size_t gameNameSize = infoBuffer.size() - neededSize;
