@@ -20,6 +20,7 @@
 #include "engine/point.hpp"
 #include "interfac.h"
 #include "items.h"
+#include "items/validation.h"
 #include "levels/gendung.h"
 #include "multi.h"
 #include "spelldat.h"
@@ -379,12 +380,7 @@ struct Player {
 
 	void CalcScrolls();
 
-	bool CanUseItem(const Item &item) const
-	{
-		return _pStrength >= item._iMinStr
-		    && _pMagic >= item._iMinMag
-		    && _pDexterity >= item._iMinDex;
-	}
+	bool CanUseItem(const Item &item) const;
 
 	/**
 	 * @brief Remove an item from player inventory

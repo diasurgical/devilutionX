@@ -28,6 +28,11 @@ namespace devilution {
 // Item indestructible durability
 #define DUR_INDESTRUCTIBLE 255
 
+constexpr int MaxVendorValue = 140000;
+constexpr int MaxVendorValueHf = 200000;
+constexpr int MaxBoyValue = 90000;
+constexpr int MaxBoyValueHf = 200000;
+
 enum item_quality : uint8_t {
 	ITEM_QUALITY_NORMAL,
 	ITEM_QUALITY_MAGIC,
