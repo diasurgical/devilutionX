@@ -9,6 +9,7 @@
 #include "dvlnet/packet.h"
 #include "player.h"
 #include "utils/log.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 namespace net {
@@ -300,11 +301,16 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 			return;
 		std::vector<std::string> playerNames;
 		for (size_t i = 0; i < Players.size(); i++) {
-			std::string playerName;
-			const char *playerNamePointer = (const char *)(pkt.Info().data() + sizeof(GameData) + (i * PlayerNameLength));
-			playerName.append(playerNamePointer, strnlen(playerNamePointer, PlayerNameLength));
-			if (!playerName.empty())
-				playerNames.push_back(playerName);
+			string_view playerNameBuffer {
+				reinterpret_cast<const char *>(pkt.Info().data() + sizeof(GameData) + (i * PlayerNameLength)),
+				PlayerNameLength
+			};
+			if (const size_t nullPos = playerNameBuffer.find('\0'); nullPos != string_view::npos) {
+				playerNameBuffer.remove_suffix(playerNameBuffer.size() - nullPos);
+			}
+			if (!playerNameBuffer.empty()) {
+				playerNames.emplace_back(playerNameBuffer.data(), playerNameBuffer.size());
+			}
 		}
 		std::string gameName;
 		size_t gameNameSize = pkt.Info().size() - neededSize;
