@@ -268,10 +268,7 @@ constexpr bool TileContainsSetPiece(Point position)
  * @param position Coordinates of the dungeon tile to check
  * @return true if the tile is within at least one players vision
  */
-constexpr bool IsTileVisible(Point position)
-{
-	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Visible);
-}
+bool IsTileVisible(Point position);
 
 /**
  * @brief Checks if a light source is illuminating this tile

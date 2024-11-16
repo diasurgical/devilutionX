@@ -1948,7 +1948,7 @@ void ZombieAi(Monster &monster)
 		return;
 	}
 
-	if (!IsTileVisible(monster.position.tile) || DebugInvisible) {
+	if (!IsTileVisible(monster.position.tile)) {
 		return;
 	}
 
@@ -2461,7 +2461,7 @@ void GharbadAi(Monster &monster)
 
 	if (monster.talkMsg >= TEXT_GARBUD1
 	    && monster.talkMsg <= TEXT_GARBUD3
-	    && (!IsTileVisible(monster.position.tile) || DebugInvisible)
+	    && !IsTileVisible(monster.position.tile)
 	    && monster.goal == MonsterGoal::Talking) {
 		monster.goal = MonsterGoal::Inquiring;
 		switch (monster.talkMsg) {
@@ -2485,7 +2485,7 @@ void GharbadAi(Monster &monster)
 		}
 	}
 
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_GARBUD4) {
 			if (!effect_is_playing(SfxID::Gharbad4) && monster.goal == MonsterGoal::Talking) {
 				monster.goal = MonsterGoal::Normal;
@@ -2511,7 +2511,7 @@ void SnotSpilAi(Monster &monster)
 
 	Direction md = GetMonsterDirection(monster);
 
-	if (monster.talkMsg == TEXT_BANNER10 && (!IsTileVisible(monster.position.tile) || DebugInvisible) && monster.goal == MonsterGoal::Talking) {
+	if (monster.talkMsg == TEXT_BANNER10 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_BANNER11;
 		monster.goal = MonsterGoal::Inquiring;
 	}
@@ -2521,7 +2521,7 @@ void SnotSpilAi(Monster &monster)
 		monster.goal = MonsterGoal::Normal;
 	}
 
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_BANNER12) {
 			if (!effect_is_playing(SfxID::Snotspill3) && monster.goal == MonsterGoal::Talking) {
 				ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
@@ -2663,14 +2663,14 @@ void ZharAi(Monster &monster)
 	}
 
 	Direction md = GetMonsterDirection(monster);
-	if (monster.talkMsg == TEXT_ZHAR1 && (!IsTileVisible(monster.position.tile) || DebugInvisible) && monster.goal == MonsterGoal::Talking) {
+	if (monster.talkMsg == TEXT_ZHAR1 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_ZHAR2;
 		monster.goal = MonsterGoal::Inquiring;
 		Quests[Q_ZHAR]._qvar1 = QS_ZHAR_ANGRY;
 		NetSendCmdQuest(true, Quests[Q_ZHAR]);
 	}
 
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_ZHAR2) {
 			if (!effect_is_playing(SfxID::Zhar2) && monster.goal == MonsterGoal::Talking) {
 				monster.activeForTicks = UINT8_MAX;
@@ -2755,7 +2755,7 @@ void LazarusAi(Monster &monster)
 	}
 
 	Direction md = GetMonsterDirection(monster);
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (!UseMultiplayerQuests()) {
 			Player &myPlayer = *MyPlayer;
 			if (monster.talkMsg == TEXT_VILE13 && monster.goal == MonsterGoal::Inquiring && myPlayer.position.tile == Point { 35, 46 }) {
@@ -2804,7 +2804,7 @@ void LazarusMinionAi(Monster &monster)
 
 	Direction md = GetMonsterDirection(monster);
 
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (!UseMultiplayerQuests()) {
 			if (Quests[Q_BETRAYER]._qvar1 <= 5) {
 				monster.goal = MonsterGoal::Inquiring;
@@ -2829,14 +2829,14 @@ void LachdananAi(Monster &monster)
 
 	Direction md = GetMonsterDirection(monster);
 
-	if (monster.talkMsg == TEXT_VEIL9 && (!IsTileVisible(monster.position.tile) || DebugInvisible) && monster.goal == MonsterGoal::Talking) {
+	if (monster.talkMsg == TEXT_VEIL9 && !IsTileVisible(monster.position.tile) && monster.goal == MonsterGoal::Talking) {
 		monster.talkMsg = TEXT_VEIL10;
 		monster.goal = MonsterGoal::Inquiring;
 		Quests[Q_VEIL]._qvar2 = QS_VEIL_EARLY_RETURN;
 		NetSendCmdQuest(true, Quests[Q_VEIL]);
 	}
 
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_VEIL11) {
 			if (!effect_is_playing(SfxID::Lachdanan3) && monster.goal == MonsterGoal::Talking) {
 				monster.talkMsg = TEXT_NONE;
@@ -2859,7 +2859,7 @@ void WarlordAi(Monster &monster)
 	}
 
 	Direction md = GetMonsterDirection(monster);
-	if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.talkMsg == TEXT_WARLRD9 && monster.goal == MonsterGoal::Inquiring)
 			monster.mode = MonsterMode::Talk;
 		if (monster.talkMsg == TEXT_WARLRD9 && !effect_is_playing(SfxID::Warlord) && monster.goal == MonsterGoal::Talking) {
@@ -4064,7 +4064,7 @@ void ProcessMonsters()
 			monster.hitPoints = std::min(monster.hitPoints, monster.maxHitPoints); // prevent going over max HP with part of a single regen tick
 		}
 
-		if (IsTileVisible(monster.position.tile) && !DebugInvisible && monster.activeForTicks == 0) {
+		if (IsTileVisible(monster.position.tile) && monster.activeForTicks == 0) {
 			if (monster.type().type == MT_CLEAVER) {
 				PlaySFX(SfxID::ButcherGreeting);
 			}
@@ -4092,7 +4092,7 @@ void ProcessMonsters()
 			assert(monster.enemy >= 0 && monster.enemy < MAX_PLRS);
 			Player &player = Players[monster.enemy];
 			monster.enemyPosition = player.position.future;
-			if (IsTileVisible(monster.position.tile) && !DebugInvisible) {
+			if (IsTileVisible(monster.position.tile)) {
 				monster.activeForTicks = UINT8_MAX;
 				monster.position.last = player.position.future;
 			} else if (monster.activeForTicks != 0 && monster.type().type != MT_DIABLO) {

@@ -28,6 +28,10 @@
 #include "utils/log.hpp"
 #include "utils/status_macros.hpp"
 
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+
 namespace devilution {
 
 Bitset2d<DMAXX, DMAXY> DungeonMask;
@@ -372,6 +376,15 @@ void InitGlobals()
 }
 
 } // namespace
+
+bool IsTileVisible(Point position)
+{
+	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Visible)
+#ifdef _DEBUG
+	    && !DebugInvisible
+#endif
+	    ;
+}
 
 #ifdef BUILD_TESTING
 std::optional<WorldTileSize> GetSizeForThemeRoom()
