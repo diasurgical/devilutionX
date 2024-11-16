@@ -65,6 +65,10 @@ uint8_t AnimationInfo::getAnimationProgress() const
 	int32_t tickModifier = tickModifier_;
 
 	if (relevantFramesForDistributing_ <= 0) {
+		if (ticksPerFrame <= 0) {
+			Log("getAnimationProgress: Invalid ticksPerFrame {}", ticksPerFrame);
+			return 0;
+		}
 		// This logic is used if animation distribution is not active (see getFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
 		ticksSinceSequenceStarted = ((currentFrame * ticksPerFrame) + tickCounterOfCurrentFrame) * baseValueFraction;
