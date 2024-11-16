@@ -30,6 +30,7 @@ std::string TestMapPath;
 OptionalOwnedClxSpriteList pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
+bool DebugInvisible = false;
 bool DebugVision = false;
 bool DebugPath = false;
 bool DebugGrid = false;
