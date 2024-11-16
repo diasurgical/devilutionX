@@ -1475,6 +1475,10 @@ void DrawAutomapText(const Surface &out)
 		linePosition.y += 15;
 		DrawString(out, "God Mode", linePosition, debugTextOptions);
 	}
+	if (DebugInvisible) {
+		linePosition.y += 15;
+		DrawString(out, "Invisible", linePosition, debugTextOptions);
+	}
 	if (DisableLighting) {
 		linePosition.y += 15;
 		DrawString(out, "Fullbright", linePosition, debugTextOptions);

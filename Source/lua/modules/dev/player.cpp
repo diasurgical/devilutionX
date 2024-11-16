@@ -90,6 +90,12 @@ sol::table LuaDevPlayerTrnModule(sol::state_view &lua)
 	return table;
 }
 
+std::string DebugCmdInvisible(std::optional<bool> on)
+{
+	DebugInvisible = on.value_or(!DebugInvisible);
+	return StrCat("Invisible: ", DebugInvisible ? "On" : "Off");
+}
+
 } // namespace
 
 sol::table LuaDevPlayerModule(sol::state_view &lua)
@@ -102,6 +108,7 @@ sol::table LuaDevPlayerModule(sol::state_view &lua)
 	SetDocumented(table, "spells", "", "Adjust player spells.", LuaDevPlayerSpellsModule(lua));
 	SetDocumented(table, "stats", "", "Adjust player stats (Strength, HP, etc).", LuaDevPlayerStatsModule(lua));
 	SetDocumented(table, "trn", "", "Set player TRN to '${name}.trn'", LuaDevPlayerTrnModule(lua));
+	SetDocumented(table, "invisible", "(on: boolean = nil)", "Toggle invisibility.", &DebugCmdInvisible);
 	return table;
 }
 

@@ -1440,7 +1440,10 @@ void GameLogic()
 	}
 	if (leveltype != DTYPE_TOWN) {
 		gGameLogicStep = GameLogicStep::ProcessMonsters;
-		ProcessMonsters();
+#ifdef _DEBUG
+		if (!DebugInvisible)
+#endif
+			ProcessMonsters();
 		gGameLogicStep = GameLogicStep::ProcessObjects;
 		ProcessObjects();
 		gGameLogicStep = GameLogicStep::ProcessMissiles;
