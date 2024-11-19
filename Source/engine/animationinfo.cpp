@@ -52,8 +52,7 @@ int8_t AnimationInfo::getFrameToUseForRendering() const
 		// Handle edge case where the calculated frame exceeds limits.
 		if (absoluteAnimationFrame >= (relevantFramesForDistributing_ + 1)) 
 		{
-			Log("getFrameToUseForRendering: Invalid Animation Frame (Calculated {} MaxFrame {})",
-				absoluteAnimationFrame, relevantFramesForDistributing_);
+			Log("getFrameToUseForRendering: Invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, relevantFramesForDistributing_);
 		}
 		
 		return relevantFramesForDistributing_ - 1;
