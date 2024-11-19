@@ -691,6 +691,24 @@ Size GetItemSizeOnSlot(int slot)
 }
 
 /**
+ * Get item size (grid size) on the slot specified. Returns 1x1 if none exists.
+ */
+Size GetItemSizeOnSlot(Point slot)
+{
+	if (Rectangle { { 0, 0 }, { 10, 10 } }.contains(slot)) {
+		StashStruct::StashCell ii = Stash.GetItemIdAtPosition(slot);
+		if (ii != StashStruct::EmptyCell) {
+			Item &item = Stash.stashList[ii];
+			if (!item.isEmpty()) {
+				return GetInventorySize(item);
+			}
+		}
+	}
+
+	return { 1, 1 };
+}
+
+/**
  * Search for the first slot occupied by an item in the inventory.
  */
 int FindFirstSlotOnItem(int8_t itemInvId)
@@ -1133,11 +1151,26 @@ void StashMove(AxisDirection dir)
 	}
 
 	if (dir.x == AxisDirectionX_LEFT) {
-		if (ActiveStashSlot.x > 0)
+		if (ActiveStashSlot.x > 0) {
+
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.x--;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.x > 0 && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.x--;
+				}
+			}
+		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
 		if (ActiveStashSlot.x < 10 - itemSize.width) {
+
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.x++;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.x < 10 - itemSize.width && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.x++;
+				}
+			}
 		} else {
 			Point stashSlotCoord = GetStashSlotCoord(ActiveStashSlot);
 			Point rightPanelCoord = { GetRightPanel().position.x, stashSlotCoord.y };
@@ -1147,11 +1180,26 @@ void StashMove(AxisDirection dir)
 		}
 	}
 	if (dir.y == AxisDirectionY_UP) {
-		if (ActiveStashSlot.y > 0)
+		if (ActiveStashSlot.y > 0) {
+
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.y--;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.y > 0 && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.y--;
+				}
+			}
+		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (ActiveStashSlot.y < 10 - itemSize.height) {
+
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.y++;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.y < 10 - itemSize.height && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.y++;
+				}
+			}
 		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(holdItem)) && ActiveStashSlot.x > 1) {
 			int beltSlot = ActiveStashSlot.x - 2;
 			Slot = SLOTXY_BELT_FIRST + beltSlot;
@@ -1167,8 +1215,18 @@ void StashMove(AxisDirection dir)
 
 	if (ActiveStashSlot != InvalidStashPoint) {
 		Point mousePos = GetStashSlotCoord(ActiveStashSlot);
-		// Stash coordinates are all the top left of the cell, so we need to shift the mouse to the center of the held item
-		// or the center of the cell if we have a hand cursor (itemSize will be 1x1 here so we can use the same calculation)
+		// At this point itemSize is the size of the item we're currently holding.
+		// We need to offset the mouse position to account for items (we're holding or hovering over) with a dimension larger than a single cell.
+		if (holdItem.isEmpty()) {
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
+			if (itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				const Item stashItem = Stash.stashList[itemIdAtActiveStashSlot];
+				const Point firstSlotOnItem = FindFirstStashSlotOnItem(itemIdAtActiveStashSlot);
+				itemSize = GetInventorySize(stashItem);
+				mousePos = GetStashSlotCoord(firstSlotOnItem);
+			}
+		}
+
 		mousePos += Displacement { itemSize.width * INV_SLOT_HALF_SIZE_PX, itemSize.height * INV_SLOT_HALF_SIZE_PX };
 		SetCursorPos(mousePos);
 		return;
@@ -1869,20 +1927,11 @@ void PerformPrimaryAction()
 
 			Point mousePos = GetStashSlotCoord(jumpSlot);
 			ActiveStashSlot = jumpSlot;
-			if (MyPlayer->HoldItem.isEmpty()) {
-				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
-				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
-				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
-				// Then we displace the mouse position to the bottom right corner of the item, then shift it back half a cell to center it.
-				// Could also be written as (cursorSize - 1) * InventorySlotSize + HalfInventorySlotSize, same thing in the end.
-				mousePos += Displacement { cursorSizeInCells } * Displacement { InventorySlotSizeInPixels } - Displacement { InventorySlotSizeInPixels } / 2;
-			} else {
-				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
-				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
-				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
-				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
-				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
-			}
+			// Center the Cursor based on the item we just put down or we're holding.
+			cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->HoldItem);
+			mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
+			mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
+
 			SetCursorPos(mousePos);
 		}
 		return;
