@@ -97,7 +97,7 @@ uint8_t AnimationInfo::getAnimationProgress() const
 	return static_cast<uint8_t>(animationFraction);
 }
 
-void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numberOfFrames,	int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/,	int8_t distributeFramesBeforeFrame /*= 0*/,	uint8_t previewShownGameTickFragments /*= 0*/) 
+void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/,	uint8_t previewShownGameTickFragments /*= 0*/) 
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && this->numberOfFrames == numberOfFrames && currentFrame + 1 >= distributeFramesBeforeFrame && currentFrame != this->numberOfFrames - 1)
 	{
@@ -134,7 +134,7 @@ void AnimationInfo::setNewAnimation(OptionalClxSpriteList celSprite, int8_t numb
 	}
 }
 
-void AnimationInfo::configureFrameDistribution(AnimationDistributionFlags flags, int8_t numberOfFrames,	int8_t distributeFramesBeforeFrame,	int8_t numSkippedFrames, int8_t ticksPerFrame, uint8_t previewShownGameTickFragments) 
+void AnimationInfo::configureFrameDistribution(AnimationDistributionFlags flags, int8_t numberOfFrames,	int8_t distributeFramesBeforeFrame, int8_t numSkippedFrames, int8_t ticksPerFrame, uint8_t previewShownGameTickFragments) 
 {
 	int8_t relevantAnimationFramesForDistributing = numberOfFrames;
 
@@ -214,7 +214,8 @@ void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/)
 		if (reverseAnimation) 
 		{
 			--currentFrame;
-			if (currentFrame < 0) {
+			if (currentFrame < 0) 
+			{
 				currentFrame = numberOfFrames - 1;
 				ticksSinceSequenceStarted_ = 0;
 			}
