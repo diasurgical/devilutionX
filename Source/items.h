@@ -15,6 +15,7 @@
 #include "engine/point.hpp"
 #include "itemdat.h"
 #include "monster.h"
+#include "utils/math.h"
 #include "utils/string_or_view.hpp"
 
 namespace devilution {
@@ -425,6 +426,33 @@ struct Item {
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
 
+	int getBonusAC() const
+	{
+		if (_iPLAC != 0) {
+			int tempAc = _iAC;
+			tempAc *= _iPLAC;
+			tempAc /= 100;
+			if (tempAc == 0)
+				tempAc = math::Sign(_iPLAC);
+			return tempAc;
+		}
+
+		return 0;
+	}
+
+	std::pair<int, int> getFinalDamage(bool baseDamage) const
+	{
+		int minDmg = _iMinDam;
+		int maxDmg = _iMaxDam;
+		if (!baseDamage) {
+			minDmg += minDmg * _iPLDam / 100;
+			maxDmg += maxDmg * _iPLDam / 100;
+			minDmg += _iPLDamMod;
+			maxDmg += _iPLDamMod;
+		}
+		return { minDmg, maxDmg };
+	}
+
 	UiFlags getTextColor() const
 	{
 		switch (_iMagical) {
@@ -488,6 +516,7 @@ extern int8_t dItem[MAXDUNX][MAXDUNY];
 extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
 extern DVL_API_FOR_TEST bool UniqueItemFlags[128];
+extern bool showItemBaseStats;
 
 uint8_t GetOutlineColor(const Item &item, bool checkReq);
 bool IsItemAvailable(int i);
@@ -550,7 +579,6 @@ bool DoOil(Player &player, int cii);
 [[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
-void PrintItemDur(const Item &item);
 void UseItem(Player &player, item_misc_id Mid, SpellID spellID, int spellFrom);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensGrave(const Item &item, Point position);
