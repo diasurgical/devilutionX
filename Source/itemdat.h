@@ -627,6 +627,8 @@ struct PLStruct {
 	int minVal;
 	int maxVal;
 	int multVal;
+	uint8_t currentTier;
+	uint8_t maxTier;
 };
 
 struct UniqueItem {
@@ -643,6 +645,9 @@ extern DVL_API_FOR_TEST std::vector<ItemData> AllItemsList;
 extern std::vector<PLStruct> ItemPrefixes;
 extern std::vector<PLStruct> ItemSuffixes;
 extern DVL_API_FOR_TEST std::vector<UniqueItem> UniqueItems;
+
+extern std::unordered_map<uint32_t, std::pair<const PLStruct *, const PLStruct *>> affixDataCache;
+extern bool showDetailedAffixData;
 
 void LoadItemData();
 
