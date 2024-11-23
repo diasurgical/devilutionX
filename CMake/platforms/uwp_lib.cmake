@@ -25,3 +25,8 @@ set(DEVILUTIONX_STATIC_ZLIB ON)
 
 # not really necessary but a good measure for SDL related stuff
 set(WINDOWS_STORE ON)
+
+add_library(uwp_defs INTERFACE)
+target_compile_definitions(uwp_defs INTERFACE __UWP__=1)
+set(DEVILUTIONX_PLATFORM_ASSETS_LINK_LIBRARIES uwp_defs)
+set(DEVILUTIONX_PLATFORM_LINK_LIBRARIES uwp_defs)

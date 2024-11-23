@@ -79,8 +79,8 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>..\Source;..\build\SDL\include;..\build\_deps\sdl_audiolib-src\include;..\build\_deps\sdl_audiolib-build;..\build\_deps\unordered_dense-src\include;..\3rdParty\tl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\Source;..\build\SDL\include;..\build\_deps\sdl_audiolib-src\include;..\build\_deps\sdl_audiolib-build;..\build\_deps\unordered_dense-src\include;..\build\_deps\libfmt-src\include;..\3rdParty\tl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;__UWP__=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -98,11 +98,11 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;__UWP__=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\Source;..\build\SDL\include;..\build\_deps\sdl_audiolib-src\include;..\build\_deps\sdl_audiolib-build;..\build\_deps\unordered_dense-src\include;..\3rdParty\tl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source;..\build\SDL\include;..\build\_deps\sdl_audiolib-src\include;..\build\_deps\sdl_audiolib-build;..\build\_deps\unordered_dense-src\include;..\build\_deps\libfmt-src\include;..\3rdParty\tl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>

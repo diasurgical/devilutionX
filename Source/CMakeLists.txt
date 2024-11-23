@@ -13,43 +13,24 @@ set(libdevilutionx_SRCS
   diablo.cpp
   diablo_msg.cpp
   doom.cpp
-  game_mode.cpp
   gamemenu.cpp
   gmenu.cpp
-  headless_mode.cpp
   help.cpp
   hwcursor.cpp
-  init.cpp
   interfac.cpp
   inv.cpp
-  itemdat.cpp
-  items.cpp
-  lighting.cpp
   loadsave.cpp
   menu.cpp
   minitext.cpp
   misdat.cpp
   missiles.cpp
-  monstdat.cpp
-  monster.cpp
   movie.cpp
   msg.cpp
-  multi.cpp
   nthread.cpp
-  objdat.cpp
-  objects.cpp
-  options.cpp
-  pack.cpp
   pfile.cpp
-  player.cpp
-  playerdat.cpp
   plrmsg.cpp
   portal.cpp
-  quests.cpp
   restrict.cpp
-  spelldat.cpp
-  spells.cpp
-  stores.cpp
   sync.cpp
   textdat.cpp
   tmsg.cpp
@@ -66,10 +47,6 @@ set(libdevilutionx_SRCS
   controls/menu_controls.cpp
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
-
-  data/file.cpp
-  data/parser.cpp
-  data/record_reader.cpp
 
   DiabloUI/button.cpp
   DiabloUI/credits.cpp
@@ -99,9 +76,7 @@ set(libdevilutionx_SRCS
 
   engine/actor_position.cpp
   engine/animationinfo.cpp
-  engine/assets.cpp
   engine/backbuffer_state.cpp
-  engine/direction.cpp
   engine/dx.cpp
   engine/events.cpp
   engine/load_cel.cpp
@@ -109,15 +84,11 @@ set(libdevilutionx_SRCS
   engine/load_clx.cpp
   engine/load_pcx.cpp
   engine/palette.cpp
-  engine/path.cpp
-  engine/random.cpp
   engine/sound_position.cpp
-  engine/surface.cpp
   engine/ticks.cpp
   engine/trn.cpp
 
   engine/render/automap_render.cpp
-  engine/render/clx_render.cpp
   engine/render/dun_render.cpp
   engine/render/primitive_render.cpp
   engine/render/scrollrt.cpp
@@ -125,12 +96,6 @@ set(libdevilutionx_SRCS
 
   items/validation.cpp
 
-  levels/crypt.cpp
-  levels/drlg_l1.cpp
-  levels/drlg_l2.cpp
-  levels/drlg_l3.cpp
-  levels/drlg_l4.cpp
-  levels/gendung.cpp
   levels/reencode_dun_cels.cpp
   levels/setmaps.cpp
   levels/themes.cpp
@@ -184,7 +149,6 @@ set(libdevilutionx_SRCS
   utils/display.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
-  utils/paths.cpp
   utils/pcx_to_clx.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
@@ -208,18 +172,383 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set_source_files_properties(${_optimize_in_debug_srcs} PROPERTIES COMPILE_OPTIONS "-O2")
 endif()
 
+# We need to define all the object libraries first
+# because our workaround for transitive dependency support
+# requires targets to exist when calling `target_link_dependencies`
+# (see object_libraries.cmake).
+
+add_devilutionx_object_library(libdevilutionx_assets
+  engine/assets.cpp
+  utils/paths.cpp
+)
+target_link_dependencies(libdevilutionx_assets PUBLIC
+  DevilutionX::SDL
+  fmt::fmt
+  tl
+  libdevilutionx_headless_mode
+  libdevilutionx_game_mode
+  libdevilutionx_mpq
+  libdevilutionx_sdl2_to_1_2_backports
+  libdevilutionx_sound
+  libdevilutionx_strings
+  ${DEVILUTIONX_PLATFORM_ASSETS_LINK_LIBRARIES}
+)
+
+add_devilutionx_object_library(libdevilutionx_clx_render
+  engine/render/clx_render.cpp
+)
+target_link_dependencies(libdevilutionx_clx_render PUBLIC
+  DevilutionX::SDL
+  fmt::fmt
+  libdevilutionx_lighting
+  libdevilutionx_strings
+)
+
+add_devilutionx_object_library(libdevilutionx_codec
+  codec.cpp
+  sha.cpp
+)
+target_link_dependencies(libdevilutionx_codec PRIVATE
+  DevilutionX::SDL
+  libdevilutionx_log
+)
+
+add_devilutionx_object_library(libdevilutionx_crawl
+  crawl.cpp
+)
+target_link_dependencies(libdevilutionx_crawl PUBLIC
+  tl
+)
+
+add_devilutionx_object_library(libdevilutionx_direction
+  engine/direction.cpp
+)
+
+add_devilutionx_object_library(libdevilutionx_surface
+  engine/surface.cpp
+)
+target_link_dependencies(libdevilutionx_surface PUBLIC
+  DevilutionX::SDL
+)
+
+add_devilutionx_object_library(libdevilutionx_file_util
+  utils/file_util.cpp
+)
+target_link_dependencies(libdevilutionx_file_util PRIVATE
+  DevilutionX::SDL
+  libdevilutionx_log
+  ${DEVILUTIONX_PLATFORM_FILE_UTIL_LINK_LIBRARIES}
+)
+
+add_devilutionx_object_library(libdevilutionx_format_int
+  utils/format_int.cpp
+)
+target_link_dependencies(libdevilutionx_format_int PUBLIC
+  libdevilutionx_strings
+)
+
+add_devilutionx_object_library(libdevilutionx_game_mode
+  game_mode.cpp
+)
+
+add_devilutionx_object_library(libdevilutionx_gendung
+  levels/crypt.cpp
+  levels/drlg_l1.cpp
+  levels/drlg_l2.cpp
+  levels/drlg_l3.cpp
+  levels/drlg_l4.cpp
+  levels/gendung.cpp
+)
+target_link_dependencies(libdevilutionx_gendung PUBLIC
+  DevilutionX::SDL
+  fmt::fmt
+  tl
+  libdevilutionx_assets
+  libdevilutionx_items
+  libdevilutionx_monster
+  libdevilutionx_random
+)
+
+add_devilutionx_object_library(libdevilutionx_headless_mode
+  headless_mode.cpp
+)
+
+add_devilutionx_object_library(libdevilutionx_init
+  init.cpp
+)
+target_link_dependencies(libdevilutionx_init PUBLIC
+  libdevilutionx_assets
+  libdevilutionx_config
+)
+
+add_devilutionx_object_library(libdevilutionx_lighting
+  lighting.cpp
+)
+target_link_dependencies(libdevilutionx_lighting PUBLIC
+  DevilutionX::SDL
+  fmt::fmt
+  tl
+)
+
+add_devilutionx_object_library(libdevilutionx_items
+  itemdat.cpp
+  items.cpp
+)
+target_link_dependencies(libdevilutionx_items PUBLIC
+  DevilutionX::SDL
+  tl
+  libdevilutionx_headless_mode
+  libdevilutionx_sound
+  libdevilutionx_spells
+  libdevilutionx_stores
+  libdevilutionx_strings
+)
+
+add_devilutionx_object_library(libdevilutionx_ini
+  utils/ini.cpp
+)
+target_link_dependencies(libdevilutionx_ini PUBLIC
+  fmt::fmt
+  tl
+  unordered_dense::unordered_dense
+  libdevilutionx_strings
+  libdevilutionx_utf8
+)
+
+# We use an INTERFACE library rather than an OBJECT library
+# because `libdevilutionx_log` does not have any sources.
+add_library(libdevilutionx_log INTERFACE)
+target_include_directories(libdevilutionx_log INTERFACE
+  ${PROJECT_SOURCE_DIR}/Source)
+target_link_libraries(libdevilutionx_log INTERFACE
+  DevilutionX::SDL
+  fmt::fmt
+)
+target_sources(libdevilutionx_log INTERFACE $<TARGET_OBJECTS:libdevilutionx_strings>)
+
+add_devilutionx_object_library(libdevilutionx_level_objects
+  objdat.cpp
+  objects.cpp
+)
+target_link_dependencies(libdevilutionx_level_objects PUBLIC
+  DevilutionX::SDL
+  unordered_dense::unordered_dense
+  tl
+  libdevilutionx_direction
+  libdevilutionx_headless_mode
+  libdevilutionx_monster
+  libdevilutionx_options
+  libdevilutionx_player
+  libdevilutionx_random
+  libdevilutionx_txtdata
+)
+
+add_devilutionx_object_library(libdevilutionx_monster
+  monstdat.cpp
+  monster.cpp
+)
+target_link_dependencies(libdevilutionx_monster PUBLIC
+  DevilutionX::SDL
+  tl
+  libdevilutionx_game_mode
+  libdevilutionx_headless_mode
+  libdevilutionx_sound
+  libdevilutionx_txtdata
+)
+
+add_devilutionx_object_library(libdevilutionx_parse_int
+  utils/parse_int.cpp
+)
+target_link_dependencies(libdevilutionx_parse_int PUBLIC
+  tl
+)
+
 if(SUPPORTS_MPQ)
-  list(APPEND libdevilutionx_DEPS libmpq)
-  list(APPEND libdevilutionx_SRCS
+  add_devilutionx_object_library(libdevilutionx_mpq
     mpq/mpq_common.cpp
     mpq/mpq_reader.cpp
     mpq/mpq_sdl_rwops.cpp
-    mpq/mpq_writer.cpp)
+    mpq/mpq_writer.cpp
+  )
+  target_link_dependencies(libdevilutionx_mpq PUBLIC
+    DevilutionX::SDL
+    fmt::fmt
+    tl
+    libmpq
+    libdevilutionx_file_util
+    libdevilutionx_pkware_encrypt
+    libdevilutionx_strings
+  )
+else()
+  add_library(libdevilutionx_mpq INTERFACE)
 endif()
 
+add_devilutionx_object_library(libdevilutionx_multiplayer
+  multi.cpp
+  pack.cpp
+)
+target_link_dependencies(libdevilutionx_multiplayer PUBLIC
+  libdevilutionx_config
+  libdevilutionx_items
+)
+
+add_devilutionx_object_library(libdevilutionx_options
+  options.cpp
+)
+target_link_dependencies(libdevilutionx_options PUBLIC
+  DevilutionX::SDL
+  SDL_audiolib::SDL_audiolib
+  fmt::fmt
+  tl
+  ${LUA_LIBRARIES}
+  sol2::sol2
+  libdevilutionx_game_mode
+  libdevilutionx_strings
+  libdevilutionx_ini
+)
+
+add_devilutionx_object_library(libdevilutionx_pathfinding
+  engine/path.cpp
+)
+target_link_dependencies(libdevilutionx_pathfinding PUBLIC
+  tl
+  libdevilutionx_crawl
+  libdevilutionx_direction
+  libdevilutionx_gendung
+  libdevilutionx_level_objects
+)
+
 if(SUPPORTS_MPQ OR NOT NONET)
-  list(APPEND libdevilutionx_DEPS PKWare)
-  list(APPEND libdevilutionx_SRCS encrypt.cpp)
+  add_devilutionx_object_library(libdevilutionx_pkware_encrypt
+    encrypt.cpp
+  )
+  target_link_dependencies(libdevilutionx_pkware_encrypt PUBLIC
+    DevilutionX::SDL
+    PKWare
+  )
+else()
+  add_library(libdevilutionx_pkware_encrypt INTERFACE)
+endif()
+
+add_devilutionx_object_library(libdevilutionx_player
+  player.cpp
+  playerdat.cpp
+)
+target_link_dependencies(libdevilutionx_player PUBLIC
+  DevilutionX::SDL
+  fmt::fmt
+  tl
+  unordered_dense::unordered_dense
+  libdevilutionx_game_mode
+)
+
+add_devilutionx_object_library(libdevilutionx_quests
+  quests.cpp
+)
+target_link_dependencies(libdevilutionx_quests PUBLIC
+  libdevilutionx_surface
+  libdevilutionx_gendung
+)
+
+add_devilutionx_object_library(libdevilutionx_random
+  engine/random.cpp
+)
+
+add_devilutionx_object_library(libdevilutionx_spells
+  spelldat.cpp
+  spells.cpp
+)
+target_link_dependencies(libdevilutionx_spells PUBLIC
+  tl
+  libdevilutionx_player
+  libdevilutionx_txtdata
+)
+
+add_devilutionx_object_library(libdevilutionx_txtdata
+  data/file.cpp
+  data/parser.cpp
+  data/record_reader.cpp
+)
+target_link_dependencies(libdevilutionx_txtdata PUBLIC
+  fmt::fmt
+  tl
+  libdevilutionx_assets
+  libdevilutionx_strings
+)
+
+add_devilutionx_object_library(libdevilutionx_utf8
+  utils/utf8.cpp
+)
+target_link_dependencies(libdevilutionx_utf8 PRIVATE
+  hoehrmann_utf8
+)
+
+if(NOSOUND)
+  add_devilutionx_object_library(libdevilutionx_sound
+    effects_stubs.cpp
+    engine/sound_stubs.cpp
+  )
+else()
+  add_devilutionx_object_library(libdevilutionx_sound
+    effects.cpp
+    engine/sound.cpp
+    utils/push_aulib_decoder.cpp
+    utils/soundsample.cpp
+  )
+  target_link_dependencies(libdevilutionx_sound PUBLIC
+    DevilutionX::SDL
+    SDL_audiolib::SDL_audiolib
+    fmt::fmt
+    tl
+    unordered_dense::unordered_dense
+    libdevilutionx_sdl2_to_1_2_backports
+  )
+endif()
+
+add_devilutionx_object_library(libdevilutionx_stores
+  stores.cpp
+)
+target_link_dependencies(libdevilutionx_stores PUBLIC
+  DevilutionX::SDL
+  fmt::fmt
+  tl
+  libdevilutionx_clx_render
+  libdevilutionx_options
+  libdevilutionx_sound
+  libdevilutionx_strings
+)
+
+add_devilutionx_object_library(libdevilutionx_strings
+  utils/str_cat.cpp
+  utils/str_case.cpp
+)
+target_link_dependencies(libdevilutionx_strings PRIVATE
+  fmt::fmt)
+
+add_devilutionx_object_library(libdevilutionx_utils_console
+  utils/console.cpp
+)
+
+if(USE_SDL1)
+  add_devilutionx_library(libdevilutionx_sdl2_to_1_2_backports STATIC
+    utils/sdl2_to_1_2_backports.cpp
+  )
+  target_link_dependencies(libdevilutionx_sdl2_to_1_2_backports PRIVATE
+    libdevilutionx_utils_console
+    fmt::fmt
+  )
+  target_link_libraries(DevilutionX::SDL INTERFACE
+    libdevilutionx_sdl2_to_1_2_backports
+  )
+  if(APPLE)
+    enable_language(OBJC)
+    target_sources(libdevilutionx_sdl2_to_1_2_backports PRIVATE
+      platform/macos_sdl1/SDL_filesystem.m)
+    target_link_libraries(libdevilutionx_sdl2_to_1_2_backports PRIVATE
+      "-framework Foundation")
+  endif()
+else()
+  add_library(libdevilutionx_sdl2_to_1_2_backports INTERFACE)
 endif()
 
 if(IOS)
@@ -228,18 +557,6 @@ endif()
 
 if(NOT DISABLE_DEMOMODE)
   list(APPEND libdevilutionx_SRCS engine/demomode.cpp)
-endif()
-
-if(NOSOUND)
-  list(APPEND libdevilutionx_SRCS
-    effects_stubs.cpp
-    engine/sound_stubs.cpp)
-else()
-  list(APPEND libdevilutionx_SRCS
-    effects.cpp
-    engine/sound.cpp
-    utils/push_aulib_decoder.cpp
-    utils/soundsample.cpp)
 endif()
 
 if(NOT NONET)
@@ -287,21 +604,63 @@ if(DEVILUTIONX_SCREENSHOT_FORMAT STREQUAL DEVILUTIONX_SCREENSHOT_FORMAT_PNG)
   )
 endif()
 
-add_devilutionx_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
+add_devilutionx_object_library(libdevilutionx ${libdevilutionx_SRCS})
 target_include_directories(libdevilutionx PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-
-if(SCREEN_READER_INTEGRATION AND NOT WIN32)
-  target_include_directories(libdevilutionx PUBLIC ${Speechd_INCLUDE_DIRS})
-endif()
+target_link_dependencies(libdevilutionx PUBLIC
+  Threads::Threads
+  DevilutionX::SDL
+  fmt::fmt
+  libsmackerdec
+  ${LUA_LIBRARIES}
+  sol2::sol2
+  tl
+  unordered_dense::unordered_dense
+  libdevilutionx_assets
+  libdevilutionx_clx_render
+  libdevilutionx_codec
+  libdevilutionx_config
+  libdevilutionx_crawl
+  libdevilutionx_direction
+  libdevilutionx_surface
+  libdevilutionx_file_util
+  libdevilutionx_format_int
+  libdevilutionx_game_mode
+  libdevilutionx_gendung
+  libdevilutionx_headless_mode
+  libdevilutionx_ini
+  libdevilutionx_init
+  libdevilutionx_items
+  libdevilutionx_level_objects
+  libdevilutionx_lighting
+  libdevilutionx_monster
+  libdevilutionx_mpq
+  libdevilutionx_multiplayer
+  libdevilutionx_options
+  libdevilutionx_parse_int
+  libdevilutionx_pathfinding
+  libdevilutionx_pkware_encrypt
+  libdevilutionx_player
+  libdevilutionx_quests
+  libdevilutionx_random
+  libdevilutionx_sound
+  libdevilutionx_spells
+  libdevilutionx_stores
+  libdevilutionx_strings
+  libdevilutionx_txtdata
+  libdevilutionx_utf8
+  libdevilutionx_utils_console
+)
 
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+add_library(libdevilutionx_config INTERFACE)
 if(is_multi_config)
   set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(libdevilutionx PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
+  target_include_directories(libdevilutionx_config INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 else()
   set(CONFIG_PATH config.h)
+  target_include_directories(libdevilutionx_config INTERFACE ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 "#pragma once
@@ -317,132 +676,12 @@ if(DISCORD_INTEGRATION)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 
-target_link_libraries(libdevilutionx PUBLIC ${LUA_LIBRARIES} sol2::sol2)
-
-if(SCREEN_READER_INTEGRATION AND WIN32)
-  target_compile_definitions(libdevilutionx PRIVATE Tolk)
-endif()
-
-add_devilutionx_object_library(libdevilutionx_utils_console
-  utils/console.cpp
-)
-
-if(USE_SDL1)
-  add_devilutionx_library(libdevilutionx_sdl2_to_1_2_backports STATIC
-    utils/sdl2_to_1_2_backports.cpp
-  )
-  target_link_libraries(libdevilutionx_sdl2_to_1_2_backports PRIVATE
-    libdevilutionx_utils_console
-    fmt::fmt
-  )
-  target_link_libraries(DevilutionX::SDL INTERFACE
-    libdevilutionx_sdl2_to_1_2_backports
-  )
-  if(APPLE)
-    enable_language(OBJC)
-    target_sources(libdevilutionx_sdl2_to_1_2_backports PRIVATE
-      platform/macos_sdl1/SDL_filesystem.m)
-    target_link_libraries(libdevilutionx_sdl2_to_1_2_backports PRIVATE
-      "-framework Foundation")
-  endif()
-endif()
-
-add_devilutionx_object_library(libdevilutionx_codec
-  codec.cpp
-  sha.cpp
-)
-target_link_libraries(libdevilutionx_codec PRIVATE
-  DevilutionX::SDL
-  libdevilutionx_log
-)
-
-add_devilutionx_object_library(libdevilutionx_crawl
-  crawl.cpp
-)
-target_link_libraries(libdevilutionx_crawl PUBLIC
-  tl
-)
-
-add_devilutionx_object_library(libdevilutionx_file_util
-  utils/file_util.cpp
-)
-target_link_libraries(libdevilutionx_file_util PRIVATE
-  DevilutionX::SDL
-  libdevilutionx_log
-  ${DEVILUTIONX_PLATFORM_LINK_LIBRARIES}
-)
-
-add_devilutionx_object_library(libdevilutionx_format_int
-  utils/format_int.cpp
-)
-target_link_libraries(libdevilutionx_format_int PUBLIC
-  libdevilutionx_strings
-)
-
-add_devilutionx_object_library(libdevilutionx_ini
-  utils/ini.cpp
-)
-target_link_libraries(libdevilutionx_ini PUBLIC
-  fmt::fmt
-  tl
-  unordered_dense::unordered_dense
-  libdevilutionx_strings
-  libdevilutionx_utf8
-)
-
-add_library(libdevilutionx_log INTERFACE)
-target_include_directories(libdevilutionx_log INTERFACE
-  ${PROJECT_SOURCE_DIR}/Source)
-target_link_libraries(libdevilutionx_log INTERFACE
-  DevilutionX::SDL
-  fmt::fmt
-  libdevilutionx_strings
-)
-
-add_devilutionx_object_library(libdevilutionx_parse_int
-  utils/parse_int.cpp
-)
-target_link_libraries(libdevilutionx_parse_int PUBLIC
-  tl
-)
-
-add_devilutionx_object_library(libdevilutionx_utf8
-  utils/utf8.cpp
-)
-target_link_libraries(libdevilutionx_utf8 PRIVATE
-  hoehrmann_utf8
-)
-
-add_devilutionx_object_library(libdevilutionx_strings
-  utils/str_cat.cpp
-  utils/str_case.cpp
-)
-target_link_libraries(libdevilutionx_strings PRIVATE
-  fmt::fmt)
-
-target_link_libraries(libdevilutionx PUBLIC
-  Threads::Threads
-  DevilutionX::SDL
-  fmt::fmt
-  libsmackerdec
-  tl
-  unordered_dense::unordered_dense
-  libdevilutionx_codec
-  libdevilutionx_crawl
-  libdevilutionx_format_int
-  libdevilutionx_file_util
-  libdevilutionx_ini
-  libdevilutionx_parse_int
-  libdevilutionx_strings
-  libdevilutionx_utf8
-  libdevilutionx_utils_console
-  ${libdevilutionx_DEPS}
-)
-
 if(SCREEN_READER_INTEGRATION)
   if(WIN32)
+    target_compile_definitions(libdevilutionx PRIVATE Tolk)
     target_link_libraries(libdevilutionx PUBLIC Tolk)
   else()
+    target_include_directories(libdevilutionx PUBLIC ${Speechd_INCLUDE_DIRS})
     target_link_libraries(libdevilutionx PUBLIC speechd)
   endif()
 endif()
@@ -476,7 +715,7 @@ foreach(path ${DEVILUTIONX_PLATFORM_SUBDIRECTORIES})
   add_subdirectory(${path})
 endforeach()
 
-target_link_libraries(libdevilutionx PUBLIC ${DEVILUTIONX_PLATFORM_LINK_LIBRARIES})
+target_link_dependencies(libdevilutionx PUBLIC ${DEVILUTIONX_PLATFORM_LINK_LIBRARIES})
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9 AND NOT AMIGA)
