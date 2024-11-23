@@ -335,7 +335,7 @@ endif()
 if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
 elseif(UWP_LIB)
-  add_custom_target(${BIN_TARGET})  # we only need libdevilutionx
+  set(BIN_TARGET libdevilutionx)
 else()
   add_executable(${BIN_TARGET}
     WIN32
@@ -355,7 +355,7 @@ else()
 endif()
 
 if(NOT UWP_LIB)
-  target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+  target_link_dependencies(${BIN_TARGET} PRIVATE libdevilutionx)
 endif()
 
 if(GPERF)
@@ -504,10 +504,6 @@ if(NINTENDO_3DS)
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-endif()
-
-if(UWP_LIB)
-  target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
 endif()
 
 if(NXDK)
@@ -668,4 +664,10 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   include(CPack)
+endif()
+
+resolve_target_link_dependencies()
+if(UWP_LIB)
+  get_target_property(_linked_objects libdevilutionx LINKED_OBJECTS)
+  target_sources(libdevilutionx PRIVATE ${_linked_objects})
 endif()
