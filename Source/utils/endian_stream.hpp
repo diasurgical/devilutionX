@@ -7,6 +7,7 @@
 #include <cstring>
 
 #include "utils/endian.hpp"
+#include "utils/endian_write.hpp"
 #include "utils/log.hpp"
 
 namespace devilution {

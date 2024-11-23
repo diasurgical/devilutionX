@@ -8,6 +8,7 @@
 #include "engine/load_clx.hpp"
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
+#include "game_mode.hpp"
 #include "init.h"
 
 namespace devilution {

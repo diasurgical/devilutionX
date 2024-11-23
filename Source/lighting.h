@@ -7,15 +7,10 @@
 
 #include <array>
 #include <cstdint>
-#include <optional>
-#include <type_traits>
-#include <vector>
 
 #include <expected.hpp>
-#include <function_ref.hpp>
 
 #include "automap.h"
-#include "engine.h"
 #include "engine/point.hpp"
 #include "utils/attributes.h"
 

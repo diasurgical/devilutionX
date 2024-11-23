@@ -21,6 +21,7 @@
 #include "discord/discord.h"
 #include "engine/demomode.h"
 #include "engine/sound_defs.hpp"
+#include "game_mode.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "platform/locale.hpp"

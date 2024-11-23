@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "diablo.h"
+#include "headless_mode.h"
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "misdat.h"

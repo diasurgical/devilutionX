@@ -5,9 +5,6 @@
  */
 #pragma once
 
-#include <cstdint>
-
-#include "engine.h"
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"
 

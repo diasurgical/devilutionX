@@ -21,6 +21,7 @@
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
+#include "headless_mode.h"
 #include "init.h"
 #include "inv.h"
 #include "levels/trigs.h"

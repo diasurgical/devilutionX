@@ -13,6 +13,7 @@
 #include <optional>
 #include <string>
 
+#include <Aulib/Stream.h>
 #include <SDL.h>
 #include <expected.hpp>
 
