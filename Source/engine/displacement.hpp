@@ -1,10 +1,13 @@
 #pragma once
 
 #include <cmath>
+#include <limits>
+
 #ifdef BUILD_TESTING
 #include <ostream>
 #endif
 
+#include "appfat.h"
 #include "engine/direction.hpp"
 #include "engine/size.hpp"
 #include "utils/attributes.h"

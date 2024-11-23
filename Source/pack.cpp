@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine/random.hpp"
+#include "game_mode.hpp"
 #include "init.h"
 #include "items/validation.h"
 #include "loadsave.h"

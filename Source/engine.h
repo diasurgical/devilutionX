@@ -37,20 +37,9 @@
 #include "engine/size.hpp"
 #include "engine/surface.hpp"
 #include "utils/attributes.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
-
-template <typename V, typename X, typename... Xs>
-DVL_ALWAYS_INLINE constexpr bool IsAnyOf(const V &v, X x, Xs... xs)
-{
-	return v == x || ((v == xs) || ...);
-}
-
-template <typename V, typename X, typename... Xs>
-DVL_ALWAYS_INLINE constexpr bool IsNoneOf(const V &v, X x, Xs... xs)
-{
-	return v != x && ((v != xs) && ...);
-}
 
 /**
  * @brief Fill a rectangle with the given color.

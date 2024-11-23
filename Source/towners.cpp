@@ -7,6 +7,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "game_mode.hpp"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"

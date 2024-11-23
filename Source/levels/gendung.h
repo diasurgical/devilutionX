@@ -11,6 +11,7 @@
 #include <string>
 #include <string_view>
 
+#include <SDL_endian.h>
 #include <expected.hpp>
 
 #include "engine/clx_sprite.hpp"

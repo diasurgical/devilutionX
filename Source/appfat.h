@@ -7,8 +7,6 @@
 
 #include <string_view>
 
-#include <SDL.h>
-
 #include "utils/attributes.h"
 
 namespace devilution {

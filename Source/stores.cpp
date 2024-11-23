@@ -19,6 +19,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
+#include "game_mode.hpp"
 #include "init.h"
 #include "minitext.h"
 #include "options.h"
