@@ -1,6 +1,6 @@
 # CMake has limited support for object libraries.
 #
-# The main limitation is of CMake object libraries is the lack
+# The main limitation of CMake object libraries is the lack
 # of transitive dependency support.
 # The functions here provide a workaround for that.
 #
