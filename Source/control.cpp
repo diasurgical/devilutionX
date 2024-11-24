@@ -1232,7 +1232,7 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { InfoBoxRect.position.x, InfoBoxRect.position.y + PanelPaddingHeight, InfoBoxRect.size.width, InfoBoxRect.size.height }, GetMainPanel().position + Displacement { InfoBoxRect.position.x, InfoBoxRect.position.y });
+	DrawPanelBox(out, MakeSdlRect(InfoBoxRect.position.x, InfoBoxRect.position.y + PanelPaddingHeight, InfoBoxRect.size.width, InfoBoxRect.size.height), GetMainPanel().position + Displacement { InfoBoxRect.position.x, InfoBoxRect.position.y });
 	if (!MainPanelFlag && !trigflag && pcursinvitem == -1 && pcursstashitem == StashStruct::EmptyCell && !SpellSelectFlag && pcurs != CURSOR_HOURGLASS) {
 		InfoString = StringOrView {};
 		InfoColor = UiFlags::ColorWhite;
