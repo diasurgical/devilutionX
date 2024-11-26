@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   ps4:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -29,12 +29,18 @@ jobs:
         fetch-depth: 0
 
     - name: Create Build Environment
-      run: >
-        sudo apt-get update &&
-        sudo apt-get install -y wget cmake git gettext smpq &&
-        wget https://github.com/PacBrew/pacbrew-pacman/releases/download/v1.1/pacbrew-pacman-1.1.deb &&
-        sudo dpkg -i pacbrew-pacman-1.1.deb && sudo pacbrew-pacman -Sy &&
-        sudo pacbrew-pacman --noconfirm -S ps4-openorbis ps4-openorbis-portlibs &&
+      run: |
+        sudo apt-get update && \
+        sudo apt-get install -y pacman-package-manager wget cmake git gettext smpq && \
+        sudo tee -a /etc/pacman.conf > /dev/null <<TEXT
+        [pacbrew]
+        SigLevel = Optional TrustAll
+        Server = https://pacman.mydedibox.fr/pacbrew/packages/
+        TEXT
+    - name: Setup pacman packages
+      run: |
+        sudo pacman --noconfirm -Sy && \
+        sudo pacman --noconfirm -S ps4-openorbis ps4-openorbis-portlibs && \
         echo "#include <endian.h>" | sudo tee /opt/pacbrew/ps4/openorbis/include/sys/endian.h
 
     - name: Build
