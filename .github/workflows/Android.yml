@@ -34,9 +34,6 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
-    - name: Accept SDK licenses
-      run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-
     - name: Install CMake
       run: |
         $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "cmake;3.31.0"
@@ -45,8 +42,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: android-project/app/.cxx
-        key: ${{ github.workflow }}-v6-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v6-
+        key: ${{ github.workflow }}-v2-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v2-
 
     - name: Build
       working-directory: ${{github.workspace}}
