@@ -139,6 +139,9 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 
 bool IsItemValid(const Player &player, const Item &item)
 {
+	if (!gbIsMultiplayer)
+		return true;
+
 	if (item.IDidx != IDI_GOLD && !IsCreationFlagComboValid(item._iCreateInfo))
 		return false;
 
