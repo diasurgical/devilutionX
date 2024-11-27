@@ -795,6 +795,8 @@ bool NetInit(bool bSinglePlayer)
 		DungeonSeeds[i] = gameGenerator.next();
 		LevelSeeds[i] = std::nullopt;
 	}
+	// explicitly randomize the town seed to divorce shops from the game seed
+	DungeonSeeds[0] = GenerateSeed();
 	PublicGame = DvlNet_IsPublicGame();
 
 	Player &myPlayer = *MyPlayer;
