@@ -234,6 +234,7 @@ public:
 struct MonsterConversionData {
 	int8_t monsterLevel;
 	uint16_t experience;
+	uint8_t toHit;
 	uint8_t toHitSpecial;
 };
 
@@ -661,16 +662,18 @@ void LoadMonster(LoadHelper *file, Monster &monster, MonsterConversionData *mons
 	else
 		file->Skip(2); // Skip exp - now calculated from monstdat when the monster dies
 
-	if (monster.isPlayerMinion()) // Don't skip for golems
-		monster.toHit = file->NextLE<uint8_t>();
+	if (monsterConversionData != nullptr)
+		monsterConversionData->toHit = file->NextLE<uint8_t>();
+	else if (monster.isPlayerMinion()) // Don't skip for golems
+		monster.golemToHit = file->NextLE<uint8_t>();
 	else
-		file->Skip(1); // Skip hit as it's already initialized
+		file->Skip(1); // Skip toHit - now calculated on the fly
 	monster.minDamage = file->NextLE<uint8_t>();
 	monster.maxDamage = file->NextLE<uint8_t>();
 	if (monsterConversionData != nullptr)
 		monsterConversionData->toHitSpecial = file->NextLE<uint8_t>();
 	else
-		file->Skip(1); // Skip toHitSpecial as it's already initialized
+		file->Skip(1); // Skip toHitSpecial - now calculated on the fly
 	monster.minDamageSpecial = file->NextLE<uint8_t>();
 	monster.maxDamageSpecial = file->NextLE<uint8_t>();
 	monster.armorClass = file->NextLE<uint8_t>();
@@ -1477,7 +1480,10 @@ void SaveMonster(SaveHelper *file, Monster &monster, MonsterConversionData *mons
 	else
 		file->WriteLE<uint16_t>(static_cast<uint16_t>(std::min<unsigned>(std::numeric_limits<uint16_t>::max(), monster.exp(sgGameInitInfo.nDifficulty))));
 
-	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
+	if (monsterConversionData != nullptr)
+		file->WriteLE<uint8_t>(monsterConversionData->toHit);
+	else
+		file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHit(sgGameInitInfo.nDifficulty), std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.minDamage);
 	file->WriteLE<uint8_t>(monster.maxDamage);
 	if (monsterConversionData != nullptr)
