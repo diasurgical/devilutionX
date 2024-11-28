@@ -1003,7 +1003,7 @@ bool PlayerMHit(Player &player, Monster *monster, int dist, int mind, int maxd, 
 	if (missileData.isArrow()) {
 		int tac = player.GetArmor();
 		if (monster != nullptr) {
-			hper = monster->toHit
+			hper = monster->toHit(sgGameInitInfo.nDifficulty)
 			    + ((monster->level(sgGameInitInfo.nDifficulty) - player.getCharacterLevel()) * 2)
 			    + 30
 			    - (dist * 2) - tac;
