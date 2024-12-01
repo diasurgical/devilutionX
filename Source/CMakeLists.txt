@@ -117,6 +117,8 @@ set(libdevilutionx_SRCS
   engine/render/scrollrt.cpp
   engine/render/text_render.cpp
 
+  items/validation.cpp
+
   levels/crypt.cpp
   levels/drlg_l1.cpp
   levels/drlg_l2.cpp

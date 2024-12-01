@@ -42,7 +42,7 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	MyPlayer = &Players[MyPlayerId];
 	*MyPlayer = {};
 
-	Player &player = Players[0];
+	devilution::Player &player = Players[0];
 	// missile can be a copy or a reference, there's no nullptr check and the functions that use it don't expect the instance to be part of a global structure so it doesn't really matter for this use.
 	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MissileID::Arrow, TARGET_MONSTERS, player.getId(), 0, 0);
 
