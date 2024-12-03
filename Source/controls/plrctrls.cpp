@@ -1145,7 +1145,6 @@ void StashMove(AxisDirection dir)
 
 	if (dir.x == AxisDirectionX_LEFT) {
 		if (ActiveStashSlot.x > 0) {
-
 			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.x--;
 			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
@@ -1155,8 +1154,11 @@ void StashMove(AxisDirection dir)
 			}
 		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
-		if (ActiveStashSlot.x < 10 - itemSize.width) {
-
+		// If we're empty-handed and trying to move right while hovering over an item we may not
+		//  have a free stash column to move to. If the item we're hovering over occupies the last
+		//  column then we want to jump to the inventory instead of just moving one column over.
+		Size itemUnderCursorSize = holdItem.isEmpty() ? GetItemSizeOnSlot(ActiveStashSlot) : itemSize;
+		if (ActiveStashSlot.x < 10 - itemUnderCursorSize.width) {
 			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.x++;
 			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
@@ -1174,7 +1176,6 @@ void StashMove(AxisDirection dir)
 	}
 	if (dir.y == AxisDirectionY_UP) {
 		if (ActiveStashSlot.y > 0) {
-
 			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.y--;
 			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
@@ -1185,7 +1186,6 @@ void StashMove(AxisDirection dir)
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (ActiveStashSlot.y < 10 - itemSize.height) {
-
 			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.y++;
 			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
