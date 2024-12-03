@@ -1104,9 +1104,9 @@ void StashMove(AxisDirection dir)
 	Item &holdItem = MyPlayer->HoldItem;
 	Size itemSize = holdItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(holdItem);
 
-	// Jump from belt to stash
-	if (BeltReturnsToStash && Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
-		if (dir.y == AxisDirectionY_UP) {
+	if (dir.y == AxisDirectionY_UP) {
+		// Check if we need to jump from belt to stash
+		if (BeltReturnsToStash && Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 			int beltSlot = Slot - SLOTXY_BELT_FIRST;
 			InvalidateInventorySlot();
 			ActiveStashSlot = { 2 + beltSlot, 10 - itemSize.height };
@@ -1114,30 +1114,21 @@ void StashMove(AxisDirection dir)
 		}
 	}
 
-	// Jump from general inventory to stash
-	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+	if (dir.x == AxisDirectionX_LEFT) {
+		// Check if we need to jump from general inventory to stash
 		int firstSlot = Slot;
-		if (MyPlayer->HoldItem.isEmpty()) {
-			int8_t itemId = GetItemIdOnSlot(Slot);
-			if (itemId != 0) {
-				firstSlot = FindFirstSlotOnItem(itemId);
+		if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+			if (MyPlayer->HoldItem.isEmpty()) {
+				int8_t itemId = GetItemIdOnSlot(Slot);
+				if (itemId != 0) {
+					firstSlot = FindFirstSlotOnItem(itemId);
+				}
 			}
 		}
-		if (IsAnyOf(firstSlot, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST)) {
-			if (dir.x == AxisDirectionX_LEFT) {
-				Point slotCoord = GetSlotCoord(Slot);
-				InvalidateInventorySlot();
-				ActiveStashSlot = FindClosestStashSlot(slotCoord) - Displacement { itemSize.width - 1, 0 };
-				dir.x = AxisDirectionX_NONE;
-			}
-		}
-	}
 
-	bool isHeadSlot = SLOTXY_HEAD == Slot;
-	bool isLeftHandSlot = SLOTXY_HAND_LEFT == Slot;
-	bool isLeftRingSlot = Slot == SLOTXY_RING_LEFT;
-	if (isHeadSlot || isLeftHandSlot || isLeftRingSlot) {
-		if (dir.x == AxisDirectionX_LEFT) {
+		// If we're in the leftmost column (or hovering over an item on the left side of the inventory) or
+		//  left side of the body and we're moving left we need to move into the closest stash column
+		if (IsAnyOf(firstSlot, SLOTXY_HEAD, SLOTXY_HAND_LEFT, SLOTXY_RING_LEFT, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST)) {
 			Point slotCoord = GetSlotCoord(Slot);
 			InvalidateInventorySlot();
 			ActiveStashSlot = FindClosestStashSlot(slotCoord) - Displacement { itemSize.width - 1, 0 };
