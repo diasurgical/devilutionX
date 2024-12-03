@@ -762,7 +762,9 @@ void ResetInvCursorPosition()
 	SetCursorPos(mousePos);
 }
 
-int FindClosestInventorySlot(Point mousePos, const Item &heldItem, tl::function_ref<int(Point, int)> distanceFunction = [](Point mousePos, int slot) { return mousePos.ManhattanDistance(GetSlotCoord(slot)); })
+int FindClosestInventorySlot(
+    Point mousePos, const Item &heldItem,
+    tl::function_ref<int(Point, int)> distanceFunction = [](Point mousePos, int slot) { return mousePos.ManhattanDistance(GetSlotCoord(slot)); })
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	int bestSlot = 0;
