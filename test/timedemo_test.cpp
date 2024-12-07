@@ -4,6 +4,8 @@
 
 #include "diablo.h"
 #include "engine/demomode.h"
+#include "game_mode.hpp"
+#include "headless_mode.h"
 #include "lua/lua.hpp"
 #include "monstdat.h"
 #include "options.h"

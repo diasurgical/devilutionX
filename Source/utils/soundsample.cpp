@@ -7,6 +7,8 @@
 
 #include <Aulib/DecoderDrmp3.h>
 #include <Aulib/DecoderDrwav.h>
+#include <Aulib/Stream.h>
+
 #include <SDL.h>
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -90,6 +92,26 @@ float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 } // namespace
 
 ///// SoundSample /////
+
+void SoundSample::SetFinishCallback(Aulib::Stream::Callback &&callback)
+{
+	stream_->setFinishCallback(std::forward<Aulib::Stream::Callback>(callback));
+}
+
+void SoundSample::Stop()
+{
+	stream_->stop();
+}
+
+void SoundSample::Mute()
+{
+	stream_->mute();
+}
+
+void SoundSample::Unmute()
+{
+	stream_->unmute();
+}
 
 void SoundSample::Release()
 {

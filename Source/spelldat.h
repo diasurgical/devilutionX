@@ -13,7 +13,7 @@
 
 #include <expected.hpp>
 
-#include "effects.h"
+#include "sound_effect_enums.h"
 #include "utils/enum_traits.h"
 
 namespace devilution {

@@ -21,6 +21,8 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "engine/events.hpp"
+#include "game_mode.hpp"
+#include "headless_mode.h"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "pfile.h"
@@ -44,36 +46,7 @@ int _newlib_heap_size_user = 100 * 1024 * 1024;
 
 namespace devilution {
 
-/** True if the game is the current active window */
 bool gbActive;
-/** Indicate if we only have access to demo data */
-bool gbIsSpawn;
-/** Indicate if we have loaded the Hellfire expansion data */
-bool gbIsHellfire;
-/** Indicate if we want vanilla savefiles */
-bool gbVanilla;
-/** Whether the Hellfire mode is required (forced). */
-bool forceHellfire;
-
-#ifdef UNPACKED_MPQS
-std::optional<std::string> spawn_data_path;
-std::optional<std::string> diabdat_data_path;
-std::optional<std::string> hellfire_data_path;
-std::optional<std::string> font_data_path;
-std::optional<std::string> lang_data_path;
-#else
-std::optional<MpqArchive> spawn_mpq;
-std::optional<MpqArchive> diabdat_mpq;
-std::optional<MpqArchive> hellfire_mpq;
-std::optional<MpqArchive> hfmonk_mpq;
-std::optional<MpqArchive> hfbard_mpq;
-std::optional<MpqArchive> hfbarb_mpq;
-std::optional<MpqArchive> hfmusic_mpq;
-std::optional<MpqArchive> hfvoice_mpq;
-std::optional<MpqArchive> devilutionx_mpq;
-std::optional<MpqArchive> lang_mpq;
-std::optional<MpqArchive> font_mpq;
-#endif
 
 namespace {
 

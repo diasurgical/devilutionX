@@ -13,7 +13,6 @@
 #include <expected.hpp>
 
 #include "automap.h"
-#include "diablo.h"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "player.h"

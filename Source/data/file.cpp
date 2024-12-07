@@ -1,5 +1,7 @@
 #include "file.hpp"
 
+#include <bitset>
+
 #include <fmt/format.h>
 
 #include "engine/assets.hpp"

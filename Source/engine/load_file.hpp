@@ -12,6 +12,7 @@
 #include "appfat.h"
 #include "diablo.h"
 #include "engine/assets.hpp"
+#include "headless_mode.h"
 #include "mpq/mpq_common.hpp"
 #include "utils/static_vector.hpp"
 #include "utils/str_cat.hpp"
