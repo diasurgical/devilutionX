@@ -9,15 +9,23 @@
 set -ex
 
 PARALLELISM="$(getconf _NPROCESSORS_ONLN)"
-STORMLIB_VERSION=8bb328df98e90be08a45a9f6aeb8edda5c1fd27c
-STORMLIB_SRC="/tmp/stormlib-src-$STORMLIB_VERSION"
+if [ "$PARALLELISM" = "undefined" ] && [ -f /usr/sbin/sysctl ]; then
+	# On older OSX, such as 10.4, _NPROCESSOR_ONLN is not defined.
+	if [ -z "$CC" ]; then
+		# Tiger's default cc is too old to build smpq, so we default to gcc instead (e.g. from macports).
+		export CC=gcc
+	fi
+	PARALLELISM="$(/usr/sbin/sysctl -n hw.ncpu)"
+fi
+
+STORMLIB_VERSION=e01d93cc8ae743cfe2da5450854c5d2e3a939265
+STORMLIB_SRC="/tmp/StormLib-$STORMLIB_VERSION"
 SMPQ_VERSION=1.6
-SMPQ_SRC="/tmp/smpq-src-$SMPQ_VERSION"
+SMPQ_SRC="/tmp/smpq-$SMPQ_VERSION"
 
 # Download, build, and install the static version of StormLib, an SMPQ dependency, to the staging prefix.
 if ! [ -d "$STORMLIB_SRC" ]; then
-	mkdir "$STORMLIB_SRC"
-	curl -L -s "https://github.com/ladislav-zezula/StormLib/archive/${STORMLIB_VERSION}.tar.gz" | tar -C "$STORMLIB_SRC" --strip-components=1 -xvzf -
+	curl -L -s "https://github.com/ladislav-zezula/StormLib/archive/${STORMLIB_VERSION}.tar.gz" | tar -C /tmp -xvzf -
 fi
 
 cmake -S"$STORMLIB_SRC" -B"$STORMLIB_SRC"/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tmp/smpq-staging -DBUILD_SHARED_LIBS=OFF \
@@ -26,8 +34,7 @@ cmake --build "$STORMLIB_SRC"/build --config Release --target install -j"$PARALL
 
 # Download, build, and install SMPQ.
 if ! [ -d "$SMPQ_SRC" ]; then
-	mkdir "$SMPQ_SRC"
-	curl -L -s "https://launchpad.net/smpq/trunk/${SMPQ_VERSION}/+download/smpq_${SMPQ_VERSION}.orig.tar.gz" | tar -C "$SMPQ_SRC" --strip-components=1 -xvzf -
+	curl -L -s "https://launchpad.net/smpq/trunk/${SMPQ_VERSION}/+download/smpq_${SMPQ_VERSION}.orig.tar.gz" | tar -C /tmp -xvzf -
 
 	# StormLib.a is C++ and must be linked with a C++ linker (e.g. via g++ instead of gcc).
 	sed -i.bak -e '/^project/a\
