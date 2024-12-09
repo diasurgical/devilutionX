@@ -528,6 +528,49 @@ Executing `Packaging/miyoo_mini/build.sh` will create the folder `build-miyoo-mi
 OnionOS Port Collection.
 </details>
 
+<details><summary>macOS 10.4 Tiger</summary>
+
+For macOS Tiger, DevilutionX can be compiled using the compiler and libraries from [MacPorts](https://www.macports.org/).
+
+For PowerPC, you can use precompiled dependencies from here:
+
+http://macports-tiger-ppc.glebm.com/
+
+After installing MacPorts, run:
+
+~~~ bash
+# Some packages may require you to manually deactivate certain ports during installation.
+# Remember to reactivate them after installing.
+sudo port install curl curl-ca-bundle gcc14 cmake \
+  libsdl12 libsdl_image libsodium bzip2 zlib
+
+# Set GCC 14 as the default GCC:
+sudo port select --set gcc mp-gcc14
+~~~
+
+<!-- The following packages have issues so we use the vendored versions:
+     libfmt11 google-benchmark gtest -->
+
+Then, build DevilutionX:
+
+~~~ bash
+CC=gcc cmake -S. -Bbuild-rel -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCPACK=ON -DMACOSX_STANDALONE_APP_BUNDLE=ON
+cmake --build build-rel -j "$(sysctl -n hw.ncpu)"
+
+# `sudo` is required to produce a bundle with all the shared libraries.
+sudo cmake --build build-rel --target package -j "$(sysctl -n hw.ncpu)"
+~~~
+
+To run tools from the `tools/` directory (only needed for development), you also need Python:
+
+~~~ bash
+sudo port install python312
+sudo port select --set python python312
+sudo port select --set python3 python312
+~~~
+
+</details>
+
 <details><summary><b>CMake build options</b></summary>
 
 ### General
