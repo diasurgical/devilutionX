@@ -165,7 +165,7 @@ void DrawDiabloMsg(const Surface &out)
 	const int borderPartWidth = 12;
 	const int borderPartHeight = 12;
 
-	const int textPaddingX = 5;
+	const int textPaddingX = 8;
 	const int borderThickness = 3;
 
 	const int outerHeight = std::min<int>(out.h(), OuterHeight);
