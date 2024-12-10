@@ -319,5 +319,5 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 
 Sint64 SDL_RWsize(SDL_RWops *context);
 
-char *SDL_GetBasePath();
-char *SDL_GetPrefPath(const char *org, const char *app);
+extern "C" char *SDL_GetBasePath();
+extern "C" char *SDL_GetPrefPath(const char *org, const char *app);
