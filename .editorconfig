@@ -67,6 +67,9 @@ end_of_line = crlf
 [*.tsv]
 trim_trailing_whitespace = false
 
+[*.plist]
+end_of_line = lf
+
 [AppRun]
 end_of_line = lf
 

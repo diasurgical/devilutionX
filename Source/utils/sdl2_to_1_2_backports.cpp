@@ -544,7 +544,7 @@ int WIN_SetError(const char *prefix)
 
 } // namespace
 
-char *SDL_GetBasePath(void)
+extern "C" char *SDL_GetBasePath(void)
 {
 	// From sdl2-2.0.9/src/filesystem/windows/SDL_sysfilesystem.c
 
@@ -611,7 +611,7 @@ char *SDL_GetBasePath(void)
 	return retval;
 }
 
-char *SDL_GetPrefPath(const char *org, const char *app)
+extern "C" char *SDL_GetPrefPath(const char *org, const char *app)
 {
 	// From sdl2-2.0.9/src/filesystem/windows/SDL_sysfilesystem.c
 
@@ -699,7 +699,8 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	return retval;
 }
 
-#else
+// For Apple, definitions are in Source/platform/macos_sdl1/SDL_filesystem.m
+#elif !defined(__APPLE__)
 
 namespace {
 #if !defined(__QNXNTO__) && !defined(__amigaos__) && !(defined(WINVER) && WINVER <= 0x0500 && (!defined(_WIN32_WINNT) || _WIN32_WINNT == 0))
@@ -736,7 +737,7 @@ char *readSymLink(const char *path)
 #endif
 } // namespace
 
-char *SDL_GetBasePath()
+extern "C" char *SDL_GetBasePath()
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
 
@@ -851,7 +852,7 @@ char *SDL_GetBasePath()
 	return retval;
 }
 
-char *SDL_GetPrefPath(const char *org, const char *app)
+extern "C" char *SDL_GetPrefPath(const char *org, const char *app)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
 	/*
