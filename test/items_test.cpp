@@ -1,5 +1,7 @@
-#include <gtest/gtest.h>
+#include <climits>
 #include <random>
+
+#include <gtest/gtest.h>
 
 #include "engine/random.hpp"
 #include "items.h"
