@@ -12,6 +12,8 @@
 #include <functional>
 #include <string>
 
+#include <SDL_endian.h>
+
 #include <expected.hpp>
 #include <function_ref.hpp>
 
@@ -22,6 +24,7 @@
 #include "engine/point.hpp"
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
+#include "game_mode.hpp"
 #include "init.h"
 #include "misdat.h"
 #include "monstdat.h"

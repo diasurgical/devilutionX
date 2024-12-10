@@ -1,5 +1,6 @@
 include(functions/genex)
 include(functions/set_relative_file_macro)
+include(functions/object_libraries)
 
 # This function is equivalent to `add_library` but applies DevilutionX-specific
 # compilation flags to it.
@@ -68,12 +69,7 @@ function(add_devilutionx_library NAME)
   set_relative_file_macro(${NAME})
 endfunction()
 
-# Same as add_devilutionx_library(${NAME} OBJECT) with an additional
-# workaround for https://gitlab.kitware.com/cmake/cmake/-/issues/18090,
-# allowing this object library to be "linked" to other object libraries.
+# Same as add_devilutionx_library(${NAME} OBJECT).
 function(add_devilutionx_object_library NAME)
   add_devilutionx_library(${NAME} OBJECT ${ARGN})
-
-  # See https://gitlab.kitware.com/cmake/cmake/-/issues/18090
-  target_sources(${NAME} INTERFACE $<TARGET_OBJECTS:${NAME}>)
 endfunction()

@@ -18,6 +18,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "headless_mode.h"
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
