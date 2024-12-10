@@ -56,6 +56,9 @@ end_of_line = lf
 [*.txt]
 end_of_line = crlf
 
+[*.plist]
+end_of_line = lf
+
 [AppRun]
 end_of_line = lf
 
