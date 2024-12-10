@@ -2,8 +2,8 @@ include(functions/FetchContent_ExcludeFromAll_backport)
 
 FetchContent_Declare_ExcludeFromAll(
   googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
-  URL_HASH MD5=c8340a482851ef6a3fe618a082304cfc
+  URL https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz
+  URL_HASH MD5=7e11f6cfcf6498324ac82d567dcb891e
 )
 
 set(INSTALL_GTEST OFF)
