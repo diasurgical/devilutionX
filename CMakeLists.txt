@@ -343,7 +343,6 @@ else()
     Source/main.cpp
     Packaging/windows/devilutionx.exe.manifest
     Packaging/windows/devilutionx.rc
-    Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
 
     if(CMAKE_STRIP AND NOT DEVILUTIONX_DISABLE_STRIP)
@@ -382,7 +381,6 @@ include(functions/set_relative_file_macro)
 set_relative_file_macro(${BIN_TARGET})
 
 if(APPLE)
-  set_source_files_properties("./Packaging/apple/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
   set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
   set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
@@ -399,7 +397,15 @@ if(APPLE)
     set(MACOSX_BUNDLE_REQUIRED_PLATFORM Carbon)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
   endif()
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon.icns")
+  if(DARWIN_MAJOR_VERSION VERSION_LESS 9)
+    # Finder on OSX Tiger can only handle icns files with up to 128x128 icons.
+    set(_icon_file AppIcon_128)
+  else()
+    set(_icon_file AppIcon)
+  endif()
+  target_sources(${BIN_TARGET} PRIVATE "Packaging/apple/${_icon_file}.icns")
+  set_source_files_properties("./Packaging/apple/${_icon_file}.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "${_icon_file}.icns")
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/apple/Info.plist")
 
   install (TARGETS ${BIN_TARGET} DESTINATION ./)
