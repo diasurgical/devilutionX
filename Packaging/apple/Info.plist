@@ -39,7 +39,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
 	<key>SDL_FILESYSTEM_BASE_DIR_TYPE</key>
-	<string>parent</string>
+	<string>resource</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

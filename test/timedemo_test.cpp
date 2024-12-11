@@ -23,7 +23,14 @@ bool Dummy_GetHeroInfo(_uiheroinfo *pInfo)
 
 void RunTimedemo(std::string timedemoFolderName)
 {
-	if (SDL_Init(SDL_INIT_EVENTS) <= -1) {
+	if (SDL_Init(
+#ifdef USE_SDL1
+	        0
+#else
+	        SDL_INIT_EVENTS
+#endif
+	        )
+	    <= -1) {
 		ErrSdl();
 	}
 	std::string unitTestFolderCompletePath = paths::BasePath() + "/test/fixtures/timedemo/" + timedemoFolderName;

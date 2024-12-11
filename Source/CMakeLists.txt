@@ -335,6 +335,13 @@ if(USE_SDL1)
   target_link_libraries(DevilutionX::SDL INTERFACE
     libdevilutionx_sdl2_to_1_2_backports
   )
+  if(APPLE)
+    enable_language(OBJC)
+    target_sources(libdevilutionx_sdl2_to_1_2_backports PRIVATE
+      platform/macos_sdl1/SDL_filesystem.m)
+    target_link_libraries(libdevilutionx_sdl2_to_1_2_backports PRIVATE
+      "-framework Foundation")
+  endif()
 endif()
 
 add_devilutionx_object_library(libdevilutionx_codec
