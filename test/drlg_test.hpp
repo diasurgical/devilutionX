@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <gtest/gtest.h>
+
 #include "engine/load_file.hpp"
 #include "levels/themes.h"
 #include "multi.h"
@@ -40,14 +42,10 @@ std::unique_ptr<uint16_t[]> DunData;
 
 void LoadExpectedLevelData(const char *fixture)
 {
-	std::string dunPath = "test/fixtures/";
-
-	paths::SetPrefPath(paths::BasePath());
-	paths::SetAssetsPath(paths::BasePath() + "/" + dunPath);
-
-	dunPath.append(fixture);
-	DunData = LoadFileInMem<uint16_t>(dunPath.c_str());
-	ASSERT_NE(DunData, nullptr) << "Unable to load test fixture " << dunPath;
+	// Set look up path to the location to load set pieces from later:
+	paths::SetPrefPath(paths::BasePath() + "test/fixtures/");
+	DunData = LoadFileInMem<uint16_t>(fixture);
+	ASSERT_NE(DunData, nullptr) << "Unable to load test fixture " << fixture;
 	ASSERT_EQ(Size(DMAXX, DMAXY), Size(SDL_SwapLE16(DunData[0]), SDL_SwapLE16(DunData[1])));
 }
 
