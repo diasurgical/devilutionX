@@ -20,15 +20,16 @@ bool Dummy_GetHeroInfo(_uiheroinfo *pInfo)
 
 void RunTimedemo(std::string timedemoFolderName)
 {
-	std::string unitTestFolderCompletePath = paths::BasePath() + "/test/fixtures/timedemo/" + timedemoFolderName;
-	paths::SetPrefPath(unitTestFolderCompletePath);
-	paths::SetConfigPath(unitTestFolderCompletePath);
 	LoadCoreArchives();
 	LoadGameArchives();
 
 	// The tests need spawn.mpq or diabdat.mpq
 	// Please provide them so that the tests can run successfully
 	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
+
+	std::string unitTestFolderCompletePath = paths::BasePath() + "test/fixtures/timedemo/" + timedemoFolderName;
+	paths::SetPrefPath(unitTestFolderCompletePath);
+	paths::SetConfigPath(unitTestFolderCompletePath);
 
 	InitKeymapActions();
 	LoadOptions();
