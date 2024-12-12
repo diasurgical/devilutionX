@@ -26,6 +26,7 @@
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "headless_mode.h"
 #include "init.h"
 #include "inv_iterators.hpp"
 #include "levels/town.h"

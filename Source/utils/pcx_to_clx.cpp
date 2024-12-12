@@ -13,6 +13,7 @@
 #include "appfat.h"
 #include "utils/clx_encode.hpp"
 #include "utils/endian.hpp"
+#include "utils/endian_write.hpp"
 #include "utils/pcx.hpp"
 
 #ifdef DEBUG_PCX_TO_CL2_SIZE

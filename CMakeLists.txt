@@ -335,7 +335,9 @@ endif()
 if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
 elseif(UWP_LIB)
-  add_custom_target(${BIN_TARGET})  # we only need libdevilutionx
+  get_target_property(_linked_objects libdevilutionx LINKED_OBJECTS)
+  target_sources(libdevilutionx PRIVATE ${_linked_objects})
+  set(BIN_TARGET libdevilutionx)
 else()
   add_executable(${BIN_TARGET}
     WIN32
@@ -355,7 +357,7 @@ else()
 endif()
 
 if(NOT UWP_LIB)
-  target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+  target_link_dependencies(${BIN_TARGET} PRIVATE libdevilutionx)
 endif()
 
 if(GPERF)
@@ -393,9 +395,9 @@ if(APPLE)
     set(MACOSX_BUNDLE_REQUIRED_PLATFORM IPhoneOS)
     set_target_properties(${BIN_TARGET} PROPERTIES XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "9.0")
-  elseif(DARWIN_MAJOR_VERSION GREATER_EQUAL 16)
+  elseif(DARWIN_MAJOR_VERSION GREATER_EQUAL 17)
     set(MACOSX_BUNDLE_REQUIRED_PLATFORM Carbon)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13.0")
   endif()
   if(DARWIN_MAJOR_VERSION VERSION_LESS 9)
     # Finder on OSX Tiger can only handle icns files with up to 128x128 icons.
@@ -504,10 +506,6 @@ if(NINTENDO_3DS)
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-endif()
-
-if(UWP_LIB)
-  target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
 endif()
 
 if(NXDK)

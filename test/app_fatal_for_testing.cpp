@@ -9,4 +9,19 @@ namespace devilution {
 	std::abort();
 }
 
+[[noreturn]] void ErrDlg(const char *title, std::string_view error, std::string_view logFilePath, int logLineNr)
+{
+	std::cerr << "ErrDlg: " << title << "\n"
+	          << error << "\n"
+	          << logFilePath << ":" << logLineNr << std::endl;
+	std::abort();
+}
+
+[[noreturn]] void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
+{
+	std::cerr << "assert_fail: " << pszFile << ":" << nLineNo << "\n"
+	          << pszFail << std::endl;
+	std::abort();
+}
+
 } // namespace devilution
