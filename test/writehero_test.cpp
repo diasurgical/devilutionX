@@ -369,8 +369,9 @@ TEST(Writehero, pfile_write_hero)
 	// Please provide them so that the tests can run successfully
 	ASSERT_TRUE(HaveSpawn() || HaveDiabdat());
 
-	paths::SetPrefPath(".");
-	std::remove("multi_0.sv");
+	const std::string savePath = paths::BasePath() + "multi_0.sv";
+	paths::SetPrefPath(paths::BasePath());
+	RemoveFile(savePath.c_str());
 
 	gbVanilla = true;
 	gbIsHellfire = false;
@@ -397,11 +398,10 @@ TEST(Writehero, pfile_write_hero)
 	AssertPlayer(Players[0]);
 	pfile_write_hero();
 
-	const char *path = "multi_0.sv";
 	uintmax_t fileSize;
-	ASSERT_TRUE(GetFileSize(path, &fileSize));
+	ASSERT_TRUE(GetFileSize(savePath.c_str(), &fileSize));
 	size_t size = static_cast<size_t>(fileSize);
-	FILE *f = std::fopen(path, "rb");
+	FILE *f = OpenFile(savePath.c_str(), "rb");
 	ASSERT_TRUE(f != nullptr);
 	std::unique_ptr<char[]> data { new char[size] };
 	ASSERT_EQ(std::fread(data.get(), size, 1, f), 1);

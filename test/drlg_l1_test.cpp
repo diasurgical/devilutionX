@@ -205,7 +205,6 @@ TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)
 {
 	LoadExpectedLevelData("hellfire/21-2122696790.dun");
 
-	paths::SetAssetsPath(paths::BasePath() + "/assets");
 	TestInitGame();
 
 	TestCreateDungeon(21, 2122696790, ENTRY_TWARPDN);
@@ -244,7 +243,6 @@ TEST(Drlg_l1, CreateL5Dungeon_crypt_4_1324803725)
 {
 	LoadExpectedLevelData("hellfire/24-1324803725.dun");
 
-	paths::SetAssetsPath(paths::BasePath() + "/assets");
 	TestInitGame();
 
 	TestCreateDungeon(24, 1324803725, ENTRY_MAIN);
