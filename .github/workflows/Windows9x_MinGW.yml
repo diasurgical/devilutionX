@@ -42,7 +42,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild-windows9x -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingw9x.toolchain.cmake -DTARGET_PLATORM=windows9x
+      run: cmake -S. -Bbuild-windows9x -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingw9x.toolchain.cmake -DTARGET_PLATFORM=windows9x
 
     - name: Build
       working-directory: ${{github.workspace}}
