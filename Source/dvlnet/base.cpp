@@ -452,7 +452,7 @@ bool base::SNetLeaveGame(int type)
 {
 	tl::expected<std::unique_ptr<packet>, PacketError> pkt
 	    = pktfty->make_packet<PT_DISCONNECT>(
-	        plr_self, PLR_BROADCAST, plr_self, type);
+	        plr_self, PLR_BROADCAST, plr_self, static_cast<leaveinfo_t>(type));
 	if (!pkt.has_value()) {
 		LogError("make_packet: {}", pkt.error().what());
 		return false;

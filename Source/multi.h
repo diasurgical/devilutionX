@@ -36,6 +36,8 @@ struct GameData {
 	uint8_t fullQuests;
 	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
 	uint32_t gameSeed[4];
+
+	void swapLE();
 };
 
 /* @brief Contains info of running public game (for game list browsing) */
