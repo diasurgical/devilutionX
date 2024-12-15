@@ -214,7 +214,7 @@ void tcp_server::DropConnection(const scc &con)
 {
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
-		    con->plr, LEAVE_DROP);
+		    con->plr, static_cast<leaveinfo_t>(LEAVE_DROP));
 		connections[con->plr] = nullptr;
 		SendPacket(*pkt);
 		// TODO: investigate if it is really ok for the server to

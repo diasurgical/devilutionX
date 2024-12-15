@@ -5,6 +5,7 @@
 #include "appfat.h"
 #include "dvlnet/packet.h"
 #include "utils/attributes.h"
+#include "utils/endian.hpp"
 
 namespace devilution {
 namespace net {
@@ -56,7 +57,7 @@ bool frame_queue::PacketReady()
 		if (Size() < sizeof(framesize_t))
 			return false;
 		auto szbuf = Read(sizeof(framesize_t));
-		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
+		nextsize = LoadLE32(szbuf.data());
 		if (nextsize == 0)
 			FRAME_QUEUE_ERROR;
 	}
@@ -77,8 +78,11 @@ buffer_t frame_queue::MakeFrame(buffer_t packetbuf)
 	buffer_t ret;
 	if (packetbuf.size() > max_frame_size)
 		ABORT();
-	framesize_t size = packetbuf.size();
-	ret.insert(ret.end(), packet_out::begin(size), packet_out::end(size));
+	const framesize_t size = packetbuf.size();
+	static_assert(sizeof(size) == 4, "framesize_t is not 4 bytes");
+	unsigned char sizeBuf[4];
+	WriteLE32(sizeBuf, size);
+	ret.insert(ret.end(), sizeBuf, sizeBuf + 4);
 	ret.insert(ret.end(), packetbuf.begin(), packetbuf.end());
 	return ret;
 }
