@@ -5,6 +5,7 @@
  */
 
 #include <cstdint>
+#include <cstring>
 #include <ctime>
 
 #include <SDL.h>
@@ -46,7 +47,7 @@ bool sgbSendDeltaTbl[MAX_PLRS];
 GameData sgGameInitInfo;
 bool gbSelectProvider;
 int sglTimeoutStart;
-int sgdwPlayerLeftReasonTbl[MAX_PLRS];
+uint32_t sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer lowPriorityBuffer;
 uint32_t sgdwGameLoops;
 /**
@@ -73,6 +74,13 @@ const event_type EventTypes[3] = {
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
 };
+
+void GameData::swapLE()
+{
+	size = SDL_SwapLE32(size);
+	dwSeed = SDL_SwapLE32(dwSeed);
+	programid = SDL_SwapLE32(programid);
+}
 
 namespace {
 
@@ -376,34 +384,44 @@ void SetupLocalPositions()
 
 void HandleEvents(_SNETEVENT *pEvt)
 {
+	const uint32_t playerId = pEvt->playerid;
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
-		auto *gameData = (GameData *)pEvt->data;
-		if (gameData->size != sizeof(GameData))
-			app_fatal(StrCat("Invalid size of game data: ", gameData->size));
-		sgGameInitInfo = *gameData;
-		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
-		break;
-	}
+		GameData gameData;
+		if (pEvt->databytes < sizeof(GameData))
+			app_fatal(StrCat("Invalid packet size (<sizeof(GameData)): ", pEvt->databytes));
+		std::memcpy(&gameData, pEvt->data, sizeof(gameData));
+		gameData.swapLE();
+		if (gameData.size != sizeof(GameData))
+			app_fatal(StrCat("Invalid size of game data: ", gameData.size));
+		sgGameInitInfo = gameData;
+		sgbPlayerTurnBitTbl[playerId] = true;
+	} break;
 	case EVENT_TYPE_PLAYER_LEAVE_GAME: {
-		sgbPlayerLeftGameTbl[pEvt->playerid] = true;
-		sgbPlayerTurnBitTbl[pEvt->playerid] = false;
+		sgbPlayerLeftGameTbl[playerId] = true;
+		sgbPlayerTurnBitTbl[playerId] = false;
 
-		int leftReason = 0;
-		if (pEvt->data != nullptr && pEvt->databytes >= sizeof(leftReason))
-			leftReason = *(int *)pEvt->data;
-		sgdwPlayerLeftReasonTbl[pEvt->playerid] = leftReason;
+		int32_t leftReason = 0;
+		if (pEvt->data != nullptr && pEvt->databytes >= sizeof(leftReason)) {
+			std::memcpy(&leftReason, pEvt->data, sizeof(leftReason));
+			leftReason = SDL_SwapLE32(leftReason);
+		}
+		sgdwPlayerLeftReasonTbl[playerId] = leftReason;
 		if (leftReason == LEAVE_ENDING)
 			gbSomebodyWonGameKludge = true;
 
-		sgbSendDeltaTbl[pEvt->playerid] = false;
+		sgbSendDeltaTbl[playerId] = false;
 
-		if (gbDeltaSender == pEvt->playerid)
+		if (gbDeltaSender == playerId)
 			gbDeltaSender = MAX_PLRS;
 	} break;
-	case EVENT_TYPE_PLAYER_MESSAGE:
-		EventPlrMsg((char *)pEvt->data);
-		break;
+	case EVENT_TYPE_PLAYER_MESSAGE: {
+		string_view data(static_cast<const char *>(pEvt->data), pEvt->databytes);
+		if (const size_t nullPos = data.find('\0'); nullPos != string_view::npos) {
+			data.remove_suffix(data.size() - nullPos);
+		}
+		EventPlrMsg(data);
+	} break;
 	}
 }
 
@@ -432,7 +450,9 @@ bool InitSingle(GameData *gameData)
 	}
 
 	int unused = 0;
-	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
+	GameData gameInitInfo = sgGameInitInfo;
+	gameInitInfo.swapLE();
+	if (!SNetCreateGame("local", "local", reinterpret_cast<char *>(&gameInitInfo), sizeof(gameInitInfo), &unused)) {
 		app_fatal(StrCat("SNetCreateGame1:\n", SDL_GetError()));
 	}
 

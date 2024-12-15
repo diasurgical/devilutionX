@@ -296,8 +296,10 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 		size_t neededSize = sizeof(GameData) + (PlayerNameLength * MAX_PLRS);
 		if (pkt.Info().size() < neededSize)
 			return;
-		const GameData *gameData = (const GameData *)pkt.Info().data();
-		if (gameData->size != sizeof(GameData))
+		GameData gameData;
+		std::memcpy(&gameData, pkt.Info().data(), sizeof(GameData));
+		gameData.swapLE();
+		if (gameData.size != sizeof(GameData))
 			return;
 		std::vector<std::string> playerNames;
 		for (size_t i = 0; i < Players.size(); i++) {
@@ -316,7 +318,7 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 		size_t gameNameSize = pkt.Info().size() - neededSize;
 		gameName.resize(gameNameSize);
 		std::memcpy(&gameName[0], pkt.Info().data() + neededSize, gameNameSize);
-		game_list[gameName] = std::make_tuple(*gameData, playerNames, sender);
+		game_list[gameName] = std::make_tuple(gameData, playerNames, sender);
 		return;
 	}
 	recv_ingame(pkt, sender);
