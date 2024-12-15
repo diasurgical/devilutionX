@@ -501,7 +501,7 @@ msgstr "クライアント - サーバー (​TCP​)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
 msgid "Offline"
-msgstr "Offline"
+msgstr "オフライン"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:648
 #: Source/DiabloUI/multi/selgame.cpp:672
@@ -932,7 +932,7 @@ msgstr ""
 
 #: Source/appfat.cpp:81
 msgid "Data File Error"
-msgstr "Data File Error"
+msgstr "データファイル​・​エラー"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
 #: Source/appfat.cpp:87
@@ -941,12 +941,12 @@ msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
-"Unable to write to location:\n"
+"書き込み​が​でき​ませ​ん:\n"
 "{:s}"
 
 #: Source/appfat.cpp:89
 msgid "Read-Only Directory Error"
-msgstr "Read-Only Directory Error"
+msgstr "読み取り専用​ディレクトリ​エラー"
 
 #: Source/automap.cpp:1411
 msgid "Game: "
@@ -1198,7 +1198,7 @@ msgstr "能力​値​が​不足​し​て​い​ます"
 #: Source/control.cpp:1274
 #, c++-format
 msgid "{:s}, Level: {:d}"
-msgstr "{:s}, Level: {:d}"
+msgstr "{:s}, レベル: {:d}"
 
 #: Source/control.cpp:1275
 #, c++-format
@@ -1878,11 +1878,11 @@ msgstr "町中​で​は​ポーズ​でき​ませ​ん"
 
 #: Source/diablo_msg.cpp:68
 msgid "Copying to a hard disk is recommended"
-msgstr "Copying to a hard disk is recommended"
+msgstr "ハードディスク​へ​の​コピー​を​推奨"
 
 #: Source/diablo_msg.cpp:69
 msgid "Multiplayer sync problem"
-msgstr "Multiplayer sync problem"
+msgstr "マルチ​プレイヤー​同期​の​問題"
 
 #: Source/diablo_msg.cpp:70
 msgid "No pause in multiplayer"
@@ -2149,15 +2149,15 @@ msgstr "メニュー​に​ある"
 
 #: Source/dvlnet/loopback.cpp:117
 msgid "loopback"
-msgstr "loopback"
+msgstr "ループ​バック"
 
 #: Source/dvlnet/tcp_client.cpp:112
 msgid "Unable to connect"
-msgstr "Unable to connect"
+msgstr "接続​でき​ませ​ん"
 
 #: Source/dvlnet/tcp_client.cpp:150
 msgid "error: read 0 bytes from server"
-msgstr "error: read 0 bytes from server"
+msgstr "エラー​：​サーバー​から​データ​を​読み込め​ませ​ん"
 
 #: Source/engine/assets.hpp:226
 #, c++-format
@@ -2569,7 +2569,7 @@ msgstr ""
 
 #: Source/init.cpp:391
 msgid "Unable to create main window"
-msgstr "Unable to create main window"
+msgstr "メイン​ウィンドウ​を​作成​でき​ませ​ん"
 
 #: Source/inv.cpp:2154
 msgid "No room for item"
@@ -3420,11 +3420,11 @@ msgstr "レベル​{:d}​へ​戻る"
 
 #: Source/loadsave.cpp:1923 Source/loadsave.cpp:2358
 msgid "Unable to open save file archive"
-msgstr "Unable to open save file archive"
+msgstr "保存​ファイル​の​アーカイブ​を​開け​ませ​ん"
 
 #: Source/loadsave.cpp:2361
 msgid "Invalid save file"
-msgstr "Invalid save file"
+msgstr "無効​な​保存​ファイル"
 
 #: Source/loadsave.cpp:2392
 msgid "Player is on a Hellfire only level"
@@ -3436,7 +3436,7 @@ msgstr "無効​な​ゲーム​状態"
 
 #: Source/menu.cpp:155
 msgid "Unable to display mainmenu"
-msgstr "Unable to display mainmenu"
+msgstr "メインメニュー​を​表示​でき​ませ​ん"
 
 #: Source/monster.cpp:2929
 msgid "Animal"
@@ -3539,7 +3539,7 @@ msgstr "ゲーム​終了"
 
 #: Source/msg.cpp:2486
 msgid "Unable to get level data"
-msgstr "Unable to get level data"
+msgstr "レベル​データ​が​取得​でき​ませ​ん"
 
 #: Source/multi.cpp:265
 #, c++-format
@@ -4725,11 +4725,11 @@ msgstr "スペルホットキー {:s}"
 
 #: Source/pfile.cpp:760
 msgid "Unable to open archive"
-msgstr "Unable to open archive"
+msgstr "アーカイブ​を​開け​ませ​ん"
 
 #: Source/pfile.cpp:762
 msgid "Unable to load character"
-msgstr "Unable to load character"
+msgstr "キャラクター​を​ロード​でき​ませ​ん"
 
 #: Source/plrmsg.cpp:77 Source/qol/chatlog.cpp:129
 #, c++-format
