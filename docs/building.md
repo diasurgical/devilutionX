@@ -322,12 +322,12 @@ https://devkitpro.org/wiki/Getting_Started
 
 ```
 sudo (dkp-)pacman -S \
-		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-		libctru citro3d 3ds-sdl 3ds-libpng \
-		3ds-cmake 3ds-pkg-config picasso 3dslink
+    devkitARM general-tools 3dstools libctru \
+    citro3d 3ds-sdl 3ds-libpng 3ds-bzip2 \
+    3ds-cmake 3ds-pkg-config picasso 3dslink
 ```
 
-- Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
+- Download or compile [bannertool](https://github.com/diasurgical/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
     - Copy binaries to: `/opt/devkitpro/tools/bin/`
 
 ### Compiling
