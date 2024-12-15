@@ -8,7 +8,7 @@ namespace {
 
 TEST(Stores, AddStoreHoldRepair_magic)
 {
-	Item *item;
+	devilution::Item *item;
 
 	item = &storehold[0];
 
@@ -41,7 +41,7 @@ TEST(Stores, AddStoreHoldRepair_magic)
 
 TEST(Stores, AddStoreHoldRepair_normal)
 {
-	Item *item;
+	devilution::Item *item;
 
 	item = &storehold[0];
 
