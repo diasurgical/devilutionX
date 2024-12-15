@@ -742,15 +742,22 @@ void ResetInvCursorPosition()
 {
 	Point mousePos {};
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-		int8_t itemInvId = GetItemIdOnSlot(Slot);
-		if (itemInvId != 0) {
-			mousePos = GetSlotCoord(FindFirstSlotOnItem(itemInvId));
-			Size itemSize = GetItemSizeOnSlot(Slot);
-			mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
-			mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
+		auto slot = Slot;
+		Size itemSize = { 1, 1 };
+
+		if (MyPlayer->HoldItem.isEmpty()) {
+			int8_t itemInvId = GetItemIdOnSlot(Slot);
+			if (itemInvId != 0) {
+				slot = FindFirstSlotOnItem(itemInvId);
+				itemSize = GetItemSizeOnSlot(Slot);
+			}
 		} else {
-			mousePos = GetSlotCoord(Slot);
+			itemSize = GetInventorySize(MyPlayer->HoldItem);
 		}
+
+		mousePos = GetSlotCoord(slot);
+		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
+		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
 	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
 	} else {
@@ -1196,7 +1203,7 @@ void StashMove(AxisDirection dir)
 			Point rightPanelCoord = { GetRightPanel().position.x, stashSlotCoord.y };
 			Slot = FindClosestInventorySlot(rightPanelCoord, holdItem, [](Point mousePos, int slot) {
 				Point slotPos = GetSlotCoord(slot);
-				// Exagerrate the vertical difference so that moving from the top 6 rows of the
+				// Exaggerate the vertical difference so that moving from the top 6 rows of the
 				//  stash is more likely to land on a body slot. The value 3 was found by trial and
 				//  error, this allows moving from the top row of the stash to the head while
 				//  empty-handed while 4 causes the amulet to be preferenced (due to less vertical
