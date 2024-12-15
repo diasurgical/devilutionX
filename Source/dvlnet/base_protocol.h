@@ -364,8 +364,10 @@ tl::expected<void, PacketError> base_protocol<P>::recv_decrypted(packet &pkt, en
 		const buffer_t &infoBuffer = **pktInfo;
 		if (infoBuffer.size() < neededSize)
 			return {};
-		const GameData *gameData = reinterpret_cast<const GameData *>(infoBuffer.data());
-		if (gameData->size != sizeof(GameData))
+		GameData gameData;
+		std::memcpy(&gameData, infoBuffer.data(), sizeof(GameData));
+		gameData.swapLE();
+		if (gameData.size != sizeof(GameData))
 			return {};
 		std::vector<std::string> playerNames;
 		for (size_t i = 0; i < Players.size(); i++) {
@@ -384,7 +386,7 @@ tl::expected<void, PacketError> base_protocol<P>::recv_decrypted(packet &pkt, en
 		size_t gameNameSize = infoBuffer.size() - neededSize;
 		gameName.resize(gameNameSize);
 		std::memcpy(&gameName[0], infoBuffer.data() + neededSize, gameNameSize);
-		game_list[gameName] = GameListValue { *gameData, std::move(playerNames), sender };
+		game_list[gameName] = GameListValue { gameData, std::move(playerNames), sender };
 		return {};
 	}
 	return recv_ingame(pkt, sender);
