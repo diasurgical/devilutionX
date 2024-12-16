@@ -14,7 +14,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD|OpenBSD|DragonFly|NetBSD")
 endif()
 
 set(TARGET_PLATFORM host CACHE STRING "Target platform")
-set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg99 rg350 gkd350h cpigamesh miyoo_mini windows9x)
+set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg99 rg350 gkd350h cpigamesh miyoo_mini windows9x windowsXP)
 if(TARGET_PLATFORM STREQUAL "retrofw")
   include(platforms/retrofw)
 elseif(TARGET_PLATFORM STREQUAL "rg99")
