@@ -693,6 +693,24 @@ Size GetItemSizeOnSlot(int slot)
 }
 
 /**
+ * Get item size (grid size) on the slot specified. Returns 1x1 if none exists.
+ */
+Size GetItemSizeOnSlot(Point slot)
+{
+	if (Rectangle { { 0, 0 }, { 10, 10 } }.contains(slot)) {
+		StashStruct::StashCell ii = Stash.GetItemIdAtPosition(slot);
+		if (ii != StashStruct::EmptyCell) {
+			Item &item = Stash.stashList[ii];
+			if (!item.isEmpty()) {
+				return GetInventorySize(item);
+			}
+		}
+	}
+
+	return { 1, 1 };
+}
+
+/**
  * Search for the first slot occupied by an item in the inventory.
  */
 int FindFirstSlotOnItem(int8_t itemInvId)
@@ -726,15 +744,22 @@ void ResetInvCursorPosition()
 {
 	Point mousePos {};
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-		int8_t itemInvId = GetItemIdOnSlot(Slot);
-		if (itemInvId != 0) {
-			mousePos = GetSlotCoord(FindFirstSlotOnItem(itemInvId));
-			Size itemSize = GetItemSizeOnSlot(Slot);
-			mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
-			mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
+		auto slot = Slot;
+		Size itemSize = { 1, 1 };
+
+		if (MyPlayer->HoldItem.isEmpty()) {
+			int8_t itemInvId = GetItemIdOnSlot(Slot);
+			if (itemInvId != 0) {
+				slot = FindFirstSlotOnItem(itemInvId);
+				itemSize = GetItemSizeOnSlot(Slot);
+			}
 		} else {
-			mousePos = GetSlotCoord(Slot);
+			itemSize = GetInventorySize(MyPlayer->HoldItem);
 		}
+
+		mousePos = GetSlotCoord(slot);
+		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
+		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
 	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
 	} else {
@@ -744,17 +769,44 @@ void ResetInvCursorPosition()
 	SetCursorPos(mousePos);
 }
 
-int FindClosestInventorySlot(Point mousePos)
+int FindClosestInventorySlot(
+    Point mousePos, const Item &heldItem,
+    tl::function_ref<int(Point, int)> distanceFunction = [](Point mousePos, int slot) { return mousePos.ManhattanDistance(GetSlotCoord(slot)); })
 {
 	int shortestDistance = std::numeric_limits<int>::max();
 	int bestSlot = 0;
 
-	for (int i = 0; i < NUM_XY_SLOTS; i++) {
-		int distance = mousePos.ManhattanDistance(GetSlotCoord(i));
+	auto checkCandidateSlot = [&](int slot) {
+		int distance = distanceFunction(mousePos, slot);
 		if (distance < shortestDistance) {
 			shortestDistance = distance;
-			bestSlot = i;
+			bestSlot = slot;
 		}
+	};
+
+	if (heldItem.isEmpty()) {
+		for (int i = SLOTXY_HEAD; i <= SLOTXY_CHEST; i++) {
+			checkCandidateSlot(i);
+		}
+	} else {
+		if (heldItem._itype == ItemType::Ring) {
+			for (int i : { SLOTXY_RING_LEFT, SLOTXY_RING_RIGHT }) {
+				checkCandidateSlot(i);
+			}
+		} else if (heldItem.isWeapon()) {
+			checkCandidateSlot(SLOTXY_HAND_LEFT);
+		} else if (heldItem.isShield()) {
+			checkCandidateSlot(SLOTXY_HAND_RIGHT);
+		} else if (heldItem.isHelm()) {
+			checkCandidateSlot(SLOTXY_HEAD);
+		} else if (heldItem.isArmor()) {
+			checkCandidateSlot(SLOTXY_CHEST);
+		} else if (heldItem._itype == ItemType::Amulet) {
+			checkCandidateSlot(SLOTXY_AMULET);
+		}
+	}
+	for (int i = SLOTXY_INV_FIRST; i <= SLOTXY_INV_LAST; i++) {
+		checkCandidateSlot(i);
 	}
 
 	return bestSlot;
@@ -796,15 +848,15 @@ void InventoryMove(AxisDirection dir)
 {
 	Point mousePos = MousePosition;
 
+	const Item &heldItem = MyPlayer->HoldItem;
 	// normalize slots
 	if (Slot < 0)
-		Slot = FindClosestInventorySlot(mousePos);
+		Slot = FindClosestInventorySlot(mousePos, heldItem);
 	else if (Slot > SLOTXY_BELT_LAST)
 		Slot = SLOTXY_BELT_LAST;
 
 	const int initialSlot = Slot;
 
-	const Item &heldItem = MyPlayer->HoldItem;
 	const bool isHoldingItem = !heldItem.isEmpty();
 	Size itemSize = isHoldingItem ? GetInventorySize(heldItem) : Size { 1 };
 
@@ -1067,8 +1119,9 @@ void StashMove(AxisDirection dir)
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
 
+	Item &holdItem = MyPlayer->HoldItem;
 	if (Slot < 0 && ActiveStashSlot == InvalidStashPoint) {
-		int invSlot = FindClosestInventorySlot(MousePosition);
+		int invSlot = FindClosestInventorySlot(MousePosition, holdItem);
 		Point invSlotCoord = GetSlotCoord(invSlot);
 		int invDistance = MousePosition.ManhattanDistance(invSlotCoord);
 
@@ -1085,12 +1138,11 @@ void StashMove(AxisDirection dir)
 		ActiveStashSlot = stashSlot;
 	}
 
-	Item &holdItem = MyPlayer->HoldItem;
 	Size itemSize = holdItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(holdItem);
 
-	// Jump from belt to stash
-	if (BeltReturnsToStash && Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
-		if (dir.y == AxisDirectionY_UP) {
+	if (dir.y == AxisDirectionY_UP) {
+		// Check if we need to jump from belt to stash
+		if (BeltReturnsToStash && Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 			int beltSlot = Slot - SLOTXY_BELT_FIRST;
 			InvalidateInventorySlot();
 			ActiveStashSlot = { 2 + beltSlot, 10 - itemSize.height };
@@ -1098,30 +1150,21 @@ void StashMove(AxisDirection dir)
 		}
 	}
 
-	// Jump from general inventory to stash
-	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+	if (dir.x == AxisDirectionX_LEFT) {
+		// Check if we need to jump from general inventory to stash
 		int firstSlot = Slot;
-		if (MyPlayer->HoldItem.isEmpty()) {
-			int8_t itemId = GetItemIdOnSlot(Slot);
-			if (itemId != 0) {
-				firstSlot = FindFirstSlotOnItem(itemId);
+		if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
+			if (MyPlayer->HoldItem.isEmpty()) {
+				int8_t itemId = GetItemIdOnSlot(Slot);
+				if (itemId != 0) {
+					firstSlot = FindFirstSlotOnItem(itemId);
+				}
 			}
 		}
-		if (IsAnyOf(firstSlot, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST)) {
-			if (dir.x == AxisDirectionX_LEFT) {
-				Point slotCoord = GetSlotCoord(Slot);
-				InvalidateInventorySlot();
-				ActiveStashSlot = FindClosestStashSlot(slotCoord) - Displacement { itemSize.width - 1, 0 };
-				dir.x = AxisDirectionX_NONE;
-			}
-		}
-	}
 
-	bool isHeadSlot = SLOTXY_HEAD == Slot;
-	bool isLeftHandSlot = SLOTXY_HAND_LEFT == Slot;
-	bool isLeftRingSlot = Slot == SLOTXY_RING_LEFT;
-	if (isHeadSlot || isLeftHandSlot || isLeftRingSlot) {
-		if (dir.x == AxisDirectionX_LEFT) {
+		// If we're in the leftmost column (or hovering over an item on the left side of the inventory) or
+		//  left side of the body and we're moving left we need to move into the closest stash column
+		if (IsAnyOf(firstSlot, SLOTXY_HEAD, SLOTXY_HAND_LEFT, SLOTXY_RING_LEFT, SLOTXY_AMULET, SLOTXY_CHEST, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST)) {
 			Point slotCoord = GetSlotCoord(Slot);
 			InvalidateInventorySlot();
 			ActiveStashSlot = FindClosestStashSlot(slotCoord) - Displacement { itemSize.width - 1, 0 };
@@ -1135,25 +1178,64 @@ void StashMove(AxisDirection dir)
 	}
 
 	if (dir.x == AxisDirectionX_LEFT) {
-		if (ActiveStashSlot.x > 0)
+		if (ActiveStashSlot.x > 0) {
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.x--;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.x > 0 && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.x--;
+				}
+			}
+		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
-		if (ActiveStashSlot.x < 10 - itemSize.width) {
+		// If we're empty-handed and trying to move right while hovering over an item we may not
+		//  have a free stash column to move to. If the item we're hovering over occupies the last
+		//  column then we want to jump to the inventory instead of just moving one column over.
+		Size itemUnderCursorSize = holdItem.isEmpty() ? GetItemSizeOnSlot(ActiveStashSlot) : itemSize;
+		if (ActiveStashSlot.x < 10 - itemUnderCursorSize.width) {
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.x++;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.x < 10 - itemSize.width && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.x++;
+				}
+			}
 		} else {
 			Point stashSlotCoord = GetStashSlotCoord(ActiveStashSlot);
 			Point rightPanelCoord = { GetRightPanel().position.x, stashSlotCoord.y };
-			Slot = FindClosestInventorySlot(rightPanelCoord);
+			Slot = FindClosestInventorySlot(rightPanelCoord, holdItem, [](Point mousePos, int slot) {
+				Point slotPos = GetSlotCoord(slot);
+				// Exaggerate the vertical difference so that moving from the top 6 rows of the
+				//  stash is more likely to land on a body slot. The value 3 was found by trial and
+				//  error, this allows moving from the top row of the stash to the head while
+				//  empty-handed while 4 causes the amulet to be preferenced (due to less vertical
+				//  distance) and 2 causes the left hand to be preferenced (due to less horizontal
+				//  distance).
+				return std::abs(mousePos.y - slotPos.y) * 3 + std::abs(mousePos.x - slotPos.x);
+			});
 			ActiveStashSlot = InvalidStashPoint;
 			BeltReturnsToStash = false;
 		}
 	}
 	if (dir.y == AxisDirectionY_UP) {
-		if (ActiveStashSlot.y > 0)
+		if (ActiveStashSlot.y > 0) {
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.y--;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.y > 0 && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.y--;
+				}
+			}
+		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
 		if (ActiveStashSlot.y < 10 - itemSize.height) {
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
 			ActiveStashSlot.y++;
+			if (holdItem.isEmpty() && itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				while (ActiveStashSlot.y < 10 - itemSize.height && itemIdAtActiveStashSlot == Stash.GetItemIdAtPosition(ActiveStashSlot)) {
+					ActiveStashSlot.y++;
+				}
+			}
 		} else if ((holdItem.isEmpty() || CanBePlacedOnBelt(*MyPlayer, holdItem)) && ActiveStashSlot.x > 1) {
 			int beltSlot = ActiveStashSlot.x - 2;
 			Slot = SLOTXY_BELT_FIRST + beltSlot;
@@ -1169,8 +1251,18 @@ void StashMove(AxisDirection dir)
 
 	if (ActiveStashSlot != InvalidStashPoint) {
 		Point mousePos = GetStashSlotCoord(ActiveStashSlot);
-		// Stash coordinates are all the top left of the cell, so we need to shift the mouse to the center of the held item
-		// or the center of the cell if we have a hand cursor (itemSize will be 1x1 here so we can use the same calculation)
+		// At this point itemSize is the size of the item we're currently holding.
+		// We need to offset the mouse position to account for items (we're holding or hovering over) with a dimension larger than a single cell.
+		if (holdItem.isEmpty()) {
+			const StashStruct::StashCell itemIdAtActiveStashSlot = Stash.GetItemIdAtPosition(ActiveStashSlot);
+			if (itemIdAtActiveStashSlot != StashStruct::EmptyCell) {
+				const Item stashItem = Stash.stashList[itemIdAtActiveStashSlot];
+				const Point firstSlotOnItem = FindFirstStashSlotOnItem(itemIdAtActiveStashSlot);
+				itemSize = GetInventorySize(stashItem);
+				mousePos = GetStashSlotCoord(firstSlotOnItem);
+			}
+		}
+
 		mousePos += Displacement { itemSize.width * INV_SLOT_HALF_SIZE_PX, itemSize.height * INV_SLOT_HALF_SIZE_PX };
 		SetCursorPos(mousePos);
 		return;
@@ -1808,7 +1900,7 @@ void PerformPrimaryAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else if (GetRightPanel().contains(MousePosition) || GetMainPanel().contains(MousePosition)) {
-			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
+			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition, MyPlayer->HoldItem);
 
 			int jumpSlot = inventorySlot; // If the cursor is over an inventory slot we may need to adjust it due to pasting items of different sizes over each other
 			if (inventorySlot >= SLOTXY_INV_FIRST && inventorySlot <= SLOTXY_INV_LAST) {
@@ -1869,20 +1961,11 @@ void PerformPrimaryAction()
 
 			Point mousePos = GetStashSlotCoord(jumpSlot);
 			ActiveStashSlot = jumpSlot;
-			if (MyPlayer->HoldItem.isEmpty()) {
-				// For inventory cut/paste we can combine the cases where we swap or simply paste items. Because stash movement is always cell based (there's no fast
-				// movement over large items) it looks better if we offset the hand cursor to the bottom right cell of the item we just placed.
-				ActiveStashSlot += Displacement { cursorSizeInCells - 1 }; // shift the active stash slot coordinates to account for items larger than 1x1
-				// Then we displace the mouse position to the bottom right corner of the item, then shift it back half a cell to center it.
-				// Could also be written as (cursorSize - 1) * InventorySlotSize + HalfInventorySlotSize, same thing in the end.
-				mousePos += Displacement { cursorSizeInCells } * Displacement { InventorySlotSizeInPixels } - Displacement { InventorySlotSizeInPixels } / 2;
-			} else {
-				// If we've picked up an item then use the same logic as the inventory so that the cursor is offset to the center of where the old item location was
-				// (in this case jumpSlot was the top left cell of where it used to be in the grid, and we need to update the cursor size since we're now holding the item)
-				cursorSizeInCells = GetInventorySize(MyPlayer->HoldItem);
-				mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
-				mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
-			}
+			// Center the Cursor based on the item we just put down or we're holding.
+			cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? GetItemSizeOnSlot(jumpSlot) : GetInventorySize(MyPlayer->HoldItem);
+			mousePos.x += ((cursorSizeInCells.width) * InventorySlotSizeInPixels.width) / 2;
+			mousePos.y += ((cursorSizeInCells.height) * InventorySlotSizeInPixels.height) / 2;
+
 			SetCursorPos(mousePos);
 		}
 		return;
