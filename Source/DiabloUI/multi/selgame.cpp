@@ -660,7 +660,9 @@ void selgame_Password_Select(int /*value*/)
 	m_game_data->bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
 	m_game_data->bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
 
-	if (SNetCreateGame(nullptr, gamePassword, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
+	GameData gameInitInfo = *m_game_data;
+	gameInitInfo.swapLE();
+	if (SNetCreateGame(nullptr, gamePassword, reinterpret_cast<char *>(&gameInitInfo), sizeof(gameInitInfo), gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {

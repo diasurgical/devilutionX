@@ -36,10 +36,10 @@ struct _SNETCAPS {
 };
 
 struct _SNETEVENT {
-	uint32_t eventid;
-	uint32_t playerid;
-	void *data;
-	uint32_t databytes;
+	uint32_t eventid;   // native-endian
+	uint32_t playerid;  // native-endian
+	void *data;         // little-endian
+	uint32_t databytes; // native-endian
 };
 
 #define PS_CONNECTED 0x10000
