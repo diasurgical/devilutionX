@@ -1758,11 +1758,11 @@ void BoyEnter()
 	StartStore(TalkID::Gossip);
 }
 
-void BoyBuyItem(Item &item)
+void BoyBuyItem(Item &item, int itemPrice)
 {
-	TakePlrsMoney(item._iIvalue);
+	TakePlrsMoney(itemPrice);
 	StoreAutoPlace(item, true);
-	boyitem.clear();
+	item.clear();
 	stextshold = TalkID::Boy;
 	CalcPlrInv(*MyPlayer, true);
 	stextlhold = 12;
@@ -1886,7 +1886,7 @@ void ConfirmEnter(Item &item)
 			WitchRechargeItem(item._iIvalue);
 			break;
 		case TalkID::BoyBuy:
-			BoyBuyItem(item);
+			BoyBuyItem(boyitem, item._iIvalue);
 			break;
 		case TalkID::HealerBuy:
 			HealerBuyItem(item);

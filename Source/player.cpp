@@ -1619,6 +1619,16 @@ void Player::CalcScrolls()
 	EnsureValidReadiedSpell(*this);
 }
 
+bool Player::CanUseItem(const Item &item) const
+{
+	if (!IsItemValid(item))
+		return false;
+
+	return _pStrength >= item._iMinStr
+	    && _pMagic >= item._iMinMag
+	    && _pDexterity >= item._iMinDex;
+}
+
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
 	if (this == MyPlayer) {
