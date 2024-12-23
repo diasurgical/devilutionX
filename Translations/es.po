@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2024-12-23 13:13-0300\n"
-"PO-Revision-Date: 2024-12-23 13:14-0300\n"
+"PO-Revision-Date: 2024-12-23 13:17-0300\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -3988,10 +3988,8 @@ msgid "Game Mode"
 msgstr "Modo de juego"
 
 #: Source/options.cpp:454
-#, fuzzy
-#| msgid "Gameplay Settings"
 msgid "Game Mode Settings"
-msgstr "Configuraciones durante el juego"
+msgstr "Configuraciones del modo de juego"
 
 #: Source/options.cpp:455
 msgid "Play Diablo or Hellfire."
