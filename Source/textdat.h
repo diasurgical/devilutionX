@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "effects.h"
+#include "sound_effect_enums.h"
 
 namespace devilution {
 

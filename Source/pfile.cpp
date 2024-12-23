@@ -16,6 +16,7 @@
 #include "codec.h"
 #include "engine.h"
 #include "engine/load_file.hpp"
+#include "game_mode.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "menu.h"

@@ -2,12 +2,18 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
-
-#include <Aulib/Stream.h>
+#include <string>
 
 #include "engine/sound_defs.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
+
+// Forward-declares Aulib::Stream to avoid adding dependencies
+// on SDL_audiolib to every user of this header.
+namespace Aulib {
+class Stream;
+} // namespace Aulib
 
 namespace devilution {
 
@@ -28,10 +34,7 @@ public:
 	// Returns 0 on success.
 	int SetChunkStream(std::string filePath, bool isMp3, bool logErrors = true);
 
-	void SetFinishCallback(Aulib::Stream::Callback &&callback)
-	{
-		stream_->setFinishCallback(std::forward<Aulib::Stream::Callback>(callback));
-	}
+	void SetFinishCallback(std::function<void(Aulib::Stream &)> &&callback);
 
 	/**
 	 * @brief Sets the sample's WAV, FLAC, or Ogg/Vorbis data.
@@ -72,23 +75,13 @@ public:
 	/**
 	 * @brief Stop playing the sound
 	 */
-	void Stop()
-	{
-		stream_->stop();
-	}
+	void Stop();
 
 	void SetVolume(int logVolume, int logMin, int logMax);
 	void SetStereoPosition(int logPan);
 
-	void Mute()
-	{
-		stream_->mute();
-	}
-
-	void Unmute()
-	{
-		stream_->unmute();
-	}
+	void Mute();
+	void Unmute();
 
 	/**
 	 * @return Audio duration in ms

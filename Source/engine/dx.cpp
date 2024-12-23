@@ -10,6 +10,7 @@
 
 #include "controls/plrctrls.h"
 #include "engine.h"
+#include "headless_mode.h"
 #include "options.h"
 #include "utils/display.h"
 #include "utils/log.hpp"

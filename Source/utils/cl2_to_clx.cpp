@@ -8,6 +8,7 @@
 #include "utils/clx_decode.hpp"
 #include "utils/clx_encode.hpp"
 #include "utils/endian.hpp"
+#include "utils/endian_write.hpp"
 
 namespace devilution {
 

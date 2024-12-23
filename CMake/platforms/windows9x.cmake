@@ -19,6 +19,7 @@ set(DEVILUTIONX_WINDOWS_NO_WCHAR ON)
 # MinGW force-defines `_WIN32_WINNT=0xa00` if it isn't defined, so define it as 0.
 add_definitions(-DWINVER=0x0500 -D_WIN32_WINDOWS=0x0500 -D_WIN32_WINNT=0)
 
+set(DEVILUTIONX_PLATFORM_FILE_UTIL_LINK_LIBRARIES shlwapi)
 list(APPEND DEVILUTIONX_PLATFORM_LINK_LIBRARIES
   shlwapi
   wsock32

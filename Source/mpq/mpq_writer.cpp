@@ -6,12 +6,11 @@
 #include <memory>
 #include <type_traits>
 
+#include <SDL_endian.h>
 #include <libmpq/mpq.h>
 
 #include "appfat.h"
 #include "encrypt.h"
-#include "engine.h"
-#include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
