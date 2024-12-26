@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SDLDEV_VERS=2.30.5
+SDLDEV_VERS=2.30.10
 SODIUM_VERS=1.0.20
 
 # exit when any command fails
@@ -37,7 +37,7 @@ cd "tmp-mingw-${MINGW_ARCH}-prep"
 
 wget -q https://www.libsdl.org/release/SDL2-devel-${SDLDEV_VERS}-mingw.tar.gz -OSDL2-devel-${SDLDEV_VERS}-mingw.tar.gz
 tar -xzf SDL2-devel-${SDLDEV_VERS}-mingw.tar.gz
-$SUDO cp -r SDL2*/${MINGW_ARCH}/* ${MINGW_PREFIX}
+CROSS_PATH=/usr ARCHITECTURES=${MINGW_ARCH} $SUDO make -eC SDL2*/ cross
 
 wget -q https://github.com/jedisct1/libsodium/releases/download/${SODIUM_VERS}-RELEASE/libsodium-${SODIUM_VERS}-mingw.tar.gz -Olibsodium-${SODIUM_VERS}-mingw.tar.gz
 tar -xzf libsodium-${SODIUM_VERS}-mingw.tar.gz --no-same-owner
