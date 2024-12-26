@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SDL_BASE=https://raw.githubusercontent.com/libsdl-org/SDL/release-2.30.5
+SDL_BASE=https://raw.githubusercontent.com/libsdl-org/SDL/release-2.30.10
 FILES=(
 	HIDDevice.java
 	HIDDeviceBLESteamController.java
