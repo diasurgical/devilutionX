@@ -19,6 +19,7 @@
 #include "debug.h"
 #endif
 #include "DiabloUI/diabloui.h"
+#include "controls/devices/kbcontroller.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "diablo.h"
@@ -488,10 +489,13 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		}
 		sgOptions.Keymapper.KeyPressed(vkey);
 		if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
+#if HAS_KBCTRL == 0
 			if ((modState & KMOD_ALT) != 0) {
 				sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 				SaveOptions();
-			} else {
+			} else
+#endif
+			{
 				control_type_message();
 			}
 		}
@@ -523,10 +527,12 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	sgOptions.Keymapper.KeyPressed(vkey);
 
 	if (PauseMode == 2) {
+#if HAS_KBCTRL == 0
 		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (modState & KMOD_ALT) != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
 		}
+#endif
 		return;
 	}
 
@@ -562,8 +568,10 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	case SDLK_RETURN:
 	case SDLK_KP_ENTER:
 		if ((modState & KMOD_ALT) != 0) {
+#if HAS_KBCTRL == 0
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
+#endif
 		} else if (stextflag != TalkID::None) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {

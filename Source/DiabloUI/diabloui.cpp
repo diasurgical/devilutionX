@@ -8,6 +8,7 @@
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
 #include "controls/controller.h"
+#include "controls/devices/kbcontroller.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
@@ -463,6 +464,7 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
+#if HAS_KBCTRL == 0
 	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
@@ -473,6 +475,7 @@ void UiHandleEvents(SDL_Event *event)
 			return;
 		}
 	}
+#endif
 
 	if (event->type == SDL_QUIT)
 		diablo_quit(0);
