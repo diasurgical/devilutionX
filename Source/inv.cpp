@@ -1974,11 +1974,7 @@ int8_t CheckInvHLight()
 	} else {
 		InfoColor = pi->getTextColor();
 		InfoString = pi->getName();
-		if (pi->_iIdentified) {
-			PrintItemDetails(*pi);
-		} else {
-			PrintItemDur(*pi);
-		}
+		PrintItemDetails(*pi);
 	}
 
 	return rv;
