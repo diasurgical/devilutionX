@@ -1,14 +1,24 @@
-#include <gtest/gtest.h>
-
 #include "engine/path.h"
 
-// The following headers are included to access globals used in functions that have not been isolated yet.
+#include <algorithm>
+#include <span>
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
+#include "engine/direction.hpp"
+#include "levels/dun_tile.hpp"
 #include "levels/gendung.h"
 #include "objects.h"
+#include "utils/algorithm/container.hpp"
 
 namespace devilution {
 
 extern int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition);
+
+namespace {
+
+using ::testing::ElementsAreArray;
 
 TEST(PathTest, Heuristics)
 {
@@ -101,40 +111,97 @@ TEST(PathTest, CanStepTest)
 	dPiece[1][1] = 0;
 }
 
-void CheckPath(Point startPosition, Point destinationPosition, std::vector<int8_t> expectedSteps)
+// These symbols are in terms of coordinates (not in terms of on-screen direction).
+// -1, -1 is top-left.
+enum class Dir {
+	None,
+	Up,
+	Left,
+	Right,
+	Down,
+	UpLeft,
+	UpRight,
+	DownRight,
+	DownLeft
+};
+std::array<std::string_view, 9> DirSymbols = { "∅", "↑", "←", "→", "↓", "↖", "↗", "↘", "↙" };
+
+std::ostream &operator<<(std::ostream &os, Dir dir)
 {
-	static int8_t pathSteps[MaxPathLength];
-	auto pathLength = FindPath([](Point) { return true; }, startPosition, destinationPosition, pathSteps);
-
-	EXPECT_EQ(pathLength, expectedSteps.size()) << "Wrong path length for a path from " << startPosition << " to " << destinationPosition;
-	// Die early if the wrong path length is returned as we don't want to read oob in expectedSteps
-	ASSERT_LE(pathLength, expectedSteps.size()) << "Path is longer than expected.";
-
-	for (int i = 0; i < pathLength; i++) {
-		EXPECT_EQ(pathSteps[i], expectedSteps[i]) << "Path step " << i << " differs from expectation for a path from "
-		                                          << startPosition << " to " << destinationPosition; // this shouldn't be a requirement but...
-
-		// Path directions are all jacked up compared to the Direction enum. Most consumers have their own mapping definition
-		// startPosition += Direction { path[i] - 1 };
-	}
-	// Given that we can't really make any assumptions about how the path is actually used.
-	// EXPECT_EQ(startPosition, destinationPosition) << "Path doesn't lead to destination";
+	return os << DirSymbols[static_cast<size_t>(dir)];
 }
 
-TEST(PathTest, FindPath)
+std::vector<Dir> ToSyms(std::span<const std::string> strings)
+{
+	std::vector<Dir> result;
+	result.reserve(strings.size());
+	for (const std::string &str : strings)
+		result.emplace_back(static_cast<Dir>(std::distance(DirSymbols.begin(), c_find(DirSymbols, str))));
+	return result;
+}
+
+std::vector<Dir> ToSyms(std::span<const int8_t> indices)
+{
+	std::vector<Dir> result;
+	result.reserve(indices.size());
+	for (const int8_t idx : indices)
+		result.emplace_back(static_cast<Dir>(idx));
+	return result;
+}
+
+void CheckPath(Point startPosition, Point destinationPosition, std::vector<std::string> expectedSteps)
+{
+	int8_t pathSteps[MaxPathLength];
+	auto pathLength = FindPath([](Point) { return true; }, startPosition, destinationPosition, pathSteps);
+	EXPECT_THAT(ToSyms(std::span<const int8_t>(pathSteps, pathLength)), ElementsAreArray(ToSyms(expectedSteps)))
+	    << "Path steps differs from expectation for a path from "
+	    << startPosition << " to " << destinationPosition;
+}
+
+TEST(PathTest, FindPathToSelf)
 {
 	CheckPath({ 8, 8 }, { 8, 8 }, {});
+}
 
-	// Traveling in cardinal directions is the only way to get a first step in a cardinal direction
-	CheckPath({ 8, 8 }, { 8, 6 }, { 1, 1 });
-	CheckPath({ 8, 8 }, { 6, 8 }, { 2, 2 });
-	CheckPath({ 8, 8 }, { 10, 8 }, { 3, 3 });
-	CheckPath({ 8, 8 }, { 8, 10 }, { 4, 4 });
+TEST(PathTest, FindPathTwoStepsUp)
+{
+	CheckPath({ 8, 8 }, { 8, 6 }, { "↑", "↑" });
+}
 
-	// Otherwise pathing biases along diagonals and the diagonal steps will always be first
-	CheckPath({ 8, 8 }, { 5, 6 }, { 5, 5, 2 });
-	CheckPath({ 8, 8 }, { 4, 4 }, { 5, 5, 5, 5 });
-	CheckPath({ 8, 8 }, { 12, 20 }, { 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4 });
+TEST(PathTest, FindPathTwoStepsLeft)
+{
+	CheckPath({ 8, 8 }, { 6, 8 }, { "←", "←" });
+}
+
+TEST(PathTest, FindPathTwoStepsRight)
+{
+	CheckPath({ 8, 8 }, { 10, 8 }, { "→", "→" });
+}
+
+TEST(PathTest, FindPathTwoStepsDown)
+{
+	CheckPath({ 8, 8 }, { 8, 10 }, { "↓", "↓" });
+}
+
+TEST(PathTest, FindPathDiagonalsFirst3Left2Up)
+{
+	// Pathing biases along diagonals and the diagonal steps will always be first
+	CheckPath({ 8, 8 }, { 5, 6 }, { "↖", "↖", "←" });
+}
+
+TEST(PathTest, FindPathDiagonalsFirst4Left4Up)
+{
+	CheckPath({ 8, 8 }, { 4, 4 }, { "↖", "↖", "↖", "↖" });
+}
+
+TEST(PathTest, FindPathDiagonalsFirst2Right4Down)
+{
+	CheckPath({ 8, 8 }, { 10, 12 }, { "↘", "↘", "↓", "↓" });
+}
+
+TEST(PathTest, FindPathDiagonalsFirst4Right12Down)
+{
+	CheckPath({ 8, 8 }, { 12, 20 }, { "↘", "↘", "↘", "↘", "↓", "↓", "↓", "↓", "↓", "↓", "↓", "↓" });
 }
 
 TEST(PathTest, LongPaths)
@@ -144,7 +211,7 @@ TEST(PathTest, LongPaths)
 
 	// Longest possible path is currently 24 steps meaning tiles 24 units away are reachable
 	Point startingPosition { 56, 56 };
-	CheckPath(startingPosition, startingPosition + Displacement { 24, 24 }, std::vector<int8_t>(24, 7));
+	CheckPath(startingPosition, startingPosition + Displacement { 24, 24 }, std::vector<std::string>(24, "↘"));
 
 	// But trying to navigate 25 units fails
 	CheckPath(startingPosition, startingPosition + Displacement { 25, 25 }, {});
@@ -285,4 +352,6 @@ TEST(PathTest, FindClosest)
 		EXPECT_EQ(*nearPosition, (Point { 50, 50 } + Displacement { 0, 21 })) << "First candidate position with a minimum radius should be at {0, +y}";
 	}
 }
+
+} // namespace
 } // namespace devilution
