@@ -11,6 +11,7 @@
 #include "items.h"
 #include "monstdat.h"
 #include "player.h"
+#include "spells.h"
 
 namespace devilution {
 
@@ -139,6 +140,22 @@ bool IsDungeonItemValid(uint16_t iCreateInfo, uint32_t dwBuff)
 	return level <= (diabloMaxDungeonLevel * 2);
 }
 
+bool IsHellfireSpellBookValid(const Item &spellBook)
+{
+	// Hellfire uses the spell book level when generating items via CreateSpellBook()
+	int spellBookLevel = GetSpellBookLevel(spellBook._iSpell);
+
+	// CreateSpellBook() adds 1 to the spell level for ilvl
+	spellBookLevel++;
+
+	if (spellBookLevel >= 1 && (spellBook._iCreateInfo & CF_LEVEL) == spellBookLevel * 2) {
+		// The ilvl matches the result for a spell book drop, so we confirm the item is legitimate
+		return true;
+	}
+
+	return IsDungeonItemValid(spellBook._iCreateInfo, spellBook.dwBuff);
+}
+
 bool IsItemValid(const Item &item)
 {
 	if (!gbIsMultiplayer)
@@ -146,19 +163,14 @@ bool IsItemValid(const Item &item)
 
 	if (item.IDidx != IDI_GOLD && !IsCreationFlagComboValid(item._iCreateInfo))
 		return false;
+	if ((item._iCreateInfo & CF_TOWN) != 0)
+		return IsTownItemValid(item._iCreateInfo) && IsShopPriceValid(item);
+	if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15)
+		return IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff);
+	if ((item.dwBuff & CF_HELLFIRE) != 0 && AllItemsList[item.IDidx].iMiscId == IMISC_BOOK)
+		return IsHellfireSpellBookValid(item);
 
-	if ((item._iCreateInfo & CF_TOWN) != 0) {
-		if (!IsTownItemValid(item._iCreateInfo) || !IsShopPriceValid(item))
-			return false;
-	} else if ((item._iCreateInfo & CF_USEFUL) == CF_UPER15) {
-		if (!IsUniqueMonsterItemValid(item._iCreateInfo, item.dwBuff))
-			return false;
-	}
-
-	if (!IsDungeonItemValid(item._iCreateInfo, item.dwBuff))
-		return false;
-
-	return true;
+	return IsDungeonItemValid(item._iCreateInfo, item.dwBuff);
 }
 
 } // namespace devilution
