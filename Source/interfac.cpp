@@ -20,6 +20,7 @@
 #include "engine/load_clx.hpp"
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
+#include "headless_mode.h"
 #include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"

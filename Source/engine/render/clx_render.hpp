@@ -14,7 +14,6 @@
 #include <string>
 #endif
 
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "lighting.h"

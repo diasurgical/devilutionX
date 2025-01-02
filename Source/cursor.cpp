@@ -24,6 +24,7 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/trn.hpp"
+#include "headless_mode.h"
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "levels/trigs.h"
