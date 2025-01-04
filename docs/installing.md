@@ -49,7 +49,7 @@ Note that Inno Setup Extractor is only available for Android 8+ and the Import D
 
 <details><summary>Linux</summary>
 
-- Copy the MPQ files to the folder containing the DevilutionX executable, or to the data folder. The data folder path may differ depending on distro, version, and security settings, but will normally be `~/.local/share/diasurgical/devilution/`
+- Copy the MPQ files to the folder containing the DevilutionX executable, or to the data folder. The data folder path may differ depending on distro, version, and security settings, but will normally be `~/.local/share/diasurgical/devilution/` for flatpak installation the path is `~/.var/app/org.diasurgical.DevilutionX/data/diasurgical/devilution/`
 - Install [SDL2](https://www.libsdl.org/download-2.0.php):
 - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0 libsdl2-image-2.0-0`
 - Fedora `sudo dnf install SDL2`
