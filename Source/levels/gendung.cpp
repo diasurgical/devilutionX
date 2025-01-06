@@ -476,6 +476,10 @@ tl::expected<void, std::string> LoadLevelSOLData()
 		// have a few pixels that should belong to the solid tile 49 instead.
 		// Marks the sub-tile as "BlockMissile" to avoid treating it as a floor during rendering.
 		SOLData[170] |= TileProperties::BlockMissile;
+		// Fence sub-tiles 481 and 487 are substitutes for solid sub-tiles 473 and 479
+		// but are not marked as solid.
+		SOLData[481] |= TileProperties::Solid;
+		SOLData[487] |= TileProperties::Solid;
 		break;
 	case DTYPE_HELL:
 		RETURN_IF_ERROR(LoadFileInMemWithStatus("levels\\l4data\\l4.sol", SOLData));
