@@ -469,6 +469,7 @@ void LoadLevelSOLData()
 		break;
 	case DTYPE_CRYPT:
 		LoadFileInMem("nlevels\\l5data\\l5.sol", SOLData);
+		SOLData[142] = TileProperties::None; // Tile is incorrectly marked as being solid
 		break;
 	default:
 		app_fatal("LoadLevelSOLData");
