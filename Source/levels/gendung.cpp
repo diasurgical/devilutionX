@@ -490,6 +490,7 @@ tl::expected<void, std::string> LoadLevelSOLData()
 		break;
 	case DTYPE_CRYPT:
 		RETURN_IF_ERROR(LoadFileInMemWithStatus("nlevels\\l5data\\l5.sol", SOLData));
+		SOLData[142] = TileProperties::None; // Tile is incorrectly marked as being solid
 		break;
 	default:
 		return tl::make_unexpected("LoadLevelSOLData");
