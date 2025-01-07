@@ -16,6 +16,7 @@
 #include "appfat.h"
 #include "dvlnet/abstract_net.h"
 #include "utils/attributes.h"
+#include "utils/endian_write.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/stubs.h"
 

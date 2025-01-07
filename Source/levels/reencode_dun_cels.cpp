@@ -12,6 +12,7 @@
 #include "levels/dun_tile.hpp"
 #include "utils/attributes.h"
 #include "utils/endian.hpp"
+#include "utils/endian_write.hpp"
 #include "utils/format_int.hpp"
 #include "utils/log.hpp"
 
