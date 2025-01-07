@@ -38,6 +38,7 @@
 #include "stores.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/endian.hpp"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/status_macros.hpp"
 

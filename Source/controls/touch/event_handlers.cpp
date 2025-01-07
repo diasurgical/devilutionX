@@ -12,6 +12,7 @@
 #include "panels/spell_list.hpp"
 #include "qol/stash.h"
 #include "stores.h"
+#include "utils/is_of.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {

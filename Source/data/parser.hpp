@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <string_view>
 
-#include "engine.h" // For IsAnyOf
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

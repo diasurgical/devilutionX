@@ -86,6 +86,7 @@
 #include "track.h"
 #include "utils/console.h"
 #include "utils/display.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/parse_int.hpp"
 #include "utils/paths.h"

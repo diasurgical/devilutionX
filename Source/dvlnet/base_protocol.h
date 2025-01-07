@@ -11,6 +11,7 @@
 #include "dvlnet/packet.h"
 #include "player.h"
 #include "utils/algorithm/container.hpp"
+#include "utils/is_of.hpp"
 #include "utils/log.hpp"
 
 namespace devilution::net {

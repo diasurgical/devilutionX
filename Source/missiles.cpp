@@ -27,6 +27,7 @@
 #include "lighting.h"
 #include "monster.h"
 #include "spells.h"
+#include "utils/is_of.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {

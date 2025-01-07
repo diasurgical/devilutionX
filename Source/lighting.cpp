@@ -18,6 +18,7 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "player.h"
 #include "utils/attributes.h"
+#include "utils/is_of.hpp"
 #include "utils/status_macros.hpp"
 
 namespace devilution {

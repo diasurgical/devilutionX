@@ -25,6 +25,7 @@
 #include "lighting.h"
 #include "options.h"
 #include "utils/bitset2d.hpp"
+#include "utils/is_of.hpp"
 #include "utils/log.hpp"
 #include "utils/status_macros.hpp"
 

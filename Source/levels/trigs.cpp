@@ -16,6 +16,7 @@
 #include "diablo_msg.hpp"
 #include "init.h"
 #include "utils/algorithm/container.hpp"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 

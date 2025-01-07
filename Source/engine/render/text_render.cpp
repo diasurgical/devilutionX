@@ -27,6 +27,7 @@
 #include "engine/render/clx_render.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
 #include "utils/utf8.hpp"

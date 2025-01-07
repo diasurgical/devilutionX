@@ -9,6 +9,7 @@
 #include "engine.h"
 #include "lua/metadoc.hpp"
 #include "quests.h"
+#include "utils/is_of.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {

@@ -16,6 +16,7 @@
 #include "monster.h"
 #include "player.h"
 #include "spelldat.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

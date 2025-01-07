@@ -21,6 +21,7 @@
 #include "objdat.h"
 #include "textdat.h"
 #include "utils/attributes.h"
+#include "utils/is_of.hpp"
 #include "utils/string_or_view.hpp"
 
 namespace devilution {
