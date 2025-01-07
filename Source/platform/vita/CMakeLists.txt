@@ -23,6 +23,7 @@ target_link_libraries(libdevilutionx_vita PUBLIC
   SceAppUtil_stub
   SceNet_stub
   SceNetCtl_stub
+  fmt::fmt
   tl
   unordered_dense::unordered_dense
 )

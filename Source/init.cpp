@@ -55,26 +55,6 @@ bool gbVanilla;
 /** Whether the Hellfire mode is required (forced). */
 bool forceHellfire;
 
-#ifdef UNPACKED_MPQS
-std::optional<std::string> spawn_data_path;
-std::optional<std::string> diabdat_data_path;
-std::optional<std::string> hellfire_data_path;
-std::optional<std::string> font_data_path;
-std::optional<std::string> lang_data_path;
-#else
-std::optional<MpqArchive> spawn_mpq;
-std::optional<MpqArchive> diabdat_mpq;
-std::optional<MpqArchive> hellfire_mpq;
-std::optional<MpqArchive> hfmonk_mpq;
-std::optional<MpqArchive> hfbard_mpq;
-std::optional<MpqArchive> hfbarb_mpq;
-std::optional<MpqArchive> hfmusic_mpq;
-std::optional<MpqArchive> hfvoice_mpq;
-std::optional<MpqArchive> devilutionx_mpq;
-std::optional<MpqArchive> lang_mpq;
-std::optional<MpqArchive> font_mpq;
-#endif
-
 namespace {
 
 constexpr char DevilutionXMpqVersion[] = "1\n";
