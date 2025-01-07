@@ -18,6 +18,7 @@
 #include "objects.h"
 #include "quests.h"
 #include "utils/algorithm/container.hpp"
+#include "utils/is_of.hpp"
 #include "utils/str_cat.hpp"
 
 namespace devilution {

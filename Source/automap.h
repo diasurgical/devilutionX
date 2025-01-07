@@ -7,9 +7,9 @@
 
 #include <cstdint>
 
-#include "engine.h"
 #include "engine/displacement.hpp"
 #include "engine/point.hpp"
+#include "engine/surface.hpp"
 #include "levels/gendung.h"
 #include "utils/attributes.h"
 

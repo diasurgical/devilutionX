@@ -12,6 +12,7 @@
 #include "lua/metadoc.hpp"
 #include "pack.h"
 #include "player.h"
+#include "utils/is_of.hpp"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
 

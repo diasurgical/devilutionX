@@ -28,6 +28,7 @@
 #include "panels/ui_panels.hpp"
 #include "stores.h"
 #include "towners.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 

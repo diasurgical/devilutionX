@@ -27,6 +27,7 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

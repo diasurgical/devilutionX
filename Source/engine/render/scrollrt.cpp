@@ -54,6 +54,7 @@
 #include "towners.h"
 #include "utils/attributes.h"
 #include "utils/display.h"
+#include "utils/is_of.hpp"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
 

@@ -6,6 +6,7 @@
 #include "monstdat.h"
 #include "pack.h"
 #include "playerdat.hpp"
+#include "utils/is_of.hpp"
 #include "utils/paths.h"
 
 namespace devilution {

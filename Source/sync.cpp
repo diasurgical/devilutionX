@@ -11,6 +11,7 @@
 #include "lighting.h"
 #include "monster.h"
 #include "player.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

@@ -19,6 +19,7 @@
 #include "engine/sound_position.hpp"
 #include "init.h"
 #include "player.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

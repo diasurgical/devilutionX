@@ -16,6 +16,7 @@
 #include "engine/palette.h"
 #include "hwcursor.hpp"
 #include "utils/display.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 

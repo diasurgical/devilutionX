@@ -11,6 +11,7 @@
 #include "player.h"
 #include "quests.h"
 #include "utils/bitset2d.hpp"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

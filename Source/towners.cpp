@@ -10,6 +10,7 @@
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/str_case.hpp"
 

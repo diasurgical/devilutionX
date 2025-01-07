@@ -34,6 +34,7 @@
 #include "towners.h"
 #include "track.h"
 #include "utils/attributes.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/sdl_bilinear_scale.hpp"
 #include "utils/surface_to_clx.hpp"

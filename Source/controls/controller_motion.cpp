@@ -13,6 +13,7 @@
 #include "controls/touch/gamepad.h"
 #include "engine/demomode.h"
 #include "options.h"
+#include "utils/is_of.hpp"
 #include "utils/log.hpp"
 
 namespace devilution {

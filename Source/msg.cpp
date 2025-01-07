@@ -42,6 +42,7 @@
 #include "sync.h"
 #include "tmsg.h"
 #include "towners.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"

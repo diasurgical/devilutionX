@@ -41,6 +41,7 @@
 #include "spells.h"
 #include "stores.h"
 #include "utils/format_int.hpp"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/math.h"

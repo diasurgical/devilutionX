@@ -15,6 +15,7 @@
 #include "engine/point.hpp"
 #include "itemdat.h"
 #include "monster.h"
+#include "utils/is_of.hpp"
 #include "utils/string_or_view.hpp"
 
 namespace devilution {

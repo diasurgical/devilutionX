@@ -14,6 +14,7 @@
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 

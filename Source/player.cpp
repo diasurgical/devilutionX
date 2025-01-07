@@ -43,6 +43,7 @@
 #include "spells.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"

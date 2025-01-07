@@ -14,6 +14,7 @@
 #include "objects.h"
 #include "player.h"
 #include "quests.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

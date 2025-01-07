@@ -9,6 +9,7 @@
 #include "movie.h"
 #include "options.h"
 #include "panels/console.hpp"
+#include "utils/is_of.hpp"
 #include "utils/log.hpp"
 
 #ifdef USE_SDL1

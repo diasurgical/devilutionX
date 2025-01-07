@@ -30,6 +30,7 @@
 #include "utils/display.h"
 #include "utils/file_util.h"
 #include "utils/ini.hpp"
+#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/logged_fstream.hpp"

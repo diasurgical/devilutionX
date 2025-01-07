@@ -14,6 +14,7 @@
 #include "multi.h"
 #include "objdat.h"
 #include "player.h"
+#include "utils/is_of.hpp"
 
 namespace devilution {
 

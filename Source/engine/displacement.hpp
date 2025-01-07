@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <limits>
+
 #ifdef BUILD_TESTING
 #include <ostream>
 #endif
