@@ -4,7 +4,7 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "diablo.h"
-#include "engine.h"
+#include "engine/render/primitive_render.hpp"
 #include "engine/render/scrollrt.h"
 #include "gmenu.h"
 #include "inv.h"

@@ -5,11 +5,11 @@
  */
 #pragma once
 
-#include <array>
+#include <cstddef>
 #include <cstdint>
 
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/direction.hpp"
 #include "engine/point.hpp"
 
 namespace devilution {

@@ -20,7 +20,6 @@
 
 #include "DiabloUI/text_input.hpp"
 #include "DiabloUI/ui_flags.hpp"
-#include "engine.h"
 #include "engine/displacement.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"

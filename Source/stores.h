@@ -10,8 +10,8 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/surface.hpp"
 #include "utils/attributes.h"
 
 namespace devilution {

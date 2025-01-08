@@ -6,9 +6,9 @@
 
 #include "control.h"
 #include "controls/plrctrls.h"
-#include "engine.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/palette.h"
+#include "engine/render/primitive_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "inv_iterators.hpp"
 #include "options.h"

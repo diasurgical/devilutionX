@@ -3,8 +3,8 @@
 #include <cstdint>
 
 #include "controls/input.h"
-#include "engine.h"
 #include "engine/demomode.h"
+#include "engine/render/primitive_render.hpp"
 #include "interfac.h"
 #include "movie.h"
 #include "options.h"

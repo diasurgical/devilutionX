@@ -10,10 +10,11 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "cursor.h"
-#include "engine.h"
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"
+#include "engine/surface.hpp"
 #include "itemdat.h"
+#include "levels/dun_tile.hpp"
 #include "monster.h"
 #include "utils/is_of.hpp"
 #include "utils/string_or_view.hpp"
@@ -462,7 +463,7 @@ struct Item {
 
 	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
 	{
-		return { -CalculateWidth2(sprite.width()), 0 };
+		return { -CalculateSpriteTileCenterX(sprite.width()), 0 };
 	}
 };
 

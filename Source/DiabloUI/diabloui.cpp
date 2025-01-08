@@ -21,6 +21,7 @@
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
 #include "engine/render/clx_render.hpp"
+#include "engine/ticks.hpp"
 #include "hwcursor.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"

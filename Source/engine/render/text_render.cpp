@@ -17,7 +17,6 @@
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/ui_item.h"
-#include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_clx.hpp"
 #include "engine/load_file.hpp"
@@ -25,6 +24,8 @@
 #include "engine/palette.h"
 #include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
+#include "engine/render/primitive_render.hpp"
+#include "engine/ticks.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/is_of.hpp"
@@ -827,7 +828,7 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 
 uint8_t PentSpn2Spin()
 {
-	return (SDL_GetTicks() / 50) % 8;
+	return GetAnimationFrame(8, 50);
 }
 
 bool IsBreakableWhitespace(char32_t c)

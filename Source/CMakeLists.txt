@@ -13,7 +13,6 @@ set(libdevilutionx_SRCS
   diablo.cpp
   diablo_msg.cpp
   doom.cpp
-  engine.cpp
   gamemenu.cpp
   gmenu.cpp
   help.cpp
@@ -112,11 +111,13 @@ set(libdevilutionx_SRCS
   engine/random.cpp
   engine/sound_position.cpp
   engine/surface.cpp
+  engine/ticks.cpp
   engine/trn.cpp
 
   engine/render/automap_render.cpp
   engine/render/clx_render.cpp
   engine/render/dun_render.cpp
+  engine/render/primitive_render.cpp
   engine/render/scrollrt.cpp
   engine/render/text_render.cpp
 

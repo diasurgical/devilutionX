@@ -10,7 +10,6 @@
 
 #include "appfat.h"
 #include "encrypt.h"
-#include "engine.h"
 #include "utils/endian_read.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"

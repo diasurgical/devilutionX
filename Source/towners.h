@@ -11,7 +11,9 @@
 #include <span>
 #include <string_view>
 
+#include "engine/clx_sprite.hpp"
 #include "items.h"
+#include "levels/dun_tile.hpp"
 #include "player.h"
 #include "quests.h"
 
@@ -67,7 +69,7 @@ struct Towner {
 	}
 	[[nodiscard]] Displacement getRenderingOffset() const
 	{
-		return { -CalculateWidth2(_tAnimWidth), 0 };
+		return { -CalculateSpriteTileCenterX(_tAnimWidth), 0 };
 	}
 };
 

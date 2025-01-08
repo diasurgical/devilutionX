@@ -6,13 +6,14 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 #include <string_view>
 
 #include <ankerl/unordered_dense.h>
 
 #include "diablo.h"
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/point.hpp"
 
 namespace devilution {
 

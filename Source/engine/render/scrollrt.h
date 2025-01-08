@@ -5,11 +5,11 @@
  */
 #pragma once
 
-#include <cstdint>
-
-#include "engine.h"
 #include "engine/animationinfo.h"
+#include "engine/direction.hpp"
+#include "engine/displacement.hpp"
 #include "engine/point.hpp"
+#include "engine/surface.hpp"
 
 namespace devilution {
 
@@ -22,7 +22,7 @@ extern bool frameflag;
  * @param dir walking direction
  * @param cameraMode Adjusts the offset relative to the camera
  */
-Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode = false);
+Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, Direction dir, bool cameraMode = false);
 
 /**
  * @brief Clear cursor state

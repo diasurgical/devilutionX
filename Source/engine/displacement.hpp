@@ -7,6 +7,7 @@
 #include <ostream>
 #endif
 
+#include "appfat.h"
 #include "engine/direction.hpp"
 #include "engine/size.hpp"
 #include "utils/attributes.h"

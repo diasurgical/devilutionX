@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "engine.h"
+#include "engine/surface.hpp"
 
 namespace devilution {
 

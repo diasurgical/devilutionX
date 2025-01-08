@@ -14,12 +14,12 @@
 
 #include "DiabloUI/text_input.hpp"
 #include "control.h"
-#include "engine.h"
 #include "engine/assets.hpp"
 #include "engine/displacement.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
 #include "engine/rectangle.hpp"
+#include "engine/render/primitive_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "engine/surface.hpp"

@@ -22,11 +22,11 @@
 #include "cursor.h"
 #include "dead.h"
 #include "doom.h"
-#include "engine.h"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
+#include "levels/dun_tile.hpp"
 #include "lighting.h"
 #include "menu.h"
 #include "missiles.h"
@@ -1077,7 +1077,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	// write _iAnimWidth for vanilla compatibility
 	file.WriteLE<int32_t>(ItemAnimWidth);
 	// write _iAnimWidth2 for vanilla compatibility
-	file.WriteLE<int32_t>(CalculateWidth2(ItemAnimWidth));
+	file.WriteLE<int32_t>(CalculateSpriteTileCenterX(ItemAnimWidth));
 	file.Skip<uint32_t>(); // _delFlag, unused since 1.02
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(item.selectionRegion));
 	file.Skip(3); // Alignment
@@ -1195,7 +1195,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	const int animWidth = player.getSpriteWidth();
 	file.WriteLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
-	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
+	file.WriteLE<int32_t>(CalculateSpriteTileCenterX(animWidth));
 	file.Skip<uint32_t>(); // Skip _peflag
 	file.WriteLE<int32_t>(player.lightId);
 	file.WriteLE<int32_t>(1); // _pvid
@@ -1607,7 +1607,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<uint32_t>(object._oAnimLen);
 	file.WriteLE<uint32_t>(object._oAnimFrame);
 	file.WriteLE<int32_t>(object._oAnimWidth);
-	file.WriteLE<int32_t>(CalculateWidth2(static_cast<int>(object._oAnimWidth))); // Write _oAnimWidth2 for vanilla compatibility
+	file.WriteLE<int32_t>(CalculateSpriteTileCenterX(static_cast<int>(object._oAnimWidth))); // Write _oAnimWidth2 for vanilla compatibility
 	file.WriteLE<uint32_t>(object._oDelFlag ? 1 : 0);
 	file.WriteLE<int8_t>(object._oBreak);
 	file.Skip(3); // Alignment

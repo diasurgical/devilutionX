@@ -6,11 +6,11 @@
 #pragma once
 
 #include <cstdint>
-#include <optional>
-#include <utility>
 
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/point.hpp"
+#include "engine/size.hpp"
+#include "engine/surface.hpp"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
 

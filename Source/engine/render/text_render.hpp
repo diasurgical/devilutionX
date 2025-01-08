@@ -16,7 +16,6 @@
 #include <SDL.h>
 
 #include "DiabloUI/ui_flags.hpp"
-#include "engine.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/palette.h"
 #include "engine/rectangle.hpp"

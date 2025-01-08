@@ -15,7 +15,6 @@
 #include <expected.hpp>
 #include <function_ref.hpp>
 
-#include "engine.h"
 #include "engine/actor_position.hpp"
 #include "engine/animationinfo.h"
 #include "engine/clx_sprite.hpp"
@@ -23,6 +22,7 @@
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
 #include "init.h"
+#include "levels/dun_tile.hpp"
 #include "misdat.h"
 #include "monstdat.h"
 #include "spelldat.h"
@@ -468,7 +468,7 @@ struct Monster { // note: missing field _mAFNum
 
 	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
 	{
-		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		Displacement offset = { -CalculateSpriteTileCenterX(sprite.width()), 0 };
 		if (isWalking())
 			offset += GetOffsetForWalking(animInfo, direction);
 		return offset;

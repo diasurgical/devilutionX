@@ -716,7 +716,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	if (lightTableIndex < LightsMax && bDead != 0) {
 		const Corpse &corpse = Corpses[(bDead & 0x1F) - 1];
-		const Point position { targetBufferPosition.x - CalculateWidth2(corpse.width), targetBufferPosition.y };
+		const Point position { targetBufferPosition.x - CalculateSpriteTileCenterX(corpse.width), targetBufferPosition.y };
 		const ClxSprite sprite = corpse.spritesForDirection(static_cast<Direction>((bDead >> 5) & 7))[corpse.frame];
 		if (corpse.translationPaletteIndex != 0) {
 			const uint8_t *trn = Monsters[corpse.translationPaletteIndex - 1].uniqueMonsterTRN.get();
