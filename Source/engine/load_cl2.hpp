@@ -13,7 +13,7 @@
 #include "engine/load_file.hpp"
 #include "mpq/mpq_common.hpp"
 #include "utils/cl2_to_clx.hpp"
-#include "utils/endian.hpp"
+#include "utils/endian_read.hpp"
 #include "utils/endian_write.hpp"
 #include "utils/pointer_value_union.hpp"
 #include "utils/static_vector.hpp"
