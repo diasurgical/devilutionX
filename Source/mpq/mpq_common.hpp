@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <string_view>
 
-#include "utils/endian.hpp"
+#include "utils/endian_read.hpp"
 
 namespace devilution {
 

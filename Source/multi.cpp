@@ -28,7 +28,7 @@
 #include "storm/storm_net.hpp"
 #include "sync.h"
 #include "tmsg.h"
-#include "utils/endian.hpp"
+#include "utils/endian_read.hpp"
 #include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"

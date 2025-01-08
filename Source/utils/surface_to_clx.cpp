@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "utils/clx_encode.hpp"
-#include "utils/endian.hpp"
+#include "utils/endian_read.hpp"
 #include "utils/endian_write.hpp"
 
 #ifdef DEBUG_SURFACE_TO_CLX_SIZE
