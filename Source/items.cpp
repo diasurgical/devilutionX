@@ -27,6 +27,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/primitive_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "headless_mode.hpp"
 #include "init.h"
 #include "inv_iterators.hpp"
 #include "levels/town.h"

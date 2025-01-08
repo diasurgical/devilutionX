@@ -31,6 +31,7 @@
 #include "engine/sound_position.hpp"
 #include "engine/world_tile.hpp"
 #include "game_mode.hpp"
+#include "headless_mode.hpp"
 #include "init.h"
 #include "levels/crypt.h"
 #include "levels/drlg_l4.h"

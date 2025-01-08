@@ -26,6 +26,7 @@
 #include "engine/world_tile.hpp"
 #include "game_mode.hpp"
 #include "gamemenu.h"
+#include "headless_mode.hpp"
 #include "help.h"
 #include "init.h"
 #include "inv_iterators.hpp"

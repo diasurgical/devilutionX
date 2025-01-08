@@ -24,6 +24,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/primitive_render.hpp"
 #include "engine/trn.hpp"
+#include "headless_mode.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "levels/trigs.h"

@@ -15,6 +15,7 @@
 #include "data/file.hpp"
 #include "data/iterators.hpp"
 #include "data/record_reader.hpp"
+#include "headless_mode.hpp"
 #include "missiles.h"
 #include "mpq/mpq_common.hpp"
 #include "utils/file_name_generator.hpp"

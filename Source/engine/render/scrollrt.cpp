@@ -28,6 +28,7 @@
 #include "engine/trn.hpp"
 #include "engine/world_tile.hpp"
 #include "gmenu.h"
+#include "headless_mode.hpp"
 #include "help.h"
 #include "hwcursor.hpp"
 #include "init.h"

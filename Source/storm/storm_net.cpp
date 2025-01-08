@@ -13,6 +13,7 @@
 
 #include "dvlnet/abstract_net.h"
 #include "engine/demomode.h"
+#include "headless_mode.hpp"
 #include "menu.h"
 #include "options.h"
 #include "utils/stubs.h"

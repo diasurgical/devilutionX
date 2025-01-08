@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "diablo.h"
+#include "headless_mode.hpp"
 #include "options.h"
 #include "utils/paths.h"
 

@@ -28,6 +28,7 @@
 #include "controls/touch/gamepad.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
+#include "headless_mode.hpp"
 #include "options.h"
 #include "utils/log.hpp"
 #include "utils/sdl_geometry.h"
