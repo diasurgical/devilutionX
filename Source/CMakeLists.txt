@@ -16,6 +16,7 @@ set(libdevilutionx_SRCS
   game_mode.cpp
   gamemenu.cpp
   gmenu.cpp
+  headless_mode.cpp
   help.cpp
   hwcursor.cpp
   init.cpp

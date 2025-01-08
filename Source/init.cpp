@@ -22,6 +22,7 @@
 #include "engine/dx.h"
 #include "engine/events.hpp"
 #include "game_mode.hpp"
+#include "headless_mode.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "pfile.h"

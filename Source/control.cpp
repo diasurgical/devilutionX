@@ -28,6 +28,7 @@
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
 #include "gamemenu.h"
+#include "headless_mode.hpp"
 #include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"

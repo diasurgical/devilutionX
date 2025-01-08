@@ -14,6 +14,7 @@
 #include "engine/dx.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "headless_mode.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "utils/display.h"

@@ -1,5 +1,12 @@
 #include "file.hpp"
 
+#include <bitset>
+#include <cstddef>
+#include <cstdint>
+#include <limits>
+#include <memory>
+
+#include <expected.hpp>
 #include <fmt/format.h>
 
 #include "engine/assets.hpp"

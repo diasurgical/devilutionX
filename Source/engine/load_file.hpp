@@ -7,11 +7,10 @@
 #include <memory>
 
 #include <expected.hpp>
-#include <fmt/core.h>
 
 #include "appfat.h"
-#include "diablo.h"
 #include "engine/assets.hpp"
+#include "headless_mode.hpp"
 #include "mpq/mpq_common.hpp"
 #include "utils/static_vector.hpp"
 #include "utils/str_cat.hpp"

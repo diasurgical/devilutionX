@@ -17,6 +17,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
+#include "headless_mode.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "minitext.h"

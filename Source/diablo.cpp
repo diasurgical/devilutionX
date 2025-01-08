@@ -41,6 +41,7 @@
 #include "game_mode.hpp"
 #include "gamemenu.h"
 #include "gmenu.h"
+#include "headless_mode.hpp"
 #include "help.h"
 #include "hwcursor.hpp"
 #include "init.h"
@@ -125,7 +126,6 @@ bool cineflag;
 int PauseMode;
 bool gbBard;
 bool gbBarbarian;
-bool HeadlessMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";

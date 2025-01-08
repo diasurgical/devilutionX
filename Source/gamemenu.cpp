@@ -12,6 +12,7 @@
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "gmenu.h"
+#include "headless_mode.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "options.h"

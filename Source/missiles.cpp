@@ -22,6 +22,7 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "engine/render/primitive_render.hpp"
+#include "headless_mode.hpp"
 #include "init.h"
 #include "inv.h"
 #include "levels/dun_tile.hpp"

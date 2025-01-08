@@ -71,10 +71,6 @@ extern void FontsCleanup();
 extern DVL_API_FOR_TEST int PauseMode;
 extern bool gbBard;
 extern bool gbBarbarian;
-/**
- * @brief Don't load UI or show Messageboxes or other user-interaction. Needed for UnitTests.
- */
-extern DVL_API_FOR_TEST bool HeadlessMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
