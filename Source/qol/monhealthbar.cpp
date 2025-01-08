@@ -14,6 +14,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/load_clx.hpp"
 #include "engine/render/clx_render.hpp"
+#include "engine/render/primitive_render.hpp"
 #include "options.h"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"

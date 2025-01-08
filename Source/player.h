@@ -12,15 +12,16 @@
 #include <array>
 
 #include "diablo.h"
-#include "engine.h"
 #include "engine/actor_position.hpp"
 #include "engine/animationinfo.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/displacement.hpp"
 #include "engine/path.h"
 #include "engine/point.hpp"
 #include "interfac.h"
 #include "items.h"
 #include "items/validation.h"
+#include "levels/dun_tile.hpp"
 #include "levels/gendung.h"
 #include "multi.h"
 #include "playerdat.hpp"
@@ -783,7 +784,7 @@ public:
 	}
 	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite) const
 	{
-		Displacement offset = { -CalculateWidth2(sprite.width()), 0 };
+		Displacement offset = { -CalculateSpriteTileCenterX(sprite.width()), 0 };
 		if (isWalking())
 			offset += GetOffsetForWalking(AnimInfo, _pdir);
 		return offset;

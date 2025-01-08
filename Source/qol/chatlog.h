@@ -5,7 +5,8 @@
  */
 #pragma once
 
-#include "engine.h"
+#include "DiabloUI/ui_flags.hpp"
+#include "engine/surface.hpp"
 #include "player.h"
 
 namespace devilution {

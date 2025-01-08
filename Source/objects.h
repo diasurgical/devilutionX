@@ -17,6 +17,7 @@
 #include "engine/rectangle.hpp"
 #include "engine/world_tile.hpp"
 #include "itemdat.h"
+#include "levels/dun_tile.hpp"
 #include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
@@ -270,7 +271,7 @@ struct Object {
 	}
 	[[nodiscard]] Displacement getRenderingOffset(const ClxSprite sprite, Point tilePosition) const
 	{
-		Displacement offset = Displacement { -CalculateWidth2(sprite.width()), 0 };
+		Displacement offset = Displacement { -CalculateSpriteTileCenterX(sprite.width()), 0 };
 		if (position != tilePosition) {
 			// drawing a large or offset object, calculate the correct position for the center of the sprite
 			Displacement worldOffset = position - tilePosition;

@@ -6,10 +6,9 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <string_view>
 
-#include "engine.h"
+#include "engine/surface.hpp"
 
 namespace devilution {
 

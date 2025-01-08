@@ -1,5 +1,6 @@
 #include "engine/backbuffer_state.hpp"
 
+#include <array>
 #include <vector>
 
 #include "engine/dx.h"

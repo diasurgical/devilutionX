@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "dead.h"
-#include "engine.h"
+#include "engine/render/primitive_render.hpp"
 #include "levels/gendung.h"
 
 using namespace devilution;

@@ -11,6 +11,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "engine/render/primitive_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
 #include "qol/chatlog.h"

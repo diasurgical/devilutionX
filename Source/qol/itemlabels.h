@@ -5,7 +5,8 @@
  */
 #pragma once
 
-#include "engine.h"
+#include "engine/point.hpp"
+#include "engine/surface.hpp"
 
 namespace devilution {
 

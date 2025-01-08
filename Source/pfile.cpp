@@ -14,8 +14,8 @@
 #include <fmt/core.h>
 
 #include "codec.h"
-#include "engine.h"
 #include "engine/load_file.hpp"
+#include "engine/render/primitive_render.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "menu.h"

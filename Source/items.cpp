@@ -25,6 +25,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
+#include "engine/render/primitive_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "inv_iterators.hpp"

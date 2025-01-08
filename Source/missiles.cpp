@@ -21,8 +21,10 @@
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
+#include "engine/render/primitive_render.hpp"
 #include "init.h"
 #include "inv.h"
+#include "levels/dun_tile.hpp"
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
@@ -2166,7 +2168,7 @@ void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monste
 	mis._miAnimDelay = anim.rate;
 	mis._miAnimLen = anim.frames;
 	mis._miAnimWidth = width;
-	mis._miAnimWidth2 = CalculateWidth2(width);
+	mis._miAnimWidth2 = CalculateSpriteTileCenterX(width);
 	mis._miAnimAdd = 1;
 	mis.var1 = 0;
 	mis.var2 = 0;

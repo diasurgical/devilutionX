@@ -131,4 +131,12 @@ constexpr int_fast16_t DunFrameTriangleHeight = 31;
 constexpr size_t ReencodedTriangleFrameSize = 544 - 32;
 constexpr size_t ReencodedTrapezoidFrameSize = 800 - 16;
 
+/**
+ * @return Returns the center of the sprite relative to the center of the tile.
+ */
+constexpr int CalculateSpriteTileCenterX(int width)
+{
+	return (width - TILE_WIDTH) / 2;
+}
+
 } // namespace devilution

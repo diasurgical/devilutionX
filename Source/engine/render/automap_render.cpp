@@ -4,9 +4,11 @@
  * Line drawing routines for the automap.
  */
 #include "engine/render/automap_render.hpp"
-#include "automap.h"
 
 #include <cstdint>
+
+#include "automap.h"
+#include "engine/render/primitive_render.hpp"
 
 namespace devilution {
 namespace {

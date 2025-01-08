@@ -6,7 +6,12 @@
 
 #include <config.h>
 
+#include <SDL.h>
 #include <fmt/format.h>
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
 
 #include "diablo.h"
 #include "multi.h"

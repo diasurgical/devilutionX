@@ -12,8 +12,8 @@
 
 #include <cstdint>
 
-#include "engine.h"
 #include "engine/point.hpp"
+#include "engine/surface.hpp"
 
 namespace devilution {
 
