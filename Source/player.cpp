@@ -24,6 +24,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/trn.hpp"
 #include "engine/world_tile.hpp"
+#include "game_mode.hpp"
 #include "gamemenu.h"
 #include "help.h"
 #include "init.h"

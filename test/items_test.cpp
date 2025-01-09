@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "engine/random.hpp"
+#include "game_mode.hpp"
 #include "items.h"
 #include "player.h"
 #include "spells.h"

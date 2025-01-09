@@ -3,6 +3,7 @@
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "engine/render/text_render.hpp"
+#include "game_mode.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 

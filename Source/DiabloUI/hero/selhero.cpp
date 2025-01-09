@@ -15,6 +15,7 @@
 #include "DiabloUI/selyesno.h"
 #include "control.h"
 #include "controls/plrctrls.h"
+#include "game_mode.hpp"
 #include "menu.h"
 #include "options.h"
 #include "pfile.h"

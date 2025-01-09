@@ -5,7 +5,7 @@
 #include <cstring>
 #include <string_view>
 
-#include "init.h"
+#include "game_mode.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"

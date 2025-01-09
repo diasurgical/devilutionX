@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "cursor.h"
+#include "game_mode.hpp"
 #include "monstdat.h"
 #include "pack.h"
 #include "playerdat.hpp"

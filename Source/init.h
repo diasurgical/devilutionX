@@ -20,10 +20,6 @@ namespace devilution {
 
 /** True if the game is the current active window */
 extern bool gbActive;
-extern DVL_API_FOR_TEST bool gbIsSpawn;
-extern DVL_API_FOR_TEST bool gbIsHellfire;
-extern DVL_API_FOR_TEST bool gbVanilla;
-extern bool forceHellfire;
 
 inline bool HaveSpawn()
 {

@@ -13,6 +13,7 @@ set(libdevilutionx_SRCS
   diablo.cpp
   diablo_msg.cpp
   doom.cpp
+  game_mode.cpp
   gamemenu.cpp
   gmenu.cpp
   help.cpp

@@ -14,6 +14,7 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "diablo_msg.hpp"
+#include "game_mode.hpp"
 #include "init.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/is_of.hpp"
