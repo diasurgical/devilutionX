@@ -18,7 +18,6 @@
 #include "engine/render/text_render.hpp"
 #include "engine/world_tile.hpp"
 #include "game_mode.hpp"
-#include "init.h"
 #include "levels/gendung.h"
 #include "levels/town.h"
 #include "levels/trigs.h"

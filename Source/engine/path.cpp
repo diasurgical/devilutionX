@@ -5,14 +5,15 @@
  */
 #include "engine/path.h"
 
-#include <array>
 #include <cstdint>
+#include <limits>
 
 #include <function_ref.hpp>
 
+#include "appfat.h"
 #include "crawl.hpp"
+#include "engine/direction.hpp"
 #include "levels/gendung.h"
-#include "lighting.h"
 #include "objects.h"
 
 namespace devilution {

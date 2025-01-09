@@ -23,6 +23,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/ticks.hpp"
 #include "hwcursor.hpp"
+#include "init.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/is_of.hpp"

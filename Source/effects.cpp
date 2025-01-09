@@ -17,7 +17,7 @@
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "engine/sound_position.hpp"
-#include "init.h"
+#include "game_mode.hpp"
 #include "player.h"
 #include "utils/is_of.hpp"
 

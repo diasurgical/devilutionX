@@ -300,4 +300,26 @@ extern std::optional<MpqArchive> lang_mpq;
 extern std::optional<MpqArchive> devilutionx_mpq;
 #endif
 
+void LoadCoreArchives();
+void LoadLanguageArchive();
+void LoadGameArchives();
+
+#ifdef UNPACKED_MPQS
+[[nodiscard]] inline bool HaveSpawn() { return spawn_data_path.has_value(); }
+[[nodiscard]] inline bool HaveDiabdat() { return diabdat_data_path.has_value(); }
+[[nodiscard]] inline bool HaveHellfire() { return hellfire_data_path.has_value(); }
+[[nodiscard]] inline bool HaveExtraFonts() { return font_data_path.has_value(); }
+
+// Bard and barbarian are not currently supported in unpacked mode.
+[[nodiscard]] inline bool HaveBardAssets() { return false; }
+[[nodiscard]] inline bool HaveBarbarianAssets() { return false; }
+#else
+[[nodiscard]] inline bool HaveSpawn() { return spawn_mpq.has_value(); }
+[[nodiscard]] inline bool HaveDiabdat() { return diabdat_mpq.has_value(); }
+[[nodiscard]] inline bool HaveHellfire() { return hellfire_mpq.has_value(); }
+[[nodiscard]] inline bool HaveExtraFonts() { return font_mpq.has_value(); }
+[[nodiscard]] inline bool HaveBardAssets() { return hfbard_mpq.has_value(); }
+[[nodiscard]] inline bool HaveBarbarianAssets() { return hfbarb_mpq.has_value(); }
+#endif
+
 } // namespace devilution

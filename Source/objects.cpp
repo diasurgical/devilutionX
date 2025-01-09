@@ -27,7 +27,6 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "headless_mode.hpp"
-#include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"
 #include "levels/crypt.h"
@@ -49,7 +48,6 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
-#include "utils/utf8.hpp"
 
 namespace devilution {
 

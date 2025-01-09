@@ -23,6 +23,13 @@ namespace devilution {
 
 /**
  * @brief Terminates the game and displays an error message box.
+ * @param str Message box title.
+ * @param str Error message.
+ */
+[[noreturn]] void DisplayFatalErrorAndExit(std::string_view title, std::string_view body);
+
+/**
+ * @brief Terminates the game and displays an error message box.
  * @param str Error message.
  */
 [[noreturn]] void app_fatal(std::string_view str);

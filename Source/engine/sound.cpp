@@ -13,11 +13,11 @@
 #include <optional>
 #include <string>
 
+#include <Aulib/Stream.h>
 #include <SDL.h>
 #include <expected.hpp>
 
 #include "engine/assets.hpp"
-#include "init.h"
 #include "options.h"
 #include "utils/log.hpp"
 #include "utils/math.h"

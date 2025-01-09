@@ -17,7 +17,7 @@
 #include <fmt/format.h>
 
 #include "config.h"
-#include "init.h"
+#include "game_mode.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
 #include "multi.h"

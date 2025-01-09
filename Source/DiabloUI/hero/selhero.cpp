@@ -15,6 +15,7 @@
 #include "DiabloUI/selyesno.h"
 #include "control.h"
 #include "controls/plrctrls.h"
+#include "engine/assets.hpp"
 #include "game_mode.hpp"
 #include "menu.h"
 #include "options.h"
@@ -161,10 +162,10 @@ void SelheroListSelect(size_t value)
 		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Sorcerer"), static_cast<int>(HeroClass::Sorcerer)));
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Monk"), static_cast<int>(HeroClass::Monk)));
-			if (gbBard || *sgOptions.Gameplay.testBard) {
+			if (HaveBardAssets() || *sgOptions.Gameplay.testBard) {
 				vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Bard"), static_cast<int>(HeroClass::Bard)));
 			}
-			if (gbBarbarian || *sgOptions.Gameplay.testBarbarian) {
+			if (HaveBarbarianAssets() || *sgOptions.Gameplay.testBarbarian) {
 				vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Barbarian"), static_cast<int>(HeroClass::Barbarian)));
 			}
 		}
@@ -263,7 +264,7 @@ void AddSelHeroBackground()
 void SelheroClassSelectorSelect(size_t value)
 {
 	auto hClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
-	if (gbIsSpawn && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !gbBard))) {
+	if (gbIsSpawn && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !HaveBardAssets()))) {
 		RemoveSelHeroBackground();
 		UiSelOkDialog(nullptr, _("The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.").data(), false);
 		AddSelHeroBackground();

@@ -9,7 +9,6 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/primitive_render.hpp"
 #include "game_mode.hpp"
-#include "init.h"
 
 namespace devilution {
 

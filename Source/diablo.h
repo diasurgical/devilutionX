@@ -7,6 +7,12 @@
 
 #include <cstdint>
 
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
@@ -69,8 +75,6 @@ extern bool cineflag;
 /* These are defined in fonts.h */
 extern void FontsCleanup();
 extern DVL_API_FOR_TEST int PauseMode;
-extern bool gbBard;
-extern bool gbBarbarian;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];

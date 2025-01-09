@@ -5,12 +5,12 @@
 #include <benchmark/benchmark.h>
 
 #include "diablo.h"
+#include "engine/assets.hpp"
 #include "engine/clx_sprite.hpp"
 #include "engine/displacement.hpp"
 #include "engine/load_file.hpp"
 #include "engine/render/dun_render.hpp"
 #include "engine/surface.hpp"
-#include "init.h"
 #include "levels/dun_tile.hpp"
 #include "levels/gendung.h"
 #include "lighting.h"

@@ -20,7 +20,6 @@
 #include "engine/render/text_render.hpp"
 #include "gamemenu.h"
 #include "help.h"
-#include "init.h"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"

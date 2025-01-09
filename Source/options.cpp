@@ -19,6 +19,7 @@
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "discord/discord.h"
+#include "engine/assets.hpp"
 #include "engine/demomode.h"
 #include "engine/sound_defs.hpp"
 #include "game_mode.hpp"
@@ -717,10 +718,10 @@ void OptionEntryResolution::SetActiveListIndex(size_t index)
 
 OptionEntryResampler::OptionEntryResampler()
     : OptionEntryListBase("Resampler", OptionEntryFlags::CantChangeInGame
-            // When there are exactly 2 options there is no submenu, so we need to recreate the UI
-            // to reflect the change in the "Resampling quality" setting visibility.
-            | (NumResamplers == 2 ? OptionEntryFlags::RecreateUI : OptionEntryFlags::None),
-        N_("Resampler"), N_("Audio resampler"))
+              // When there are exactly 2 options there is no submenu, so we need to recreate the UI
+              // to reflect the change in the "Resampling quality" setting visibility.
+              | (NumResamplers == 2 ? OptionEntryFlags::RecreateUI : OptionEntryFlags::None),
+          N_("Resampler"), N_("Audio resampler"))
 {
 }
 void OptionEntryResampler::LoadFromIni(std::string_view category)
