@@ -721,7 +721,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Нормальная сложность\n"
-"Отсюда новичкам стоит начинать путь к победы над Диабло."
+"Отсюда новичкам стоит начинать путь к победе над Диабло."
 
 # Подобрано под размер меню.
 #: Source/DiabloUI/multi/selgame.cpp:395
@@ -784,7 +784,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Нормальная скорость\n"
-"Отсюда новичкам стоит начинать путь к победы над Диабло."
+"Отсюда новичкам стоит начинать путь к победе над Диабло."
 
 # Подобрано под размер меню.
 #: Source/DiabloUI/multi/selgame.cpp:521
