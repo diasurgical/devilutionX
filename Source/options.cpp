@@ -24,6 +24,7 @@
 #include "engine/sound_defs.hpp"
 #include "game_mode.hpp"
 #include "hwcursor.hpp"
+#include "lua/lua.hpp"
 #include "options.h"
 #include "platform/locale.hpp"
 #include "qol/monhealthbar.h"
@@ -1834,6 +1835,13 @@ std::vector<ModOptions::ModEntry> &ModOptions::GetModEntries()
 		newModEntries.emplace_back(modName);
 	}
 	return newModEntries;
+}
+
+ModOptions::ModEntry::ModEntry(std::string_view name)
+    : name(name)
+    , enabled(this->name, OptionEntryFlags::None, this->name.c_str(), "", false)
+{
+	enabled.SetValueChangedCallback(LuaReloadActiveMods);
 }
 
 namespace {

@@ -811,12 +811,7 @@ struct ModOptions : OptionCategoryBase {
 
 private:
 	struct ModEntry {
-		ModEntry(std::string_view name)
-		    : name(name)
-		    , enabled(this->name, OptionEntryFlags::None, this->name.c_str(), "", false)
-		{
-		}
-
+		ModEntry(std::string_view name);
 		std::string name;
 		OptionEntryBoolean enabled;
 	};
