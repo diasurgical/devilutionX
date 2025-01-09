@@ -28,7 +28,6 @@
 #include "gamemenu.h"
 #include "headless_mode.hpp"
 #include "help.h"
-#include "init.h"
 #include "inv_iterators.hpp"
 #include "levels/trigs.h"
 #include "lighting.h"
@@ -1463,9 +1462,9 @@ void ValidatePlayer()
 
 HeroClass GetPlayerSpriteClass(HeroClass cls)
 {
-	if (cls == HeroClass::Bard && !gbBard)
+	if (cls == HeroClass::Bard && !HaveBardAssets())
 		return HeroClass::Rogue;
-	if (cls == HeroClass::Barbarian && !gbBarbarian)
+	if (cls == HeroClass::Barbarian && !HaveBarbarianAssets())
 		return HeroClass::Warrior;
 	return cls;
 }

@@ -5,11 +5,17 @@
 #include <cstring>
 #include <string_view>
 
+#include "appfat.h"
 #include "game_mode.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
+
+#if defined(_WIN32) && !defined(__UWP__) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
+#include <find_steam_game.h>
+#endif
 
 #ifndef UNPACKED_MPQS
 #include "mpq/mpq_sdl_rwops.hpp"
@@ -256,6 +262,209 @@ tl::expected<AssetData, std::string> LoadAsset(std::string_view path)
 std::string FailedToOpenFileErrorMessage(std::string_view path, std::string_view error)
 {
 	return fmt::format(fmt::runtime(_("Failed to open file:\n{:s}\n\n{:s}\n\nThe MPQ file(s) might be damaged. Please check the file integrity.")), path, error);
+}
+
+namespace {
+#ifdef UNPACKED_MPQS
+std::optional<std::string> FindUnpackedMpqData(const std::vector<std::string> &paths, std::string_view mpqName)
+{
+	std::string targetPath;
+	for (const std::string &path : paths) {
+		targetPath.clear();
+		targetPath.reserve(path.size() + mpqName.size() + 1);
+		targetPath.append(path).append(mpqName) += DirectorySeparator;
+		if (FileExists(targetPath)) {
+			LogVerbose("  Found unpacked MPQ directory: {}", targetPath);
+			return targetPath;
+		}
+	}
+	return std::nullopt;
+}
+#else
+std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, std::string_view mpqName)
+{
+	std::optional<MpqArchive> archive;
+	std::string mpqAbsPath;
+	std::int32_t error = 0;
+	for (const auto &path : paths) {
+		mpqAbsPath = path + mpqName.data();
+		if ((archive = MpqArchive::Open(mpqAbsPath.c_str(), error))) {
+			LogVerbose("  Found: {} in {}", mpqName, path);
+			return archive;
+		}
+		if (error != 0) {
+			LogError("Error {}: {}", MpqArchive::ErrorMessage(error), mpqAbsPath);
+		}
+	}
+	if (error == 0) {
+		LogVerbose("Missing: {}", mpqName);
+	}
+
+	return std::nullopt;
+}
+#endif
+
+std::vector<std::string> GetMPQSearchPaths()
+{
+	std::vector<std::string> paths;
+	paths.push_back(paths::BasePath());
+	paths.push_back(paths::PrefPath());
+	if (paths[0] == paths[1])
+		paths.pop_back();
+	paths.push_back(paths::ConfigPath());
+	if (paths[0] == paths[1] || (paths.size() == 3 && (paths[0] == paths[2] || paths[1] == paths[2])))
+		paths.pop_back();
+
+#if (defined(__unix__) || defined(__APPLE__)) && !defined(__ANDROID__)
+	// `XDG_DATA_HOME` is usually the root path of `paths::PrefPath()`, so we only
+	// add `XDG_DATA_DIRS`.
+	const char *xdgDataDirs = std::getenv("XDG_DATA_DIRS");
+	if (xdgDataDirs != nullptr) {
+		for (const std::string_view path : SplitByChar(xdgDataDirs, ':')) {
+			std::string fullPath(path);
+			if (!path.empty() && path.back() != '/')
+				fullPath += '/';
+			fullPath.append("diasurgical/devilutionx/");
+			paths.push_back(std::move(fullPath));
+		}
+	} else {
+		paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
+		paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	}
+#elif defined(NXDK)
+	paths.emplace_back("D:\\");
+#elif defined(_WIN32) && !defined(__UWP__) && !defined(DEVILUTIONX_WINDOWS_NO_WCHAR)
+	char gogpath[_FSG_PATH_MAX];
+	fsg_get_gog_game_path(gogpath, "1412601690");
+	if (strlen(gogpath) > 0) {
+		paths.emplace_back(std::string(gogpath) + "/");
+		paths.emplace_back(std::string(gogpath) + "/hellfire/");
+	}
+#endif
+
+	if (paths.empty() || !paths.back().empty()) {
+		paths.emplace_back(); // PWD
+	}
+
+	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
+		LogVerbose("Paths:\n    base: {}\n    pref: {}\n  config: {}\n  assets: {}",
+		    paths::BasePath(), paths::PrefPath(), paths::ConfigPath(), paths::AssetsPath());
+
+		std::string message;
+		for (std::size_t i = 0; i < paths.size(); ++i) {
+			message.append(fmt::format("\n{:6d}. '{}'", i + 1, paths[i]));
+		}
+		LogVerbose("MPQ search paths:{}", message);
+	}
+
+	return paths;
+}
+
+} // namespace
+
+void LoadCoreArchives()
+{
+	auto paths = GetMPQSearchPaths();
+
+#ifdef UNPACKED_MPQS
+	font_data_path = FindUnpackedMpqData(paths, "fonts");
+#else // !UNPACKED_MPQS
+#if !defined(__ANDROID__) && !defined(__APPLE__) && !defined(__3DS__) && !defined(__SWITCH__)
+	// Load devilutionx.mpq first to get the font file for error messages
+	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+#endif
+	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
+#endif
+}
+
+void LoadLanguageArchive()
+{
+#ifdef UNPACKED_MPQS
+	lang_data_path = std::nullopt;
+#else
+	lang_mpq = std::nullopt;
+#endif
+
+	std::string_view code = GetLanguageCode();
+	if (code != "en") {
+		std::string langMpqName { code };
+#ifdef UNPACKED_MPQS
+		lang_data_path = FindUnpackedMpqData(GetMPQSearchPaths(), langMpqName);
+#else
+		langMpqName.append(".mpq");
+		lang_mpq = LoadMPQ(GetMPQSearchPaths(), langMpqName);
+#endif
+	}
+}
+
+void LoadGameArchives()
+{
+	auto paths = GetMPQSearchPaths();
+#ifdef UNPACKED_MPQS
+	diabdat_data_path = FindUnpackedMpqData(paths, "diabdat");
+	if (!diabdat_data_path) {
+		spawn_data_path = FindUnpackedMpqData(paths, "spawn");
+		if (spawn_data_path)
+			gbIsSpawn = true;
+	}
+	if (!HeadlessMode) {
+		AssetRef ref = FindAsset("ui_art\\title.clx");
+		if (!ref.ok()) {
+			LogError("{}", SDL_GetError());
+			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
+		}
+	}
+	hellfire_data_path = FindUnpackedMpqData(paths, "hellfire");
+	if (hellfire_data_path)
+		gbIsHellfire = true;
+	if (forceHellfire && !hellfire_data_path)
+		InsertCDDlg("hellfire");
+
+	const bool hasMonk = FileExists(*hellfire_data_path + "plrgfx/monk/mha/mhaas.clx");
+	const bool hasMusic = FileExists(*hellfire_data_path + "music/dlvlf.wav")
+	    || FileExists(*hellfire_data_path + "music/dlvlf.mp3");
+	const bool hasVoice = FileExists(*hellfire_data_path + "sfx/hellfire/cowsut1.wav")
+	    || FileExists(*hellfire_data_path + "sfx/hellfire/cowsut1.mp3");
+
+	if (gbIsHellfire && (!hasMonk || !hasMusic || !hasVoice)) {
+		DisplayFatalErrorAndExit(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
+	}
+#else // !UNPACKED_MPQS
+	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
+	if (!diabdat_mpq) {
+		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
+		diabdat_mpq = LoadMPQ(paths, "diabdat.mpq");
+	}
+
+	if (!diabdat_mpq) {
+		spawn_mpq = LoadMPQ(paths, "spawn.mpq");
+		if (spawn_mpq)
+			gbIsSpawn = true;
+	}
+	if (!HeadlessMode) {
+		AssetRef ref = FindAsset("ui_art\\title.pcx");
+		if (!ref.ok()) {
+			LogError("{}", SDL_GetError());
+			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
+		}
+	}
+
+	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
+	if (hellfire_mpq)
+		gbIsHellfire = true;
+	if (forceHellfire && !hellfire_mpq)
+		InsertCDDlg("hellfire.mpq");
+
+	hfmonk_mpq = LoadMPQ(paths, "hfmonk.mpq");
+	hfbard_mpq = LoadMPQ(paths, "hfbard.mpq");
+	hfbarb_mpq = LoadMPQ(paths, "hfbarb.mpq");
+	hfmusic_mpq = LoadMPQ(paths, "hfmusic.mpq");
+	hfvoice_mpq = LoadMPQ(paths, "hfvoice.mpq");
+
+	if (gbIsHellfire && (!hfmonk_mpq || !hfmusic_mpq || !hfvoice_mpq)) {
+		DisplayFatalErrorAndExit(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
+	}
+#endif
 }
 
 } // namespace devilution

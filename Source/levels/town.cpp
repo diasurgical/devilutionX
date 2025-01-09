@@ -4,9 +4,11 @@
 
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
-#include "init.h"
+#include "engine/world_tile.hpp"
+#include "game_mode.hpp"
 #include "levels/drlg_l1.h"
 #include "levels/trigs.h"
+#include "multi.h"
 #include "player.h"
 #include "quests.h"
 

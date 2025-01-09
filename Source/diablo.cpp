@@ -12,6 +12,7 @@
 #include <config.h>
 
 #include "DiabloUI/selstart.h"
+#include "appfat.h"
 #include "automap.h"
 #include "capture.h"
 #include "control.h"
@@ -124,8 +125,6 @@ bool gbProcessPlayers;
 bool gbLoadGame;
 bool cineflag;
 int PauseMode;
-bool gbBard;
-bool gbBarbarian;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";

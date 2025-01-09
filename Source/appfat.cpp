@@ -49,14 +49,14 @@ void FreeDlg()
 	SNetDestroy();
 }
 
-[[noreturn]] void DisplayFatalErrorAndExit(std::string_view title, std::string_view body)
+} // namespace
+
+void DisplayFatalErrorAndExit(std::string_view title, std::string_view body)
 {
 	FreeDlg();
 	UiErrorOkDialog(title, body);
 	diablo_quit(1);
 }
-
-} // namespace
 
 void app_fatal(std::string_view str)
 {

@@ -24,7 +24,7 @@
 #include "doom.h"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
-#include "init.h"
+#include "game_mode.hpp"
 #include "inv.h"
 #include "levels/dun_tile.hpp"
 #include "lighting.h"

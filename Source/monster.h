@@ -22,7 +22,6 @@
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
 #include "game_mode.hpp"
-#include "init.h"
 #include "levels/dun_tile.hpp"
 #include "misdat.h"
 #include "monstdat.h"

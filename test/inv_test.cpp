@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "cursor.h"
+#include "engine/assets.hpp"
 #include "inv.h"
 #include "player.h"
 #include "storm/storm_net.hpp"

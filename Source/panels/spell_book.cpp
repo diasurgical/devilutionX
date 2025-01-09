@@ -15,7 +15,7 @@
 #include "engine/rectangle.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
-#include "init.h"
+#include "game_mode.hpp"
 #include "missiles.h"
 #include "panels/spell_icons.hpp"
 #include "panels/ui_panels.hpp"

@@ -17,7 +17,6 @@
 #include "engine/load_file.hpp"
 #include "engine/render/primitive_render.hpp"
 #include "game_mode.hpp"
-#include "init.h"
 #include "loadsave.h"
 #include "menu.h"
 #include "mpq/mpq_common.hpp"

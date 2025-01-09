@@ -15,6 +15,7 @@
 #include <string>
 #include <string_view>
 
+#include <SDL_endian.h>
 #include <expected.hpp>
 #include <fmt/core.h>
 #include <fmt/format.h>
@@ -32,7 +33,6 @@
 #include "engine/world_tile.hpp"
 #include "game_mode.hpp"
 #include "headless_mode.hpp"
-#include "init.h"
 #include "levels/crypt.h"
 #include "levels/drlg_l4.h"
 #include "levels/themes.h"
@@ -55,7 +55,6 @@
 #include "utils/static_vector.hpp"
 #include "utils/status_macros.hpp"
 #include "utils/str_cat.hpp"
-#include "utils/utf8.hpp"
 
 #ifdef _DEBUG
 #include "debug.h"

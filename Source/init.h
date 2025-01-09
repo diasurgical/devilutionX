@@ -21,42 +21,6 @@ namespace devilution {
 /** True if the game is the current active window */
 extern bool gbActive;
 
-inline bool HaveSpawn()
-{
-#ifdef UNPACKED_MPQS
-	return bool(spawn_data_path);
-#else
-	return bool(spawn_mpq);
-#endif
-}
-
-inline bool HaveDiabdat()
-{
-#ifdef UNPACKED_MPQS
-	return bool(diabdat_data_path);
-#else
-	return bool(diabdat_mpq);
-#endif
-}
-
-inline bool HaveHellfire()
-{
-#ifdef UNPACKED_MPQS
-	return bool(hellfire_data_path);
-#else
-	return bool(hellfire_mpq);
-#endif
-}
-
-inline bool HaveExtraFonts()
-{
-#ifdef UNPACKED_MPQS
-	return bool(font_data_path);
-#else
-	return bool(font_mpq);
-#endif
-}
-
 #ifdef UNPACKED_MPQS
 bool AreExtraFontsOutOfDate(const std::string &path);
 #else
@@ -86,9 +50,6 @@ inline bool IsDevilutionXMpqOutOfDate()
 }
 
 void init_cleanup();
-void LoadCoreArchives();
-void LoadLanguageArchive();
-void LoadGameArchives();
 void init_create_window();
 void MainWndProc(const SDL_Event &event);
 

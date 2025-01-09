@@ -3,6 +3,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
 #include "control.h"
+#include "engine/assets.hpp"
 #include "engine/load_clx.hpp"
 #include "game_mode.hpp"
 #include "utils/language.h"

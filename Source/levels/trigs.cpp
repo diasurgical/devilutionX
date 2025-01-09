@@ -15,7 +15,7 @@
 #include "cursor.h"
 #include "diablo_msg.hpp"
 #include "game_mode.hpp"
-#include "init.h"
+#include "multi.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/is_of.hpp"
 #include "utils/language.h"

@@ -8,6 +8,8 @@
 #include <array>
 #include <cstdint>
 
+#include <SDL.h>
+
 #include "levels/gendung.h"
 
 namespace devilution {
