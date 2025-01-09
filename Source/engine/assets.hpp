@@ -14,6 +14,7 @@
 
 #include "appfat.h"
 #include "diablo.h"
+#include "game_mode.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"

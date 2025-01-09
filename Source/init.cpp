@@ -21,6 +21,7 @@
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "engine/events.hpp"
+#include "game_mode.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "pfile.h"
@@ -46,14 +47,6 @@ namespace devilution {
 
 /** True if the game is the current active window */
 bool gbActive;
-/** Indicate if we only have access to demo data */
-bool gbIsSpawn;
-/** Indicate if we have loaded the Hellfire expansion data */
-bool gbIsHellfire;
-/** Indicate if we want vanilla savefiles */
-bool gbVanilla;
-/** Whether the Hellfire mode is required (forced). */
-bool forceHellfire;
 
 namespace {
 

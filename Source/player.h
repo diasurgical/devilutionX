@@ -18,6 +18,7 @@
 #include "engine/displacement.hpp"
 #include "engine/path.h"
 #include "engine/point.hpp"
+#include "game_mode.hpp"
 #include "interfac.h"
 #include "items.h"
 #include "items/validation.h"

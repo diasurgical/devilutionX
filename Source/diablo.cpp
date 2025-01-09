@@ -38,6 +38,7 @@
 #include "engine/random.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/sound.h"
+#include "game_mode.hpp"
 #include "gamemenu.h"
 #include "gmenu.h"
 #include "help.h"

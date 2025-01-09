@@ -12,6 +12,7 @@
 #include "control.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/surface.hpp"
+#include "game_mode.hpp"
 #include "utils/attributes.h"
 
 namespace devilution {
