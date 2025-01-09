@@ -29,13 +29,11 @@ jobs:
     - name: Formatting Check (Source)
       uses: jidicula/clang-format-action@v4.14.0
       with:
-        clang-format-version: '13'
+        clang-format-version: '18'
         check-path: 'Source'
-        fallback-style: 'webkit'
 
     - name: Formatting Check (test)
       uses: jidicula/clang-format-action@v4.14.0
       with:
-        clang-format-version: '13'
+        clang-format-version: '18'
         check-path: 'test'
-        fallback-style: 'webkit'
