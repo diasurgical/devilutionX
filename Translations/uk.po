@@ -1473,24 +1473,20 @@ msgid "Hotkey for skill or spell."
 msgstr "Гаряча клавіша для чар або таланту."
 
 #: Source/diablo.cpp:1726
-#, fuzzy
-#| msgid "Previous Menu"
 msgid "Previous quick spell"
-msgstr "Попереднє Меню"
+msgstr "Попередні швидкі чари"
 
 #: Source/diablo.cpp:1727
 msgid "Selects the previous quick spell (cycles)."
-msgstr ""
+msgstr "Вибирає попередні швидкі чари (циклює)."
 
 #: Source/diablo.cpp:1734
-#, fuzzy
-#| msgid "Quick spell {}"
 msgid "Next quick spell"
-msgstr "Швидкі Чари {}"
+msgstr "Наступні швидкі чари"
 
 #: Source/diablo.cpp:1735
 msgid "Selects the next quick spell (cycles)."
-msgstr ""
+msgstr "Вибирає наступні швидкі чари (циклює)."
 
 #: Source/diablo.cpp:1742 Source/diablo.cpp:2146
 msgid "Use health potion"
@@ -1700,14 +1696,12 @@ msgid "Displays chat log."
 msgstr "Показує лог чату."
 
 #: Source/diablo.cpp:1972 Source/diablo.cpp:2449
-#, fuzzy
-#| msgid "Inventory"
 msgid "Sort Inventory"
-msgstr "Інвентар"
+msgstr "Сортувати Інвентар"
 
 #: Source/diablo.cpp:1973 Source/diablo.cpp:2450
 msgid "Sorts the inventory."
-msgstr ""
+msgstr "Сортує інвентар."
 
 #: Source/diablo.cpp:1981
 msgid "Console"
@@ -2188,6 +2182,12 @@ msgid ""
 "\n"
 "The MPQ file(s) might be damaged. Please check the file integrity."
 msgstr ""
+"Не вдалося відкрити файл:\n"
+"{:s}\n"
+"\n"
+"{:s}\n"
+"\n"
+"Можливо, файл(и) MPQ пошкоджено. Будь ласка, перевірте цілісність файлів."
 
 #: Source/engine/assets.cpp:414 Source/engine/assets.cpp:448
 msgid "diabdat.mpq or spawn.mpq"
@@ -3970,10 +3970,8 @@ msgid "Game Mode"
 msgstr "Режим Гри"
 
 #: Source/options.cpp:457
-#, fuzzy
-#| msgid "Gameplay Settings"
 msgid "Game Mode Settings"
-msgstr "Налаштування Гри"
+msgstr "Налаштування Режиму Гри"
 
 #: Source/options.cpp:458
 msgid "Play Diablo or Hellfire."
@@ -4299,11 +4297,11 @@ msgstr "Коли це налаштування ввімкнене, курсор 
 
 #: Source/options.cpp:943
 msgid "Pause Game When Window Loses Focus"
-msgstr ""
+msgstr "Зупинити гру, коли вікно втрачає фокус"
 
 #: Source/options.cpp:943
 msgid "When enabled, the game will pause when focus is lost."
-msgstr ""
+msgstr "Коли увімкнено, гра призупинятиметься, при втраті фокусу."
 
 #: Source/options.cpp:944
 msgid "Enable Little Girl quest."
@@ -4581,13 +4579,11 @@ msgstr "Налаштування Падмапінгу"
 
 #: Source/options.cpp:1794
 msgid "Mods"
-msgstr ""
+msgstr "Модифікації"
 
 #: Source/options.cpp:1794
-#, fuzzy
-#| msgid "Settings"
 msgid "Mod Settings"
-msgstr "Налаштування"
+msgstr "Налаштування Модифікацій"
 
 #: Source/panels/charpanel.cpp:133
 msgid "Level"
@@ -4980,16 +4976,13 @@ msgid "Armor: {:d}  "
 msgstr "Броня: {:d}  "
 
 #: Source/stores.cpp:314
-#, fuzzy, c++-format
-#| msgid "Dur: {:d}/{:d},  "
+#, c++-format
 msgid "Dur: {:d}/{:d}"
-msgstr "Міц: {:d}/{:d},  "
+msgstr "Міц: {:d}/{:d}"
 
 #: Source/stores.cpp:316
-#, fuzzy
-#| msgid "indestructible"
 msgid "Indestructible"
-msgstr "неруйновний"
+msgstr "Неруйновний"
 
 #: Source/stores.cpp:386 Source/stores.cpp:1034 Source/stores.cpp:1253
 msgid "Welcome to the"
@@ -12131,9 +12124,3 @@ msgstr "Руна Каменю"
 #: Source/utils/format_int.cpp:27
 msgid ","
 msgstr ","
-
-#~ msgid "Indestructible,  "
-#~ msgstr "Неруйновний,  "
-
-#~ msgid "No required attributes"
-#~ msgstr "Немає вимог"
