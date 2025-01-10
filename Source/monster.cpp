@@ -4314,7 +4314,7 @@ void M_FallenFear(Point position)
 
 void PrintMonstHistory(int mt)
 {
-	if (*sgOptions.Gameplay.showMonsterType) {
+	if (*GetOptions().Gameplay.showMonsterType) {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
 	} else {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
@@ -4383,7 +4383,7 @@ void PrintMonstHistory(int mt)
 void PrintUniqueHistory()
 {
 	Monster &monster = Monsters[pcursmonst];
-	if (*sgOptions.Gameplay.showMonsterType) {
+	if (*GetOptions().Gameplay.showMonsterType) {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
 	}
 

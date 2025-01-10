@@ -201,7 +201,7 @@ void LuaReloadActiveMods()
 	CurrentLuaState->events = RunScript(/*env=*/std::nullopt, "devilutionx.events", /*optional=*/false);
 	CurrentLuaState->commonPackages["devilutionx.events"] = CurrentLuaState->events;
 
-	for (std::string_view modname : sgOptions.Mods.GetActiveModList()) {
+	for (std::string_view modname : GetOptions().Mods.GetActiveModList()) {
 		std::string packageName = StrCat("mods.", modname, ".init");
 		RunScript(CreateLuaSandbox(), packageName, /*optional=*/true);
 	}

@@ -256,7 +256,7 @@ bool TrySelectPixelBased(Point tile)
 		const Point renderPosition = GetScreenPosition(renderingTile) + renderingOffset;
 		Point spriteTopLeft = renderPosition - Displacement { 0, sprite.height() };
 		Size spriteSize = { sprite.width(), sprite.height() };
-		if (*sgOptions.Graphics.zoom) {
+		if (*GetOptions().Graphics.zoom) {
 			spriteSize *= 2;
 			spriteTopLeft *= 2;
 		}
@@ -264,7 +264,7 @@ bool TrySelectPixelBased(Point tile)
 		if (!spriteCoords.contains(MousePosition))
 			return false;
 		Point pointInSprite = Point { 0, 0 } + (MousePosition - spriteCoords.position);
-		if (*sgOptions.Graphics.zoom)
+		if (*GetOptions().Graphics.zoom)
 			pointInSprite /= 2;
 		return IsPointWithinClx(pointInSprite, sprite);
 	};
@@ -666,7 +666,7 @@ void AlterMousePositionViaScrolling(Point &screenPosition, Rectangle mainPanel)
  */
 void AlterMousePositionViaZoom(Point &screenPosition)
 {
-	if (*sgOptions.Graphics.zoom) {
+	if (*GetOptions().Graphics.zoom) {
 		screenPosition.x /= 2;
 		screenPosition.y /= 2;
 	}
@@ -722,7 +722,7 @@ Point ConvertToTileGrid(Point &screenPosition)
 		currentTile.y++;
 	}
 
-	if (*sgOptions.Graphics.zoom) {
+	if (*GetOptions().Graphics.zoom) {
 		screenPosition.y -= TILE_HEIGHT / 4;
 	}
 

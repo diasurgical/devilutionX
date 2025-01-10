@@ -59,7 +59,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 					break;
 #ifndef USE_SDL1
 				case SDL_WINDOWEVENT:
-					if (*sgOptions.Gameplay.pauseOnFocusLoss) {
+					if (*GetOptions().Gameplay.pauseOnFocusLoss) {
 						if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
 							diablo_focus_pause();
 						else if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)

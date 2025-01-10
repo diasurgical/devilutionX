@@ -73,8 +73,8 @@ std::optional<std::string_view> GetHotkeyName(SpellID spellId, SpellType spellTy
 			continue;
 		auto quickSpellActionKey = StrCat("QuickSpell", t + 1);
 		if (ControlMode == ControlTypes::Gamepad)
-			return sgOptions.Padmapper.InputNameForAction(quickSpellActionKey, useShortName);
-		return sgOptions.Keymapper.KeyNameForAction(quickSpellActionKey);
+			return GetOptions().Padmapper.InputNameForAction(quickSpellActionKey, useShortName);
+		return GetOptions().Keymapper.KeyNameForAction(quickSpellActionKey);
 	}
 	return {};
 }

@@ -54,7 +54,7 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 
 void InitXPBar()
 {
-	if (*sgOptions.Gameplay.experienceBar) {
+	if (*GetOptions().Gameplay.experienceBar) {
 		xpbarArt = LoadClx("data\\xpbar.clx");
 	}
 }
@@ -66,7 +66,7 @@ void FreeXPBar()
 
 void DrawXPBar(const Surface &out)
 {
-	if (!*sgOptions.Gameplay.experienceBar || ChatFlag)
+	if (!*GetOptions().Gameplay.experienceBar || ChatFlag)
 		return;
 
 	const Player &player = *MyPlayer;
@@ -109,7 +109,7 @@ void DrawXPBar(const Surface &out)
 
 bool CheckXPBarInfo()
 {
-	if (!*sgOptions.Gameplay.experienceBar)
+	if (!*GetOptions().Gameplay.experienceBar)
 		return false;
 	const Rectangle &mainPanel = GetMainPanel();
 

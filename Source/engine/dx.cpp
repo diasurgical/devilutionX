@@ -72,7 +72,7 @@ bool CanRenderDirectlyToOutputSurface()
  */
 void LimitFrameRate()
 {
-	if (*sgOptions.Graphics.frameRateControl != FrameRateControl::CPUSleep)
+	if (*GetOptions().Graphics.frameRateControl != FrameRateControl::CPUSleep)
 		return;
 	static uint32_t frameDeadline;
 	uint32_t tc = SDL_GetTicks() * 1000;
@@ -117,7 +117,7 @@ void dx_cleanup()
 #ifndef USE_SDL1
 	texture = nullptr;
 	FreeVirtualGamepadTextures();
-	if (*sgOptions.Graphics.upscale)
+	if (*GetOptions().Graphics.upscale)
 		SDL_DestroyRenderer(renderer);
 #endif
 	SDL_DestroyWindow(ghMainWnd);
@@ -249,7 +249,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 
-		if (*sgOptions.Graphics.frameRateControl != FrameRateControl::VerticalSync) {
+		if (*GetOptions().Graphics.frameRateControl != FrameRateControl::VerticalSync) {
 			LimitFrameRate();
 		}
 	} else {

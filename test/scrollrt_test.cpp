@@ -15,7 +15,7 @@ TEST(Scroll_rt, calc_tiles_in_view_original)
 	gnScreenWidth = 640;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight - 128;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
@@ -28,7 +28,7 @@ TEST(Scroll_rt, calc_tiles_in_view_original_zoom)
 	gnScreenWidth = 640;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight - 128;
-	sgOptions.Graphics.zoom.SetValue(true);
+	GetOptions().Graphics.zoom.SetValue(true);
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
@@ -41,7 +41,7 @@ TEST(Scroll_rt, calc_tiles_in_view_960_540)
 	gnScreenWidth = 960;
 	gnScreenHeight = 540;
 	gnViewportHeight = gnScreenHeight;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
@@ -54,7 +54,7 @@ TEST(Scroll_rt, calc_tiles_in_view_640_512)
 	gnScreenWidth = 640;
 	gnScreenHeight = 512;
 	gnViewportHeight = gnScreenHeight - 128;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
@@ -67,7 +67,7 @@ TEST(Scroll_rt, calc_tiles_in_view_768_480_zoom)
 	gnScreenWidth = 768;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight;
-	sgOptions.Graphics.zoom.SetValue(true);
+	GetOptions().Graphics.zoom.SetValue(true);
 	int columns = 0;
 	int rows = 0;
 	TilesInView(&columns, &rows);
@@ -82,7 +82,7 @@ TEST(Scroll_rt, calc_tile_offset_original)
 	gnScreenWidth = 640;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight - 128;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	int x = 0;
 	int y = 0;
 	CalcTileOffset(&x, &y);
@@ -95,7 +95,7 @@ TEST(Scroll_rt, calc_tile_offset_original_zoom)
 	gnScreenWidth = 640;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight - 128;
-	sgOptions.Graphics.zoom.SetValue(true);
+	GetOptions().Graphics.zoom.SetValue(true);
 	int x = 0;
 	int y = 0;
 	CalcTileOffset(&x, &y);
@@ -108,7 +108,7 @@ TEST(Scroll_rt, calc_tile_offset_960_540)
 	gnScreenWidth = 960;
 	gnScreenHeight = 540;
 	gnViewportHeight = gnScreenHeight;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	int x = 0;
 	int y = 0;
 	CalcTileOffset(&x, &y);
@@ -121,7 +121,7 @@ TEST(Scroll_rt, calc_tile_offset_853_480)
 	gnScreenWidth = 853;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	int x = 0;
 	int y = 0;
 	CalcTileOffset(&x, &y);
@@ -134,7 +134,7 @@ TEST(Scroll_rt, calc_tile_offset_768_480_zoom)
 	gnScreenWidth = 768;
 	gnScreenHeight = 480;
 	gnViewportHeight = gnScreenHeight;
-	sgOptions.Graphics.zoom.SetValue(true);
+	GetOptions().Graphics.zoom.SetValue(true);
 	int x = 0;
 	int y = 0;
 	CalcTileOffset(&x, &y);
@@ -147,7 +147,7 @@ TEST(Scroll_rt, calc_tile_offset_768_480_zoom)
 TEST(Scroll_rt, calc_tiles_covered_by_panel_original)
 {
 	gnScreenWidth = 640;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	CalculatePanelAreas();
 	EXPECT_EQ(RowsCoveredByPanel(), 0);
 }
@@ -155,7 +155,7 @@ TEST(Scroll_rt, calc_tiles_covered_by_panel_original)
 TEST(Scroll_rt, calc_tiles_covered_by_panel_960)
 {
 	gnScreenWidth = 960;
-	sgOptions.Graphics.zoom.SetValue(false);
+	GetOptions().Graphics.zoom.SetValue(false);
 	CalculatePanelAreas();
 	EXPECT_EQ(RowsCoveredByPanel(), 4);
 }
@@ -163,7 +163,7 @@ TEST(Scroll_rt, calc_tiles_covered_by_panel_960)
 TEST(Scroll_rt, calc_tiles_covered_by_panel_960_zoom)
 {
 	gnScreenWidth = 960;
-	sgOptions.Graphics.zoom.SetValue(true);
+	GetOptions().Graphics.zoom.SetValue(true);
 	CalculatePanelAreas();
 	EXPECT_EQ(RowsCoveredByPanel(), 2);
 }

@@ -250,7 +250,7 @@ void InitQuests()
 		}
 	}
 
-	if (!UseMultiplayerQuests() && *sgOptions.Gameplay.randomizeQuests) {
+	if (!UseMultiplayerQuests() && *GetOptions().Gameplay.randomizeQuests) {
 		// Quests are set from the seed used to generate level 15.
 		InitialiseQuestPools(DungeonSeeds[15], Quests);
 	}

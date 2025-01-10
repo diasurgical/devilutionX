@@ -3619,7 +3619,7 @@ unsigned int Object::GetId() const
 
 bool Object::IsDisabled() const
 {
-	if (!*sgOptions.Gameplay.disableCripplingShrines) {
+	if (!*GetOptions().Gameplay.disableCripplingShrines) {
 		return false;
 	}
 	if (IsAnyOf(_otype, _object_id::OBJ_GOATSHRINE, _object_id::OBJ_CAULDRON)) {

@@ -516,12 +516,13 @@ void InitGameInfo()
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 	sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
-	sgGameInitInfo.nTickRate = *sgOptions.Gameplay.tickRate;
-	sgGameInitInfo.bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
-	sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
-	sgGameInitInfo.bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
-	sgGameInitInfo.bFriendlyFire = *sgOptions.Gameplay.friendlyFire ? 1 : 0;
-	sgGameInitInfo.fullQuests = (!gbIsMultiplayer || *sgOptions.Gameplay.multiplayerFullQuests) ? 1 : 0;
+	const Options &options = GetOptions();
+	sgGameInitInfo.nTickRate = *options.Gameplay.tickRate;
+	sgGameInitInfo.bRunInTown = *options.Gameplay.runInTown ? 1 : 0;
+	sgGameInitInfo.bTheoQuest = *options.Gameplay.theoQuest ? 1 : 0;
+	sgGameInitInfo.bCowQuest = *options.Gameplay.cowQuest ? 1 : 0;
+	sgGameInitInfo.bFriendlyFire = *options.Gameplay.friendlyFire ? 1 : 0;
+	sgGameInitInfo.fullQuests = (!gbIsMultiplayer || *options.Gameplay.multiplayerFullQuests) ? 1 : 0;
 }
 
 void NetSendLoPri(uint8_t playerId, const std::byte *data, size_t size)

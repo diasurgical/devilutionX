@@ -405,7 +405,7 @@ void PreprocessEvents(SDL_Event *event)
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
-		if (devilution::sgOptions.Controller.bRearTouch) {
+		if (devilution::GetOptions().Controller.bRearTouch) {
 			switch (event->type) {
 			case SDL_FINGERDOWN:
 				PreprocessBackFingerDown(event);
