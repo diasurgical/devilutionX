@@ -145,10 +145,10 @@ bool HardwareCursorDefault()
 void OptionGrabInputChanged()
 {
 #ifdef USE_SDL1
-	SDL_WM_GrabInput(*sgOptions.Gameplay.grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+	SDL_WM_GrabInput(*GetOptions().Gameplay.grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
 #else
 	if (ghMainWnd != nullptr)
-		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+		SDL_SetWindowGrab(ghMainWnd, *GetOptions().Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
 #endif
 }
 
@@ -156,7 +156,7 @@ void OptionExperienceBarChanged()
 {
 	if (!gbRunGame)
 		return;
-	if (*sgOptions.Gameplay.experienceBar)
+	if (*GetOptions().Gameplay.experienceBar)
 		InitXPBar();
 	else
 		FreeXPBar();
@@ -166,7 +166,7 @@ void OptionEnemyHealthBarChanged()
 {
 	if (!gbRunGame)
 		return;
-	if (*sgOptions.Gameplay.enemyHealthBar)
+	if (*GetOptions().Gameplay.enemyHealthBar)
 		InitMonsterHealthBar();
 	else
 		FreeMonsterHealthBar();
@@ -177,14 +177,14 @@ void ResizeWindowAndUpdateResolutionOptions()
 {
 	ResizeWindow();
 #ifndef __3DS__
-	sgOptions.Graphics.resolution.InvalidateList();
+	GetOptions().Graphics.resolution.InvalidateList();
 #endif
 }
 #endif
 
 void OptionShowFPSChanged()
 {
-	if (*sgOptions.Graphics.showFPS)
+	if (*GetOptions().Graphics.showFPS)
 		EnableFrameCount();
 	else
 		frameflag = false;
@@ -199,13 +199,13 @@ void OptionLanguageCodeChanged()
 
 void OptionGameModeChanged()
 {
-	gbIsHellfire = *sgOptions.GameMode.gameMode == StartUpGameMode::Hellfire;
+	gbIsHellfire = *GetOptions().GameMode.gameMode == StartUpGameMode::Hellfire;
 	discord_manager::UpdateMenu(true);
 }
 
 void OptionSharewareChanged()
 {
-	gbIsSpawn = *sgOptions.GameMode.shareware;
+	gbIsSpawn = *GetOptions().GameMode.shareware;
 }
 
 void OptionAudioChanged()
@@ -223,8 +223,11 @@ void OptionAudioChanged()
 
 } // namespace
 
-/** Game options */
-Options sgOptions;
+Options &GetOptions()
+{
+	static Options options;
+	return options;
+}
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorSupported()
@@ -242,20 +245,21 @@ bool HardwareCursorSupported()
 void LoadOptions()
 {
 	LoadIni();
-	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+	Options &options = GetOptions();
+	for (OptionCategoryBase *pCategory : options.GetCategories()) {
 		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
 			pEntry->LoadFromIni(pCategory->GetKey());
 		}
 	}
 
-	ini->getUtf8Buf("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem));
-	ini->getUtf8Buf("Network", "Bind Address", "0.0.0.0", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress));
-	ini->getUtf8Buf("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame, sizeof(sgOptions.Network.szPreviousZTGame));
-	ini->getUtf8Buf("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost));
+	ini->getUtf8Buf("Hellfire", "SItem", options.Hellfire.szItem, sizeof(options.Hellfire.szItem));
+	ini->getUtf8Buf("Network", "Bind Address", "0.0.0.0", options.Network.szBindAddress, sizeof(options.Network.szBindAddress));
+	ini->getUtf8Buf("Network", "Previous Game ID", options.Network.szPreviousZTGame, sizeof(options.Network.szPreviousZTGame));
+	ini->getUtf8Buf("Network", "Previous Host", options.Network.szPreviousHost, sizeof(options.Network.szPreviousHost));
 
 	for (size_t i = 0; i < QuickMessages.size(); i++) {
 		std::span<const Ini::Value> values = ini->get("NetMsg", QuickMessages[i].key);
-		std::vector<std::string> &result = sgOptions.Chat.szHotKeyMsgs[i];
+		std::vector<std::string> &result = options.Chat.szHotKeyMsgs[i];
 		result.clear();
 		result.reserve(values.size());
 		for (const Ini::Value &value : values) {
@@ -263,10 +267,10 @@ void LoadOptions()
 		}
 	}
 
-	ini->getUtf8Buf("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping));
-	sgOptions.Controller.fDeadzone = ini->getFloat("Controller", "deadzone", 0.07F);
+	ini->getUtf8Buf("Controller", "Mapping", options.Controller.szMapping, sizeof(options.Controller.szMapping));
+	options.Controller.fDeadzone = ini->getFloat("Controller", "deadzone", 0.07F);
 #ifdef __vita__
-	sgOptions.Controller.bRearTouch = ini->getBool("Controller", "Enable Rear Touchpad", true);
+	options.Controller.bRearTouch = ini->getBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
 	if (demo::IsRunning())
@@ -278,26 +282,27 @@ void SaveOptions()
 	if (demo::IsRunning())
 		return;
 
-	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
-		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
+	Options &options = GetOptions();
+	for (OptionCategoryBase *pCategory : options.GetCategories()) {
+		for (const OptionEntryBase *pEntry : pCategory->GetEntries()) {
 			pEntry->SaveToIni(pCategory->GetKey());
 		}
 	}
 
-	ini->set("Hellfire", "SItem", sgOptions.Hellfire.szItem);
+	ini->set("Hellfire", "SItem", options.Hellfire.szItem);
 
-	ini->set("Network", "Bind Address", sgOptions.Network.szBindAddress);
-	ini->set("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame);
-	ini->set("Network", "Previous Host", sgOptions.Network.szPreviousHost);
+	ini->set("Network", "Bind Address", options.Network.szBindAddress);
+	ini->set("Network", "Previous Game ID", options.Network.szPreviousZTGame);
+	ini->set("Network", "Previous Host", options.Network.szPreviousHost);
 
 	for (size_t i = 0; i < QuickMessages.size(); i++) {
-		ini->set("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
+		ini->set("NetMsg", QuickMessages[i].key, options.Chat.szHotKeyMsgs[i]);
 	}
 
-	ini->set("Controller", "Mapping", sgOptions.Controller.szMapping);
-	ini->set("Controller", "deadzone", sgOptions.Controller.fDeadzone);
+	ini->set("Controller", "Mapping", options.Controller.szMapping);
+	ini->set("Controller", "deadzone", options.Controller.fDeadzone);
 #ifdef __vita__
-	ini->set("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
+	ini->set("Controller", "Enable Rear Touchpad", options.Controller.bRearTouch);
 #endif
 
 	SaveIni();
@@ -634,7 +639,7 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		    static_cast<int>(mode.w * scaleFactor),
 		    static_cast<int>(mode.h * scaleFactor) });
 	}
-	supportsAnyResolution = *sgOptions.Graphics.upscale;
+	supportsAnyResolution = *GetOptions().Graphics.upscale;
 #endif
 
 	if (supportsAnyResolution && sizes.size() == 1) {
@@ -659,7 +664,7 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		sizes.emplace_back(Size { 640, 480 });
 
 #ifndef USE_SDL1
-	if (*sgOptions.Graphics.fitToScreen) {
+	if (*GetOptions().Graphics.fitToScreen) {
 		SDL_DisplayMode mode;
 		if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
 			ErrSdl();
@@ -685,7 +690,7 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 
 	for (auto &size : sizes) {
 #ifndef USE_SDL1
-		if (*sgOptions.Graphics.fitToScreen) {
+		if (*GetOptions().Graphics.fitToScreen) {
 			resolutions.emplace_back(size, StrCat(size.height, "p"));
 			continue;
 		}
@@ -772,9 +777,9 @@ void OptionEntryResampler::UpdateDependentOptions() const
 {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 	if (resampler_ == Resampler::Speex) {
-		sgOptions.Audio.resamplingQuality.flags &= ~OptionEntryFlags::Invisible;
+		GetOptions().Audio.resamplingQuality.flags &= ~OptionEntryFlags::Invisible;
 	} else {
-		sgOptions.Audio.resamplingQuality.flags |= OptionEntryFlags::Invisible;
+		GetOptions().Audio.resamplingQuality.flags |= OptionEntryFlags::Invisible;
 	}
 #endif
 }
@@ -1314,8 +1319,8 @@ void KeymapperOptions::Action::LoadFromIni(std::string_view category)
 		return;
 	}
 
-	auto keyIt = sgOptions.Keymapper.keyNameToKeyID.find(iniValue);
-	if (keyIt == sgOptions.Keymapper.keyNameToKeyID.end()) {
+	auto keyIt = GetOptions().Keymapper.keyNameToKeyID.find(iniValue);
+	if (keyIt == GetOptions().Keymapper.keyNameToKeyID.end()) {
 		// Use the default key if the key is unknown.
 		Log("Keymapper: unknown key '{}'", iniValue);
 		SetValue(defaultKey);
@@ -1333,8 +1338,8 @@ void KeymapperOptions::Action::SaveToIni(std::string_view category) const
 		ini->set(category, key, std::string {});
 		return;
 	}
-	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
-	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
+	auto keyNameIt = GetOptions().Keymapper.keyIDToKeyName.find(boundKey);
+	if (keyNameIt == GetOptions().Keymapper.keyIDToKeyName.end()) {
 		LogVerbose("Keymapper: no name found for key {} bound to {}", boundKey, key);
 		return;
 	}
@@ -1345,8 +1350,8 @@ std::string_view KeymapperOptions::Action::GetValueDescription() const
 {
 	if (boundKey == SDLK_UNKNOWN)
 		return "";
-	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
-	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
+	auto keyNameIt = GetOptions().Keymapper.keyIDToKeyName.find(boundKey);
+	if (keyNameIt == GetOptions().Keymapper.keyIDToKeyName.end()) {
 		return "";
 	}
 	return keyNameIt->second;
@@ -1354,27 +1359,27 @@ std::string_view KeymapperOptions::Action::GetValueDescription() const
 
 bool KeymapperOptions::Action::SetValue(int value)
 {
-	if (value != SDLK_UNKNOWN && sgOptions.Keymapper.keyIDToKeyName.find(value) == sgOptions.Keymapper.keyIDToKeyName.end()) {
+	if (value != SDLK_UNKNOWN && GetOptions().Keymapper.keyIDToKeyName.find(value) == GetOptions().Keymapper.keyIDToKeyName.end()) {
 		// Ignore invalid key values
 		return false;
 	}
 
 	// Remove old key
 	if (boundKey != SDLK_UNKNOWN) {
-		sgOptions.Keymapper.keyIDToAction.erase(boundKey);
+		GetOptions().Keymapper.keyIDToAction.erase(boundKey);
 		boundKey = SDLK_UNKNOWN;
 	}
 
 	// Add new key
 	if (value != SDLK_UNKNOWN) {
-		auto it = sgOptions.Keymapper.keyIDToAction.find(value);
-		if (it != sgOptions.Keymapper.keyIDToAction.end()) {
+		auto it = GetOptions().Keymapper.keyIDToAction.find(value);
+		if (it != GetOptions().Keymapper.keyIDToAction.end()) {
 			// Warn about overwriting keys.
 			Log("Keymapper: key '{}' is already bound to action '{}', overwriting", value, it->second.get().name);
 			it->second.get().boundKey = SDLK_UNKNOWN;
 		}
 
-		sgOptions.Keymapper.keyIDToAction.insert_or_assign(value, *this);
+		GetOptions().Keymapper.keyIDToAction.insert_or_assign(value, *this);
 		boundKey = value;
 	}
 
@@ -1545,8 +1550,8 @@ void PadmapperOptions::Action::LoadFromIni(std::string_view category)
 
 	ControllerButtonCombo input {};
 	if (!modName.empty()) {
-		auto modifierIt = sgOptions.Padmapper.buttonNameToButton.find(modName);
-		if (modifierIt == sgOptions.Padmapper.buttonNameToButton.end()) {
+		auto modifierIt = GetOptions().Padmapper.buttonNameToButton.find(modName);
+		if (modifierIt == GetOptions().Padmapper.buttonNameToButton.end()) {
 			// Use the default button combo if the modifier name is unknown.
 			LogWarn("Padmapper: unknown button '{}'", modName);
 			SetValue(defaultInput);
@@ -1555,8 +1560,8 @@ void PadmapperOptions::Action::LoadFromIni(std::string_view category)
 		input.modifier = modifierIt->second;
 	}
 
-	auto buttonIt = sgOptions.Padmapper.buttonNameToButton.find(buttonName);
-	if (buttonIt == sgOptions.Padmapper.buttonNameToButton.end()) {
+	auto buttonIt = GetOptions().Padmapper.buttonNameToButton.find(buttonName);
+	if (buttonIt == GetOptions().Padmapper.buttonNameToButton.end()) {
 		// Use the default button combo if the button name is unknown.
 		LogWarn("Padmapper: unknown button '{}'", buttonName);
 		SetValue(defaultInput);
@@ -1575,13 +1580,13 @@ void PadmapperOptions::Action::SaveToIni(std::string_view category) const
 		ini->set(category, key, "");
 		return;
 	}
-	std::string inputName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.button)];
+	std::string inputName = GetOptions().Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.button)];
 	if (inputName.empty()) {
 		LogVerbose("Padmapper: no name found for button {} bound to {}", static_cast<size_t>(boundInput.button), key);
 		return;
 	}
 	if (boundInput.modifier != ControllerButton_NONE) {
-		const std::string &modifierName = sgOptions.Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.modifier)];
+		const std::string &modifierName = GetOptions().Padmapper.buttonToButtonName[static_cast<size_t>(boundInput.modifier)];
 		if (modifierName.empty()) {
 			LogVerbose("Padmapper: no name found for modifier button {} bound to {}", static_cast<size_t>(boundInput.button), key);
 			return;

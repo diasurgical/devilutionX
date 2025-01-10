@@ -238,7 +238,7 @@ void PressControllerButton(ControllerButton button)
 				SetSpeedSpell(slot);
 				return;
 			}
-			if (!*sgOptions.Gameplay.quickCast)
+			if (!*GetOptions().Gameplay.quickCast)
 				ToggleSpell(slot);
 			else
 				QuickCast(slot);
@@ -289,7 +289,7 @@ void PressControllerButton(ControllerButton button)
 			return;
 		case devilution::ControllerButton_BUTTON_Y:
 #ifdef __3DS__
-			sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+			GetOptions().Graphics.zoom.SetValue(!*GetOptions().Graphics.zoom);
 			CalcViewportGeometry();
 #endif
 			return;
@@ -298,7 +298,7 @@ void PressControllerButton(ControllerButton button)
 		}
 	}
 
-	sgOptions.Padmapper.ButtonPressed(button);
+	GetOptions().Padmapper.ButtonPressed(button);
 }
 
 } // namespace
@@ -337,7 +337,7 @@ bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 		return false;
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return false;
-	std::string_view actionName = sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	std::string_view actionName = GetOptions().Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
 	return IsAnyOf(actionName, "LeftMouseClick1", "LeftMouseClick2", "RightMouseClick1", "RightMouseClick2");
 }
 
@@ -356,7 +356,7 @@ bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonE
 		~ButtonReleaser()
 		{
 			if (ctrlEvent.up)
-				sgOptions.Padmapper.ButtonReleased(ctrlEvent.button, false);
+				GetOptions().Padmapper.ButtonReleased(ctrlEvent.button, false);
 		}
 		ControllerButtonEvent ctrlEvent;
 	};
@@ -377,10 +377,10 @@ bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonE
 		SuppressedButton = ControllerButton_NONE;
 	}
 
-	if (ctrlEvent.up && sgOptions.Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent) != "") {
+	if (ctrlEvent.up && GetOptions().Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent) != "") {
 		// Button press may have brought up a menu;
 		// don't confuse release of that button with intent to interact with the menu
-		sgOptions.Padmapper.ButtonReleased(ctrlEvent.button);
+		GetOptions().Padmapper.ButtonReleased(ctrlEvent.button);
 		return true;
 	} else if (GetGameAction(event, ctrlEvent, &action)) {
 		ProcessGameAction(action);

@@ -21,10 +21,10 @@ inline std::unique_ptr<Aulib::Resampler> CreateAulibResampler(int sourceRate)
 {
 	if (Aulib::sampleRate() == sourceRate)
 		return nullptr;
-	switch (*sgOptions.Audio.resampler) {
+	switch (*GetOptions().Audio.resampler) {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 	case Resampler::Speex:
-		return std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality);
+		return std::make_unique<Aulib::ResamplerSpeex>(*GetOptions().Audio.resamplingQuality);
 #endif
 #ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
 	case Resampler::SDL:

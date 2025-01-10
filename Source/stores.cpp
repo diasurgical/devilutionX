@@ -663,7 +663,7 @@ void StartSmithRepair()
 
 void FillManaPlayer()
 {
-	if (!*sgOptions.Gameplay.adriaRefillsMana)
+	if (!*GetOptions().Gameplay.adriaRefillsMana)
 		return;
 
 	Player &myPlayer = *MyPlayer;
@@ -2150,7 +2150,7 @@ void SetupTownStores()
 
 void FreeStoreMem()
 {
-	if (*sgOptions.Gameplay.showItemGraphicsInStores) {
+	if (*GetOptions().Gameplay.showItemGraphicsInStores) {
 		FreeHalfSizeItemSprites();
 	}
 	ActiveStore = TalkID::None;
@@ -2182,7 +2182,7 @@ void PrintSString(const Surface &out, int margin, int line, std::string_view tex
 	constexpr int CursWidth = INV_SLOT_SIZE_PX * 2;
 	constexpr int HalfCursWidth = CursWidth / 2;
 
-	if (*sgOptions.Gameplay.showItemGraphicsInStores && cursId >= 0) {
+	if (*GetOptions().Gameplay.showItemGraphicsInStores && cursId >= 0) {
 		const Size size = GetInvItemSize(static_cast<int>(CURSOR_FIRSTITEM) + cursId);
 		const bool useHalfSize = size.width > INV_SLOT_SIZE_PX || size.height > INV_SLOT_SIZE_PX;
 		const bool useRed = HasAnyOf(flags, UiFlags::ColorRed);
@@ -2200,7 +2200,7 @@ void PrintSString(const Surface &out, int margin, int line, std::string_view tex
 		}
 	}
 
-	if (*sgOptions.Gameplay.showItemGraphicsInStores && cursIndent) {
+	if (*GetOptions().Gameplay.showItemGraphicsInStores && cursIndent) {
 		const Rectangle textRect { { rect.position.x + HalfCursWidth + 8, rect.position.y }, { rect.size.width - HalfCursWidth + 8, rect.size.height } };
 		DrawString(out, text, textRect, { .flags = flags });
 	} else {
@@ -2254,7 +2254,7 @@ void ClearSText(int s, int e)
 
 void StartStore(TalkID s)
 {
-	if (*sgOptions.Gameplay.showItemGraphicsInStores) {
+	if (*GetOptions().Gameplay.showItemGraphicsInStores) {
 		CreateHalfSizeItemSprites();
 	}
 	SpellbookFlag = false;

@@ -488,7 +488,7 @@ void FindTrigger()
 bool IsStandingGround()
 {
 	if (ControlMode == ControlTypes::Gamepad) {
-		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		ControllerButtonCombo standGroundCombo = GetOptions().Padmapper.ButtonComboForAction("StandGround");
 		return StandToggle || IsControllerButtonComboPressed(standGroundCombo);
 	}
 #ifndef USE_SDL1

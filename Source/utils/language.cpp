@@ -335,7 +335,7 @@ std::string_view GetLanguageCode()
 {
 	if (!forceLocale.empty())
 		return forceLocale;
-	return *sgOptions.Language.code;
+	return *GetOptions().Language.code;
 }
 
 void LanguageInitialize()

@@ -19,7 +19,7 @@ namespace devilution::net {
 
 int tcp_client::create(std::string_view addrstr)
 {
-	auto port = *sgOptions.Network.port;
+	auto port = *GetOptions().Network.port;
 	local_server = std::make_unique<tcp_server>(ioc, std::string(addrstr), port, *pktfty);
 	return join(local_server->LocalhostSelf());
 }
@@ -218,7 +218,7 @@ bool tcp_client::SNetLeaveGame(int type)
 
 std::string tcp_client::make_default_gamename()
 {
-	return std::string(sgOptions.Network.szBindAddress);
+	return std::string(GetOptions().Network.szBindAddress);
 }
 
 void tcp_client::RaiseIoHandlerError(const PacketError &error)

@@ -429,7 +429,7 @@ void UiHandleEvents(SDL_Event *event)
 	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
-			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			GetOptions().Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
 			if (gfnFullscreen != nullptr)
 				gfnFullscreen();
@@ -455,9 +455,9 @@ void UiHandleEvents(SDL_Event *event)
 			// For example, if the previous size was too large for a hardware cursor then it was invisible
 			// but may now become visible.
 			DoReinitializeHardwareCursor();
-		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST && *sgOptions.Gameplay.pauseOnFocusLoss) {
+		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST && *GetOptions().Gameplay.pauseOnFocusLoss) {
 			music_mute();
-		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED && *sgOptions.Gameplay.pauseOnFocusLoss) {
+		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED && *GetOptions().Gameplay.pauseOnFocusLoss) {
 			diablo_focus_unpause();
 		}
 	}

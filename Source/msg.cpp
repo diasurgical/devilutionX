@@ -2287,7 +2287,7 @@ size_t OnCheatExperience(const TCmd *pCmd, Player &player) // NOLINT(misc-unused
 		SendPacket(player, pCmd, sizeof(*pCmd));
 	else if (!player.isMaxCharacterLevel()) {
 		player._pExperience = player.getNextExperienceThreshold();
-		if (*sgOptions.Gameplay.experienceBar) {
+		if (*GetOptions().Gameplay.experienceBar) {
 			RedrawEverything();
 		}
 		NextPlrLevel(player);

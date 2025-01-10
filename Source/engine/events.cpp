@@ -143,7 +143,7 @@ EventHandler CurrentEventHandler;
 
 EventHandler SetEventHandler(EventHandler eventHandler)
 {
-	sgOptions.Padmapper.ReleaseAllActiveButtons();
+	GetOptions().Padmapper.ReleaseAllActiveButtons();
 
 	EventHandler previousHandler = CurrentEventHandler;
 	CurrentEventHandler = eventHandler;

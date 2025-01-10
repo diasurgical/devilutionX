@@ -32,7 +32,7 @@ OptionalOwnedClxSpriteList playerExpTags;
 
 void InitMonsterHealthBar()
 {
-	if (!*sgOptions.Gameplay.enemyHealthBar)
+	if (!*GetOptions().Gameplay.enemyHealthBar)
 		return;
 
 	healthBox = LoadClx("data\\healthbox.clx");
@@ -59,7 +59,7 @@ void FreeMonsterHealthBar()
 
 void DrawMonsterHealthBar(const Surface &out)
 {
-	if (!*sgOptions.Gameplay.enemyHealthBar)
+	if (!*GetOptions().Gameplay.enemyHealthBar)
 		return;
 
 	if (leveltype == DTYPE_TOWN)
@@ -120,7 +120,7 @@ void DrawMonsterHealthBar(const Surface &out)
 		}
 	};
 
-	if (*sgOptions.Gameplay.showMonsterType) {
+	if (*GetOptions().Gameplay.showMonsterType) {
 		Uint8 borderColor = GetBorderColor(monster.data().monsterClass);
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);

@@ -393,7 +393,7 @@ void InitLevelChange(Player &player)
 bool DoWalk(Player &player)
 {
 	// Play walking sound effect on certain animation frames
-	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
+	if (*GetOptions().Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.currentFrame == 0
 		    || player.AnimInfo.currentFrame == 4) {
 			PlaySfxLoc(SfxID::Walk, player.position.tile);
@@ -1409,7 +1409,7 @@ void ValidatePlayer()
 	// This lets us catch cases where someone is editing experience directly through memory modification and reset their experience back to the expected cap.
 	if (myPlayer._pExperience > myPlayer.getNextExperienceThreshold()) {
 		myPlayer._pExperience = myPlayer.getNextExperienceThreshold();
-		if (*sgOptions.Gameplay.experienceBar) {
+		if (*GetOptions().Gameplay.experienceBar) {
 			RedrawEverything();
 		}
 	}
@@ -2380,7 +2380,7 @@ void Player::_addExperience(uint32_t experience, int levelDelta)
 	// ensure we only add enough experience to reach the max experience cap so we don't overflow
 	_pExperience += std::min(clampedExp, maxExperience - _pExperience);
 
-	if (*sgOptions.Gameplay.experienceBar) {
+	if (*GetOptions().Gameplay.experienceBar) {
 		RedrawEverything();
 	}
 

@@ -457,7 +457,7 @@ void ReleaseKey(SDL_Keycode vkey)
 	remap_keyboard_key(&vkey);
 	if (sgnTimeoutCurs != CURSOR_NONE)
 		return;
-	sgOptions.Keymapper.KeyReleased(vkey);
+	GetOptions().Keymapper.KeyReleased(vkey);
 }
 
 void ClosePanels()
@@ -477,6 +477,7 @@ void ClosePanels()
 
 void PressKey(SDL_Keycode vkey, uint16_t modState)
 {
+	Options &options = GetOptions();
 	remap_keyboard_key(&vkey);
 
 	if (vkey == SDLK_UNKNOWN)
@@ -490,10 +491,10 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		sgOptions.Keymapper.KeyPressed(vkey);
+		options.Keymapper.KeyPressed(vkey);
 		if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
 			if ((modState & KMOD_ALT) != 0) {
-				sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+				options.Graphics.fullscreen.SetValue(!IsFullScreen());
 				SaveOptions();
 			} else {
 				TypeChatMessage();
@@ -524,11 +525,11 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 	}
 
-	sgOptions.Keymapper.KeyPressed(vkey);
+	options.Keymapper.KeyPressed(vkey);
 
 	if (PauseMode == 2) {
 		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (modState & KMOD_ALT) != 0) {
-			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			options.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
 		}
 		return;
@@ -566,7 +567,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	case SDLK_RETURN:
 	case SDLK_KP_ENTER:
 		if ((modState & KMOD_ALT) != 0) {
-			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			options.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
 		} else if (ActiveStore != TalkID::None) {
 			StoreEnter();
@@ -655,7 +656,7 @@ void HandleMouseButtonDown(Uint8 button, uint16_t modState)
 			RightMouseDown((modState & KMOD_SHIFT) != 0);
 			break;
 		default:
-			sgOptions.Keymapper.KeyPressed(button | KeymapperMouseButtonMask);
+			GetOptions().Keymapper.KeyPressed(button | KeymapperMouseButtonMask);
 			break;
 		}
 	}
@@ -671,7 +672,7 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 	} else {
-		sgOptions.Keymapper.KeyReleased(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
+		GetOptions().Keymapper.KeyReleased(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
 	}
 }
 
@@ -682,6 +683,7 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 
 void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
+	[[maybe_unused]] Options &options = GetOptions();
 	StaticVector<ControllerButtonEvent, 4> ctrlEvents = ToControllerButtonEvents(event);
 	for (ControllerButtonEvent ctrlEvent : ctrlEvents) {
 		GameAction action;
@@ -755,7 +757,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			} else if (IsStashOpen) {
 				Stash.PreviousPage();
 			} else {
-				sgOptions.Keymapper.KeyPressed(MouseScrollUpButton);
+				options.Keymapper.KeyPressed(MouseScrollUpButton);
 			}
 		} else if (event.wheel.y < 0) { // down
 			if (ActiveStore != TalkID::None) {
@@ -769,12 +771,12 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			} else if (IsStashOpen) {
 				Stash.NextPage();
 			} else {
-				sgOptions.Keymapper.KeyPressed(MouseScrollDownButton);
+				options.Keymapper.KeyPressed(MouseScrollDownButton);
 			}
 		} else if (event.wheel.x > 0) { // left
-			sgOptions.Keymapper.KeyPressed(MouseScrollLeftButton);
+			options.Keymapper.KeyPressed(MouseScrollLeftButton);
 		} else if (event.wheel.x < 0) { // right
-			sgOptions.Keymapper.KeyPressed(MouseScrollRightButton);
+			options.Keymapper.KeyPressed(MouseScrollRightButton);
 		}
 		break;
 #endif
@@ -1150,7 +1152,7 @@ void CheckArchivesUpToDate()
 
 void ApplicationInit()
 {
-	if (*sgOptions.Graphics.showFPS)
+	if (*GetOptions().Graphics.showFPS)
 		EnableFrameCount();
 
 	init_create_window();
@@ -1166,9 +1168,9 @@ void ApplicationInit()
 
 void DiabloInit()
 {
-	if (forceSpawn || *sgOptions.GameMode.shareware)
+	if (forceSpawn || *GetOptions().GameMode.shareware)
 		gbIsSpawn = true;
-	if (forceDiablo || *sgOptions.GameMode.gameMode == StartUpGameMode::Diablo)
+	if (forceDiablo || *GetOptions().GameMode.gameMode == StartUpGameMode::Diablo)
 		gbIsHellfire = false;
 	if (forceHellfire)
 		gbIsHellfire = true;
@@ -1176,7 +1178,7 @@ void DiabloInit()
 	gbIsHellfireSaveGame = gbIsHellfire;
 
 	for (size_t i = 0; i < QuickMessages.size(); i++) {
-		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
+		auto &messages = GetOptions().Chat.szHotKeyMsgs[i];
 		if (messages.empty()) {
 			messages.emplace_back(_(QuickMessages[i].message));
 		}
@@ -1189,7 +1191,7 @@ void DiabloInit()
 	UiInitialize();
 	was_ui_init = true;
 
-	if (gbIsHellfire && !forceHellfire && *sgOptions.GameMode.gameMode == StartUpGameMode::Ask) {
+	if (gbIsHellfire && !forceHellfire && *GetOptions().GameMode.gameMode == StartUpGameMode::Ask) {
 		UiSelStartUpGameOption();
 		if (!gbIsHellfire) {
 			// Reinitialize the UI Elements because we changed the game
@@ -1220,10 +1222,10 @@ void DiabloSplash()
 	if (!gbShowIntro)
 		return;
 
-	if (*sgOptions.StartUp.splash == StartUpSplash::LogoAndTitleDialog)
+	if (*GetOptions().StartUp.splash == StartUpSplash::LogoAndTitleDialog)
 		play_movie("gendata\\logo.smk", true);
 
-	auto &intro = gbIsHellfire ? sgOptions.StartUp.hellfireIntro : sgOptions.StartUp.diabloIntro;
+	auto &intro = gbIsHellfire ? GetOptions().StartUp.hellfireIntro : GetOptions().StartUp.diabloIntro;
 
 	if (*intro != StartUpIntro::Off) {
 		if (gbIsHellfire)
@@ -1236,7 +1238,7 @@ void DiabloSplash()
 		}
 	}
 
-	if (IsAnyOf(*sgOptions.StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog))
+	if (IsAnyOf(*GetOptions().StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog))
 		UiTitleDialog();
 }
 
@@ -1674,8 +1676,9 @@ bool CanAutomapBeToggledOff()
 
 void InitKeymapActions()
 {
+	Options &options = GetOptions();
 	for (uint32_t i = 0; i < 8; ++i) {
-		sgOptions.Keymapper.AddAction(
+		options.Keymapper.AddAction(
 		    "BeltItem{}",
 		    N_("Belt item {}"),
 		    N_("Use Belt item."),
@@ -1691,7 +1694,7 @@ void InitKeymapActions()
 		    i + 1);
 	}
 	for (uint32_t i = 0; i < NumHotkeys; ++i) {
-		sgOptions.Keymapper.AddAction(
+		options.Keymapper.AddAction(
 		    "QuickSpell{}",
 		    N_("Quick spell {}"),
 		    N_("Hotkey for skill or spell."),
@@ -1701,7 +1704,7 @@ void InitKeymapActions()
 				    SetSpeedSpell(i);
 				    return;
 			    }
-			    if (!*sgOptions.Gameplay.quickCast)
+			    if (!*GetOptions().Gameplay.quickCast)
 				    ToggleSpell(i);
 			    else
 				    QuickCast(i);
@@ -1710,7 +1713,7 @@ void InitKeymapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "QuickSpellPrevious",
 	    N_("Previous quick spell"),
 	    N_("Selects the previous quick spell (cycles)."),
@@ -1718,7 +1721,7 @@ void InitKeymapActions()
 	    [] { CycleSpellHotkeys(false); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "QuickSpellNext",
 	    N_("Next quick spell"),
 	    N_("Selects the next quick spell (cycles)."),
@@ -1726,7 +1729,7 @@ void InitKeymapActions()
 	    [] { CycleSpellHotkeys(true); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "UseHealthPotion",
 	    N_("Use health potion"),
 	    N_("Use health potions from belt."),
@@ -1734,7 +1737,7 @@ void InitKeymapActions()
 	    [] { UseBeltItem(BeltItemType::Healing); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "UseManaPotion",
 	    N_("Use mana potion"),
 	    N_("Use mana potions from belt."),
@@ -1742,7 +1745,7 @@ void InitKeymapActions()
 	    [] { UseBeltItem(BeltItemType::Mana); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "DisplaySpells",
 	    N_("Speedbook"),
 	    N_("Open Speedbook."),
@@ -1750,7 +1753,7 @@ void InitKeymapActions()
 	    DisplaySpellsKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "QuickSave",
 	    N_("Quick save"),
 	    N_("Saves the game."),
@@ -1758,7 +1761,7 @@ void InitKeymapActions()
 	    [] { gamemenu_save_game(false); },
 	    nullptr,
 	    [&]() { return !gbIsMultiplayer && CanPlayerTakeAction(); });
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "QuickLoad",
 	    N_("Quick load"),
 	    N_("Loads the game."),
@@ -1767,14 +1770,14 @@ void InitKeymapActions()
 	    nullptr,
 	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && ActiveStore == TalkID::None && IsGameRunning(); });
 #ifndef NOEXIT
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "QuitGame",
 	    N_("Quit game"),
 	    N_("Closes the game."),
 	    SDLK_UNKNOWN,
 	    [] { gamemenu_quit_game(false); });
 #endif
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "StopHero",
 	    N_("Stop hero"),
 	    N_("Stops walking and cancel pending actions."),
@@ -1782,21 +1785,21 @@ void InitKeymapActions()
 	    [] { MyPlayer->Stop(); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Item Highlighting",
 	    N_("Item highlighting"),
 	    N_("Show/hide items on ground."),
 	    SDLK_LALT,
 	    [] { HighlightKeyPressed(true); },
 	    [] { HighlightKeyPressed(false); });
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Toggle Item Highlighting",
 	    N_("Toggle item highlighting"),
 	    N_("Permanent show/hide items on ground."),
 	    SDLK_RCTRL,
 	    nullptr,
 	    [] { ToggleItemLabelHighlight(); });
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Toggle Automap",
 	    N_("Toggle automap"),
 	    N_("Toggles if automap is displayed."),
@@ -1804,7 +1807,7 @@ void InitKeymapActions()
 	    DoAutoMap,
 	    nullptr,
 	    IsGameRunning);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "CycleAutomapType",
 	    N_("Cycle map type"),
 	    N_("Opaque -> Transparent -> Minimap -> None"),
@@ -1813,7 +1816,7 @@ void InitKeymapActions()
 	    nullptr,
 	    IsGameRunning);
 
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Inventory",
 	    N_("Inventory"),
 	    N_("Open Inventory screen."),
@@ -1821,7 +1824,7 @@ void InitKeymapActions()
 	    InventoryKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Character",
 	    N_("Character"),
 	    N_("Open Character screen."),
@@ -1829,7 +1832,7 @@ void InitKeymapActions()
 	    CharacterSheetKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "QuestLog",
 	    N_("Quest log"),
 	    N_("Open Quest log."),
@@ -1837,7 +1840,7 @@ void InitKeymapActions()
 	    QuestLogKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "SpellBook",
 	    N_("Spellbook"),
 	    N_("Open Spellbook."),
@@ -1846,7 +1849,7 @@ void InitKeymapActions()
 	    nullptr,
 	    CanPlayerTakeAction);
 	for (uint32_t i = 0; i < QuickMessages.size(); ++i) {
-		sgOptions.Keymapper.AddAction(
+		options.Keymapper.AddAction(
 		    "QuickMessage{}",
 		    N_("Quick Message {}"),
 		    N_("Use Quick Message in chat."),
@@ -1856,7 +1859,7 @@ void InitKeymapActions()
 		    nullptr,
 		    i + 1);
 	}
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Hide Info Screens",
 	    N_("Hide Info Screens"),
 	    N_("Hide all info screens."),
@@ -1880,30 +1883,30 @@ void InitKeymapActions()
 	    },
 	    nullptr,
 	    IsGameRunning);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Zoom",
 	    N_("Zoom"),
 	    N_("Zoom Game Screen."),
 	    'Z',
 	    [] {
-		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+		    GetOptions().Graphics.zoom.SetValue(!*GetOptions().Graphics.zoom);
 		    CalcViewportGeometry();
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Pause Game",
 	    N_("Pause Game"),
 	    N_("Pauses the game."),
 	    'P',
 	    diablo_pause_game);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Pause Game (Alternate)",
 	    N_("Pause Game (Alternate)"),
 	    N_("Pauses the game."),
 	    SDLK_PAUSE,
 	    diablo_pause_game);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "DecreaseGamma",
 	    N_("Decrease Gamma"),
 	    N_("Reduce screen brightness."),
@@ -1911,7 +1914,7 @@ void InitKeymapActions()
 	    DecreaseGamma,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "IncreaseGamma",
 	    N_("Increase Gamma"),
 	    N_("Increase screen brightness."),
@@ -1919,7 +1922,7 @@ void InitKeymapActions()
 	    IncreaseGamma,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Help",
 	    N_("Help"),
 	    N_("Open Help Screen."),
@@ -1927,14 +1930,14 @@ void InitKeymapActions()
 	    HelpKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "Screenshot",
 	    N_("Screenshot"),
 	    N_("Takes a screenshot."),
 	    SDLK_PRINTSCREEN,
 	    nullptr,
 	    CaptureScreen);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "GameInfo",
 	    N_("Game info"),
 	    N_("Displays game infos."),
@@ -1948,7 +1951,7 @@ void InitKeymapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "ChatLog",
 	    N_("Chat Log"),
 	    N_("Displays chat log."),
@@ -1956,7 +1959,7 @@ void InitKeymapActions()
 	    [] {
 		    ToggleChatLog();
 	    });
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "SortInv",
 	    N_("Sort Inventory"),
 	    N_("Sorts the inventory."),
@@ -1965,13 +1968,13 @@ void InitKeymapActions()
 		    ReorganizeInventory(*MyPlayer);
 	    });
 #ifdef _DEBUG
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "OpenConsole",
 	    N_("Console"),
 	    N_("Opens Lua console."),
 	    SDLK_BACKQUOTE,
 	    OpenConsole);
-	sgOptions.Keymapper.AddAction(
+	options.Keymapper.AddAction(
 	    "DebugToggle",
 	    "Debug toggle",
 	    "Programming is like magic.",
@@ -1980,13 +1983,14 @@ void InitKeymapActions()
 		    DebugToggle = !DebugToggle;
 	    });
 #endif
-	sgOptions.Keymapper.CommitActions();
+	options.Keymapper.CommitActions();
 }
 
 void InitPadmapActions()
 {
+	Options &options = GetOptions();
 	for (int i = 0; i < 8; ++i) {
-		sgOptions.Padmapper.AddAction(
+		options.Padmapper.AddAction(
 		    "BeltItem{}",
 		    N_("Belt item {}"),
 		    N_("Use Belt item."),
@@ -2002,7 +2006,7 @@ void InitPadmapActions()
 		    i + 1);
 	}
 	for (uint32_t i = 0; i < NumHotkeys; ++i) {
-		sgOptions.Padmapper.AddAction(
+		options.Padmapper.AddAction(
 		    "QuickSpell{}",
 		    N_("Quick spell {}"),
 		    N_("Hotkey for skill or spell."),
@@ -2012,7 +2016,7 @@ void InitPadmapActions()
 				    SetSpeedSpell(i);
 				    return;
 			    }
-			    if (!*sgOptions.Gameplay.quickCast)
+			    if (!*GetOptions().Gameplay.quickCast)
 				    ToggleSpell(i);
 			    else
 				    QuickCast(i);
@@ -2021,7 +2025,7 @@ void InitPadmapActions()
 		    CanPlayerTakeAction,
 		    i + 1);
 	}
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "PrimaryAction",
 	    N_("Primary action"),
 	    N_("Attack monsters, talk to towners, lift and place inventory items."),
@@ -2036,7 +2040,7 @@ void InitPadmapActions()
 		    LastMouseButtonAction = MouseActionType::None;
 	    },
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "SecondaryAction",
 	    N_("Secondary action"),
 	    N_("Open chests, interact with doors, pick up items."),
@@ -2051,7 +2055,7 @@ void InitPadmapActions()
 		    LastMouseButtonAction = MouseActionType::None;
 	    },
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "SpellAction",
 	    N_("Spell action"),
 	    N_("Cast the active spell."),
@@ -2066,7 +2070,7 @@ void InitPadmapActions()
 		    LastMouseButtonAction = MouseActionType::None;
 	    },
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "CancelAction",
 	    N_("Cancel action"),
 	    N_("Close menus."),
@@ -2092,37 +2096,37 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    [] { return DoomFlag || SpellSelectFlag || invflag || SpellbookFlag || QuestLogIsOpen || CharFlag; });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MoveUp",
 	    N_("Move up"),
 	    N_("Moves the player character up."),
 	    ControllerButton_BUTTON_DPAD_UP,
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MoveDown",
 	    N_("Move down"),
 	    N_("Moves the player character down."),
 	    ControllerButton_BUTTON_DPAD_DOWN,
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MoveLeft",
 	    N_("Move left"),
 	    N_("Moves the player character left."),
 	    ControllerButton_BUTTON_DPAD_LEFT,
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MoveRight",
 	    N_("Move right"),
 	    N_("Moves the player character right."),
 	    ControllerButton_BUTTON_DPAD_RIGHT,
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "StandGround",
 	    N_("Stand ground"),
 	    N_("Hold to prevent the player from moving."),
 	    ControllerButton_NONE,
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "ToggleStandGround",
 	    N_("Toggle stand ground"),
 	    N_("Toggle whether the player moves."),
@@ -2130,7 +2134,7 @@ void InitPadmapActions()
 	    [] { StandToggle = !StandToggle; },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "UseHealthPotion",
 	    N_("Use health potion"),
 	    N_("Use health potions from belt."),
@@ -2138,7 +2142,7 @@ void InitPadmapActions()
 	    [] { UseBeltItem(BeltItemType::Healing); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "UseManaPotion",
 	    N_("Use mana potion"),
 	    N_("Use mana potions from belt."),
@@ -2146,7 +2150,7 @@ void InitPadmapActions()
 	    [] { UseBeltItem(BeltItemType::Mana); },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Character",
 	    N_("Character"),
 	    N_("Open Character screen."),
@@ -2154,7 +2158,7 @@ void InitPadmapActions()
 	    [] {
 		    ProcessGameAction(GameAction { GameActionType_TOGGLE_CHARACTER_INFO });
 	    });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Inventory",
 	    N_("Inventory"),
 	    N_("Open Inventory screen."),
@@ -2164,7 +2168,7 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "QuestLog",
 	    N_("Quest log"),
 	    N_("Open Quest log."),
@@ -2174,7 +2178,7 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "SpellBook",
 	    N_("Spellbook"),
 	    N_("Open Spellbook."),
@@ -2184,7 +2188,7 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "DisplaySpells",
 	    N_("Speedbook"),
 	    N_("Open Speedbook."),
@@ -2194,57 +2198,57 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Toggle Automap",
 	    N_("Toggle automap"),
 	    N_("Toggles if automap is displayed."),
 	    ControllerButton_BUTTON_LEFTSTICK,
 	    DoAutoMap);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MouseUp",
 	    N_("Move mouse up"),
 	    N_("Simulates upward mouse movement."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_UP },
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MouseDown",
 	    N_("Move mouse down"),
 	    N_("Simulates downward mouse movement."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_DOWN },
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MouseLeft",
 	    N_("Move mouse left"),
 	    N_("Simulates leftward mouse movement."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_LEFT },
 	    [] {});
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "MouseRight",
 	    N_("Move mouse right"),
 	    N_("Simulates rightward mouse movement."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_DPAD_RIGHT },
 	    [] {});
 	auto leftMouseDown = [] {
-		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		ControllerButtonCombo standGroundCombo = GetOptions().Padmapper.ButtonComboForAction("StandGround");
 		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
 		sgbMouseDown = CLICK_LEFT;
 		LeftMouseDown(standGround ? KMOD_SHIFT : KMOD_NONE);
 	};
 	auto leftMouseUp = [] {
-		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		ControllerButtonCombo standGroundCombo = GetOptions().Padmapper.ButtonComboForAction("StandGround");
 		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		LeftMouseUp(standGround ? KMOD_SHIFT : KMOD_NONE);
 	};
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "LeftMouseClick1",
 	    N_("Left mouse click"),
 	    N_("Simulates the left mouse button."),
 	    ControllerButton_BUTTON_RIGHTSTICK,
 	    leftMouseDown,
 	    leftMouseUp);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "LeftMouseClick2",
 	    N_("Left mouse click"),
 	    N_("Simulates the left mouse button."),
@@ -2252,7 +2256,7 @@ void InitPadmapActions()
 	    leftMouseDown,
 	    leftMouseUp);
 	auto rightMouseDown = [] {
-		ControllerButtonCombo standGroundCombo = sgOptions.Padmapper.ButtonComboForAction("StandGround");
+		ControllerButtonCombo standGroundCombo = GetOptions().Padmapper.ButtonComboForAction("StandGround");
 		bool standGround = StandToggle || IsControllerButtonComboPressed(standGroundCombo);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_RIGHT;
@@ -2262,28 +2266,28 @@ void InitPadmapActions()
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 	};
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "RightMouseClick1",
 	    N_("Right mouse click"),
 	    N_("Simulates the right mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSTICK },
 	    rightMouseDown,
 	    rightMouseUp);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "RightMouseClick2",
 	    N_("Right mouse click"),
 	    N_("Simulates the right mouse button."),
 	    { ControllerButton_BUTTON_BACK, ControllerButton_BUTTON_RIGHTSHOULDER },
 	    rightMouseDown,
 	    rightMouseUp);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "PadHotspellMenu",
 	    N_("Gamepad hotspell menu"),
 	    N_("Hold to set or use spell hotkeys."),
 	    ControllerButton_BUTTON_BACK,
 	    [] { PadHotspellMenuActive = true; },
 	    [] { PadHotspellMenuActive = false; });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "PadMenuNavigator",
 	    N_("Gamepad menu navigator"),
 	    N_("Hold to access gamepad menu navigation."),
@@ -2299,7 +2303,7 @@ void InitPadmapActions()
 		if (!inMenu)
 			gamemenu_on();
 	};
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "ToggleGameMenu1",
 	    N_("Toggle game menu"),
 	    N_("Opens the game menu."),
@@ -2308,7 +2312,7 @@ void InitPadmapActions()
 	        ControllerButton_BUTTON_START,
 	    },
 	    toggleGameMenu);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "ToggleGameMenu2",
 	    N_("Toggle game menu"),
 	    N_("Opens the game menu."),
@@ -2317,7 +2321,7 @@ void InitPadmapActions()
 	        ControllerButton_BUTTON_BACK,
 	    },
 	    toggleGameMenu);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "QuickSave",
 	    N_("Quick save"),
 	    N_("Saves the game."),
@@ -2325,7 +2329,7 @@ void InitPadmapActions()
 	    [] { gamemenu_save_game(false); },
 	    nullptr,
 	    [&]() { return !gbIsMultiplayer && CanPlayerTakeAction(); });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "QuickLoad",
 	    N_("Quick load"),
 	    N_("Loads the game."),
@@ -2333,21 +2337,21 @@ void InitPadmapActions()
 	    [] { gamemenu_load_game(false); },
 	    nullptr,
 	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && ActiveStore == TalkID::None && IsGameRunning(); });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Item Highlighting",
 	    N_("Item highlighting"),
 	    N_("Show/hide items on ground."),
 	    ControllerButton_NONE,
 	    [] { HighlightKeyPressed(true); },
 	    [] { HighlightKeyPressed(false); });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Toggle Item Highlighting",
 	    N_("Toggle item highlighting"),
 	    N_("Permanent show/hide items on ground."),
 	    ControllerButton_NONE,
 	    nullptr,
 	    [] { ToggleItemLabelHighlight(); });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Hide Info Screens",
 	    N_("Hide Info Screens"),
 	    N_("Hide all info screens."),
@@ -2371,24 +2375,24 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    IsGameRunning);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Zoom",
 	    N_("Zoom"),
 	    N_("Zoom Game Screen."),
 	    ControllerButton_NONE,
 	    [] {
-		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
+		    GetOptions().Graphics.zoom.SetValue(!*GetOptions().Graphics.zoom);
 		    CalcViewportGeometry();
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Pause Game",
 	    N_("Pause Game"),
 	    N_("Pauses the game."),
 	    ControllerButton_NONE,
 	    diablo_pause_game);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "DecreaseGamma",
 	    N_("Decrease Gamma"),
 	    N_("Reduce screen brightness."),
@@ -2396,7 +2400,7 @@ void InitPadmapActions()
 	    DecreaseGamma,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "IncreaseGamma",
 	    N_("Increase Gamma"),
 	    N_("Increase screen brightness."),
@@ -2404,7 +2408,7 @@ void InitPadmapActions()
 	    IncreaseGamma,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Help",
 	    N_("Help"),
 	    N_("Open Help Screen."),
@@ -2412,14 +2416,14 @@ void InitPadmapActions()
 	    HelpKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "Screenshot",
 	    N_("Screenshot"),
 	    N_("Takes a screenshot."),
 	    ControllerButton_NONE,
 	    nullptr,
 	    CaptureScreen);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "GameInfo",
 	    N_("Game info"),
 	    N_("Displays game infos."),
@@ -2433,7 +2437,7 @@ void InitPadmapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "SortInv",
 	    N_("Sort Inventory"),
 	    N_("Sorts the inventory."),
@@ -2441,7 +2445,7 @@ void InitPadmapActions()
 	    [] {
 		    ReorganizeInventory(*MyPlayer);
 	    });
-	sgOptions.Padmapper.AddAction(
+	options.Padmapper.AddAction(
 	    "ChatLog",
 	    N_("Chat Log"),
 	    N_("Displays chat log."),
@@ -2449,7 +2453,7 @@ void InitPadmapActions()
 	    [] {
 		    ToggleChatLog();
 	    });
-	sgOptions.Padmapper.CommitActions();
+	options.Padmapper.CommitActions();
 }
 
 void SetCursorPos(Point position)
@@ -3281,7 +3285,7 @@ bool game_loop(bool bStartup)
 
 void diablo_color_cyc_logic()
 {
-	if (!*sgOptions.Graphics.colorCycling)
+	if (!*GetOptions().Graphics.colorCycling)
 		return;
 
 	if (PauseMode != 0)

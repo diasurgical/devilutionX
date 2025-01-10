@@ -864,7 +864,10 @@ struct Options {
 	}
 };
 
-extern DVL_API_FOR_TEST Options sgOptions;
+/**
+ * @brief Get the Options singleton object
+ */
+[[nodiscard]] Options &GetOptions();
 
 bool HardwareCursorSupported();
 

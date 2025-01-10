@@ -1023,11 +1023,11 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
 
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
-		int multiplier = (*sgOptions.Graphics.zoom) ? 1 : 2;
+		int multiplier = (*GetOptions().Graphics.zoom) ? 1 : 2;
 		position += Displacement(Direction::East) * multiplier;
 		offset.deltaX += -TILE_WIDTH * multiplier / 2 / 2;
 
-		if (IsLeftPanelOpen() && !*sgOptions.Graphics.zoom) {
+		if (IsLeftPanelOpen() && !*GetOptions().Graphics.zoom) {
 			offset.deltaX += SidePanelSize.width;
 			// SidePanelSize.width accounted for in Zoom()
 		}
@@ -1065,7 +1065,7 @@ void CalcFirstTilePosition(Point &position, Displacement &offset)
 void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 {
 	// Limit rendering to the view area
-	const Surface &out = !*sgOptions.Graphics.zoom
+	const Surface &out = !*GetOptions().Graphics.zoom
 	    ? fullOut.subregionY(0, gnViewportHeight)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
@@ -1074,7 +1074,7 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
-		columns -= (*sgOptions.Graphics.zoom) ? 2 : 4;
+		columns -= (*GetOptions().Graphics.zoom) ? 2 : 4;
 	}
 
 	UpdateMissilesRendererData();
@@ -1112,7 +1112,7 @@ void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 	DrawFloor(out, position, Point {} + offset, rows, columns);
 	DrawTileContent(out, position, Point {} + offset, rows, columns);
 
-	if (*sgOptions.Graphics.zoom) {
+	if (*GetOptions().Graphics.zoom) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
 	}
 
@@ -1165,11 +1165,11 @@ void DrawView(const Surface &out, Point startPosition)
 				continue;
 			if (megaTiles)
 				pixelCoords += Displacement { 0, TILE_HEIGHT / 2 };
-			if (*sgOptions.Graphics.zoom)
+			if (*GetOptions().Graphics.zoom)
 				pixelCoords *= 2;
 			if (debugGridTextNeeded && GetDebugGridText(dunCoords, debugGridTextBuffer)) {
 				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
-				if (*sgOptions.Graphics.zoom)
+				if (*GetOptions().Graphics.zoom)
 					tileSize *= 2;
 				DrawString(out, debugGridTextBuffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize },
 				    { .flags = UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter });
@@ -1177,7 +1177,7 @@ void DrawView(const Surface &out, Point startPosition)
 			if (DebugGrid) {
 				int halfTileWidth = TILE_WIDTH / 2;
 				int halfTileHeight = TILE_HEIGHT / 2;
-				if (*sgOptions.Graphics.zoom) {
+				if (*GetOptions().Graphics.zoom) {
 					halfTileWidth *= 2;
 					halfTileHeight *= 2;
 				}
@@ -1426,7 +1426,7 @@ int RowsCoveredByPanel()
 	}
 
 	int rows = mainPanelSize.height / TILE_HEIGHT;
-	if (*sgOptions.Graphics.zoom) {
+	if (*GetOptions().Graphics.zoom) {
 		rows /= 2;
 	}
 
@@ -1441,7 +1441,7 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 	int x;
 	int y;
 
-	if (!*sgOptions.Graphics.zoom) {
+	if (!*GetOptions().Graphics.zoom) {
 		x = screenWidth % TILE_WIDTH;
 		y = viewportHeight % TILE_HEIGHT;
 	} else {
@@ -1472,7 +1472,7 @@ void TilesInView(int *rcolumns, int *rrows)
 		rows++;
 	}
 
-	if (*sgOptions.Graphics.zoom) {
+	if (*GetOptions().Graphics.zoom) {
 		// Half the number of tiles, rounded up
 		if ((columns & 1) != 0) {
 			columns++;
@@ -1490,14 +1490,14 @@ void TilesInView(int *rcolumns, int *rrows)
 
 void CalcViewportGeometry()
 {
-	const int zoomFactor = *sgOptions.Graphics.zoom ? 2 : 1;
+	const int zoomFactor = *GetOptions().Graphics.zoom ? 2 : 1;
 	const int screenWidth = GetScreenWidth() / zoomFactor;
 	const int screenHeight = GetScreenHeight() / zoomFactor;
 	const int panelHeight = GetMainPanel().size.height / zoomFactor;
 	const int pixelsToPanel = screenHeight - panelHeight;
 	Point playerPosition { screenWidth / 2, pixelsToPanel / 2 };
 
-	if (*sgOptions.Graphics.zoom)
+	if (*GetOptions().Graphics.zoom)
 		playerPosition.y += TILE_HEIGHT / 4;
 
 	const int tilesToTop = (playerPosition.y + TILE_HEIGHT - 1) / TILE_HEIGHT;
@@ -1705,9 +1705,9 @@ void DrawAndBlit()
 		DrawChatBox(out);
 	}
 	DrawXPBar(out);
-	if (*sgOptions.Gameplay.showHealthValues)
+	if (*GetOptions().Gameplay.showHealthValues)
 		DrawFlaskValues(out, { mainPanel.position.x + 134, mainPanel.position.y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
-	if (*sgOptions.Gameplay.showManaValues)
+	if (*GetOptions().Gameplay.showManaValues)
 		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 },
 		    (HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) || (MyPlayer->_pMana >> 6) <= 0) ? 0 : MyPlayer->_pMana >> 6,
 		    HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) ? 0 : MyPlayer->_pMaxMana >> 6);

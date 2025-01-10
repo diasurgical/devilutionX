@@ -171,7 +171,7 @@ void ItemFocused(size_t value)
 		optionDescription[0] = '\0';
 		if (vecItem->m_value < 0)
 			return;
-		auto *pCategory = sgOptions.GetCategories()[vecItem->m_value];
+		auto *pCategory = GetOptions().GetCategories()[vecItem->m_value];
 		UpdateDescription(*pCategory);
 	} break;
 	case ShownMenuType::Settings: {
@@ -255,7 +255,7 @@ void ItemSelected(size_t value)
 
 	switch (shownMenu) {
 	case ShownMenuType::Categories: {
-		selectedCategory = sgOptions.GetCategories()[vecItemValue];
+		selectedCategory = GetOptions().GetCategories()[vecItemValue];
 		endMenu = true;
 		shownMenu = ShownMenuType::Settings;
 	} break;
@@ -319,7 +319,7 @@ void EscPressed()
 
 void FullscreenChanged()
 {
-	auto *fullscreenOption = &sgOptions.Graphics.fullscreen;
+	auto *fullscreenOption = &GetOptions().Graphics.fullscreen;
 
 	for (auto &vecItem : vecDialogItems) {
 		int vecItemValue = vecItem->m_value;
@@ -386,7 +386,7 @@ void UiSettingsMenu()
 		switch (shownMenu) {
 		case ShownMenuType::Categories: {
 			size_t catIndex = 0;
-			for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+			for (OptionCategoryBase *pCategory : GetOptions().GetCategories()) {
 				for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
 					if (!IsValidEntry(pEntry))
 						continue;

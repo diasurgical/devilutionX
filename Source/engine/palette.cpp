@@ -42,9 +42,9 @@ bool sgbFadedIn = true;
 
 void LoadGamma()
 {
-	int gammaValue = *sgOptions.Graphics.gammaCorrection;
+	int gammaValue = *GetOptions().Graphics.gammaCorrection;
 	gammaValue = std::clamp(gammaValue, 30, 100);
-	sgOptions.Graphics.gammaCorrection.SetValue(gammaValue - gammaValue % 5);
+	GetOptions().Graphics.gammaCorrection.SetValue(gammaValue - gammaValue % 5);
 }
 
 Uint8 FindBestMatchForColor(std::array<SDL_Color, 256> &palette, SDL_Color color, int skipFrom, int skipTo)
@@ -185,7 +185,7 @@ void palette_update(int first, int ncolor)
 
 void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256> &src, int n)
 {
-	float g = *sgOptions.Graphics.gammaCorrection / 100.0F;
+	float g = *GetOptions().Graphics.gammaCorrection / 100.0F;
 
 	for (int i = 0; i < n; i++) {
 		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0F, g) * 256.0F);
@@ -257,7 +257,7 @@ void LoadRndLvlPal(dungeon_type l)
 	int rv = RandomIntBetween(1, 4);
 	char szFileName[27];
 	if (l == DTYPE_NEST) {
-		if (!*sgOptions.Graphics.alternateNestArt) {
+		if (!*GetOptions().Graphics.alternateNestArt) {
 			rv++;
 		}
 		*fmt::format_to(szFileName, R"(nlevels\l{0}data\l{0}base{1}.pal)", 6, rv) = '\0';
@@ -269,9 +269,9 @@ void LoadRndLvlPal(dungeon_type l)
 
 void IncreaseGamma()
 {
-	int gammaValue = *sgOptions.Graphics.gammaCorrection;
+	int gammaValue = *GetOptions().Graphics.gammaCorrection;
 	if (gammaValue < 100) {
-		sgOptions.Graphics.gammaCorrection.SetValue(std::min(gammaValue + 5, 100));
+		GetOptions().Graphics.gammaCorrection.SetValue(std::min(gammaValue + 5, 100));
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -279,9 +279,9 @@ void IncreaseGamma()
 
 void DecreaseGamma()
 {
-	int gammaValue = *sgOptions.Graphics.gammaCorrection;
+	int gammaValue = *GetOptions().Graphics.gammaCorrection;
 	if (gammaValue > 30) {
-		sgOptions.Graphics.gammaCorrection.SetValue(std::max(gammaValue - 5, 30));
+		GetOptions().Graphics.gammaCorrection.SetValue(std::max(gammaValue - 5, 30));
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -290,11 +290,11 @@ void DecreaseGamma()
 int UpdateGamma(int gamma)
 {
 	if (gamma > 0) {
-		sgOptions.Graphics.gammaCorrection.SetValue(130 - gamma);
+		GetOptions().Graphics.gammaCorrection.SetValue(130 - gamma);
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
-	return 130 - *sgOptions.Graphics.gammaCorrection;
+	return 130 - *GetOptions().Graphics.gammaCorrection;
 }
 
 void SetFadeLevel(int fadeval, bool updateHardwareCursor, const std::array<SDL_Color, 256> &srcPalette)

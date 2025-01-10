@@ -79,7 +79,7 @@ private:
 
 void ToggleItemLabelHighlight()
 {
-	sgOptions.Gameplay.showItemLabels.SetValue(!*sgOptions.Gameplay.showItemLabels);
+	GetOptions().Gameplay.showItemLabels.SetValue(!*GetOptions().Gameplay.showItemLabels);
 }
 
 void HighlightKeyPressed(bool pressed)
@@ -99,7 +99,7 @@ void ResetItemlabelHighlighted()
 
 bool IsHighlightingLabelsEnabled()
 {
-	return ActiveStore == TalkID::None && highlightKeyPressed != *sgOptions.Gameplay.showItemLabels;
+	return ActiveStore == TalkID::None && highlightKeyPressed != *GetOptions().Gameplay.showItemLabels;
 }
 
 void AddItemToLabelQueue(int id, Point position)
@@ -125,7 +125,7 @@ void AddItemToLabelQueue(int id, Point position)
 
 	position.x += *labelCenterOffsets[index];
 	position.y -= TILE_HEIGHT;
-	if (*sgOptions.Graphics.zoom) {
+	if (*GetOptions().Graphics.zoom) {
 		position *= 2;
 	}
 	position.x -= nameWidth / 2;

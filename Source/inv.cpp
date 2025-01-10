@@ -277,7 +277,7 @@ bool AutoEquip(Player &player, const Item &item, inv_body_loc bodyLocation, bool
 	if (persistItem) {
 		ChangeEquipment(player, bodyLocation, item, sendNetworkMessage);
 
-		if (sendNetworkMessage && *sgOptions.Audio.autoEquipSound) {
+		if (sendNetworkMessage && *GetOptions().Audio.autoEquipSound) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 		}
 
@@ -1352,23 +1352,23 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
+		return player._pClass != HeroClass::Monk && *GetOptions().Gameplay.autoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
-		return *sgOptions.Gameplay.autoEquipArmor;
+		return *GetOptions().Gameplay.autoEquipArmor;
 	}
 
 	if (item.isHelm()) {
-		return *sgOptions.Gameplay.autoEquipHelms;
+		return *GetOptions().Gameplay.autoEquipHelms;
 	}
 
 	if (item.isShield()) {
-		return *sgOptions.Gameplay.autoEquipShields;
+		return *GetOptions().Gameplay.autoEquipShields;
 	}
 
 	if (item.isJewelry()) {
-		return *sgOptions.Gameplay.autoEquipJewelry;
+		return *GetOptions().Gameplay.autoEquipJewelry;
 	}
 
 	return true;
@@ -1754,7 +1754,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii)
 	}
 
 	if (done) {
-		if (!autoEquipped && *sgOptions.Audio.itemPickupSound && &player == MyPlayer) {
+		if (!autoEquipped && *GetOptions().Audio.itemPickupSound && &player == MyPlayer) {
 			PlaySFX(SfxID::GrabItem);
 		}
 
@@ -2086,7 +2086,7 @@ bool UseInvItem(int cii)
 		speedlist = true;
 
 		// If selected speedlist item exists in InvList, use the InvList item.
-		for (int i = 0; i < player._pNumInv && *sgOptions.Gameplay.autoRefillBelt; i++) {
+		for (int i = 0; i < player._pNumInv && *GetOptions().Gameplay.autoRefillBelt; i++) {
 			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
 				c = i;
 				item = &player.InvList[c];
@@ -2097,7 +2097,7 @@ bool UseInvItem(int cii)
 		}
 
 		// If speedlist item is not inventory, use same item at the end of the speedlist if exists.
-		if (speedlist && *sgOptions.Gameplay.autoRefillBelt) {
+		if (speedlist && *GetOptions().Gameplay.autoRefillBelt) {
 			for (int i = INVITEM_BELT_LAST - INVITEM_BELT_FIRST; i > c; i--) {
 				Item &candidate = player.SpdList[i];
 

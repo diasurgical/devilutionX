@@ -282,7 +282,7 @@ void GamemenuSpeed(bool bActivate)
 		sgGameInitInfo.nTickRate = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
 	}
 
-	sgOptions.Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
+	GetOptions().Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 }
 

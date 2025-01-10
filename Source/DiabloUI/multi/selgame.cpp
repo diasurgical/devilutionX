@@ -115,9 +115,9 @@ void UiInitGameSelectionList(std::string_view search)
 	}
 
 	if (provider == SELCONN_ZT) {
-		CopyUtf8(selgame_Ip, sgOptions.Network.szPreviousZTGame, sizeof(selgame_Ip));
+		CopyUtf8(selgame_Ip, GetOptions().Network.szPreviousZTGame, sizeof(selgame_Ip));
 	} else {
-		CopyUtf8(selgame_Ip, sgOptions.Network.szPreviousHost, sizeof(selgame_Ip));
+		CopyUtf8(selgame_Ip, GetOptions().Network.szPreviousHost, sizeof(selgame_Ip));
 	}
 
 	selgame_FreeVectors();
@@ -622,9 +622,9 @@ void selgame_Password_Select(size_t /*value*/)
 			for (unsigned int i = 0; i < (sizeof(selgame_Ip) / sizeof(selgame_Ip[0])); i++) {
 				selgame_Ip[i] = (selgame_Ip[i] >= 'A' && selgame_Ip[i] <= 'Z') ? selgame_Ip[i] + 'a' - 'A' : selgame_Ip[i];
 			}
-			strcpy(sgOptions.Network.szPreviousZTGame, selgame_Ip);
+			strcpy(GetOptions().Network.szPreviousZTGame, selgame_Ip);
 		} else {
-			strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
+			strcpy(GetOptions().Network.szPreviousHost, selgame_Ip);
 		}
 		if (allowJoin && SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
 			if (!IsGameCompatibleWithErrorMessage(*m_game_data)) {
@@ -657,9 +657,9 @@ void selgame_Password_Select(size_t /*value*/)
 
 	m_game_data->nDifficulty = nDifficulty;
 	m_game_data->nTickRate = nTickRate;
-	m_game_data->bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
-	m_game_data->bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
-	m_game_data->bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
+	m_game_data->bRunInTown = *GetOptions().Gameplay.runInTown ? 1 : 0;
+	m_game_data->bTheoQuest = *GetOptions().Gameplay.theoQuest ? 1 : 0;
+	m_game_data->bCowQuest = *GetOptions().Gameplay.cowQuest ? 1 : 0;
 
 	GameData gameInitInfo = *m_game_data;
 	gameInitInfo.swapLE();

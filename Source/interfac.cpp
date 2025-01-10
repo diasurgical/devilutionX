@@ -473,7 +473,7 @@ void InitRendering()
 void CheckShouldSkipRendering()
 {
 	if (!ProgressEventHandlerState.skipRendering) return;
-	const bool shouldSkip = ProgressEventHandlerState.loadStartedAt + *sgOptions.Gameplay.skipLoadingScreenThresholdMs > SDL_GetTicks();
+	const bool shouldSkip = ProgressEventHandlerState.loadStartedAt + *GetOptions().Gameplay.skipLoadingScreenThresholdMs > SDL_GetTicks();
 	if (shouldSkip) return;
 	ProgressEventHandlerState.skipRendering = false;
 	if (!HeadlessMode) InitRendering();
