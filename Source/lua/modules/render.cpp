@@ -4,13 +4,22 @@
 
 #include "engine/dx.h"
 #include "engine/render/text_render.hpp"
+#include "lua/metadoc.hpp"
+#include "utils/display.h"
 
 namespace devilution {
 
 sol::table LuaRenderModule(sol::state_view &lua)
 {
-	return lua.create_table_with(
-	    "string", [](std::string_view text, int x, int y) { DrawString(GlobalBackBuffer(), text, { x, y }); });
+	sol::table table = lua.create_table();
+	SetDocumented(table, "string", "(text: string, x: integer, y: integer)",
+	    "Renders a string at the given coordinates",
+	    [](std::string_view text, int x, int y) { DrawString(GlobalBackBuffer(), text, { x, y }); });
+	SetDocumented(table, "screen_width", "()",
+	    "Returns the screen width", []() { return gnScreenWidth; });
+	SetDocumented(table, "screen_height", "()",
+	    "Returns the screen height", []() { return gnScreenHeight; });
+	return table;
 }
 
 } // namespace devilution
