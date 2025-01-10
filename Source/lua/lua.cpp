@@ -11,6 +11,7 @@
 #include "appfat.h"
 #include "engine/assets.hpp"
 #include "lua/modules/audio.hpp"
+#include "lua/modules/i18n.hpp"
 #include "lua/modules/log.hpp"
 #include "lua/modules/render.hpp"
 #include "options.h"
@@ -232,6 +233,7 @@ void LuaInitialize()
 	    "devilutionx.dev", LuaDevModule(lua),
 #endif
 	    "devilutionx.version", PROJECT_VERSION,
+	    "devilutionx.i18n", LuaI18nModule(lua),
 	    "devilutionx.log", LuaLogModule(lua),
 	    "devilutionx.audio", LuaAudioModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
