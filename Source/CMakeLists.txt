@@ -149,7 +149,6 @@ set(libdevilutionx_SRCS
   utils/cl2_to_clx.cpp
   utils/display.cpp
   utils/language.cpp
-  utils/logged_fstream.cpp
   utils/pcx_to_clx.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
@@ -291,6 +290,14 @@ target_link_dependencies(libdevilutionx_lighting PUBLIC
   tl
 )
 
+add_devilutionx_object_library(libdevilutionx_logged_fstream
+  utils/logged_fstream.cpp
+)
+target_link_dependencies(libdevilutionx_logged_fstream PUBLIC
+  libdevilutionx_file_util
+  libdevilutionx_log
+)
+
 add_devilutionx_object_library(libdevilutionx_items
   itemdat.cpp
   items.cpp
@@ -377,6 +384,7 @@ if(SUPPORTS_MPQ)
     tl
     libmpq
     libdevilutionx_file_util
+    libdevilutionx_logged_fstream
     libdevilutionx_pkware_encrypt
     libdevilutionx_strings
   )
@@ -404,6 +412,7 @@ target_link_dependencies(libdevilutionx_options PUBLIC
   ${LUA_LIBRARIES}
   sol2::sol2
   libdevilutionx_game_mode
+  libdevilutionx_logged_fstream
   libdevilutionx_strings
   libdevilutionx_ini
 )
@@ -474,6 +483,7 @@ target_link_dependencies(libdevilutionx_txtdata PUBLIC
   fmt::fmt
   tl
   libdevilutionx_assets
+  libdevilutionx_parse_int
   libdevilutionx_strings
 )
 
@@ -502,6 +512,8 @@ else()
     fmt::fmt
     tl
     unordered_dense::unordered_dense
+    libdevilutionx_options
+    libdevilutionx_random
     libdevilutionx_sdl2_to_1_2_backports
   )
 endif()

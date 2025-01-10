@@ -31,4 +31,10 @@ namespace devilution {
 	std::abort();
 }
 
+[[noreturn]] void InsertCDDlg(std::string_view archiveName)
+{
+	std::cerr << "InsertCDDlg error: " << archiveName << std::endl;
+	std::abort();
+}
+
 } // namespace devilution
