@@ -149,6 +149,7 @@ set(devilutionx_assets
   lua_internal/get_lua_function_signature.lua
   lua/devilutionx/events.lua
   lua/inspect.lua
+  lua/mods/clock/init.lua
   lua/repl_prelude.lua
   nlevels/cutl5w.clx
   nlevels/cutl6w.clx

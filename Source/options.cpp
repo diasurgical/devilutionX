@@ -1829,7 +1829,15 @@ std::vector<ModOptions::ModEntry> &ModOptions::GetModEntries()
 	if (modEntries)
 		return *modEntries;
 
-	std::vector<std::string> modNames = ini->getKeys(name);
+	std::vector<std::string> modNames = ini->getKeys(key);
+
+	// Add mods available by default:
+	for (const std::string_view modName : { "clock" }) {
+		if (c_find(modNames, modName) != modNames.end()) continue;
+		ini->set(key, modName, false);
+		modNames.emplace_back(modName);
+	}
+
 	std::vector<ModOptions::ModEntry> &newModEntries = modEntries.emplace();
 	for (auto &modName : modNames) {
 		newModEntries.emplace_back(modName);
