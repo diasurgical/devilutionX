@@ -119,6 +119,7 @@ set(libdevilutionx_SRCS
   lua/modules/dev/quests.cpp
   lua/modules/dev/search.cpp
   lua/modules/dev/towners.cpp
+  lua/modules/i18n.cpp
   lua/modules/log.cpp
   lua/modules/render.cpp
   lua/repl.cpp
