@@ -29,6 +29,7 @@
 #include "platform/locale.hpp"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
+#include "quick_messages.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/file_util.h"
@@ -252,7 +253,7 @@ void LoadOptions()
 	ini->getUtf8Buf("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame, sizeof(sgOptions.Network.szPreviousZTGame));
 	ini->getUtf8Buf("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost));
 
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
+	for (size_t i = 0; i < QuickMessages.size(); i++) {
 		std::span<const Ini::Value> values = ini->get("NetMsg", QuickMessages[i].key);
 		std::vector<std::string> &result = sgOptions.Chat.szHotKeyMsgs[i];
 		result.clear();
@@ -289,7 +290,7 @@ void SaveOptions()
 	ini->set("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame);
 	ini->set("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
+	for (size_t i = 0; i < QuickMessages.size(); i++) {
 		ini->set("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
 	}
 

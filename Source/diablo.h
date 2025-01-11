@@ -110,15 +110,6 @@ void diablo_color_cyc_logic();
 extern bool DebugDisableNetworkTimeout;
 #endif
 
-struct QuickMessage {
-	/** Config variable names for quick message */
-	const char *const key;
-	/** Default quick message */
-	const char *const message;
-};
-
-constexpr size_t QUICK_MESSAGE_OPTIONS = 10;
-extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 /**
  * @brief Specifies what game logic step is currently executed
  */

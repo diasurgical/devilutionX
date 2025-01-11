@@ -81,6 +81,7 @@
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
+#include "quick_messages.hpp"
 #include "restrict.h"
 #include "stores.h"
 #include "storm/storm_net.hpp"
@@ -134,18 +135,6 @@ bool DebugDisableNetworkTimeout = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
 GameLogicStep gGameLogicStep = GameLogicStep::None;
-QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
-	{ "QuickMessage1", N_("I need help! Come here!") },
-	{ "QuickMessage2", N_("Follow me.") },
-	{ "QuickMessage3", N_("Here's something for you.") },
-	{ "QuickMessage4", N_("Now you DIE!") },
-	{ "QuickMessage5", N_("Heal yourself!") },
-	{ "QuickMessage6", N_("Watch out!") },
-	{ "QuickMessage7", N_("Thanks.") },
-	{ "QuickMessage8", N_("Retreat!") },
-	{ "QuickMessage9", N_("Sorry.") },
-	{ "QuickMessage10", N_("I'm waiting.") },
-};
 
 /** This and the following mouse variables are for handling in-game click-and-hold actions */
 MouseActionType LastMouseButtonAction = MouseActionType::None;
@@ -1186,7 +1175,7 @@ void DiabloInit()
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
+	for (size_t i = 0; i < QuickMessages.size(); i++) {
 		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
 		if (messages.empty()) {
 			messages.emplace_back(_(QuickMessages[i].message));
@@ -1856,7 +1845,7 @@ void InitKeymapActions()
 	    SpellBookKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
-	for (uint32_t i = 0; i < QUICK_MESSAGE_OPTIONS; ++i) {
+	for (uint32_t i = 0; i < QuickMessages.size(); ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickMessage{}",
 		    N_("Quick Message {}"),

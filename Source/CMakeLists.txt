@@ -413,6 +413,7 @@ target_link_dependencies(libdevilutionx_options PUBLIC
   sol2::sol2
   libdevilutionx_game_mode
   libdevilutionx_logged_fstream
+  libdevilutionx_quick_messages
   libdevilutionx_strings
   libdevilutionx_ini
 )
@@ -462,6 +463,10 @@ target_link_dependencies(libdevilutionx_quests PUBLIC
 
 add_devilutionx_object_library(libdevilutionx_random
   engine/random.cpp
+)
+
+add_devilutionx_object_library(libdevilutionx_quick_messages
+  quick_messages.cpp
 )
 
 add_devilutionx_object_library(libdevilutionx_spells
@@ -654,6 +659,7 @@ target_link_dependencies(libdevilutionx PUBLIC
   libdevilutionx_pkware_encrypt
   libdevilutionx_player
   libdevilutionx_quests
+  libdevilutionx_quick_messages
   libdevilutionx_random
   libdevilutionx_sound
   libdevilutionx_spells
