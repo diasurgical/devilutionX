@@ -3,35 +3,35 @@
  *
  * Load and save options from the diablo.ini file.
  */
+#include "options.h"
 
 #include <algorithm>
 #include <cerrno>
 #include <cstdint>
 #include <cstdio>
+#include <cstring>
+#include <functional>
+#include <iterator>
 #include <optional>
 #include <span>
 
+#include <SDL_version.h>
 #include <expected.hpp>
 #include <fmt/format.h>
+#include <function_ref.hpp>
 
+#include "appfat.h"
 #include "control.h"
 #include "controls/controller.h"
+#include "controls/controller_buttons.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
-#include "discord/discord.h"
 #include "engine/assets.hpp"
 #include "engine/demomode.h"
 #include "engine/sound_defs.hpp"
-#include "game_mode.hpp"
-#include "hwcursor.hpp"
-#include "lua/lua.hpp"
-#include "options.h"
 #include "platform/locale.hpp"
-#include "qol/monhealthbar.h"
-#include "qol/xpbar.h"
 #include "quick_messages.hpp"
 #include "utils/algorithm/container.hpp"
-#include "utils/display.h"
 #include "utils/file_util.h"
 #include "utils/ini.hpp"
 #include "utils/is_of.hpp"
@@ -142,85 +142,6 @@ bool HardwareCursorDefault()
 }
 #endif
 
-void OptionGrabInputChanged()
-{
-#ifdef USE_SDL1
-	SDL_WM_GrabInput(*GetOptions().Gameplay.grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
-#else
-	if (ghMainWnd != nullptr)
-		SDL_SetWindowGrab(ghMainWnd, *GetOptions().Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
-#endif
-}
-
-void OptionExperienceBarChanged()
-{
-	if (!gbRunGame)
-		return;
-	if (*GetOptions().Gameplay.experienceBar)
-		InitXPBar();
-	else
-		FreeXPBar();
-}
-
-void OptionEnemyHealthBarChanged()
-{
-	if (!gbRunGame)
-		return;
-	if (*GetOptions().Gameplay.enemyHealthBar)
-		InitMonsterHealthBar();
-	else
-		FreeMonsterHealthBar();
-}
-
-#if !defined(USE_SDL1) || defined(__3DS__)
-void ResizeWindowAndUpdateResolutionOptions()
-{
-	ResizeWindow();
-#ifndef __3DS__
-	GetOptions().Graphics.resolution.InvalidateList();
-#endif
-}
-#endif
-
-void OptionShowFPSChanged()
-{
-	if (*GetOptions().Graphics.showFPS)
-		EnableFrameCount();
-	else
-		frameflag = false;
-}
-
-void OptionLanguageCodeChanged()
-{
-	UnloadFonts();
-	LanguageInitialize();
-	LoadLanguageArchive();
-}
-
-void OptionGameModeChanged()
-{
-	gbIsHellfire = *GetOptions().GameMode.gameMode == StartUpGameMode::Hellfire;
-	discord_manager::UpdateMenu(true);
-}
-
-void OptionSharewareChanged()
-{
-	gbIsSpawn = *GetOptions().GameMode.shareware;
-}
-
-void OptionAudioChanged()
-{
-	effects_cleanup_sfx();
-	music_stop();
-	snd_deinit();
-	snd_init();
-	music_start(TMUSIC_INTRO);
-	if (gbRunGame)
-		sound_init();
-	else
-		ui_sound_init();
-}
-
 } // namespace
 
 Options &GetOptions()
@@ -320,14 +241,13 @@ OptionEntryFlags OptionEntryBase::GetFlags() const
 {
 	return flags;
 }
-void OptionEntryBase::SetValueChangedCallback(std::function<void()> callback)
+void OptionEntryBase::SetValueChangedCallback(tl::function_ref<void()> callback)
 {
-	this->callback = std::move(callback);
+	callback_ = callback;
 }
 void OptionEntryBase::NotifyValueChanged()
 {
-	if (callback)
-		callback();
+	if (callback_.has_value()) (*callback_)();
 }
 
 void OptionEntryBoolean::LoadFromIni(std::string_view category)
@@ -471,8 +391,6 @@ GameModeOptions::GameModeOptions()
     , shareware("Shareware", OptionEntryFlags::NeedDiabloMpq | OptionEntryFlags::RecreateUI, N_("Restrict to Shareware"), N_("Makes the game compatible with the demo. Enables multiplayer with friends who don't own a full copy of Diablo."), false)
 
 {
-	gameMode.SetValueChangedCallback(OptionGameModeChanged);
-	shareware.SetValueChangedCallback(OptionSharewareChanged);
 }
 std::vector<OptionEntryBase *> GameModeOptions::GetEntries()
 {
@@ -553,12 +471,6 @@ AudioOptions::AudioOptions()
     , bufferSize("Buffer Size", OptionEntryFlags::CantChangeInGame, N_("Buffer Size"), N_("Buffer size (number of frames per channel)."), DEFAULT_AUDIO_BUFFER_SIZE, { 1024, 2048, 5120 })
     , resamplingQuality("Resampling Quality", OptionEntryFlags::CantChangeInGame, N_("Resampling Quality"), N_("Quality of the resampler, from 0 (lowest) to 10 (highest)."), DEFAULT_AUDIO_RESAMPLING_QUALITY, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
 {
-	sampleRate.SetValueChangedCallback(OptionAudioChanged);
-	channels.SetValueChangedCallback(OptionAudioChanged);
-	bufferSize.SetValueChangedCallback(OptionAudioChanged);
-	resamplingQuality.SetValueChangedCallback(OptionAudioChanged);
-	resampler.SetValueChangedCallback(OptionAudioChanged);
-	device.SetValueChangedCallback(OptionAudioChanged);
 }
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 {
@@ -811,6 +723,13 @@ size_t OptionEntryAudioDevice::GetListSize() const
 
 std::string_view OptionEntryAudioDevice::GetListDescription(size_t index) const
 {
+	// TODO: Fix the following problems with this function:
+	// 1. The `string_view` result of `GetDeviceName` is used in the UI but per SDL documentation:
+	// > If you need to keep the string for any length of time, you should make your own copy of it,
+	// > as it will be invalid next time any of several other SDL functions are called.
+	//
+	// 2. `GetLineWidth` introduces a circular dependency on `text_render` which we'd like to avoid.
+	// The clipping should be done in the UI instead (settingsmenu.cpp).
 	constexpr int MaxWidth = 500;
 
 	std::string_view deviceName = GetDeviceName(index);
@@ -904,17 +823,6 @@ GraphicsOptions::GraphicsOptions()
 #endif
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
 {
-	resolution.SetValueChangedCallback(ResizeWindow);
-	fullscreen.SetValueChangedCallback(SetFullscreenMode);
-#if !defined(USE_SDL1) || defined(__3DS__)
-	fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions);
-#endif
-#ifndef USE_SDL1
-	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
-	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
-	frameRateControl.SetValueChangedCallback(ReinitializeRenderer);
-#endif
-	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
 std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
@@ -994,10 +902,8 @@ GameplayOptions::GameplayOptions()
           })
     , skipLoadingScreenThresholdMs("Skip loading screen threshold, ms", OptionEntryFlags::Invisible, "", "", 0)
 {
-	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
-	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
-	enemyHealthBar.SetValueChangedCallback(OptionEnemyHealthBarChanged);
 }
+
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
 	return {
@@ -1194,7 +1100,6 @@ void OptionEntryLanguageCode::SetActiveListIndex(size_t index)
 LanguageOptions::LanguageOptions()
     : OptionCategoryBase("Language", N_("Language"), N_("Language Settings"))
 {
-	code.SetValueChangedCallback(OptionLanguageCodeChanged);
 }
 std::vector<OptionEntryBase *> LanguageOptions::GetEntries()
 {
@@ -1860,7 +1765,6 @@ ModOptions::ModEntry::ModEntry(std::string_view name)
     : name(name)
     , enabled(this->name, OptionEntryFlags::None, this->name.c_str(), "", false)
 {
-	enabled.SetValueChangedCallback(LuaReloadActiveMods);
 }
 
 namespace {

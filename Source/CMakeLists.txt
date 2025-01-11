@@ -39,7 +39,6 @@ set(libdevilutionx_SRCS
 
   controls/axis_direction.cpp
   controls/controller.cpp
-  controls/controller_buttons.cpp
   controls/controller_motion.cpp
   controls/devices/joystick.cpp
   controls/devices/kbcontroller.cpp
@@ -213,6 +212,13 @@ target_link_dependencies(libdevilutionx_codec PRIVATE
   libdevilutionx_log
 )
 
+add_devilutionx_object_library(libdevilutionx_controller_buttons
+  controls/controller_buttons.cpp
+)
+target_link_dependencies(libdevilutionx_controller_buttons
+  DevilutionX::SDL
+)
+
 add_devilutionx_object_library(libdevilutionx_crawl
   crawl.cpp
 )
@@ -249,6 +255,10 @@ target_link_dependencies(libdevilutionx_format_int PUBLIC
 
 add_devilutionx_object_library(libdevilutionx_game_mode
   game_mode.cpp
+)
+target_link_dependencies(libdevilutionx_game_mode PRIVATE
+  tl
+  libdevilutionx_options
 )
 
 add_devilutionx_object_library(libdevilutionx_gendung
@@ -406,12 +416,9 @@ add_devilutionx_object_library(libdevilutionx_options
 )
 target_link_dependencies(libdevilutionx_options PUBLIC
   DevilutionX::SDL
-  SDL_audiolib::SDL_audiolib
   fmt::fmt
   tl
-  ${LUA_LIBRARIES}
-  sol2::sol2
-  libdevilutionx_game_mode
+  libdevilutionx_controller_buttons
   libdevilutionx_logged_fstream
   libdevilutionx_quick_messages
   libdevilutionx_strings
@@ -637,6 +644,7 @@ target_link_dependencies(libdevilutionx PUBLIC
   libdevilutionx_clx_render
   libdevilutionx_codec
   libdevilutionx_config
+  libdevilutionx_controller_buttons
   libdevilutionx_crawl
   libdevilutionx_direction
   libdevilutionx_surface

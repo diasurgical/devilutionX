@@ -28,6 +28,18 @@ OptionalOwnedClxSpriteList health;
 OptionalOwnedClxSpriteList healthBlue;
 OptionalOwnedClxSpriteList playerExpTags;
 
+void OptionEnemyHealthBarChanged()
+{
+	if (!gbRunGame)
+		return;
+	if (*GetOptions().Gameplay.enemyHealthBar)
+		InitMonsterHealthBar();
+	else
+		FreeMonsterHealthBar();
+}
+
+const auto OptionChangeHandler = (GetOptions().Gameplay.enemyHealthBar.SetValueChangedCallback(OptionEnemyHealthBarChanged), true);
+
 } // namespace
 
 void InitMonsterHealthBar()

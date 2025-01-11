@@ -50,6 +50,18 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 	out.SetPixel({ point.x, point.y + 3 }, gradient[idx / 2]);
 }
 
+void OptionExperienceBarChanged()
+{
+	if (!gbRunGame)
+		return;
+	if (*GetOptions().Gameplay.experienceBar)
+		InitXPBar();
+	else
+		FreeXPBar();
+}
+
+const auto OptionChangeHandler = (GetOptions().Gameplay.experienceBar.SetValueChangedCallback(OptionExperienceBarChanged), true);
+
 } // namespace
 
 void InitXPBar()

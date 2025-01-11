@@ -244,6 +244,10 @@ void LuaInitialize()
 	// Used by the custom require implementation.
 	lua["setEnvironment"] = [](const sol::environment &env, const sol::function &fn) { sol::set_environment(env, fn); };
 
+	for (OptionEntryBase *mod : GetOptions().Mods.GetEntries()) {
+		mod->SetValueChangedCallback(LuaReloadActiveMods);
+	}
+
 	LuaReloadActiveMods();
 }
 

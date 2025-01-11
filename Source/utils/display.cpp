@@ -193,6 +193,37 @@ Size GetPreferredWindowSize()
 	return windowSize;
 }
 
+const auto OptionChangeHandlerResolution = (GetOptions().Graphics.resolution.SetValueChangedCallback(ResizeWindow), true);
+const auto OptionChangeHandlerFullscreen = (GetOptions().Graphics.fullscreen.SetValueChangedCallback(SetFullscreenMode), true);
+
+void OptionGrabInputChanged()
+{
+#ifdef USE_SDL1
+	SDL_WM_GrabInput(*GetOptions().Gameplay.grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#else
+	if (ghMainWnd != nullptr)
+		SDL_SetWindowGrab(ghMainWnd, *GetOptions().Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+#endif
+}
+const auto OptionChangeHandlerGrabInput = (GetOptions().Gameplay.grabInput.SetValueChangedCallback(OptionGrabInputChanged), true);
+
+#if !defined(USE_SDL1) || defined(__3DS__)
+void ResizeWindowAndUpdateResolutionOptions()
+{
+	ResizeWindow();
+#ifndef __3DS__
+	GetOptions().Graphics.resolution.InvalidateList();
+#endif
+}
+const auto OptionChangeHandlerFitToScreen = (GetOptions().Graphics.fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions), true);
+#endif
+
+#ifndef USE_SDL1
+const auto OptionChangeHandlerScaleQuality = (GetOptions().Graphics.scaleQuality.SetValueChangedCallback(ReinitializeTexture), true);
+const auto OptionChangeHandlerIntegerScaling = (GetOptions().Graphics.integerScaling.SetValueChangedCallback(ReinitializeIntegerScale), true);
+const auto OptionChangeHandlerVSync = (GetOptions().Graphics.frameRateControl.SetValueChangedCallback(ReinitializeRenderer), true);
+#endif
+
 } // namespace
 
 void AdjustToScreenGeometry(Size windowSize)

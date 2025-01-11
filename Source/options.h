@@ -9,6 +9,7 @@
 
 #include <SDL_version.h>
 #include <ankerl/unordered_dense.h>
+#include <function_ref.hpp>
 
 #include "controls/controller.h"
 #include "controls/controller_buttons.h"
@@ -122,7 +123,7 @@ public:
 	[[nodiscard]] virtual OptionEntryType GetType() const = 0;
 	[[nodiscard]] OptionEntryFlags GetFlags() const;
 
-	void SetValueChangedCallback(std::function<void()> callback);
+	void SetValueChangedCallback(tl::function_ref<void()> callback);
 
 	[[nodiscard]] virtual std::string_view GetValueDescription() const = 0;
 	virtual void LoadFromIni(std::string_view category) = 0;
@@ -137,7 +138,7 @@ protected:
 	void NotifyValueChanged();
 
 private:
-	std::function<void()> callback;
+	std::optional<tl::function_ref<void()>> callback_;
 };
 
 class OptionEntryBoolean : public OptionEntryBase {

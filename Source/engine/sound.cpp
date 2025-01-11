@@ -150,6 +150,26 @@ int CapVolume(int volume)
 	return std::clamp(volume, VOLUME_MIN, VOLUME_MAX);
 }
 
+void OptionAudioChanged()
+{
+	effects_cleanup_sfx();
+	music_stop();
+	snd_deinit();
+	snd_init();
+	music_start(TMUSIC_INTRO);
+	if (gbRunGame)
+		sound_init();
+	else
+		ui_sound_init();
+}
+
+const auto OptionChangeSampleRate = (GetOptions().Audio.sampleRate.SetValueChangedCallback(OptionAudioChanged), true);
+const auto OptionChangeChannels = (GetOptions().Audio.channels.SetValueChangedCallback(OptionAudioChanged), true);
+const auto OptionChangeBufferSize = (GetOptions().Audio.bufferSize.SetValueChangedCallback(OptionAudioChanged), true);
+const auto OptionChangeResamplingQuality = (GetOptions().Audio.resamplingQuality.SetValueChangedCallback(OptionAudioChanged), true);
+const auto OptionChangeResampler = (GetOptions().Audio.resampler.SetValueChangedCallback(OptionAudioChanged), true);
+const auto OptionChangeDevice = (GetOptions().Audio.device.SetValueChangedCallback(OptionAudioChanged), true);
+
 } // namespace
 
 void ClearDuplicateSounds()
