@@ -10,6 +10,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
+#include "utils/string_or_view.hpp"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -350,15 +351,15 @@ private:
 
 class UiListItem {
 public:
-	UiListItem(std::string_view text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
-	    : m_text(text)
+	UiListItem(StringOrView &&text = {}, int value = 0, UiFlags uiFlags = UiFlags::None)
+	    : m_text(std::move(text))
 	    , m_value(value)
 	    , uiFlags(uiFlags)
 	{
 	}
 
-	UiListItem(std::string_view text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
-	    : m_text(text)
+	UiListItem(StringOrView &&text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
+	    : m_text(std::move(text))
 	    , args(args)
 	    , m_value(value)
 	    , uiFlags(uiFlags)
@@ -366,7 +367,7 @@ public:
 	}
 
 	// private:
-	std::string_view m_text;
+	StringOrView m_text;
 	std::vector<DrawStringFormatArg> args;
 	int m_value;
 	UiFlags uiFlags;
