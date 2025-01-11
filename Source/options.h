@@ -15,6 +15,7 @@
 #include "controls/game_controls.h"
 #include "engine/sound_defs.hpp"
 #include "pack.h"
+#include "quick_messages.hpp"
 #include "utils/enum_traits.h"
 #include "utils/string_view_hash.hpp"
 
@@ -647,7 +648,7 @@ struct ChatOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Quick chat messages. */
-	std::vector<std::string> szHotKeyMsgs[QUICK_MESSAGE_OPTIONS];
+	std::vector<std::string> szHotKeyMsgs[QuickMessages.size()];
 };
 
 struct LanguageOptions : OptionCategoryBase {

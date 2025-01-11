@@ -46,6 +46,7 @@
 #include "playerdat.hpp"
 #include "qol/stash.h"
 #include "qol/xpbar.h"
+#include "quick_messages.hpp"
 #include "stores.h"
 #include "towners.h"
 #include "utils/algorithm/container.hpp"
@@ -1690,7 +1691,7 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 		return;
 	}
 
-	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
+	assert(dwMsg < QuickMessages.size());
 
 	for (const std::string &msg : sgOptions.Chat.szHotKeyMsgs[dwMsg]) {
 #ifdef _DEBUG
