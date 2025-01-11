@@ -1,3 +1,5 @@
+#include <string_view>
+
 #include <fmt/format.h>
 
 #include "DiabloUI/diabloui.h"
@@ -39,7 +41,7 @@ void SelconnLoad()
 
 #ifndef NONET
 #ifndef DISABLE_ZERO_TIER
-	vecConnItems.push_back(std::make_unique<UiListItem>(ConnectionNames[SELCONN_ZT], SELCONN_ZT));
+	vecConnItems.push_back(std::make_unique<UiListItem>(std::string_view(ConnectionNames[SELCONN_ZT]), SELCONN_ZT));
 #endif
 #ifndef DISABLE_TCP
 	vecConnItems.push_back(std::make_unique<UiListItem>(_(ConnectionNames[SELCONN_TCP]), SELCONN_TCP));

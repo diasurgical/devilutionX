@@ -21,6 +21,7 @@
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
 #include "engine/render/clx_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "engine/ticks.hpp"
 #include "hwcursor.hpp"
 #include "init.h"
@@ -714,14 +715,24 @@ void UiFadeIn()
 	RenderPresent();
 }
 
+namespace {
+ClxSpriteList GetListSelectorSprites(int itemHeight)
+{
+	int size;
+	if (itemHeight >= 42) {
+		size = FOCUS_BIG;
+	} else if (itemHeight >= 30) {
+		size = FOCUS_MED;
+	} else {
+		size = FOCUS_SMALL;
+	}
+	return *ArtFocus[size];
+}
+} // namespace
+
 void DrawSelector(const SDL_Rect &rect)
 {
-	int size = FOCUS_SMALL;
-	if (rect.h >= 42)
-		size = FOCUS_BIG;
-	else if (rect.h >= 30)
-		size = FOCUS_MED;
-	const ClxSpriteList sprites = *ArtFocus[size];
+	const ClxSpriteList sprites = GetListSelectorSprites(rect.h);
 	const ClxSprite sprite = sprites[GetAnimationFrame(sprites.numSprites())];
 
 	// TODO FOCUS_MED appears higher than the box
@@ -813,18 +824,25 @@ void Render(const UiList &uiList)
 	const Surface &out = Surface(DiabloUiSurface());
 
 	for (std::size_t i = listOffset; i < uiList.m_vecItems.size() && (i - listOffset) < ListViewportSize; ++i) {
-		SDL_Rect rect = uiList.itemRect(static_cast<int>(i - listOffset));
+		const SDL_Rect rect = uiList.itemRect(static_cast<int>(i - listOffset));
 		const UiListItem &item = *uiList.GetItem(i);
 		if (i == SelectedItem)
 			DrawSelector(rect);
 
-		Rectangle rectangle = MakeRectangle(rect);
+		const Rectangle rectangle = MakeRectangle(rect).inset(
+		    Displacement(GetListSelectorSprites(rect.h)[0].width(), 0));
+
+		const UiFlags uiFlags = uiList.GetFlags() | item.uiFlags;
+		const GameFontTables fontSize = GetFontSizeFromUiFlags(uiFlags);
+		std::string_view text = item.m_text.str();
+		while (GetLineWidth(text, fontSize, 1) > rectangle.size.width) {
+			text = std::string_view(text.data(), FindLastUtf8Symbols(text));
+		}
+
 		if (item.args.empty()) {
-			DrawString(out, item.m_text, rectangle,
-			    { .flags = uiList.GetFlags() | item.uiFlags, .spacing = uiList.GetSpacing() });
+			DrawString(out, text, rectangle, { .flags = uiFlags, .spacing = uiList.GetSpacing() });
 		} else {
-			DrawStringWithColors(out, item.m_text, item.args, rectangle,
-			    { .flags = uiList.GetFlags() | item.uiFlags, .spacing = uiList.GetSpacing() });
+			DrawStringWithColors(out, text, item.args, rectangle, { .flags = uiFlags, .spacing = uiList.GetSpacing() });
 		}
 	}
 }

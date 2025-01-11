@@ -723,24 +723,8 @@ size_t OptionEntryAudioDevice::GetListSize() const
 
 std::string_view OptionEntryAudioDevice::GetListDescription(size_t index) const
 {
-	// TODO: Fix the following problems with this function:
-	// 1. The `string_view` result of `GetDeviceName` is used in the UI but per SDL documentation:
-	// > If you need to keep the string for any length of time, you should make your own copy of it,
-	// > as it will be invalid next time any of several other SDL functions are called.
-	//
-	// 2. `GetLineWidth` introduces a circular dependency on `text_render` which we'd like to avoid.
-	// The clipping should be done in the UI instead (settingsmenu.cpp).
-	constexpr int MaxWidth = 500;
-
 	std::string_view deviceName = GetDeviceName(index);
-	if (deviceName.empty())
-		return "System Default";
-
-	while (GetLineWidth(deviceName, GameFont24, 1) > MaxWidth) {
-		size_t lastSymbolIndex = FindLastUtf8Symbols(deviceName);
-		deviceName = std::string_view(deviceName.data(), lastSymbolIndex);
-	}
-
+	if (deviceName.empty()) deviceName = "System Default";
 	return deviceName;
 }
 
