@@ -1,6 +1,6 @@
 #include "controller_buttons.h"
 
-#include "plrctrls.h"
+#include "controls/game_controls.h"
 
 namespace devilution {
 namespace {
@@ -280,17 +280,21 @@ std::string_view ToXboxIcon(ControllerButton button)
 
 } // namespace
 
+// Defined in `plrctrls.cpp`.
+// Declared here to avoid having to depend on it in tests.
+extern GamepadLayout GamepadType;
+
 std::string_view ToString(ControllerButton button)
 {
 	switch (GamepadType) {
-	case devilution::GamepadLayout::PlayStation:
+	case GamepadLayout::PlayStation:
 		return ToPlayStationIcon(button);
-	case devilution::GamepadLayout::Nintendo:
+	case GamepadLayout::Nintendo:
 		return ToNintendoIcon(button);
-	case devilution::GamepadLayout::Xbox:
+	case GamepadLayout::Xbox:
 		return ToXboxIcon(button);
 	default:
-	case devilution::GamepadLayout::Generic:
+	case GamepadLayout::Generic:
 		return ToGenericButtonText(button);
 	}
 }

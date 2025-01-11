@@ -26,6 +26,7 @@
 #include "engine/render/clx_render.hpp"
 #include "engine/render/primitive_render.hpp"
 #include "engine/ticks.hpp"
+#include "options.h"
 #include "utils/algorithm/container.hpp"
 #include "utils/display.h"
 #include "utils/is_of.hpp"
@@ -474,6 +475,15 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 	maybeDrawCursor();
 	return static_cast<uint32_t>(remaining.data() - text.data());
 }
+
+void OptionLanguageCodeChanged()
+{
+	UnloadFonts();
+	LanguageInitialize();
+	LoadLanguageArchive();
+}
+
+const auto OptionChangeHandlerResolution = (GetOptions().Language.code.SetValueChangedCallback(OptionLanguageCodeChanged), true);
 
 } // namespace
 

@@ -1386,6 +1386,15 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 	}
 }
 
+void OptionShowFPSChanged()
+{
+	if (*GetOptions().Graphics.showFPS)
+		EnableFrameCount();
+	else
+		frameflag = false;
+}
+const auto OptionChangeHandlerShowFPS = (GetOptions().Graphics.showFPS.SetValueChangedCallback(OptionShowFPSChanged), true);
+
 } // namespace
 
 Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
