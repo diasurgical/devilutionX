@@ -866,21 +866,28 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
     , integerScaling("Integer Scaling", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Integer Scaling"), N_("Scales the image using whole number pixel ratio."), false)
-    , vSync("Vertical Sync",
+#endif
+    , frameRateControl("Frame Rate Control",
           OptionEntryFlags::RecreateUI
-#ifdef NXDK
+#if defined(NXDK) || defined(__ANDROID__)
               | OptionEntryFlags::Invisible
 #endif
           ,
-          N_("Vertical Sync"),
-          N_("Forces waiting for Vertical Sync. Prevents tearing effect when drawing a frame. Disabling it can help with mouse lag on some systems."),
-#ifdef NXDK
-          false
+          N_("Frame Rate Control"),
+          N_("Manages frame rate to balance performance, reduce tearing, or save power."),
+#if defined(NXDK) || defined(USE_SDL1)
+          FrameRateControl::CPUSleep
 #else
-          true
+          FrameRateControl::VerticalSync
 #endif
-          )
+          ,
+          {
+              { FrameRateControl::None, N_("None") },
+#ifndef USE_SDL1
+              { FrameRateControl::VerticalSync, N_("Vertical Sync") },
 #endif
+              { FrameRateControl::CPUSleep, N_("Limit FPS") },
+          })
     , gammaCorrection("Gamma Correction", OptionEntryFlags::Invisible, "Gamma Correction", "Gamma correction level.", 100)
     , zoom("Zoom", OptionEntryFlags::None, N_("Zoom"), N_("Zoom on when enabled."), false)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
@@ -890,7 +897,6 @@ GraphicsOptions::GraphicsOptions()
     , hardwareCursorForItems("Hardware Cursor For Items", OptionEntryFlags::CantChangeInGame | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor For Items"), N_("Use a hardware cursor for items."), false)
     , hardwareCursorMaxSize("Hardware Cursor Maximum Size", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor Maximum Size"), N_("Maximum width / height for the hardware cursor. Larger cursors fall back to software."), 128, { 0, 64, 128, 256, 512 })
 #endif
-    , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
 {
 	resolution.SetValueChangedCallback(ResizeWindow);
@@ -901,7 +907,7 @@ GraphicsOptions::GraphicsOptions()
 #ifndef USE_SDL1
 	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
 	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
-	vSync.SetValueChangedCallback(ReinitializeRenderer);
+	frameRateControl.SetValueChangedCallback(ReinitializeRenderer);
 #endif
 	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
@@ -920,11 +926,10 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&upscale,
 		&scaleQuality,
 		&integerScaling,
-		&vSync,
 #endif
+		&frameRateControl,
 		&gammaCorrection,
 		&zoom,
-		&limitFPS,
 		&showFPS,
 		&colorCycling,
 		&alternateNestArt,

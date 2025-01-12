@@ -123,9 +123,9 @@ void FreeRenderer()
 		renderer = nullptr;
 	}
 
-#if defined(_WIN32) && !defined(NXDK)
+#if defined(_WIN32) && !defined(NXDK) && !defined(USE_SDL1)
 	// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
-	if (wasD3D9 && *sgOptions.Graphics.upscale && *sgOptions.Graphics.vSync) {
+	if (wasD3D9 && *sgOptions.Graphics.upscale && *sgOptions.Graphics.frameRateControl != FrameRateControl::VerticalSync) {
 		std::string title = SDL_GetWindowTitle(ghMainWnd);
 		Uint32 flags = SDL_GetWindowFlags(ghMainWnd);
 		Rectangle dimensions;
@@ -425,7 +425,7 @@ void ReinitializeRenderer()
 	if (*sgOptions.Graphics.upscale) {
 		Uint32 rendererFlags = 0;
 
-		if (*sgOptions.Graphics.vSync) {
+		if (*sgOptions.Graphics.frameRateControl == FrameRateControl::VerticalSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 

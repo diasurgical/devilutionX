@@ -595,10 +595,7 @@ void OverrideOptions()
 	sgOptions.Graphics.hardwareCursor.SetValue(false);
 #endif
 	if (Timedemo) {
-#ifndef USE_SDL1
-		sgOptions.Graphics.vSync.SetValue(false);
-#endif
-		sgOptions.Graphics.limitFPS.SetValue(false);
+		sgOptions.Graphics.frameRateControl.SetValue(FrameRateControl::None);
 	}
 	forceResolution = Size(DemoGraphicsWidth, DemoGraphicsHeight);
 
