@@ -974,7 +974,7 @@ GraphicsOptions::GraphicsOptions()
           })
     , integerScaling("Integer Scaling", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Integer Scaling"), N_("Scales the image using whole number pixel ratio."), false)
 #endif
-    , frameRateControl("Vertical Sync",
+    , frameRateControl("Frame Rate Control",
           OptionEntryFlags::RecreateUI
 #if defined(NXDK) || defined(__ANDROID__)
               | OptionEntryFlags::Invisible
