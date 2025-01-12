@@ -13,6 +13,7 @@
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
+#include "utils/display.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/utf8.hpp"
@@ -346,17 +347,20 @@ void UiSettingsMenu()
 	do {
 		endMenu = false;
 
+		// For the settings menu, we use the full height and allow some more width.
+		const int uiWidth = std::clamp<int>(gnScreenWidth, 640, 720);
+		const Rectangle uiRectangle = {
+			{ (gnScreenWidth - uiWidth) / 2, 0 },
+			{ uiWidth, gnScreenHeight }
+		};
+
 		UiLoadBlackBackground();
 		LoadScrollBar();
 		UiAddBackground(&vecDialog);
-		UiAddLogo(&vecDialog);
-
-		const Rectangle &uiRectangle = GetUIRectangle();
+		UiAddLogo(&vecDialog, uiRectangle.position.y);
 
 		const int descriptionLineHeight = IsSmallFontTall() ? 20 : 18;
 		const int descriptionMarginTop = IsSmallFontTall() ? 10 : 16;
-		rectList = { uiRectangle.position + Displacement { 50, 204 }, Size { 540, 208 } };
-		rectDescription = { rectList.position + Displacement { -26, rectList.size.height + descriptionMarginTop }, Size { 590, 80 - descriptionMarginTop } };
 
 		optionDescription[0] = '\0';
 
@@ -373,8 +377,6 @@ void UiSettingsMenu()
 			break;
 		}
 		vecDialog.push_back(std::make_unique<UiArtText>(titleText.data(), MakeSdlRect(uiRectangle.position.x, uiRectangle.position.y + 161, uiRectangle.size.width, 35), UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
-		vecDialog.push_back(std::make_unique<UiScrollbar>((*ArtScrollBarBackground)[0], (*ArtScrollBarThumb)[0], *ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
-		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, descriptionLineHeight));
 
 		size_t itemToSelect = 0;
 		std::optional<tl::function_ref<bool(SDL_Event &)>> eventHandler;
@@ -531,7 +533,17 @@ void UiSettingsMenu()
 		vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
 		vecDialogItems.push_back(std::make_unique<UiListItem>(_("Previous Menu"), static_cast<int>(SpecialMenuEntry::PreviousMenu), UiFlags::ColorUiGold));
 
-		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.size.height / 26, rectList.position.x, rectList.position.y, rectList.size.width, 26, UiFlags::FontSize24 | UiFlags::AlignCenter));
+		constexpr int ListItemHeight = 26;
+		rectList = { uiRectangle.position + Displacement { 50, 204 },
+			Size { uiRectangle.size.width - 100, std::min<int>(vecDialogItems.size() * ListItemHeight, uiRectangle.size.height - 272) } };
+		rectDescription = { rectList.position + Displacement { -26, rectList.size.height + descriptionMarginTop },
+			Size { uiRectangle.size.width - 50, 80 - descriptionMarginTop } };
+		vecDialog.push_back(std::make_unique<UiScrollbar>((*ArtScrollBarBackground)[0], (*ArtScrollBarThumb)[0],
+		    *ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
+		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription),
+		    UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, descriptionLineHeight));
+		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.size.height / ListItemHeight,
+		    rectList.position.x, rectList.position.y, rectList.size.width, ListItemHeight, UiFlags::FontSize24 | UiFlags::AlignCenter));
 
 		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, FullscreenChanged, nullptr, itemToSelect);
 
