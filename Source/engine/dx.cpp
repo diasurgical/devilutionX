@@ -70,7 +70,7 @@ bool CanRenderDirectlyToOutputSurface()
  */
 void LimitFrameRate()
 {
-	if (!*sgOptions.Graphics.limitFPS)
+	if (*sgOptions.Graphics.frameRateControl != FrameRateControl::CPUSleep)
 		return;
 	static uint32_t frameDeadline;
 	uint32_t tc = SDL_GetTicks() * 1000;
@@ -246,7 +246,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 
-		if (!*sgOptions.Graphics.vSync) {
+		if (*sgOptions.Graphics.frameRateControl != FrameRateControl::VerticalSync) {
 			LimitFrameRate();
 		}
 	} else {

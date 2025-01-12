@@ -48,6 +48,14 @@ enum class ScalingQuality : uint8_t {
 	AnisotropicFiltering,
 };
 
+enum class FrameRateControl : uint8_t {
+	None = 0,
+#ifndef USE_SDL1
+	VerticalSync = 1,
+#endif
+	CPUSleep = 2,
+};
+
 enum class Resampler : uint8_t {
 #ifdef DEVILUTIONX_RESAMPLER_SPEEX
 	Speex = 0,
@@ -499,9 +507,9 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryEnum<ScalingQuality> scaleQuality;
 	/** @brief Only scale by values divisible by the width and height. */
 	OptionEntryBoolean integerScaling;
-	/** @brief Enable vsync on the output. */
-	OptionEntryBoolean vSync;
 #endif
+	/** @brief Limit frame rate either for vsync or CPU load. */
+	OptionEntryEnum<FrameRateControl> frameRateControl;
 	/** @brief Gamma correction level. */
 	OptionEntryInt<int> gammaCorrection;
 	/** @brief Zoom on start. */
@@ -518,8 +526,6 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
 	OptionEntryInt<int> hardwareCursorMaxSize;
 #endif
-	/** @brief Enable FPS Limiter. */
-	OptionEntryBoolean limitFPS;
 	/** @brief Show FPS, even without the -f command line flag. */
 	OptionEntryBoolean showFPS;
 };
