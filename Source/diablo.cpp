@@ -1805,6 +1805,13 @@ void InitKeymapActions()
 	    nullptr,
 	    IsGameRunning);
 	sgOptions.Keymapper.AddAction(
+	    "Show Affix Data",
+	    N_("Show affix data"),
+	    N_("Shows detailed affix data while held."),
+	    SDLK_LCTRL,
+	    [] { showDetailedAffixData = true; },
+	    [] { showDetailedAffixData = false; });
+	sgOptions.Keymapper.AddAction(
 	    "CycleAutomapType",
 	    N_("Cycle map type"),
 	    N_("Opaque -> Transparent -> Minimap -> None"),
