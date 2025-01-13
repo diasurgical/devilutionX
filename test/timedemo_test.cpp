@@ -50,6 +50,7 @@ void RunTimedemo(std::string timedemoFolderName)
 
 	InitKeymapActions();
 	LoadOptions();
+	demo::OverrideOptions();
 	LuaInitialize();
 
 	const int demoNumber = 0;

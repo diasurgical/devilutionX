@@ -27,7 +27,6 @@
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "engine/assets.hpp"
-#include "engine/demomode.h"
 #include "engine/sound_defs.hpp"
 #include "platform/locale.hpp"
 #include "quick_messages.hpp"
@@ -193,16 +192,10 @@ void LoadOptions()
 #ifdef __vita__
 	options.Controller.bRearTouch = ini->getBool("Controller", "Enable Rear Touchpad", true);
 #endif
-
-	if (demo::IsRunning())
-		demo::OverrideOptions();
 }
 
 void SaveOptions()
 {
-	if (demo::IsRunning())
-		return;
-
 	Options &options = GetOptions();
 	for (OptionCategoryBase *pCategory : options.GetCategories()) {
 		for (const OptionEntryBase *pEntry : pCategory->GetEntries()) {
