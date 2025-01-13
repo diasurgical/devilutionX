@@ -10,6 +10,7 @@
 #include <cstdint>
 
 #include "control.h"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "crawl.hpp"
 #include "cursor.h"

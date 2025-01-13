@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 
 #include "control.h"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/palette.h"

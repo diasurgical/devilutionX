@@ -11,6 +11,7 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "engine/events.hpp"
 #include "gmenu.h"

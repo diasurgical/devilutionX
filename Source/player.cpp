@@ -10,6 +10,7 @@
 #include <fmt/core.h>
 
 #include "control.h"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "dead.h"

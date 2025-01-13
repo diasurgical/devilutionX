@@ -74,6 +74,13 @@ inline bool IsDPadButton(ControllerButton button)
 	    || button == ControllerButton_BUTTON_DPAD_RIGHT;
 }
 
-std::string_view ToString(ControllerButton button);
+enum class GamepadLayout : uint8_t {
+	Generic,
+	Nintendo,
+	PlayStation,
+	Xbox,
+};
+
+[[nodiscard]] std::string_view ToString(GamepadLayout gamepadType, ControllerButton button);
 
 } // namespace devilution

@@ -14,6 +14,7 @@
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selyesno.h"
 #include "control.h"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "engine/assets.hpp"
 #include "game_mode.hpp"

@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <cstdint>
 
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "engine/render/primitive_render.hpp"
 #include "headless_mode.hpp"

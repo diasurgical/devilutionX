@@ -12,6 +12,7 @@
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/backbuffer_state.hpp"
