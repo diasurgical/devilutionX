@@ -495,7 +495,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
 			if ((modState & KMOD_ALT) != 0) {
 				options.Graphics.fullscreen.SetValue(!IsFullScreen());
-				SaveOptions();
+				if (!demo::IsRunning()) SaveOptions();
 			} else {
 				TypeChatMessage();
 			}
@@ -530,7 +530,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	if (PauseMode == 2) {
 		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (modState & KMOD_ALT) != 0) {
 			options.Graphics.fullscreen.SetValue(!IsFullScreen());
-			SaveOptions();
+			if (!demo::IsRunning()) SaveOptions();
 		}
 		return;
 	}
@@ -568,7 +568,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	case SDLK_KP_ENTER:
 		if ((modState & KMOD_ALT) != 0) {
 			options.Graphics.fullscreen.SetValue(!IsFullScreen());
-			SaveOptions();
+			if (!demo::IsRunning()) SaveOptions();
 		} else if (ActiveStore != TalkID::None) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {
@@ -1234,7 +1234,7 @@ void DiabloSplash()
 			play_movie("gendata\\diablo1.smk", true);
 		if (*intro == StartUpIntro::Once) {
 			intro.SetValue(StartUpIntro::Off);
-			SaveOptions();
+			if (!demo::IsRunning()) SaveOptions();
 		}
 	}
 
@@ -2565,12 +2565,14 @@ int DiabloMain(int argc, char **argv)
 
 	// Read settings including translation next. This will use the presence of fonts.mpq and look for assets in devilutionx.mpq
 	LoadOptions();
+	if (demo::IsRunning()) demo::OverrideOptions();
+
 	// Then look for a voice pack file based on the selected translation
 	LoadLanguageArchive();
 
 	ApplicationInit();
 	LuaInitialize();
-	SaveOptions();
+	if (!demo::IsRunning()) SaveOptions();
 
 	// Finally load game data
 	LoadGameArchives();
@@ -2589,7 +2591,7 @@ int DiabloMain(int argc, char **argv)
 #ifdef __UWP__
 	onInitialized();
 #endif
-	SaveOptions();
+	if (!demo::IsRunning()) SaveOptions();
 
 	DiabloSplash();
 	mainmenu_loop();
