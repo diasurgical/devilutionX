@@ -1724,7 +1724,7 @@ std::vector<OptionEntryBase *> ModOptions::GetEntries()
 	return optionEntries;
 }
 
-std::vector<ModOptions::ModEntry> &ModOptions::GetModEntries()
+std::forward_list<ModOptions::ModEntry> &ModOptions::GetModEntries()
 {
 	if (modEntries)
 		return *modEntries;
@@ -1738,10 +1738,11 @@ std::vector<ModOptions::ModEntry> &ModOptions::GetModEntries()
 		modNames.emplace_back(modName);
 	}
 
-	std::vector<ModOptions::ModEntry> &newModEntries = modEntries.emplace();
+	std::forward_list<ModOptions::ModEntry> &newModEntries = modEntries.emplace();
 	for (auto &modName : modNames) {
-		newModEntries.emplace_back(modName);
+		newModEntries.emplace_front(modName);
 	}
+	newModEntries.reverse();
 	return newModEntries;
 }
 

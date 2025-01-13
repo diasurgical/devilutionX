@@ -819,13 +819,17 @@ struct ModOptions : OptionCategoryBase {
 
 private:
 	struct ModEntry {
+		// OptionEntryBase::key references ModEntry::name.
+		// The implicit copy constructor would copy that reference instead of referencing the copy.
+		ModEntry(const ModEntry &) = delete;
+
 		ModEntry(std::string_view name);
 		std::string name;
 		OptionEntryBoolean enabled;
 	};
 
-	std::vector<ModEntry> &GetModEntries();
-	std::optional<std::vector<ModEntry>> modEntries;
+	std::forward_list<ModEntry> &GetModEntries();
+	std::optional<std::forward_list<ModEntry>> modEntries;
 };
 
 struct Options {
