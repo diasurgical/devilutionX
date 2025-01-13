@@ -1598,9 +1598,6 @@ bool PadmapperOptions::IsActive(std::string_view actionName) const
 
 std::string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const
 {
-	if (!gbRunGame)
-		return "";
-
 	if (!ctrlEvent.up) {
 		const Action *pressAction = FindAction(ctrlEvent.button);
 		return pressAction != nullptr ? pressAction->key : "";

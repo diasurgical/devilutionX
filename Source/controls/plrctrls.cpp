@@ -1542,7 +1542,7 @@ float rightStickLastMove = 0;
 
 bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
-	if (AutomapActive)
+	if (!gbRunGame || AutomapActive)
 		return false;
 
 #if !defined(USE_SDL1) && !defined(JOY_AXIS_RIGHTX) && !defined(JOY_AXIS_RIGHTY)
