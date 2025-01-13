@@ -91,7 +91,8 @@ bool TriggersQuickSpellAction(ControllerButton button)
 
 bool IsPressedForMovement(ControllerButton button)
 {
-	return !PadMenuNavigatorActive
+	return gbRunGame
+	    && !PadMenuNavigatorActive
 	    && IsControllerButtonPressed(button)
 	    && !IsMovementOverriddenByPadmapper(button)
 	    && !(SpellSelectFlag && TriggersQuickSpellAction(button));
