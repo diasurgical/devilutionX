@@ -38,11 +38,12 @@ set(libdevilutionx_SRCS
   track.cpp
 
   controls/axis_direction.cpp
-  controls/controller.cpp
   controls/controller_motion.cpp
+  controls/controller.cpp
   controls/devices/joystick.cpp
   controls/devices/kbcontroller.cpp
   controls/game_controls.cpp
+  controls/keymapper.cpp
   controls/menu_controls.cpp
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
