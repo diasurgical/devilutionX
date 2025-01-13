@@ -22,6 +22,7 @@
 #include "debug.h"
 #endif
 #include "DiabloUI/diabloui.h"
+#include "controls/keymapper.hpp"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "diablo.h"
@@ -457,7 +458,7 @@ void ReleaseKey(SDL_Keycode vkey)
 	remap_keyboard_key(&vkey);
 	if (sgnTimeoutCurs != CURSOR_NONE)
 		return;
-	GetOptions().Keymapper.KeyReleased(vkey);
+	KeymapperRelease(vkey);
 }
 
 void ClosePanels()
@@ -491,7 +492,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		options.Keymapper.KeyPressed(vkey);
+		KeymapperPress(vkey);
 		if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
 			if ((modState & KMOD_ALT) != 0) {
 				options.Graphics.fullscreen.SetValue(!IsFullScreen());
@@ -525,7 +526,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 	}
 
-	options.Keymapper.KeyPressed(vkey);
+	KeymapperPress(vkey);
 
 	if (PauseMode == 2) {
 		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (modState & KMOD_ALT) != 0) {
@@ -656,7 +657,7 @@ void HandleMouseButtonDown(Uint8 button, uint16_t modState)
 			RightMouseDown((modState & KMOD_SHIFT) != 0);
 			break;
 		default:
-			GetOptions().Keymapper.KeyPressed(button | KeymapperMouseButtonMask);
+			KeymapperPress(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
 			break;
 		}
 	}
@@ -672,7 +673,7 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 	} else {
-		GetOptions().Keymapper.KeyReleased(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
+		KeymapperRelease(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
 	}
 }
 
@@ -757,7 +758,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			} else if (IsStashOpen) {
 				Stash.PreviousPage();
 			} else {
-				options.Keymapper.KeyPressed(MouseScrollUpButton);
+				KeymapperPress(MouseScrollUpButton);
 			}
 		} else if (event.wheel.y < 0) { // down
 			if (ActiveStore != TalkID::None) {
@@ -771,12 +772,12 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			} else if (IsStashOpen) {
 				Stash.NextPage();
 			} else {
-				options.Keymapper.KeyPressed(MouseScrollDownButton);
+				KeymapperPress(MouseScrollDownButton);
 			}
 		} else if (event.wheel.x > 0) { // left
-			options.Keymapper.KeyPressed(MouseScrollLeftButton);
+			KeymapperPress(MouseScrollLeftButton);
 		} else if (event.wheel.x < 0) { // right
-			options.Keymapper.KeyPressed(MouseScrollRightButton);
+			KeymapperPress(MouseScrollRightButton);
 		}
 		break;
 #endif

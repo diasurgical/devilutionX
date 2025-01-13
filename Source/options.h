@@ -700,10 +700,13 @@ struct KeymapperOptions : OptionCategoryBase {
 
 		bool SetValue(int value);
 
-	private:
-		uint32_t defaultKey;
+		[[nodiscard]] bool isEnabled() const { return !enable || enable(); }
+
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
+
+	private:
+		uint32_t defaultKey;
 		std::function<bool()> enable;
 		uint32_t boundKey = SDLK_UNKNOWN;
 		unsigned dynamicIndex;
@@ -723,10 +726,9 @@ struct KeymapperOptions : OptionCategoryBase {
 	    std::function<bool()> enable = nullptr,
 	    unsigned index = 0);
 	void CommitActions();
-	void KeyPressed(uint32_t key) const;
-	void KeyReleased(SDL_Keycode key) const;
-	bool IsTextEntryKey(SDL_Keycode vkey) const;
-	bool IsNumberEntryKey(SDL_Keycode vkey) const;
+
+	[[nodiscard]] const Action *findAction(uint32_t key) const;
+
 	std::string_view KeyNameForAction(std::string_view actionName) const;
 	uint32_t KeyForAction(std::string_view actionName) const;
 
