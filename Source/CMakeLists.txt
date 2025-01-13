@@ -220,6 +220,13 @@ target_link_dependencies(libdevilutionx_controller_buttons
   DevilutionX::SDL
 )
 
+add_devilutionx_object_library(libdevilutionx_control_mode
+  controls/control_mode.cpp
+)
+target_link_dependencies(libdevilutionx_control_mode PUBLIC
+  libdevilutionx_controller_buttons
+)
+
 add_devilutionx_object_library(libdevilutionx_padmapper
   controls/padmapper.cpp
 )
@@ -428,6 +435,7 @@ target_link_dependencies(libdevilutionx_options PUBLIC
   fmt::fmt
   tl
   libdevilutionx_controller_buttons
+  libdevilutionx_control_mode
   libdevilutionx_logged_fstream
   libdevilutionx_quick_messages
   libdevilutionx_strings
@@ -654,6 +662,7 @@ target_link_dependencies(libdevilutionx PUBLIC
   libdevilutionx_codec
   libdevilutionx_config
   libdevilutionx_controller_buttons
+  libdevilutionx_control_mode
   libdevilutionx_crawl
   libdevilutionx_direction
   libdevilutionx_surface

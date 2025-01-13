@@ -11,6 +11,7 @@
 
 #include <fmt/format.h>
 
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/backbuffer_state.hpp"

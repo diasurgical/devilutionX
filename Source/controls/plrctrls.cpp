@@ -15,6 +15,7 @@
 #ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
 #endif
+#include "controls/control_mode.hpp"
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
 #include "cursor.h"
@@ -44,16 +45,7 @@
 
 namespace devilution {
 
-ControlTypes ControlMode = ControlTypes::None;
-ControlTypes ControlDevice = ControlTypes::None;
 GameActionType ControllerActionHeld = GameActionType_NONE;
-GamepadLayout GamepadType =
-#if defined(DEVILUTIONX_GAMEPAD_TYPE)
-    GamepadLayout::
-        DEVILUTIONX_GAMEPAD_TYPE;
-#else
-    GamepadLayout::Generic;
-#endif
 
 bool StandToggle = false;
 

@@ -22,6 +22,7 @@
 #include "debug.h"
 #endif
 #include "DiabloUI/diabloui.h"
+#include "controls/control_mode.hpp"
 #include "controls/keymapper.hpp"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"

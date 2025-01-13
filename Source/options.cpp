@@ -21,11 +21,8 @@
 #include <function_ref.hpp>
 
 #include "appfat.h"
-#include "control.h"
-#include "controls/controller.h"
+#include "controls/control_mode.hpp"
 #include "controls/controller_buttons.h"
-#include "controls/game_controls.h"
-#include "controls/plrctrls.h"
 #include "engine/assets.hpp"
 #include "engine/sound_defs.hpp"
 #include "platform/locale.hpp"
@@ -33,7 +30,6 @@
 #include "utils/algorithm/container.hpp"
 #include "utils/file_util.h"
 #include "utils/ini.hpp"
-#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/logged_fstream.hpp"
@@ -1444,13 +1440,13 @@ void PadmapperOptions::Action::UpdateValueDescription() const
 		boundInputShortDescription = "";
 		return;
 	}
-	std::string_view buttonName = ToString(boundInput.button);
+	std::string_view buttonName = ToString(GamepadType, boundInput.button);
 	if (boundInput.modifier == ControllerButton_NONE) {
 		boundInputDescription = std::string(buttonName);
 		boundInputShortDescription = std::string(Shorten(buttonName));
 		return;
 	}
-	std::string_view modifierName = ToString(boundInput.modifier);
+	std::string_view modifierName = ToString(GamepadType, boundInput.modifier);
 	boundInputDescription = StrCat(modifierName, "+", buttonName);
 	boundInputShortDescription = StrCat(Shorten(modifierName), "+", Shorten(buttonName));
 }
