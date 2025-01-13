@@ -509,7 +509,7 @@ msgstr "Client-Server (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
 #, fuzzy
-msgid "Offline" 
+msgid "Offline"
 msgstr "Loopback"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:645
@@ -1536,6 +1536,10 @@ msgstr "Sospendi Partita"
 #: Source/diablo.cpp:1776 Source/diablo.cpp:2244
 msgid "Pauses the game."
 msgstr "Sospende la partita."
+
+#: Source/diablo.cpp:1792
+msgid "Pause Game (Alternate)"
+msgstr "Sospendi Partita (Alternativo)"
 
 #: Source/diablo.cpp:1781 Source/diablo.cpp:2249
 msgid "Decrease Gamma"

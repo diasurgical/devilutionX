@@ -475,10 +475,6 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	if (vkey == SDLK_UNKNOWN)
 		return;
 
-	if (vkey == SDLK_PAUSE) {
-		diablo_pause_game();
-		return;
-	}
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
@@ -1790,6 +1786,12 @@ void InitKeymapActions()
 	    N_("Pause Game"),
 	    N_("Pauses the game."),
 	    'P',
+	    diablo_pause_game);
+	sgOptions.Keymapper.AddAction(
+	    "Pause Game (Alternate)",
+	    N_("Pause Game (Alternate)"),
+	    N_("Pauses the game."),
+	    SDLK_PAUSE,
 	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",

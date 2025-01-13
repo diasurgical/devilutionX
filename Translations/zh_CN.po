@@ -369,7 +369,7 @@ msgstr "客户​端​-​服务器​(​TCP)"
 
 #: Source/DiabloUI/selconn.cpp:15
 #, fuzzy
-msgid "Offline" 
+msgid "Offline"
 msgstr "回环"
 
 #: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604
@@ -1351,6 +1351,10 @@ msgstr "暂停​游戏"
 #: Source/diablo.cpp:1613
 msgid "Pauses the game."
 msgstr "暂停​当前​游戏。"
+
+#: Source/diablo.cpp:1792
+msgid "Pause Game (Alternate)"
+msgstr "暂停​游戏（备用）"
 
 #: Source/diablo.cpp:1618
 msgid "Decrease Gamma"

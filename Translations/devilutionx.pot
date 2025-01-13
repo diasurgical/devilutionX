@@ -1525,6 +1525,10 @@ msgstr ""
 msgid "Pause Game"
 msgstr ""
 
+#: Source/diablo.cpp:1792
+msgid "Pause Game (Alternate)"
+msgstr ""
+
 #: Source/diablo.cpp:1897 Source/diablo.cpp:1903 Source/diablo.cpp:2388
 msgid "Pauses the game."
 msgstr ""

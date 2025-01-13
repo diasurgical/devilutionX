@@ -1492,6 +1492,10 @@ msgstr "Pausar Juego"
 msgid "Pauses the game."
 msgstr "Pausar el juego."
 
+#: Source/diablo.cpp:1792
+msgid "Pause Game (Alternate)"
+msgstr "Pausar juego (alternativo)"
+
 #: Source/diablo.cpp:1771 Source/diablo.cpp:2241
 msgid "Decrease Gamma"
 msgstr "Disminuir Gamma"

@@ -1542,6 +1542,10 @@ msgstr "Зупинити Гру"
 msgid "Pauses the game."
 msgstr "Ставить гру на паузу."
 
+#: Source/diablo.cpp:1792
+msgid "Pause Game (Alternate)"
+msgstr "Зупинити гру (Альтернатива)"
+
 #: Source/diablo.cpp:1782 Source/diablo.cpp:2250
 msgid "Decrease Gamma"
 msgstr "Зменшити Гамму"
