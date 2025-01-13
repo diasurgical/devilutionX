@@ -131,8 +131,10 @@ public:
 
 	OptionEntryFlags flags;
 
-protected:
+public:
 	std::string_view key;
+
+protected:
 	const char *name;
 	const char *description;
 	void NotifyValueChanged();
@@ -763,12 +765,15 @@ struct PadmapperOptions : OptionCategoryBase {
 
 		bool SetValue(ControllerButtonCombo value);
 
-	private:
-		ControllerButtonCombo defaultInput;
+		[[nodiscard]] bool isEnabled() const { return !enable || enable(); }
+
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
+		ControllerButtonCombo boundInput;
+
+	private:
+		ControllerButtonCombo defaultInput;
 		std::function<bool()> enable;
-		ControllerButtonCombo boundInput {};
 		mutable GamepadLayout boundInputDescriptionType = GamepadLayout::Generic;
 		mutable std::string boundInputDescription;
 		mutable std::string boundInputShortDescription;
@@ -792,23 +797,17 @@ struct PadmapperOptions : OptionCategoryBase {
 	    std::function<bool()> enable = nullptr,
 	    unsigned index = 0);
 	void CommitActions();
-	void ButtonPressed(ControllerButton button);
-	void ButtonReleased(ControllerButton button, bool invokeAction = true);
-	void ReleaseAllActiveButtons();
-	bool IsActive(std::string_view actionName) const;
-	std::string_view ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const;
 	std::string_view InputNameForAction(std::string_view actionName, bool useShortName = false) const;
 	ControllerButtonCombo ButtonComboForAction(std::string_view actionName) const;
 
-private:
+	[[nodiscard]] const Action *findAction(ControllerButton button, tl::function_ref<bool(ControllerButton)> isModifierPressed) const;
+
 	std::forward_list<Action> actions;
-	std::array<const Action *, enum_size<ControllerButton>::value> buttonToReleaseAction;
+
+private:
 	std::array<std::string, enum_size<ControllerButton>::value> buttonToButtonName;
 	ankerl::unordered_dense::segmented_map<std::string, ControllerButton, StringViewHash, StringViewEquals> buttonNameToButton;
 	bool committed = false;
-
-	const Action *FindAction(ControllerButton button) const;
-	bool CanDeferToMovementHandler(const Action &action) const;
 };
 
 struct ModOptions : OptionCategoryBase {

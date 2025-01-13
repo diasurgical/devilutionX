@@ -55,6 +55,17 @@ struct ControllerButtonCombo {
 	ControllerButton button;
 };
 
+struct ControllerButtonEvent {
+	ControllerButtonEvent(ControllerButton button, bool up)
+	    : button(button)
+	    , up(up)
+	{
+	}
+
+	ControllerButton button;
+	bool up;
+};
+
 inline bool IsDPadButton(ControllerButton button)
 {
 	return button == ControllerButton_BUTTON_DPAD_UP

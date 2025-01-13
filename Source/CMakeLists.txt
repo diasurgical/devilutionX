@@ -219,6 +219,14 @@ target_link_dependencies(libdevilutionx_controller_buttons
   DevilutionX::SDL
 )
 
+add_devilutionx_object_library(libdevilutionx_padmapper
+  controls/padmapper.cpp
+)
+target_link_dependencies(libdevilutionx_padmapper PUBLIC
+  libdevilutionx_controller_buttons
+  libdevilutionx_options
+)
+
 add_devilutionx_object_library(libdevilutionx_crawl
   crawl.cpp
 )
@@ -662,6 +670,7 @@ target_link_dependencies(libdevilutionx PUBLIC
   libdevilutionx_mpq
   libdevilutionx_multiplayer
   libdevilutionx_options
+  libdevilutionx_padmapper
   libdevilutionx_parse_int
   libdevilutionx_pathfinding
   libdevilutionx_pkware_encrypt

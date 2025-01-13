@@ -7,6 +7,7 @@
 #include "controls/devices/game_controller.h"
 #endif
 #include "controls/devices/joystick.h"
+#include "controls/padmapper.hpp"
 #include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "doom.h"
@@ -214,6 +215,28 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 	return false;
 }
 
+bool CanDeferToMovementHandler(const PadmapperOptions::Action &action)
+{
+	if (action.boundInput.modifier != ControllerButton_NONE)
+		return false;
+
+	if (SpellSelectFlag) {
+		const std::string_view prefix { "QuickSpell" };
+		const std::string_view key { action.key };
+		if (key.size() >= prefix.size()) {
+			const std::string_view truncated { key.data(), prefix.size() };
+			if (truncated == prefix)
+				return false;
+		}
+	}
+
+	return IsAnyOf(action.boundInput.button,
+	    ControllerButton_BUTTON_DPAD_UP,
+	    ControllerButton_BUTTON_DPAD_DOWN,
+	    ControllerButton_BUTTON_DPAD_LEFT,
+	    ControllerButton_BUTTON_DPAD_RIGHT);
+}
+
 void PressControllerButton(ControllerButton button)
 {
 	if (IsStashOpen) {
@@ -298,7 +321,10 @@ void PressControllerButton(ControllerButton button)
 		}
 	}
 
-	GetOptions().Padmapper.ButtonPressed(button);
+	const PadmapperOptions::Action *action = GetOptions().Padmapper.findAction(button, IsControllerButtonPressed);
+	if (action == nullptr) return;
+	if (IsMovementHandlerActive() && CanDeferToMovementHandler(*action)) return;
+	PadmapperPress(button, *action);
 }
 
 } // namespace
@@ -337,7 +363,7 @@ bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
 		return false;
 	if (!ctrlEvent.up && ctrlEvent.button == SuppressedButton)
 		return false;
-	std::string_view actionName = GetOptions().Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent);
+	const std::string_view actionName = PadmapperActionNameTriggeredByButtonEvent(ctrlEvent);
 	return IsAnyOf(actionName, "LeftMouseClick1", "LeftMouseClick2", "RightMouseClick1", "RightMouseClick2");
 }
 
@@ -355,8 +381,7 @@ bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonE
 	struct ButtonReleaser {
 		~ButtonReleaser()
 		{
-			if (ctrlEvent.up)
-				GetOptions().Padmapper.ButtonReleased(ctrlEvent.button, false);
+			if (ctrlEvent.up) PadmapperRelease(ctrlEvent.button, /*invokeAction=*/false);
 		}
 		ControllerButtonEvent ctrlEvent;
 	};
@@ -377,10 +402,10 @@ bool HandleControllerButtonEvent(const SDL_Event &event, const ControllerButtonE
 		SuppressedButton = ControllerButton_NONE;
 	}
 
-	if (ctrlEvent.up && GetOptions().Padmapper.ActionNameTriggeredByButtonEvent(ctrlEvent) != "") {
+	if (ctrlEvent.up && !PadmapperActionNameTriggeredByButtonEvent(ctrlEvent).empty()) {
 		// Button press may have brought up a menu;
 		// don't confuse release of that button with intent to interact with the menu
-		GetOptions().Padmapper.ButtonReleased(ctrlEvent.button);
+		PadmapperRelease(ctrlEvent.button, /*invokeAction=*/true);
 		return true;
 	} else if (GetGameAction(event, ctrlEvent, &action)) {
 		ProcessGameAction(action);
