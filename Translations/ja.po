@@ -1530,6 +1530,10 @@ msgstr "ゲーム​の​一時停止"
 msgid "Pauses the game."
 msgstr "ゲーム​を​一時停止​し​ます。"
 
+#: Source/diablo.cpp:1792
+msgid "Pause Game (Alternate)"
+msgstr "ゲーム​の​一時停止"
+
 #: Source/diablo.cpp:1782 Source/diablo.cpp:2250
 msgid "Decrease Gamma"
 msgstr "ガンマ​値​を​下げる"
