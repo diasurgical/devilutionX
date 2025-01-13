@@ -1387,9 +1387,9 @@ std::vector<OptionEntryBase *> PadmapperOptions::GetEntries()
 
 PadmapperOptions::Action::Action(std::string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
-    , defaultInput(defaultInput)
     , actionPressed(std::move(actionPressed))
     , actionReleased(std::move(actionReleased))
+    , defaultInput(defaultInput)
     , enable(std::move(enable))
     , dynamicIndex(index)
 {
@@ -1548,66 +1548,6 @@ void PadmapperOptions::CommitActions()
 	committed = true;
 }
 
-void PadmapperOptions::ButtonPressed(ControllerButton button)
-{
-	const Action *action = FindAction(button);
-	if (action == nullptr)
-		return;
-	if (IsMovementHandlerActive() && CanDeferToMovementHandler(*action))
-		return;
-	if (action->actionPressed)
-		action->actionPressed();
-	SuppressedButton = action->boundInput.modifier;
-	buttonToReleaseAction[static_cast<size_t>(button)] = action;
-}
-
-void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction)
-{
-	if (invokeAction) {
-		const Action *action = buttonToReleaseAction[static_cast<size_t>(button)];
-		if (action == nullptr)
-			return; // Ignore unmapped buttons.
-
-		// Check that the action can be triggered.
-		if (action->actionReleased && (!action->enable || action->enable()))
-			action->actionReleased();
-	}
-	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
-}
-
-void PadmapperOptions::ReleaseAllActiveButtons()
-{
-	for (auto *action : buttonToReleaseAction) {
-		if (action == nullptr)
-			continue;
-		ControllerButton button = action->boundInput.button;
-		ButtonReleased(button, true);
-	}
-}
-
-bool PadmapperOptions::IsActive(std::string_view actionName) const
-{
-	for (const Action &action : actions) {
-		if (action.key != actionName)
-			continue;
-		const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(action.boundInput.button)];
-		return releaseAction != nullptr && releaseAction->key == actionName;
-	}
-	return false;
-}
-
-std::string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const
-{
-	if (!ctrlEvent.up) {
-		const Action *pressAction = FindAction(ctrlEvent.button);
-		return pressAction != nullptr ? pressAction->key : "";
-	}
-	const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(ctrlEvent.button)];
-	if (releaseAction == nullptr)
-		return "";
-	return releaseAction->key;
-}
-
 std::string_view PadmapperOptions::InputNameForAction(std::string_view actionName, bool useShortName) const
 {
 	for (const Action &action : actions) {
@@ -1628,7 +1568,7 @@ ControllerButtonCombo PadmapperOptions::ButtonComboForAction(std::string_view ac
 	return ControllerButton_NONE;
 }
 
-const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton button) const
+const PadmapperOptions::Action *PadmapperOptions::findAction(ControllerButton button, tl::function_ref<bool(ControllerButton)> isModifierPressed) const
 {
 	// To give preference to button combinations,
 	// first pass ignores mappings where no modifier is bound
@@ -1638,7 +1578,7 @@ const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton bu
 			continue;
 		if (button != combo.button)
 			continue;
-		if (!IsControllerButtonPressed(combo.modifier))
+		if (!isModifierPressed(combo.modifier))
 			continue;
 		if (action.enable && !action.enable())
 			continue;
@@ -1657,28 +1597,6 @@ const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton bu
 	}
 
 	return nullptr;
-}
-
-bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
-{
-	if (action.boundInput.modifier != ControllerButton_NONE)
-		return false;
-
-	if (SpellSelectFlag) {
-		const std::string_view prefix { "QuickSpell" };
-		const std::string_view key { action.key };
-		if (key.size() >= prefix.size()) {
-			const std::string_view truncated { key.data(), prefix.size() };
-			if (truncated == prefix)
-				return false;
-		}
-	}
-
-	return IsAnyOf(action.boundInput.button,
-	    ControllerButton_BUTTON_DPAD_UP,
-	    ControllerButton_BUTTON_DPAD_DOWN,
-	    ControllerButton_BUTTON_DPAD_LEFT,
-	    ControllerButton_BUTTON_DPAD_RIGHT);
 }
 
 ModOptions::ModOptions()

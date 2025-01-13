@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "controls/input.h"
+#include "controls/padmapper.hpp"
 #include "engine/demomode.h"
 #include "engine/render/primitive_render.hpp"
 #include "interfac.h"
@@ -143,7 +144,7 @@ EventHandler CurrentEventHandler;
 
 EventHandler SetEventHandler(EventHandler eventHandler)
 {
-	GetOptions().Padmapper.ReleaseAllActiveButtons();
+	PadmapperReleaseAllActiveButtons();
 
 	EventHandler previousHandler = CurrentEventHandler;
 	CurrentEventHandler = eventHandler;
