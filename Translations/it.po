@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2025-01-14 23:53+0100\n"
-"PO-Revision-Date: 2025-01-14 23:53+0100\n"
+"PO-Revision-Date: 2025-01-14 23:56+0100\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -509,9 +509,8 @@ msgid "Client-Server (TCP)"
 msgstr "Client-Server (TCP)"
 
 #: Source/DiabloUI/multi/selconn.cpp:15
-#, fuzzy
 msgid "Offline"
-msgstr "Loopback"
+msgstr "Non In Linea"
 
 #: Source/DiabloUI/multi/selconn.cpp:56 Source/DiabloUI/multi/selgame.cpp:647
 #: Source/DiabloUI/multi/selgame.cpp:673
@@ -968,9 +967,8 @@ msgid "Game: "
 msgstr "Partita: "
 
 #: Source/automap.cpp:743
-#, fuzzy
 msgid "Offline Game"
-msgstr "Loopback"
+msgstr "Partita Non In Linea"
 
 #: Source/automap.cpp:745
 msgid "Password: "
@@ -1112,10 +1110,8 @@ msgid "Prints help overview or help for a specific command."
 msgstr "Mostra guida generale o la guida per un comando specifico."
 
 #: Source/control.cpp:524
-#, fuzzy
-#| msgid "Command "
 msgid "[command]"
-msgstr "Comando "
+msgstr "[comando]"
 
 #: Source/control.cpp:525
 msgid "/arena"
@@ -1126,10 +1122,8 @@ msgid "Enter a PvP Arena."
 msgstr "Entra in un'Arena PvP."
 
 #: Source/control.cpp:525
-#, fuzzy
-#| msgid "{arena-number}"
 msgid "<arena-number>"
-msgstr "{arena-number}"
+msgstr "<numero-arena>"
 
 #: Source/control.cpp:526
 msgid "/arenapot"
@@ -1140,10 +1134,8 @@ msgid "Gives Arena Potions."
 msgstr "Fornisce Pozioni in Arena."
 
 #: Source/control.cpp:526
-#, fuzzy
-#| msgid "{number}"
 msgid "<number>"
-msgstr "{number}"
+msgstr "<numero>"
 
 #: Source/control.cpp:527
 msgid "/inspect"
@@ -1154,18 +1146,16 @@ msgid "Inspects stats and equipment of another player."
 msgstr "Ispeziona le statistiche e l'equipaggiamento di un altro giocatore."
 
 #: Source/control.cpp:527
-#, fuzzy
-#| msgid "{player name}"
 msgid "<player name>"
-msgstr "{player name}"
+msgstr "<nome giocatore>"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
-msgstr ""
+msgstr "/seedinfo"
 
 #: Source/control.cpp:528
 msgid "Show seed infos for current level."
-msgstr ""
+msgstr "Mostra dettagli seed per il livello attuale."
 
 #: Source/control.cpp:538
 msgid "Command \""
@@ -1851,11 +1841,8 @@ msgid "error: read 0 bytes from server"
 msgstr "errore: 0 byte ricevuti dal server"
 
 #: Source/error.cpp:58
-#, fuzzy
-#| msgctxt "spell"
-#| msgid "Flame Wave"
 msgid "Game saved"
-msgstr "Ondata di Fiamme"
+msgstr "Partita salvata"
 
 #: Source/error.cpp:59
 msgid "No multiplayer functions in demo"
@@ -2410,7 +2397,7 @@ msgstr "Impossibile creare la finestra principale"
 
 #: Source/inv.cpp:2120
 msgid "No room for item"
-msgstr ""
+msgstr "Non c'è spazio per l'oggetto"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:236 Source/panels/charpanel.cpp:165
 msgid "Gold"
@@ -6641,8 +6628,6 @@ msgid "Game Mode"
 msgstr "Modalità Gioco"
 
 #: Source/options.cpp:563
-#, fuzzy
-#| msgid "Gameplay Settings"
 msgid "Game Mode Settings"
 msgstr "Impostazioni di Gioco"
 
@@ -6869,12 +6854,14 @@ msgstr ""
 
 #: Source/options.cpp:983
 msgid "Frame Rate Control"
-msgstr ""
+msgstr "Controllo Frame Rate"
 
 #: Source/options.cpp:984
 msgid ""
 "Manages frame rate to balance performance, reduce tearing, or save power."
 msgstr ""
+"Gestisce il frame rate per bilanciare le prestazioni, ridurre il tearing o "
+"risparmiare energia."
 
 #: Source/options.cpp:994
 msgid "Vertical Sync"
@@ -6882,7 +6869,7 @@ msgstr "Sincronizzazione Verticale"
 
 #: Source/options.cpp:996
 msgid "Limit FPS"
-msgstr ""
+msgstr "Limita FPS"
 
 #: Source/options.cpp:999
 msgid "Zoom on when enabled."
