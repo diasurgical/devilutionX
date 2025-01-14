@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2025-01-14 22:23+0100\n"
-"PO-Revision-Date: 2025-01-14 22:23+0100\n"
+"PO-Revision-Date: 2025-01-14 22:26+0100\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -4160,12 +4160,14 @@ msgstr ""
 
 #: Source/options.cpp:784
 msgid "Frame Rate Control"
-msgstr ""
+msgstr "Controllo Frame Rate"
 
 #: Source/options.cpp:785
 msgid ""
 "Manages frame rate to balance performance, reduce tearing, or save power."
 msgstr ""
+"Gestisce il frame rate per bilanciare le prestazioni, ridurre il tearing o "
+"risparmiare energia."
 
 #: Source/options.cpp:795
 msgid "Vertical Sync"
@@ -4173,7 +4175,7 @@ msgstr "Sincronizzazione Verticale"
 
 #: Source/options.cpp:797
 msgid "Limit FPS"
-msgstr ""
+msgstr "Limita FPS"
 
 #: Source/options.cpp:800
 msgid "Zoom on when enabled."
