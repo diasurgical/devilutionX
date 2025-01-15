@@ -767,6 +767,43 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 		MousePosition = { event.button.x, event.button.y };
 		HandleMouseButtonUp(event.button.button, modState);
 		return;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	case SDL_MOUSEWHEEL:
+		if (event.wheel.y > 0) { // Up
+			if (stextflag != TalkID::None) {
+				StoreUp();
+			} else if (QuestLogIsOpen) {
+				QuestlogUp();
+			} else if (HelpFlag) {
+				HelpScrollUp();
+			} else if (ChatLogFlag) {
+				ChatLogScrollUp();
+			} else if (IsStashOpen) {
+				Stash.PreviousPage();
+			} else {
+				sgOptions.Keymapper.KeyPressed(MouseScrollUpButton);
+			}
+		} else if (event.wheel.y < 0) { // down
+			if (stextflag != TalkID::None) {
+				StoreDown();
+			} else if (QuestLogIsOpen) {
+				QuestlogDown();
+			} else if (HelpFlag) {
+				HelpScrollDown();
+			} else if (ChatLogFlag) {
+				ChatLogScrollDown();
+			} else if (IsStashOpen) {
+				Stash.NextPage();
+			} else {
+				sgOptions.Keymapper.KeyPressed(MouseScrollDownButton);
+			}
+		} else if (event.wheel.x > 0) { // left
+			sgOptions.Keymapper.KeyPressed(MouseScrollLeftButton);
+		} else if (event.wheel.x < 0) { // right
+			sgOptions.Keymapper.KeyPressed(MouseScrollRightButton);
+		}
+		break;
+#endif
 	default:
 		if (IsCustomEvent(event.type)) {
 			if (gbIsMultiplayer)

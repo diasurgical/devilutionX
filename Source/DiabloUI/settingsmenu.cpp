@@ -447,6 +447,19 @@ void UiSettingsMenu()
 						break;
 					}
 					break;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+				case SDL_MOUSEWHEEL:
+					if (event.wheel.y > 0) {
+						key = MouseScrollUpButton;
+					} else if (event.wheel.y < 0) {
+						key = MouseScrollDownButton;
+					} else if (event.wheel.x > 0) {
+						key = MouseScrollLeftButton;
+					} else if (event.wheel.x < 0) {
+						key = MouseScrollRightButton;
+					}
+					break;
+#endif
 				}
 				// Ignore unknown keys
 				if (key == SDLK_UNKNOWN)

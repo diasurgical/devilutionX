@@ -1327,6 +1327,10 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask, "MMOUSE");
 	keyIDToKeyName.emplace(SDL_BUTTON_X1 | KeymapperMouseButtonMask, "X1MOUSE");
 	keyIDToKeyName.emplace(SDL_BUTTON_X2 | KeymapperMouseButtonMask, "X2MOUSE");
+	keyIDToKeyName.emplace(MouseScrollUpButton, "SCROLLUPMOUSE");
+	keyIDToKeyName.emplace(MouseScrollDownButton, "SCROLLDOWNMOUSE");
+	keyIDToKeyName.emplace(MouseScrollLeftButton, "SCROLLLEFTMOUSE");
+	keyIDToKeyName.emplace(MouseScrollRightButton, "SCROLLRIGHTMOUSE");
 
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {
