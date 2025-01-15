@@ -2036,7 +2036,7 @@ void ConsumeStaffCharge(Player &player)
 		return;
 
 	staff._iCharges--;
-	CalcPlrStaff(player);
+	CalcPlrInv(player, false);
 }
 
 bool CanUseStaff(Player &player, SpellID spellId)
