@@ -5,6 +5,7 @@ set(UBSAN OFF)
 SET(DISABLE_LTO ON)
 set(NONET ON)
 set(NOEXIT ON)
+set(DEVILUTIONX_GAMEPAD_TYPE PlayStation)
 set(BUILD_ASSETS_MPQ ON)
 
 # Packbrew SDK provides SDL_image, but FindSDL2_image() fails to
