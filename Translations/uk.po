@@ -23,12 +23,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
-"Переклад українською\n"
-"\n"
-"Олександр \"tsunami_state\" Калько\n"
-"\n"
-"Дизайн Гри"
+msgstr "Дизайн Гри"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -1835,11 +1830,8 @@ msgid "error: read 0 bytes from server"
 msgstr "помилка: прочитано 0 байт від сервера"
 
 #: Source/error.cpp:58
-#, fuzzy
-#| msgctxt "spell"
-#| msgid "Flame Wave"
 msgid "Game saved"
-msgstr "Хвиля Вогню"
+msgstr "Гру збережено"
 
 #: Source/error.cpp:59
 msgid "No multiplayer functions in demo"
@@ -2391,7 +2383,7 @@ msgstr "Немає місця для предмету"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:236 Source/panels/charpanel.cpp:165
 msgid "Gold"
-msgstr "Золотий"
+msgstr "Золото"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:172
 msgid "Short Sword"
@@ -6626,10 +6618,8 @@ msgid "Game Mode"
 msgstr "Режим Гри"
 
 #: Source/options.cpp:563
-#, fuzzy
-#| msgid "Gameplay Settings"
 msgid "Game Mode Settings"
-msgstr "Налаштування Гри"
+msgstr "Налаштування Режиму Гри"
 
 #: Source/options.cpp:564
 msgid "Play Diablo or Hellfire."
@@ -6852,12 +6842,14 @@ msgstr "Збільшує зображення гри по коефіцієнту
 
 #: Source/options.cpp:983
 msgid "Frame Rate Control"
-msgstr ""
+msgstr "Керування Частотою Кадрів"
 
 #: Source/options.cpp:984
 msgid ""
 "Manages frame rate to balance performance, reduce tearing, or save power."
 msgstr ""
+"Керує частотою кадрів, щоб збалансувати продуктивність, зменшити розриви або "
+"заощадити енергію."
 
 #: Source/options.cpp:994
 msgid "Vertical Sync"
@@ -6865,7 +6857,7 @@ msgstr "Вертикальна Синхронізація"
 
 #: Source/options.cpp:996
 msgid "Limit FPS"
-msgstr ""
+msgstr "FPS ліміт"
 
 #: Source/options.cpp:999
 msgid "Zoom on when enabled."
@@ -7302,19 +7294,19 @@ msgstr "Налаштування Мови"
 
 #: Source/options.cpp:1305
 msgid "Keymapping"
-msgstr "Назначення Клавіш"
+msgstr "Клавіатура"
 
 #: Source/options.cpp:1305
 msgid "Keymapping Settings"
-msgstr "Налаштування Назначення"
+msgstr "Налаштування призначення клавіш клавіатури"
 
 #: Source/options.cpp:1528
 msgid "Padmapping"
-msgstr "Падмапінг"
+msgstr "Геймпад"
 
 #: Source/options.cpp:1528
 msgid "Padmapping Settings"
-msgstr "Налаштування Падмапінгу"
+msgstr "Налаштування призначення кнопок геймпаду"
 
 #: Source/panels/charpanel.cpp:127
 msgid "Level"
@@ -7330,7 +7322,7 @@ msgstr "Наступний рівень"
 
 #: Source/panels/charpanel.cpp:143
 msgid "Base"
-msgstr "Базовий"
+msgstr "База"
 
 #: Source/panels/charpanel.cpp:144
 msgid "Now"
@@ -7354,7 +7346,7 @@ msgstr "Живучість"
 
 #: Source/panels/charpanel.cpp:159
 msgid "Points to distribute"
-msgstr "Розподілити очків"
+msgstr "Вільні очки"
 
 #: Source/panels/charpanel.cpp:169
 msgid "Armor class"
@@ -12013,22 +12005,3 @@ msgstr "Вбитий Житель"
 #: Source/utils/format_int.cpp:26
 msgid ","
 msgstr ","
-
-#~ msgid "No automap available in town"
-#~ msgstr "Автокарта недоступна в Місті"
-
-#~ msgid ""
-#~ "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
-#~ "frame. Disabling it can help with mouse lag on some systems."
-#~ msgstr ""
-#~ "Примушує очікування кінця Вертикальної Синхронізації. Запобігає ефекту "
-#~ "розриву зображення. Якщо налаштування вимкнене, то це може зменшити лаг "
-#~ "на деяких системах."
-
-#~ msgid "FPS Limiter"
-#~ msgstr "Ліміт Кадрів в Секунду"
-
-#~ msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
-#~ msgstr ""
-#~ "Кадри в секунду лімітовані, щоб запобігти високе використання процессора. "
-#~ "Ліміт враховує частоту оновлення монітора."
