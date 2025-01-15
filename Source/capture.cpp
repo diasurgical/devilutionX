@@ -23,6 +23,7 @@
 #include "utils/surface_to_png.hpp"
 #endif
 
+#include "effects.h"
 #include "engine/backbuffer_state.hpp"
 #include "engine/dx.h"
 #include "engine/palette.h"
@@ -57,25 +58,10 @@ SDL_RWops *CaptureFile(std::string *dstPath)
 	return SDL_RWFromFile(dstPath->c_str(), "wb");
 }
 
-/**
- * @brief Make a red version of the given palette and apply it to the screen.
- */
-void RedPalette()
-{
-	for (int i = 0; i < 256; i++) {
-		system_palette[i].g = 0;
-		system_palette[i].b = 0;
-	}
-	palette_update();
-	BltFast(nullptr, nullptr);
-	RenderPresent();
-}
-
 } // namespace
 
 void CaptureScreen()
 {
-	SDL_Color palette[256];
 	std::string fileName;
 	const uint32_t startTime = SDL_GetTicks();
 
@@ -86,11 +72,10 @@ void CaptureScreen()
 		return;
 	}
 	DrawAndBlit();
-	PaletteGetEntries(256, palette);
-	RedPalette();
-	for (int i = 0; i < 256; i++) {
-		system_palette[i] = palette[i];
-	}
+
+	auto tempPalette = system_palette;
+
+	system_palette = orig_palette;
 	palette_update();
 
 	const tl::expected<void, std::string> result =
@@ -105,11 +90,10 @@ void CaptureScreen()
 		RemoveFile(fileName.c_str());
 	} else {
 		Log("Screenshot saved at {}", fileName);
+		PlaySFX(SfxID::MenuSelect);
 	}
-	const uint32_t timePassed = SDL_GetTicks() - startTime;
-	if (timePassed < 300) {
-		SDL_Delay(300 - timePassed);
-	}
+	system_palette = tempPalette;
+	palette_update();
 	RedrawEverything();
 }
 
