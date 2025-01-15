@@ -16,6 +16,7 @@
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "doom.h"
@@ -1800,8 +1801,8 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
 		return;
 	}
-	const std::string_view activateButton = ToString(ControllerButton_BUTTON_Y);
-	const std::string_view castButton = ToString(ControllerButton_BUTTON_X);
+	const std::string_view activateButton = ToString(GamepadType, ControllerButton_BUTTON_Y);
+	const std::string_view castButton = ToString(GamepadType, ControllerButton_BUTTON_X);
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("{} to view")), activateButton));

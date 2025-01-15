@@ -15,6 +15,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "control.h"
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "doom.h"
 #include "engine/backbuffer_state.hpp"

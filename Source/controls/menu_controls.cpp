@@ -2,6 +2,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "controls/axis_direction.h"
+#include "controls/control_mode.hpp"
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/plrctrls.h"

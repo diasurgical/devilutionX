@@ -6,6 +6,7 @@
 
 #include <cstdint>
 
+#include "controls/control_mode.hpp"
 #include "controls/plrctrls.h"
 #include "diablo.h"
 #include "effects.h"

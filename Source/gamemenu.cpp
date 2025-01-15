@@ -8,6 +8,7 @@
 #include "cursor.h"
 #include "diablo_msg.hpp"
 #include "engine/backbuffer_state.hpp"
+#include "engine/demomode.h"
 #include "engine/events.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
@@ -358,7 +359,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
 		CornerstoneSave();
-		SaveOptions();
+		if (!demo::IsRunning()) SaveOptions();
 	}
 	interface_msg_pump();
 	SetEventHandler(saveProc);

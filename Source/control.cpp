@@ -17,6 +17,7 @@
 
 #include "DiabloUI/text_input.hpp"
 #include "automap.h"
+#include "controls/control_mode.hpp"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"

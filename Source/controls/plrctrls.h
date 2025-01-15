@@ -17,29 +17,7 @@ enum class BeltItemType : uint8_t {
 	Mana,
 };
 
-enum class ControlTypes : uint8_t {
-	None,
-	KeyboardAndMouse,
-	Gamepad,
-	VirtualGamepad,
-};
-
-extern ControlTypes ControlMode;
-
-/**
- * @brief Controlling device type.
- *
- * While simulating a mouse, `ControlMode` is set to `KeyboardAndMouse`,
- * even though a gamepad is used to control it.
- *
- * This value is always set to the actual active device type.
- */
-extern ControlTypes ControlDevice;
-
 extern GameActionType ControllerActionHeld;
-
-extern GamepadLayout GamepadType;
-
 extern bool StandToggle;
 
 // Runs every frame.

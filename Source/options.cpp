@@ -21,20 +21,15 @@
 #include <function_ref.hpp>
 
 #include "appfat.h"
-#include "control.h"
-#include "controls/controller.h"
+#include "controls/control_mode.hpp"
 #include "controls/controller_buttons.h"
-#include "controls/game_controls.h"
-#include "controls/plrctrls.h"
 #include "engine/assets.hpp"
-#include "engine/demomode.h"
 #include "engine/sound_defs.hpp"
 #include "platform/locale.hpp"
 #include "quick_messages.hpp"
 #include "utils/algorithm/container.hpp"
 #include "utils/file_util.h"
 #include "utils/ini.hpp"
-#include "utils/is_of.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/logged_fstream.hpp"
@@ -193,16 +188,10 @@ void LoadOptions()
 #ifdef __vita__
 	options.Controller.bRearTouch = ini->getBool("Controller", "Enable Rear Touchpad", true);
 #endif
-
-	if (demo::IsRunning())
-		demo::OverrideOptions();
 }
 
 void SaveOptions()
 {
-	if (demo::IsRunning())
-		return;
-
 	Options &options = GetOptions();
 	for (OptionCategoryBase *pCategory : options.GetCategories()) {
 		for (const OptionEntryBase *pEntry : pCategory->GetEntries()) {
@@ -1174,9 +1163,9 @@ std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
 
 KeymapperOptions::Action::Action(std::string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
-    , defaultKey(defaultKey)
     , actionPressed(std::move(actionPressed))
     , actionReleased(std::move(actionReleased))
+    , defaultKey(defaultKey)
     , enable(std::move(enable))
     , dynamicIndex(index)
 {
@@ -1285,53 +1274,11 @@ void KeymapperOptions::CommitActions()
 	actions.reverse();
 }
 
-void KeymapperOptions::KeyPressed(uint32_t key) const
+const KeymapperOptions::Action *KeymapperOptions::findAction(uint32_t key) const
 {
-	if (key >= SDLK_a && key <= SDLK_z) {
-		key -= 'a' - 'A';
-	}
-
 	auto it = keyIDToAction.find(key);
-	if (it == keyIDToAction.end())
-		return; // Ignore unmapped keys.
-
-	const Action &action = it->second.get();
-
-	// Check that the action can be triggered and that the chat textbox is not
-	// open.
-	if (!action.actionPressed || (action.enable && !action.enable()) || ChatFlag)
-		return;
-
-	action.actionPressed();
-}
-
-void KeymapperOptions::KeyReleased(SDL_Keycode key) const
-{
-	if (key >= SDLK_a && key <= SDLK_z) {
-		key = static_cast<SDL_Keycode>(static_cast<Sint32>(key) - ('a' - 'A'));
-	}
-	auto it = keyIDToAction.find(key);
-	if (it == keyIDToAction.end())
-		return; // Ignore unmapped keys.
-
-	const Action &action = it->second.get();
-
-	// Check that the action can be triggered and that the chat or gold textbox is not
-	// open. If either of those textboxes are open, only return if the key can be used for entry into the box
-	if (!action.actionReleased || (action.enable && !action.enable()) || ((ChatFlag && IsTextEntryKey(key)) || (DropGoldFlag && IsNumberEntryKey(key))))
-		return;
-
-	action.actionReleased();
-}
-
-bool KeymapperOptions::IsTextEntryKey(SDL_Keycode vkey) const
-{
-	return IsAnyOf(vkey, SDLK_ESCAPE, SDLK_RETURN, SDLK_KP_ENTER, SDLK_BACKSPACE, SDLK_DOWN, SDLK_UP) || (vkey >= SDLK_SPACE && vkey <= SDLK_z);
-}
-
-bool KeymapperOptions::IsNumberEntryKey(SDL_Keycode vkey) const
-{
-	return ((vkey >= SDLK_0 && vkey <= SDLK_9) || vkey == SDLK_BACKSPACE);
+	if (it == keyIDToAction.end()) return nullptr;
+	return &it->second.get();
 }
 
 std::string_view KeymapperOptions::KeyNameForAction(std::string_view actionName) const
@@ -1394,9 +1341,9 @@ std::vector<OptionEntryBase *> PadmapperOptions::GetEntries()
 
 PadmapperOptions::Action::Action(std::string_view key, const char *name, const char *description, ControllerButtonCombo defaultInput, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
-    , defaultInput(defaultInput)
     , actionPressed(std::move(actionPressed))
     , actionReleased(std::move(actionReleased))
+    , defaultInput(defaultInput)
     , enable(std::move(enable))
     , dynamicIndex(index)
 {
@@ -1493,13 +1440,13 @@ void PadmapperOptions::Action::UpdateValueDescription() const
 		boundInputShortDescription = "";
 		return;
 	}
-	std::string_view buttonName = ToString(boundInput.button);
+	std::string_view buttonName = ToString(GamepadType, boundInput.button);
 	if (boundInput.modifier == ControllerButton_NONE) {
 		boundInputDescription = std::string(buttonName);
 		boundInputShortDescription = std::string(Shorten(buttonName));
 		return;
 	}
-	std::string_view modifierName = ToString(boundInput.modifier);
+	std::string_view modifierName = ToString(GamepadType, boundInput.modifier);
 	boundInputDescription = StrCat(modifierName, "+", buttonName);
 	boundInputShortDescription = StrCat(Shorten(modifierName), "+", Shorten(buttonName));
 }
@@ -1555,69 +1502,6 @@ void PadmapperOptions::CommitActions()
 	committed = true;
 }
 
-void PadmapperOptions::ButtonPressed(ControllerButton button)
-{
-	const Action *action = FindAction(button);
-	if (action == nullptr)
-		return;
-	if (IsMovementHandlerActive() && CanDeferToMovementHandler(*action))
-		return;
-	if (action->actionPressed)
-		action->actionPressed();
-	SuppressedButton = action->boundInput.modifier;
-	buttonToReleaseAction[static_cast<size_t>(button)] = action;
-}
-
-void PadmapperOptions::ButtonReleased(ControllerButton button, bool invokeAction)
-{
-	if (invokeAction) {
-		const Action *action = buttonToReleaseAction[static_cast<size_t>(button)];
-		if (action == nullptr)
-			return; // Ignore unmapped buttons.
-
-		// Check that the action can be triggered.
-		if (action->actionReleased && (!action->enable || action->enable()))
-			action->actionReleased();
-	}
-	buttonToReleaseAction[static_cast<size_t>(button)] = nullptr;
-}
-
-void PadmapperOptions::ReleaseAllActiveButtons()
-{
-	for (auto *action : buttonToReleaseAction) {
-		if (action == nullptr)
-			continue;
-		ControllerButton button = action->boundInput.button;
-		ButtonReleased(button, true);
-	}
-}
-
-bool PadmapperOptions::IsActive(std::string_view actionName) const
-{
-	for (const Action &action : actions) {
-		if (action.key != actionName)
-			continue;
-		const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(action.boundInput.button)];
-		return releaseAction != nullptr && releaseAction->key == actionName;
-	}
-	return false;
-}
-
-std::string_view PadmapperOptions::ActionNameTriggeredByButtonEvent(ControllerButtonEvent ctrlEvent) const
-{
-	if (!gbRunGame)
-		return "";
-
-	if (!ctrlEvent.up) {
-		const Action *pressAction = FindAction(ctrlEvent.button);
-		return pressAction != nullptr ? pressAction->key : "";
-	}
-	const Action *releaseAction = buttonToReleaseAction[static_cast<size_t>(ctrlEvent.button)];
-	if (releaseAction == nullptr)
-		return "";
-	return releaseAction->key;
-}
-
 std::string_view PadmapperOptions::InputNameForAction(std::string_view actionName, bool useShortName) const
 {
 	for (const Action &action : actions) {
@@ -1638,7 +1522,7 @@ ControllerButtonCombo PadmapperOptions::ButtonComboForAction(std::string_view ac
 	return ControllerButton_NONE;
 }
 
-const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton button) const
+const PadmapperOptions::Action *PadmapperOptions::findAction(ControllerButton button, tl::function_ref<bool(ControllerButton)> isModifierPressed) const
 {
 	// To give preference to button combinations,
 	// first pass ignores mappings where no modifier is bound
@@ -1648,7 +1532,7 @@ const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton bu
 			continue;
 		if (button != combo.button)
 			continue;
-		if (!IsControllerButtonPressed(combo.modifier))
+		if (!isModifierPressed(combo.modifier))
 			continue;
 		if (action.enable && !action.enable())
 			continue;
@@ -1667,28 +1551,6 @@ const PadmapperOptions::Action *PadmapperOptions::FindAction(ControllerButton bu
 	}
 
 	return nullptr;
-}
-
-bool PadmapperOptions::CanDeferToMovementHandler(const Action &action) const
-{
-	if (action.boundInput.modifier != ControllerButton_NONE)
-		return false;
-
-	if (SpellSelectFlag) {
-		const std::string_view prefix { "QuickSpell" };
-		const std::string_view key { action.key };
-		if (key.size() >= prefix.size()) {
-			const std::string_view truncated { key.data(), prefix.size() };
-			if (truncated == prefix)
-				return false;
-		}
-	}
-
-	return IsAnyOf(action.boundInput.button,
-	    ControllerButton_BUTTON_DPAD_UP,
-	    ControllerButton_BUTTON_DPAD_DOWN,
-	    ControllerButton_BUTTON_DPAD_LEFT,
-	    ControllerButton_BUTTON_DPAD_RIGHT);
 }
 
 ModOptions::ModOptions()

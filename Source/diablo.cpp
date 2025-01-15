@@ -22,6 +22,8 @@
 #include "debug.h"
 #endif
 #include "DiabloUI/diabloui.h"
+#include "controls/control_mode.hpp"
+#include "controls/keymapper.hpp"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "diablo.h"
@@ -457,7 +459,7 @@ void ReleaseKey(SDL_Keycode vkey)
 	remap_keyboard_key(&vkey);
 	if (sgnTimeoutCurs != CURSOR_NONE)
 		return;
-	GetOptions().Keymapper.KeyReleased(vkey);
+	KeymapperRelease(vkey);
 }
 
 void ClosePanels()
@@ -491,11 +493,11 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		options.Keymapper.KeyPressed(vkey);
+		KeymapperPress(vkey);
 		if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
 			if ((modState & KMOD_ALT) != 0) {
 				options.Graphics.fullscreen.SetValue(!IsFullScreen());
-				SaveOptions();
+				if (!demo::IsRunning()) SaveOptions();
 			} else {
 				TypeChatMessage();
 			}
@@ -525,12 +527,12 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 	}
 
-	options.Keymapper.KeyPressed(vkey);
+	KeymapperPress(vkey);
 
 	if (PauseMode == 2) {
 		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (modState & KMOD_ALT) != 0) {
 			options.Graphics.fullscreen.SetValue(!IsFullScreen());
-			SaveOptions();
+			if (!demo::IsRunning()) SaveOptions();
 		}
 		return;
 	}
@@ -568,7 +570,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	case SDLK_KP_ENTER:
 		if ((modState & KMOD_ALT) != 0) {
 			options.Graphics.fullscreen.SetValue(!IsFullScreen());
-			SaveOptions();
+			if (!demo::IsRunning()) SaveOptions();
 		} else if (ActiveStore != TalkID::None) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {
@@ -656,7 +658,7 @@ void HandleMouseButtonDown(Uint8 button, uint16_t modState)
 			RightMouseDown((modState & KMOD_SHIFT) != 0);
 			break;
 		default:
-			GetOptions().Keymapper.KeyPressed(button | KeymapperMouseButtonMask);
+			KeymapperPress(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
 			break;
 		}
 	}
@@ -672,7 +674,7 @@ void HandleMouseButtonUp(Uint8 button, uint16_t modState)
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 	} else {
-		GetOptions().Keymapper.KeyReleased(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
+		KeymapperRelease(static_cast<SDL_Keycode>(button | KeymapperMouseButtonMask));
 	}
 }
 
@@ -757,7 +759,7 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			} else if (IsStashOpen) {
 				Stash.PreviousPage();
 			} else {
-				options.Keymapper.KeyPressed(MouseScrollUpButton);
+				KeymapperPress(MouseScrollUpButton);
 			}
 		} else if (event.wheel.y < 0) { // down
 			if (ActiveStore != TalkID::None) {
@@ -771,12 +773,12 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 			} else if (IsStashOpen) {
 				Stash.NextPage();
 			} else {
-				options.Keymapper.KeyPressed(MouseScrollDownButton);
+				KeymapperPress(MouseScrollDownButton);
 			}
 		} else if (event.wheel.x > 0) { // left
-			options.Keymapper.KeyPressed(MouseScrollLeftButton);
+			KeymapperPress(MouseScrollLeftButton);
 		} else if (event.wheel.x < 0) { // right
-			options.Keymapper.KeyPressed(MouseScrollRightButton);
+			KeymapperPress(MouseScrollRightButton);
 		}
 		break;
 #endif
@@ -1234,7 +1236,7 @@ void DiabloSplash()
 			play_movie("gendata\\diablo1.smk", true);
 		if (*intro == StartUpIntro::Once) {
 			intro.SetValue(StartUpIntro::Off);
-			SaveOptions();
+			if (!demo::IsRunning()) SaveOptions();
 		}
 	}
 
@@ -2565,12 +2567,14 @@ int DiabloMain(int argc, char **argv)
 
 	// Read settings including translation next. This will use the presence of fonts.mpq and look for assets in devilutionx.mpq
 	LoadOptions();
+	if (demo::IsRunning()) demo::OverrideOptions();
+
 	// Then look for a voice pack file based on the selected translation
 	LoadLanguageArchive();
 
 	ApplicationInit();
 	LuaInitialize();
-	SaveOptions();
+	if (!demo::IsRunning()) SaveOptions();
 
 	// Finally load game data
 	LoadGameArchives();
@@ -2589,7 +2593,7 @@ int DiabloMain(int argc, char **argv)
 #ifdef __UWP__
 	onInitialized();
 #endif
-	SaveOptions();
+	if (!demo::IsRunning()) SaveOptions();
 
 	DiabloSplash();
 	mainmenu_loop();

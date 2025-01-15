@@ -7,17 +7,6 @@
 
 namespace devilution {
 
-struct ControllerButtonEvent {
-	ControllerButtonEvent(ControllerButton button, bool up)
-	    : button(button)
-	    , up(up)
-	{
-	}
-
-	ControllerButton button;
-	bool up;
-};
-
 // Must be called exactly once at the start of each SDL input event.
 void UnlockControllerState(const SDL_Event &event);
 
