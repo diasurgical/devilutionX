@@ -23,12 +23,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
-"Переклад українською\n"
-"\n"
-"Олександр \"tsunami_state\" Калько\n"
-"\n"
-"Дизайн Гри"
+msgstr "Дизайн Гри"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -4518,19 +4513,19 @@ msgstr "Налаштування Мови"
 
 #: Source/options.cpp:1096
 msgid "Keymapping"
-msgstr "Назначення Клавіш"
+msgstr "Клавіатура"
 
 #: Source/options.cpp:1096
 msgid "Keymapping Settings"
-msgstr "Налаштування Назначення"
+msgstr "Налаштування призначення клавіш клавіатури"
 
 #: Source/options.cpp:1358
 msgid "Padmapping"
-msgstr "Падмапінг"
+msgstr "Геймпад"
 
 #: Source/options.cpp:1358
 msgid "Padmapping Settings"
-msgstr "Налаштування Падмапінгу"
+msgstr "Налаштування призначення кнопок геймпаду"
 
 #: Source/options.cpp:1695
 msgid "Mods"
@@ -4554,7 +4549,7 @@ msgstr "Наступний рівень"
 
 #: Source/panels/charpanel.cpp:150
 msgid "Base"
-msgstr "Базовий"
+msgstr "База"
 
 #: Source/panels/charpanel.cpp:151
 msgid "Now"
@@ -4578,12 +4573,12 @@ msgstr "Живучість"
 
 #: Source/panels/charpanel.cpp:166
 msgid "Points to distribute"
-msgstr "Розподілити очків"
+msgstr "Вільні очки"
 
 #: Source/panels/charpanel.cpp:172 Source/translation_dummy.cpp:247
 #: Source/translation_dummy.cpp:602
 msgid "Gold"
-msgstr "Золотий"
+msgstr "Золото"
 
 #: Source/panels/charpanel.cpp:176
 msgid "Armor class"
@@ -12119,19 +12114,3 @@ msgstr "Руна Каменю"
 #: Source/utils/format_int.cpp:27
 msgid ","
 msgstr ","
-
-#~ msgid ""
-#~ "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
-#~ "frame. Disabling it can help with mouse lag on some systems."
-#~ msgstr ""
-#~ "Примушує очікування кінця Вертикальної Синхронізації. Запобігає ефекту "
-#~ "розриву зображення. Якщо налаштування вимкнене, то це може зменшити лаг "
-#~ "на деяких системах."
-
-#~ msgid "FPS Limiter"
-#~ msgstr "Ліміт Кадрів в Секунду"
-
-#~ msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
-#~ msgstr ""
-#~ "Кадри в секунду лімітовані, щоб запобігти високе використання процессора. "
-#~ "Ліміт враховує частоту оновлення монітора."
