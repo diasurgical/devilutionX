@@ -728,10 +728,10 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 	}
 }
 
-void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
+void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int y)
 {
 	vecDialog->push_back(std::make_unique<UiImageAnimatedClx>(
-	    *ArtLogo, MakeSdlRect(0, GetUIRectangle().position.y, 0, 0), UiFlags::AlignCenter));
+	    *ArtLogo, MakeSdlRect(0, y, 0, 0), UiFlags::AlignCenter));
 }
 
 void UiFadeIn()
