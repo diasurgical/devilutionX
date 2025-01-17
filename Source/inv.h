@@ -395,9 +395,6 @@ inline bool RemoveInventoryOrBeltItemById(Player &player, _item_indexes id)
  */
 inline void SetSpectralUsable(Player &player)
 {
-	if (player.InvList->isEmpty())
-		return;
-
 	for (Item &item : player.InvList) {
 		if (item.IDidx == IDI_SPECELIX) {
 			item._iCreateInfo |= CF_ONLYGOOD; // Set the unused flag to mark as permanently usable
