@@ -2343,8 +2343,7 @@ void AddGolem(Missile &missile, AddMissileParameter &parameter)
 
 	// Is Golem alive?
 	if (golem != nullptr) {
-		if (&player == MyPlayer)
-			KillGolem(*golem);
+		KillGolem(*golem);
 		return;
 	}
 
@@ -2357,7 +2356,7 @@ void AddGolem(Missile &missile, AddMissileParameter &parameter)
 	if (!spawnPosition)
 		return;
 
-	SpawnGolem(player, *golem, *spawnPosition, missile);
+	SpawnGolem(player, *spawnPosition, missile);
 }
 
 void AddApocalypseBoom(Missile &missile, AddMissileParameter &parameter)
