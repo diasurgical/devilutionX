@@ -79,6 +79,9 @@ constexpr int HellToHitBonus = 120;
 constexpr int NightmareAcBonus = 50;
 constexpr int HellAcBonus = 80;
 
+/** @brief Reserved some entries in @Monster for golems. For vanilla compatibility, this must remain 4. */
+constexpr int ReservedMonsterSlotsForGolems = 4;
+
 /** Tracks which missile files are already loaded */
 size_t totalmonsters;
 int monstimgtot;
@@ -3517,7 +3520,7 @@ void WeakenNaKrul()
 void InitGolems()
 {
 	if (!setlevel) {
-		for (int i = 0; i < MAX_PLRS; i++)
+		for (int i = 0; i < ReservedMonsterSlotsForGolems; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 	}
 }
@@ -3587,7 +3590,7 @@ tl::expected<void, std::string> SetMapMonsters(const uint16_t *dunData, Point st
 {
 	RETURN_IF_ERROR(AddMonsterType(MT_GOLEM, PLACE_SPECIAL));
 	if (setlevel)
-		for (int i = 0; i < MAX_PLRS; i++)
+		for (int i = 0; i < ReservedMonsterSlotsForGolems; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 
 	WorldTileSize size = GetDunSize(dunData);
@@ -4011,7 +4014,7 @@ void GolumAi(Monster &golem)
 
 void DeleteMonsterList()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (int i = 0; i < ReservedMonsterSlotsForGolems; i++) {
 		Monster &golem = Monsters[i];
 		if (!golem.isInvalid)
 			continue;
@@ -4022,7 +4025,7 @@ void DeleteMonsterList()
 		golem.isInvalid = false;
 	}
 
-	for (size_t i = MAX_PLRS; i < ActiveMonsterCount;) {
+	for (size_t i = ReservedMonsterSlotsForGolems; i < ActiveMonsterCount;) {
 		if (Monsters[ActiveMonsters[i]].isInvalid) {
 			if (pcursmonst == static_cast<int>(ActiveMonsters[i])) // Unselect monster if player highlighted it
 				pcursmonst = -1;
