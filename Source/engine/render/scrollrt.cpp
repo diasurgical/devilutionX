@@ -73,6 +73,20 @@
 
 namespace devilution {
 
+enum OutlineColors : uint8_t {
+	OutlineColorsPlayer1 = (PAL16_ORANGE + 7),
+	OutlineColorsPlayer2 = (PAL16_YELLOW + 7),
+	OutlineColorsPlayer3 = (PAL16_RED + 7),
+	OutlineColorsPlayer4 = (PAL16_BLUE + 7),
+	OutlineColorsPlayer5 = (PAL16_ORANGE + 5),
+	OutlineColorsPlayer6 = (PAL16_BEIGE + 5),
+	OutlineColorsPlayer7 = (PAL16_RED + 5),
+	OutlineColorsPlayer8 = (PAL16_BLUE + 5),
+	OutlineColorsObject = (PAL16_YELLOW + 2),
+	OutlineColorsTowner = (PAL16_BEIGE + 6),
+	OutlineColorsMonster = (PAL16_RED + 9),
+};
+
 bool AutoMapShowItems;
 
 // DevilutionX extension.
@@ -402,8 +416,19 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 	const ClxSprite sprite = player.currentSprite();
 	Point spriteBufferPosition = targetBufferPosition + player.getRenderingOffset(sprite);
 
+	uint8_t playerColor[] = {
+		OutlineColorsPlayer1,
+		OutlineColorsPlayer2,
+		OutlineColorsPlayer3,
+		OutlineColorsPlayer4,
+		OutlineColorsPlayer5,
+		OutlineColorsPlayer6,
+		OutlineColorsPlayer7,
+		OutlineColorsPlayer8
+	};
+
 	if (&player == PlayerUnderCursor)
-		ClxDrawOutlineSkipColorZero(out, 165, spriteBufferPosition, sprite);
+		ClxDrawOutlineSkipColorZero(out, playerColor[player.getId()], spriteBufferPosition, sprite);
 
 	if (&player == MyPlayer && IsNoneOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		ClxDraw(out, spriteBufferPosition, sprite);
@@ -456,7 +481,7 @@ void DrawObject(const Surface &out, const Object &objectToDraw, Point tilePositi
 	const Point screenPosition = targetBufferPosition + objectToDraw.getRenderingOffset(sprite, tilePosition);
 
 	if (&objectToDraw == ObjectUnderCursor) {
-		ClxDrawOutlineSkipColorZero(out, 194, screenPosition, sprite);
+		ClxDrawOutlineSkipColorZero(out, OutlineColorsObject, screenPosition, sprite);
 	}
 	if (objectToDraw.applyLighting) {
 		ClxDrawLight(out, screenPosition, sprite, lightTableIndex);
@@ -659,7 +684,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		const Point position = targetBufferPosition + towner.getRenderingOffset();
 		const ClxSprite sprite = towner.currentSprite();
 		if (mi == pcursmonst) {
-			ClxDrawOutlineSkipColorZero(out, 166, position, sprite);
+			ClxDrawOutlineSkipColorZero(out, OutlineColorsTowner, position, sprite);
 		}
 		ClxDraw(out, position, sprite);
 		return;
@@ -684,7 +709,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	const Point monsterRenderPosition = targetBufferPosition + offset;
 	if (mi == pcursmonst) {
-		ClxDrawOutlineSkipColorZero(out, 233, monsterRenderPosition, sprite);
+		ClxDrawOutlineSkipColorZero(out, OutlineColorsMonster, monsterRenderPosition, sprite);
 	}
 	DrawMonster(out, tilePosition, monsterRenderPosition, monster, lightTableIndex);
 }
