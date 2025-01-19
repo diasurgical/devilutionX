@@ -38,6 +38,7 @@
 #include "objects.h"
 #include "options.h"
 #include "player.h"
+#include "portal.h"
 #include "qol/autopickup.h"
 #include "qol/floatingnumbers.h"
 #include "qol/stash.h"

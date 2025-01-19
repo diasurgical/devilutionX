@@ -12,7 +12,7 @@
 namespace devilution {
 
 /** In-game state of portals. */
-Portal Portals[8];
+Portal Portals[MaxPlayers];
 
 namespace {
 
@@ -20,7 +20,7 @@ namespace {
 size_t portalindex;
 
 /** Coordinate of each player's portal in town. */
-Point PortalTownPosition[8] = {
+Point PortalTownPosition[MaxPlayers] = {
 	{ 57, 40 },
 	{ 59, 40 },
 	{ 61, 40 },

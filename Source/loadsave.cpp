@@ -34,6 +34,7 @@
 #include "mpq/mpq_common.hpp"
 #include "pfile.h"
 #include "playerdat.hpp"
+#include "portal.h"
 #include "qol/stash.h"
 #include "stores.h"
 #include "utils/algorithm/container.hpp"

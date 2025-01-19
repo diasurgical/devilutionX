@@ -7,6 +7,7 @@
 
 #include "engine/point.hpp"
 #include "levels/gendung.h"
+#include "multi.h"
 
 namespace devilution {
 
@@ -21,7 +22,7 @@ struct Portal {
 	bool setlvl;
 };
 
-extern Portal Portals[8];
+extern Portal Portals[MaxPlayers];
 
 void InitPortals();
 void SetPortalStats(int i, bool o, Point position, int lvl, dungeon_type lvltype, bool isSetLevel);

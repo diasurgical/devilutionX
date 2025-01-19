@@ -24,6 +24,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "portal.h"
 #include "qol/chatlog.h"
 #include "storm/storm_net.hpp"
 #include "sync.h"
