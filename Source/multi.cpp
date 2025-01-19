@@ -225,7 +225,6 @@ void MonsterSeeds()
 {
 	sgdwGameLoops++;
 	const uint32_t seed = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24);
-
 	for (uint32_t i = 0; i < MaxMonsters; i++)
 		Monsters[i].aiSeed = seed + i;
 }
