@@ -97,8 +97,8 @@ void LoadIni()
 	if (file != nullptr) {
 		uintmax_t size;
 		if (GetFileSize(path.c_str(), &size)) {
-			buffer.resize(size);
-			if (std::fread(buffer.data(), size, 1, file) != 1) {
+			buffer.resize(static_cast<size_t>(size));
+			if (std::fread(buffer.data(), static_cast<size_t>(size), 1, file) != 1) {
 				const char *errorMessage = std::strerror(errno);
 				if (errorMessage == nullptr) errorMessage = "";
 				LogError(LogCategory::System, "std::fread: failed with \"{}\"", errorMessage);
