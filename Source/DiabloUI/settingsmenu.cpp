@@ -536,7 +536,7 @@ void UiSettingsMenu()
 
 		constexpr int ListItemHeight = 26;
 		rectList = { uiRectangle.position + Displacement { 50, 204 },
-			Size { uiRectangle.size.width - 100, std::min<int>(vecDialogItems.size() * ListItemHeight, uiRectangle.size.height - 272) } };
+			Size { uiRectangle.size.width - 100, std::min<int>(static_cast<int>(vecDialogItems.size()) * ListItemHeight, uiRectangle.size.height - 272) } };
 		rectDescription = { rectList.position + Displacement { -26, rectList.size.height + descriptionMarginTop },
 			Size { uiRectangle.size.width - 50, 80 - descriptionMarginTop } };
 		vecDialog.push_back(std::make_unique<UiScrollbar>((*ArtScrollBarBackground)[0], (*ArtScrollBarThumb)[0],
