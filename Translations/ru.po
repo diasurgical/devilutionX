@@ -4207,12 +4207,14 @@ msgstr ""
 
 #: Source/options.cpp:784
 msgid "Frame Rate Control"
-msgstr ""
+msgstr "Управление Частотой Кадров"
 
 #: Source/options.cpp:785
 msgid ""
 "Manages frame rate to balance performance, reduce tearing, or save power."
 msgstr ""
+"Управление частотой кадров для сбалансирования производительности, "
+"уменьшения разрывов или экономии электроэнергии."
 
 #: Source/options.cpp:795
 msgid "Vertical Sync"
@@ -4220,7 +4222,7 @@ msgstr "Вертикальная синхронизация"
 
 #: Source/options.cpp:797
 msgid "Limit FPS"
-msgstr ""
+msgstr "Ограничение FPS"
 
 #: Source/options.cpp:800
 msgid "Zoom on when enabled."
