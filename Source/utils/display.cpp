@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <utility>
 
 #ifdef __vita__
 #include <psp2/power.h>
@@ -207,12 +208,115 @@ void OptionGrabInputChanged()
 }
 const auto OptionChangeHandlerGrabInput = (GetOptions().Gameplay.grabInput.SetValueChangedCallback(OptionGrabInputChanged), true);
 
+void UpdateAvailableResolutions()
+{
+	GraphicsOptions &graphicsOptions = GetOptions().Graphics;
+
+	std::vector<Size> sizes;
+	float scaleFactor = GetDpiScalingFactor();
+
+	// Add resolutions
+	bool supportsAnyResolution = false;
+#ifdef USE_SDL1
+	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
+	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
+	if (modes == (SDL_Rect **)-1) {
+		supportsAnyResolution = true;
+	} else if (modes != nullptr) {
+		for (size_t i = 0; modes[i] != nullptr; i++) {
+			if (modes[i]->w < modes[i]->h) {
+				std::swap(modes[i]->w, modes[i]->h);
+			}
+			sizes.emplace_back(Size {
+			    static_cast<int>(modes[i]->w * scaleFactor),
+			    static_cast<int>(modes[i]->h * scaleFactor) });
+		}
+	}
+#else
+	int displayModeCount = SDL_GetNumDisplayModes(0);
+	for (int i = 0; i < displayModeCount; i++) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDisplayMode(0, i, &mode) != 0) {
+			ErrSdl();
+		}
+		if (mode.w < mode.h) {
+			std::swap(mode.w, mode.h);
+		}
+		sizes.emplace_back(Size {
+		    static_cast<int>(mode.w * scaleFactor),
+		    static_cast<int>(mode.h * scaleFactor) });
+	}
+	supportsAnyResolution = *GetOptions().Graphics.upscale;
+#endif
+
+	if (supportsAnyResolution && sizes.size() == 1) {
+		// Attempt to provide sensible options for 4:3 and the native aspect ratio
+		const int width = sizes[0].width;
+		const int height = sizes[0].height;
+		const int commonHeights[] = { 480, 540, 720, 960, 1080, 1440, 2160 };
+		for (int commonHeight : commonHeights) {
+			if (commonHeight > height)
+				break;
+			sizes.emplace_back(Size { commonHeight * 4 / 3, commonHeight });
+			if (commonHeight * width % height == 0)
+				sizes.emplace_back(Size { commonHeight * width / height, commonHeight });
+		}
+	}
+
+	const Size configuredSize = *graphicsOptions.resolution;
+
+	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
+	sizes.push_back(configuredSize);
+	// Ensures that the platform's preferred default resolution is always present
+	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+	// Ensures that the vanilla Diablo resolution is present on systems that would support it
+	if (supportsAnyResolution)
+		sizes.emplace_back(Size { 640, 480 });
+
+#ifndef USE_SDL1
+	if (*graphicsOptions.fitToScreen) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+			ErrSdl();
+		}
+		for (auto &size : sizes) {
+			// Ensure that the ini specified resolution remains present in the resolution list
+			if (size.height == configuredSize.height)
+				size.width = configuredSize.width;
+			else
+				size.width = size.height * mode.w / mode.h;
+		}
+	}
+#endif
+
+	// Sort by width then by height
+	c_sort(sizes, [](const Size &x, const Size &y) -> bool {
+		if (x.width == y.width)
+			return x.height > y.height;
+		return x.width > y.width;
+	});
+	// Remove duplicate entries
+	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
+
+	std::vector<std::pair<Size, std::string>> resolutions;
+	for (auto &size : sizes) {
+#ifndef USE_SDL1
+		if (*graphicsOptions.fitToScreen) {
+			resolutions.emplace_back(size, StrCat(size.height, "p"));
+			continue;
+		}
+#endif
+		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
+	}
+	graphicsOptions.resolution.setAvailableResolutions(std::move(resolutions));
+}
+
 #if !defined(USE_SDL1) || defined(__3DS__)
 void ResizeWindowAndUpdateResolutionOptions()
 {
 	ResizeWindow();
 #ifndef __3DS__
-	GetOptions().Graphics.resolution.InvalidateList();
+	UpdateAvailableResolutions();
 #endif
 }
 const auto OptionChangeHandlerFitToScreen = (GetOptions().Graphics.fitToScreen.SetValueChangedCallback(ResizeWindowAndUpdateResolutionOptions), true);
@@ -405,7 +509,12 @@ bool SpawnWindow(const char *lpWindowName)
 
 	ReinitializeRenderer();
 
-	return ghMainWnd != nullptr;
+	if (ghMainWnd != nullptr) {
+		UpdateAvailableResolutions();
+		return true;
+	}
+
+	return false;
 }
 
 #ifndef USE_SDL1

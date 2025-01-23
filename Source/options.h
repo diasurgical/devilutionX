@@ -3,17 +3,22 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <forward_list>
+#include <functional>
+#include <initializer_list>
 #include <optional>
+#include <string>
 #include <string_view>
+#include <utility>
 
 #include <SDL_version.h>
 #include <ankerl/unordered_dense.h>
 #include <function_ref.hpp>
 
-#include "controls/controller.h"
+#include "appfat.h"
 #include "controls/controller_buttons.h"
-#include "controls/game_controls.h"
+#include "engine/size.hpp"
 #include "engine/sound_defs.hpp"
 #include "pack.h"
 #include "quick_messages.hpp"
@@ -21,6 +26,13 @@
 #include "utils/string_view_hash.hpp"
 
 namespace devilution {
+
+#ifndef DEFAULT_WIDTH
+#define DEFAULT_WIDTH 640
+#endif
+#ifndef DEFAULT_HEIGHT
+#define DEFAULT_HEIGHT 480
+#endif
 
 enum class StartUpGameMode : uint8_t {
 	/** @brief If hellfire is present, asks the user what game they want to start. */
@@ -338,19 +350,18 @@ public:
 	[[nodiscard]] std::string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
-	void InvalidateList();
 
-	Size operator*() const
+	void setAvailableResolutions(std::vector<std::pair<Size, std::string>> &&resolutions)
 	{
-		return size;
+		resolutions_ = std::move(resolutions);
 	}
+
+	Size operator*() const { return size_; }
 
 private:
 	/** @brief View size. */
-	Size size;
-	mutable std::vector<std::pair<Size, std::string>> resolutions;
-
-	void CheckResolutionsAreInitialized() const;
+	Size size_;
+	std::vector<std::pair<Size, std::string>> resolutions_;
 };
 
 class OptionEntryResampler : public OptionEntryListBase {
