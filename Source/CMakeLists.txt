@@ -189,7 +189,6 @@ target_link_dependencies(libdevilutionx_assets PUBLIC
   libdevilutionx_game_mode
   libdevilutionx_mpq
   libdevilutionx_sdl2_to_1_2_backports
-  libdevilutionx_sound
   libdevilutionx_strings
   ${DEVILUTIONX_PLATFORM_ASSETS_LINK_LIBRARIES}
 )
@@ -305,6 +304,7 @@ add_devilutionx_object_library(libdevilutionx_init
 target_link_dependencies(libdevilutionx_init PUBLIC
   libdevilutionx_assets
   libdevilutionx_config
+  libdevilutionx_options
 )
 
 add_devilutionx_object_library(libdevilutionx_lighting
@@ -434,6 +434,7 @@ target_link_dependencies(libdevilutionx_options PUBLIC
   DevilutionX::SDL
   fmt::fmt
   tl
+  unordered_dense::unordered_dense
   libdevilutionx_controller_buttons
   libdevilutionx_control_mode
   libdevilutionx_logged_fstream
