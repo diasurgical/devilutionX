@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include "controller.h"
+#include "game_controls.h"
 #include "options.h"
 
 namespace devilution {
