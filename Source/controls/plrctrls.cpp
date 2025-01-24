@@ -27,6 +27,7 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "items.h"
+#include "levels/tile_properties.hpp"
 #include "levels/town.h"
 #include "levels/trigs.h"
 #include "minitext.h"
@@ -127,7 +128,7 @@ int GetDistance(Point destination, int maxDistance)
 
 	int8_t walkpath[MaxPathLength];
 	Player &myPlayer = *MyPlayer;
-	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
+	int steps = FindPath(CanStep, [&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
 	if (steps > maxDistance)
 		return 0;
 

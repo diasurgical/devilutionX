@@ -10,43 +10,24 @@
 
 #include <function_ref.hpp>
 
+#include "engine/displacement.hpp"
 #include "engine/point.hpp"
-#include "utils/attributes.h"
 
 namespace devilution {
 
 constexpr size_t MaxPathLength = 25;
 
-bool IsTileNotSolid(Point position);
-bool IsTileSolid(Point position);
-
 /**
- * @brief Checks the position is solid or blocked by an object
- */
-bool IsTileWalkable(Point position, bool ignoreDoors = false);
-
-/**
- * @brief Checks if the position contains an object, player, monster, or solid dungeon piece
- */
-bool IsTileOccupied(Point position);
-
-/**
- * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
- * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
- */
-int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength]);
-
-/**
- * @brief check if stepping from a given position to a neighbouring tile cuts a corner.
+ * @brief Find the shortest path from `startPosition` to `destinationPosition`.
  *
- * If you step from A to B, both Xs need to be clear:
- *
- *  AX
- *  XB
- *
- * @return true if step is allowed
+ * @param canStep specifies whether a step between two adjacent points is allowed.
+ * @param posOk specifies whether a position can be stepped on.
+ * @param startPosition
+ * @param destinationPosition
+ * @param path Resulting path represented as the step directions, which are indices in `PathDirs`. Must have room for `MaxPathLength` steps.
+ * @return The length of the resulting path, or 0 if there is no valid path.
  */
-bool CanStep(Point startPosition, Point destinationPosition);
+int FindPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength]);
 
 /** For iterating over the 8 possible movement directions */
 const Displacement PathDirs[8] = {
@@ -61,6 +42,19 @@ const Displacement PathDirs[8] = {
 	{  0,  1 }, //Direction::SouthWest
 	// clang-format on
 };
+
+/**
+ * Returns a number representing the direction from a starting tile to a neighbouring tile.
+ *
+ * Used in the pathfinding code, each step direction is assigned a number like this:
+ *       dx
+ *     -1 0 1
+ *     +-----
+ *   -1|5 1 6
+ * dy 0|2 0 3
+ *    1|8 4 7
+ */
+[[nodiscard]] int8_t GetPathDirection(Point startPosition, Point destinationPosition);
 
 /**
  * @brief Searches for the closest position that passes the check in expanding "rings".

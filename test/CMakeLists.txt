@@ -27,13 +27,13 @@ set(tests
   math_test
   missiles_test
   pack_test
-  path_test
   player_test
   quests_test
   random_test
   rectangle_test
   scrollrt_test
   stores_test
+  tile_properties_test
   timedemo_test
   writehero_test
 )
@@ -45,6 +45,7 @@ set(standalone_tests
   format_int_test
   ini_test
   parse_int_test
+  path_test
   str_cat_test
   utf8_test
 )
@@ -97,6 +98,7 @@ target_link_dependencies(file_util_test PRIVATE libdevilutionx_file_util app_fat
 target_link_dependencies(format_int_test PRIVATE libdevilutionx_format_int language_for_testing)
 target_link_dependencies(ini_test PRIVATE libdevilutionx_ini app_fatal_for_testing)
 target_link_dependencies(parse_int_test PRIVATE libdevilutionx_parse_int)
+target_link_dependencies(path_test PRIVATE libdevilutionx_pathfinding libdevilutionx_direction app_fatal_for_testing)
 target_link_dependencies(str_cat_test PRIVATE libdevilutionx_strings)
 target_link_dependencies(utf8_test PRIVATE libdevilutionx_utf8)
 

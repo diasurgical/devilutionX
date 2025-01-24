@@ -31,6 +31,7 @@
 #include "game_mode.hpp"
 #include "headless_mode.hpp"
 #include "inv_iterators.hpp"
+#include "levels/tile_properties.hpp"
 #include "levels/town.h"
 #include "lighting.h"
 #include "minitext.h"

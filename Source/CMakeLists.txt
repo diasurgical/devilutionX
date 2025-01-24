@@ -99,6 +99,7 @@ set(libdevilutionx_SRCS
   levels/reencode_dun_cels.cpp
   levels/setmaps.cpp
   levels/themes.cpp
+  levels/tile_properties.cpp
   levels/town.cpp
   levels/trigs.cpp
 
@@ -450,8 +451,6 @@ target_link_dependencies(libdevilutionx_pathfinding PUBLIC
   tl
   libdevilutionx_crawl
   libdevilutionx_direction
-  libdevilutionx_gendung
-  libdevilutionx_level_objects
 )
 
 if(SUPPORTS_MPQ OR NOT NONET)
