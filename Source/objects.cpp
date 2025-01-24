@@ -33,6 +33,7 @@
 #include "levels/drlg_l4.h"
 #include "levels/setmaps.h"
 #include "levels/themes.h"
+#include "levels/tile_properties.hpp"
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"

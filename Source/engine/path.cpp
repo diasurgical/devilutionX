@@ -5,16 +5,17 @@
  */
 #include "engine/path.h"
 
+#include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <optional>
 
 #include <function_ref.hpp>
 
 #include "appfat.h"
 #include "crawl.hpp"
 #include "engine/direction.hpp"
-#include "levels/gendung.h"
-#include "objects.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 namespace {
@@ -191,7 +192,7 @@ int GetHeuristicCost(Point startPosition, Point destinationPosition)
 /**
  * @brief update all path costs using depth-first search starting at pPath
  */
-void SetCoords(uint16_t pPath)
+void SetCoords(tl::function_ref<bool(Point, Point)> canStep, uint16_t pPath)
 {
 	PushActiveStep(pPath);
 	// while there are path nodes to check
@@ -204,7 +205,7 @@ void SetCoords(uint16_t pPath)
 			PathNode &pathAct = PathNodes[childIndex];
 
 			if (pathOld.g + GetDistance(pathOld.position(), pathAct.position()) < pathAct.g) {
-				if (CanStep(pathOld.position(), pathAct.position())) {
+				if (canStep(pathOld.position(), pathAct.position())) {
 					pathAct.parentIndex = pathOldIndex;
 					pathAct.g = pathOld.g + GetDistance(pathOld.position(), pathAct.position());
 					pathAct.f = pathAct.g + pathAct.h;
@@ -216,31 +217,15 @@ void SetCoords(uint16_t pPath)
 }
 
 /**
- * Returns a number representing the direction from a starting tile to a neighbouring tile.
- *
- * Used in the pathfinding code, each step direction is assigned a number like this:
- *       dx
- *     -1 0 1
- *     +-----
- *   -1|5 1 6
- * dy 0|2 0 3
- *    1|8 4 7
- */
-int8_t GetPathDirection(Point startPosition, Point destinationPosition)
-{
-	constexpr int8_t PathDirections[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
-	return PathDirections[3 * (destinationPosition.y - startPosition.y) + 4 + destinationPosition.x - startPosition.x];
-}
-
-/**
  * @brief add a step from pPath to destination, return 1 if successful, and update the frontier/visited nodes accordingly
  *
+ * @param canStep specifies whether a step between two adjacent points is allowed
  * @param pathIndex index of the current path node
  * @param candidatePosition expected to be a neighbour of the current path node position
  * @param destinationPosition where we hope to end up
  * @return true if step successfully added, false if we ran out of nodes to use
  */
-bool ExploreFrontier(uint16_t pathIndex, Point candidatePosition, Point destinationPosition)
+bool ExploreFrontier(tl::function_ref<bool(Point, Point)> canStep, uint16_t pathIndex, Point candidatePosition, Point destinationPosition)
 {
 	PathNode &path = PathNodes[pathIndex];
 	int nextG = path.g + GetDistance(path.position(), candidatePosition);
@@ -252,7 +237,7 @@ bool ExploreFrontier(uint16_t pathIndex, Point candidatePosition, Point destinat
 		path.addChild(dxdyIndex);
 		PathNode &dxdy = PathNodes[dxdyIndex];
 		if (nextG < dxdy.g) {
-			if (CanStep(path.position(), candidatePosition)) {
+			if (canStep(path.position(), candidatePosition)) {
 				// we'll explore it later, just update
 				dxdy.parentIndex = pathIndex;
 				dxdy.g = nextG;
@@ -265,13 +250,13 @@ bool ExploreFrontier(uint16_t pathIndex, Point candidatePosition, Point destinat
 		if (dxdyIndex != PathNode::InvalidIndex) {
 			path.addChild(dxdyIndex);
 			PathNode &dxdy = PathNodes[dxdyIndex];
-			if (nextG < dxdy.g && CanStep(path.position(), candidatePosition)) {
+			if (nextG < dxdy.g && canStep(path.position(), candidatePosition)) {
 				// update the node
 				dxdy.parentIndex = pathIndex;
 				dxdy.g = nextG;
 				dxdy.f = nextG + dxdy.h;
 				// already explored, so re-update others starting from that node
-				SetCoords(dxdyIndex);
+				SetCoords(canStep, dxdyIndex);
 			}
 		} else {
 			// case 3: (dx,dy) is totally new
@@ -298,14 +283,14 @@ bool ExploreFrontier(uint16_t pathIndex, Point candidatePosition, Point destinat
  *
  * @return false if we ran out of preallocated nodes to use, else true
  */
-bool GetPath(tl::function_ref<bool(Point)> posOk, uint16_t pathIndex, Point destination)
+bool GetPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, uint16_t pathIndex, Point destination)
 {
 	for (Displacement dir : PathDirs) {
 		const PathNode &path = PathNodes[pathIndex];
 		const Point tile = path.position() + dir;
 		const bool ok = posOk(tile);
-		if ((ok && CanStep(path.position(), tile)) || (!ok && tile == destination)) {
-			if (!ExploreFrontier(pathIndex, tile, destination))
+		if ((ok && canStep(path.position(), tile)) || (!ok && tile == destination)) {
+			if (!ExploreFrontier(canStep, pathIndex, tile, destination))
 				return false;
 		}
 	}
@@ -315,62 +300,13 @@ bool GetPath(tl::function_ref<bool(Point)> posOk, uint16_t pathIndex, Point dest
 
 } // namespace
 
-bool IsTileNotSolid(Point position)
+int8_t GetPathDirection(Point startPosition, Point destinationPosition)
 {
-	if (!InDungeonBounds(position)) {
-		return false;
-	}
-
-	return !TileHasAny(position, TileProperties::Solid);
+	constexpr int8_t PathDirections[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
+	return PathDirections[3 * (destinationPosition.y - startPosition.y) + 4 + destinationPosition.x - startPosition.x];
 }
 
-bool IsTileSolid(Point position)
-{
-	if (!InDungeonBounds(position)) {
-		return false;
-	}
-
-	return TileHasAny(position, TileProperties::Solid);
-}
-
-bool IsTileWalkable(Point position, bool ignoreDoors)
-{
-	Object *object = FindObjectAtPosition(position);
-	if (object != nullptr) {
-		if (ignoreDoors && object->isDoor()) {
-			return true;
-		}
-		if (object->_oSolidFlag) {
-			return false;
-		}
-	}
-
-	return IsTileNotSolid(position);
-}
-
-bool IsTileOccupied(Point position)
-{
-	if (!InDungeonBounds(position)) {
-		return true; // OOB positions are considered occupied.
-	}
-
-	if (IsTileSolid(position)) {
-		return true;
-	}
-	if (dMonster[position.x][position.y] != 0) {
-		return true;
-	}
-	if (dPlayer[position.x][position.y] != 0) {
-		return true;
-	}
-	if (IsObjectAtPosition(position)) {
-		return true;
-	}
-
-	return false;
-}
-
-int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength])
+int FindPath(tl::function_ref<bool(Point, Point)> canStep, tl::function_ref<bool(Point)> posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength])
 {
 	/**
 	 * for reconstructing the path after the A* search is done. The longest
@@ -413,33 +349,11 @@ int FindPath(tl::function_ref<bool(Point)> posOk, Point startPosition, Point des
 			return 0;
 		}
 		// ran out of nodes, abort!
-		if (!GetPath(posOk, nextNodeIndex, destinationPosition))
+		if (!GetPath(canStep, posOk, nextNodeIndex, destinationPosition))
 			return 0;
 	}
 	// frontier is empty, no path!
 	return 0;
-}
-
-bool CanStep(Point startPosition, Point destinationPosition)
-{
-	// These checks are written as if working backwards from the destination to the source, given
-	// both tiles are expected to be adjacent this doesn't matter beyond being a bit confusing
-	bool rv = true;
-	switch (GetPathDirection(startPosition, destinationPosition)) {
-	case 5: // Stepping north
-		rv = IsTileNotSolid(destinationPosition + Direction::SouthWest) && IsTileNotSolid(destinationPosition + Direction::SouthEast);
-		break;
-	case 6: // Stepping east
-		rv = IsTileNotSolid(destinationPosition + Direction::SouthWest) && IsTileNotSolid(destinationPosition + Direction::NorthWest);
-		break;
-	case 7: // Stepping south
-		rv = IsTileNotSolid(destinationPosition + Direction::NorthEast) && IsTileNotSolid(destinationPosition + Direction::NorthWest);
-		break;
-	case 8: // Stepping west
-		rv = IsTileNotSolid(destinationPosition + Direction::SouthEast) && IsTileNotSolid(destinationPosition + Direction::NorthEast);
-		break;
-	}
-	return rv;
 }
 
 std::optional<Point> FindClosestValidPosition(tl::function_ref<bool(Point)> posOk, Point startingPosition, unsigned int minimumRadius, unsigned int maximumRadius)

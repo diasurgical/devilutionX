@@ -8,6 +8,7 @@
 
 #include "crawl.hpp"
 #include "levels/gendung.h"
+#include "levels/tile_properties.hpp"
 #include "lighting.h"
 #include "lua/metadoc.hpp"
 #include "monstdat.h"

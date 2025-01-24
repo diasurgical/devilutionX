@@ -36,6 +36,7 @@
 #include "inv.h"
 #include "levels/dun_tile.hpp"
 #include "levels/gendung.h"
+#include "levels/tile_properties.hpp"
 #include "lighting.h"
 #include "lua/lua.hpp"
 #include "minitext.h"

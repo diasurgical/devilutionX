@@ -27,6 +27,7 @@
 #include "headless_mode.hpp"
 #include "inv.h"
 #include "levels/dun_tile.hpp"
+#include "levels/tile_properties.hpp"
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
