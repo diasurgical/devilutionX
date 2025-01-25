@@ -52,7 +52,9 @@ set(standalone_tests
 set(benchmarks
   clx_render_benchmark
   crawl_benchmark
-  dun_render_benchmark)
+  dun_render_benchmark
+  path_benchmark
+)
 
 include(Fixtures.cmake)
 
@@ -99,6 +101,7 @@ target_link_dependencies(format_int_test PRIVATE libdevilutionx_format_int langu
 target_link_dependencies(ini_test PRIVATE libdevilutionx_ini app_fatal_for_testing)
 target_link_dependencies(parse_int_test PRIVATE libdevilutionx_parse_int)
 target_link_dependencies(path_test PRIVATE libdevilutionx_pathfinding libdevilutionx_direction app_fatal_for_testing)
+target_link_dependencies(path_benchmark PRIVATE libdevilutionx_pathfinding app_fatal_for_testing)
 target_link_dependencies(str_cat_test PRIVATE libdevilutionx_strings)
 target_link_dependencies(utf8_test PRIVATE libdevilutionx_utf8)
 
