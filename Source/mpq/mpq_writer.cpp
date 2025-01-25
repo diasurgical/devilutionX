@@ -92,7 +92,7 @@ MpqWriter::MpqWriter(const char *path)
 	LogVerbose("Opening {}", path);
 	std::string error;
 	bool exists = FileExists(path);
-	const char *mode = "wb";
+	const char *mode = "wbx";
 	if (exists) {
 		mode = "r+b";
 		if (!GetFileSize(path, &size_)) {
