@@ -5,8 +5,6 @@
 #include <SDL.h>
 #include <diablo.h>
 #include <wrl.h>
-#include <iostream>
-#include <string>
 
 /* At least one file in any SDL/WinRT app appears to require compilation
    with C++/CX, otherwise a Windows Metadata file won't get created, and
@@ -60,26 +58,6 @@ void OnBackRequested(Platform::Object^, Windows::UI::Core::BackRequestedEventArg
 void onInitialized()
 {
 	Windows::UI::Core::SystemNavigationManager::GetForCurrentView()->BackRequested += ref new Windows::Foundation::EventHandler<Windows::UI::Core::BackRequestedEventArgs^>(OnBackRequested);
-	
-	// workaround untill new config is released
-	std::string controllerMapping = ",*,a:b1,b:b0,x:b3,y:b2,back:b6,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b10,dpdown:b12,dpleft:b13,dpright:b11,leftx:a1,lefty:a0~,rightx:a3,righty:a2~,lefttrigger:a4,righttrigger:a5,platform:WinRT";
-
-	for(int i = 0; i < SDL_NumJoysticks(); ++i)
-	{
-		SDL_JoystickType type = SDL_JoystickGetDeviceType(i);
-
-		if(type == SDL_JOYSTICK_POWER_UNKNOWN)
-			continue;
-
-		SDL_JoystickGUID guid = SDL_JoystickGetDeviceGUID(i);
-
-		if(!guid.data)
-			continue;
-
-		char guidString[33];
-		SDL_JoystickGetGUIDString(guid, guidString, 33);
-		SDL_GameControllerAddMapping((guidString + controllerMapping).c_str());
-	}
 }
 
 int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
