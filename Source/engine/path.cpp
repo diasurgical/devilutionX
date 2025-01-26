@@ -165,28 +165,21 @@ uint16_t PopActiveStep()
 /**
  * @brief Returns the distance between 2 adjacent nodes.
  *
- * The distance is 2 for nodes in the same row or column,
- * and 3 for diagonally adjacent nodes.
- *
- * This approximates that diagonal movement on a square grid should have a cost
- * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
- * except diagonal steps which are times 3
+ * The distance is the chevsbyshev/walking distance between the nodes, as
+ * they're neighbours this is a value of 1.
  */
-int GetDistance(Point startPosition, Point destinationPosition)
+uint8_t GetDistance(Point startPosition, Point destinationPosition)
 {
-	if (startPosition.x == destinationPosition.x || startPosition.y == destinationPosition.y)
-		return 2;
-
-	return 3;
+	assert(startPosition.WalkingDistance(destinationPosition) == 1 && "GetDistance called with non-neighbours");
+	return 1;
 }
 
 /**
  * @brief heuristic, estimated cost from startPosition to destinationPosition.
  */
-int GetHeuristicCost(Point startPosition, Point destinationPosition)
+uint8_t GetHeuristicCost(Point startPosition, Point destinationPosition)
 {
-	// see GetDistance for why this is times 2
-	return 2 * startPosition.ManhattanDistance(destinationPosition);
+	return startPosition.WalkingDistance(destinationPosition);
 }
 
 /**
