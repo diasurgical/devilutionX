@@ -38,6 +38,8 @@ enum _talker_id : uint8_t {
 	NUM_TOWNER_TYPES,
 };
 
+extern const char *const TownerLongNames[NUM_TOWNER_TYPES];
+
 struct Towner {
 	OptionalOwnedClxSpriteList ownedAnim;
 	OptionalClxSpriteList anim;

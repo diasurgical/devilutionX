@@ -13,7 +13,9 @@
 #include "lua/modules/audio.hpp"
 #include "lua/modules/i18n.hpp"
 #include "lua/modules/log.hpp"
+#include "lua/modules/player.hpp"
 #include "lua/modules/render.hpp"
+#include "lua/modules/towners.hpp"
 #include "options.h"
 #include "plrmsg.h"
 #include "utils/console.h"
@@ -236,7 +238,9 @@ void LuaInitialize()
 	    "devilutionx.i18n", LuaI18nModule(lua),
 	    "devilutionx.log", LuaLogModule(lua),
 	    "devilutionx.audio", LuaAudioModule(lua),
+	    "devilutionx.player", LuaPlayerModule(lua),
 	    "devilutionx.render", LuaRenderModule(lua),
+	    "devilutionx.towners", LuaTownersModule(lua),
 	    "devilutionx.message", [](std::string_view text) { EventPlrMsg(text, UiFlags::ColorRed); },
 	    // This package is loaded without a sandbox:
 	    "inspect", RunScript(/*env=*/std::nullopt, "inspect", /*optional=*/false));
