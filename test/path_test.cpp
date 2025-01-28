@@ -91,7 +91,8 @@ std::vector<Dir> ToSyms(std::span<const int8_t> indices)
 
 void CheckPath(Point startPosition, Point destinationPosition, std::vector<std::string> expectedSteps)
 {
-	constexpr size_t MaxPathLength = 25;
+	// Restrict tests to the longest possible path length in vanilla Diablo
+	constexpr size_t MaxPathLength = 24;
 	int8_t pathSteps[MaxPathLength];
 	auto pathLength = FindPath(
 	    /*canStep=*/[](Point, Point) { return true; },
@@ -153,7 +154,7 @@ TEST(PathTest, LongPaths)
 	// Starting from the middle of the world and trying to path to a border exceeds the maximum path size
 	CheckPath({ 56, 56 }, { 0, 0 }, {});
 
-	// Longest possible path is currently 24 steps meaning tiles 24 units away are reachable
+	// Longest possible path used to be 24 steps meaning tiles 24 units away are reachable
 	Point startingPosition { 56, 56 };
 	CheckPath(startingPosition, startingPosition + Displacement { 24, 24 }, std::vector<std::string>(24, "↘"));
 
