@@ -382,6 +382,17 @@ Surface ClipSurface(const Surface &out, Rectangle rect)
 	    std::min(rect.position.y + rect.size.height, out.h()));
 }
 
+int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int charactersInLine, int availableWidth)
+{
+	if (lineWidth <= availableWidth || charactersInLine < 2)
+		return maxSpacing;
+
+	const int overhang = lineWidth - availableWidth;
+	const int spacingRedux = (overhang + charactersInLine - 2) / (charactersInLine - 1);
+	lineWidth -= spacingRedux * (charactersInLine - 1);
+	return maxSpacing - spacingRedux;
+}
+
 void MaybeWrap(Point &characterPosition, int characterWidth, int rightMargin, int initialX, int lineHeight)
 {
 	if (characterPosition.x + characterWidth > rightMargin) {
@@ -401,10 +412,13 @@ int GetLineStartX(UiFlags flags, const Rectangle &rect, int lineWidth)
 }
 
 uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect, Point &characterPosition,
-    int lineWidth, int rightMargin, int bottomMargin, GameFontTables size, text_color color, bool outline,
+    int lineWidth, int charactersInLine, int rightMargin, int bottomMargin, GameFontTables size, text_color color, bool outline,
     TextRenderOptions &opts)
 {
 	CurrentFont currentFont;
+	int curSpacing = HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)
+	    ? AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width)
+	    : opts.spacing;
 
 	char32_t next;
 	std::string_view remaining = text;
@@ -448,10 +462,15 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 				break;
 			characterPosition.y = nextLineY;
 
+			if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)) {
+				int nextLineWidth = GetLineWidth(remaining.substr(cpLen), size, opts.spacing, &charactersInLine);
+				curSpacing = AdjustSpacingToFitHorizontally(nextLineWidth, opts.spacing, charactersInLine, rect.size.width);
+			}
+
 			if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = width;
 				if (remaining.size() > cpLen)
-					lineWidth += opts.spacing + GetLineWidth(remaining.substr(cpLen), size, opts.spacing);
+					lineWidth += curSpacing + GetLineWidth(remaining.substr(cpLen), size, curSpacing);
 			}
 			characterPosition.x = GetLineStartX(opts.flags, rect, lineWidth);
 
@@ -466,13 +485,13 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
 		if (byteIndex >= opts.highlightRange.begin && byteIndex < opts.highlightRange.end) {
 			const bool lastInRange = static_cast<int>(byteIndex + cpLen) == opts.highlightRange.end;
 			FillRect(out, characterPosition.x, characterPosition.y,
-			    glyph.width() + (lastInRange ? 0 : opts.spacing), glyph.height(),
+			    glyph.width() + (lastInRange ? 0 : curSpacing), glyph.height(),
 			    opts.highlightColor);
 		}
 
 		DrawFont(out, characterPosition, glyph, color, outline);
 		maybeDrawCursor();
-		characterPosition.x += width + opts.spacing;
+		characterPosition.x += width + curSpacing;
 	}
 	maybeDrawCursor();
 	return static_cast<uint32_t>(remaining.data() - text.data());
@@ -593,17 +612,6 @@ int GetLineHeight(std::string_view text, GameFontTables fontIndex)
 	return LineHeights[fontIndex];
 }
 
-int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int charactersInLine, int availableWidth)
-{
-	if (lineWidth <= availableWidth || charactersInLine < 2)
-		return maxSpacing;
-
-	const int overhang = lineWidth - availableWidth;
-	const int spacingRedux = (overhang + charactersInLine - 2) / (charactersInLine - 1);
-	lineWidth -= spacingRedux * (charactersInLine - 1);
-	return maxSpacing - spacingRedux;
-}
-
 std::string WordWrapString(std::string_view text, unsigned width, GameFontTables size, int spacing)
 {
 	std::string output;
@@ -700,10 +708,6 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 	if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
 		lineWidth = GetLineWidth(text, size, opts.spacing, &charactersInLine);
 
-	const int maxSpacing = opts.spacing;
-	if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing))
-		opts.spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
-
 	Point characterPosition { GetLineStartX(opts.flags, rect, lineWidth), rect.position.y };
 	const int initialX = characterPosition.x;
 
@@ -730,7 +734,7 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 	}
 
 	const uint32_t bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition,
-	    lineWidth, rightMargin, bottomMargin, size, color, outlined, opts);
+	    lineWidth, charactersInLine, rightMargin, bottomMargin, size, color, outlined, opts);
 
 	if (HasAnyOf(opts.flags, UiFlags::PentaCursor)) {
 		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
@@ -750,10 +754,6 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 	int lineWidth = 0;
 	if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
 		lineWidth = GetLineWidth(fmt, args, argsLen, 0, size, opts.spacing, &charactersInLine);
-
-	const int maxSpacing = opts.spacing;
-	if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing))
-		opts.spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
 	Point characterPosition { GetLineStartX(opts.flags, rect, lineWidth), rect.position.y };
 	const int initialX = characterPosition.x;
@@ -776,6 +776,9 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 	const Surface clippedOut = ClipSurface(out, rect);
 
 	CurrentFont currentFont;
+	int curSpacing = HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)
+	    ? AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width)
+	    : opts.spacing;
 
 	char32_t prev = U'\0';
 	char32_t next;
@@ -791,7 +794,7 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 
 		const std::optional<std::size_t> fmtArgPos = fmtArgParser(remaining);
 		if (fmtArgPos) {
-			DoDrawString(clippedOut, args[*fmtArgPos].GetFormatted(), rect, characterPosition, lineWidth, rightMargin, bottomMargin, size,
+			DoDrawString(clippedOut, args[*fmtArgPos].GetFormatted(), rect, characterPosition, lineWidth, charactersInLine, rightMargin, bottomMargin, size,
 			    GetColorFromFlags(args[*fmtArgPos].GetFlags()), outlined, opts);
 			// `fmtArgParser` has already consumed `remaining`. Ensure the loop doesn't consume any more.
 			cpLen = 0;
@@ -816,10 +819,15 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 				break;
 			characterPosition.y = nextLineY;
 
+			if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)) {
+				int nextLineWidth = GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, opts.spacing, &charactersInLine);
+				curSpacing = AdjustSpacingToFitHorizontally(nextLineWidth, opts.spacing, charactersInLine, rect.size.width);
+			}
+
 			if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = width;
 				if (remaining.size() > cpLen)
-					lineWidth += opts.spacing + GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, opts.spacing);
+					lineWidth += curSpacing + GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, curSpacing);
 			}
 			characterPosition.x = GetLineStartX(opts.flags, rect, lineWidth);
 
@@ -828,7 +836,7 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 		}
 
 		DrawFont(clippedOut, characterPosition, (*currentFont.sprite)[frame], color, outlined);
-		characterPosition.x += width + opts.spacing;
+		characterPosition.x += width + curSpacing;
 	}
 
 	if (HasAnyOf(opts.flags, UiFlags::PentaCursor)) {
