@@ -160,13 +160,13 @@ int ReconstructPath(const ExploredNodes &explored, PointT dest, int8_t *path, si
 		const auto it = explored.find(cur);
 		if (it == explored.end()) app_fatal("Failed to reconstruct path");
 		if (it->second.g == 0) break; // reached start
-		path[len++] = GetPathDirection(it->second.prev, cur);
-		cur = it->second.prev;
 		if (len == maxPathLength) {
 			// Path too long.
 			len = 0;
 			break;
 		}
+		path[len++] = GetPathDirection(it->second.prev, cur);
+		cur = it->second.prev;
 	}
 	std::reverse(path, path + len);
 	std::fill(path + len, path + maxPathLength, -1);
