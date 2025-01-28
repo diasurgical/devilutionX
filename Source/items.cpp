@@ -44,6 +44,7 @@
 #include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
+#include "utils/algorithm/container.hpp"
 #include "utils/format_int.hpp"
 #include "utils/is_of.hpp"
 #include "utils/language.h"
@@ -51,6 +52,7 @@
 #include "utils/math.h"
 #include "utils/str_case.hpp"
 #include "utils/str_cat.hpp"
+#include "utils/str_split.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -4098,12 +4100,19 @@ void DrawUniqueInfo(const Surface &out)
 
 	rect.position.y += (10 - uitem.UINumPL) * 12;
 	assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+	const TextRenderOptions textRenderOptions { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter };
+	const GameFontTables fontSize = GetFontSizeFromUiFlags(textRenderOptions.flags);
 	for (const auto &power : uitem.powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		rect.position.y += 2 * 12;
-		DrawString(out, PrintItemPower(power.type, curruitem), rect,
-		    { .flags = UiFlags::ColorWhite | UiFlags::AlignCenter });
+		// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words.
+		const std::string wrapped = WordWrapString(PrintItemPower(power.type, curruitem), rect.size.width);
+		DrawString(out, wrapped, rect, textRenderOptions);
+		for (const std::string_view line : SplitByChar(wrapped, '\n')) {
+			if (line.data() + line.size() == wrapped.data() + wrapped.size()) break;
+			rect.position.y += GetLineHeight(line, fontSize);
+		}
 	}
 }
 
