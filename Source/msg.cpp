@@ -1360,12 +1360,11 @@ size_t OnPutItem(const TCmd *pCmd, Player &player)
 					pfile_update(true);
 			}
 			return sizeof(message);
-		} else {
-			PutItemRecord(dwSeed, wCI, wIndx);
-			DeltaPutItem(message, position, player);
-			if (isSelf)
-				pfile_update(true);
 		}
+		PutItemRecord(dwSeed, wCI, wIndx);
+		DeltaPutItem(message, position, player);
+		if (isSelf)
+			pfile_update(true);
 	}
 
 	return sizeof(message);
