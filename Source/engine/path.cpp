@@ -170,7 +170,7 @@ int ReconstructPath(const ExploredNodes &explored, PointT dest, int8_t *path, si
 	}
 	std::reverse(path, path + len);
 	std::fill(path + len, path + maxPathLength, -1);
-	return len;
+	return static_cast<int>(len);
 }
 
 } // namespace
