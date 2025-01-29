@@ -4271,7 +4271,6 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 		if (ControlMode == ControlTypes::KeyboardAndMouse && GetSpellData(spellID).isTargeted()) {
 			prepareSpellID = spellID;
 		} else {
-			const int spellLevel = player.GetSpellLevel(spellID);
 			// Find a valid target for the spell because tile coords
 			// will be validated when processing the network message
 			Point target = cursPosition;
