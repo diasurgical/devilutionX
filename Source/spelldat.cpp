@@ -253,6 +253,7 @@ void LoadSpellData()
 		reader.readInt("minMana", item.sMinMana);
 		reader.readInt("staffMin", item.sStaffMin);
 		reader.readInt("staffMax", item.sStaffMax);
+		reader.readInt("softCap", item.sSoftCap);
 	}
 	SpellsData.shrink_to_fit();
 }

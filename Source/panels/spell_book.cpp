@@ -192,7 +192,11 @@ void DrawSpellBook(const Surface &out)
 			default: {
 				const int mana = GetManaAmount(player, sn) >> 6;
 				const int lvl = player.GetSpellLevel(sn);
-				PrintSBookStr(out, line0, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}")), lvl), UiFlags::AlignRight);
+				const int softCap = GetSpellData(sn).sSoftCap;
+				if (softCap > 0)
+					PrintSBookStr(out, line0, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}/{:d}")), lvl, GetSpellData(sn).sSoftCap), UiFlags::AlignRight);
+				else
+					PrintSBookStr(out, line0, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}")), lvl), UiFlags::AlignRight);
 				if (const StringOrView text = GetSpellPowerText(sn, lvl); !text.empty()) {
 					PrintSBookStr(out, line1, text, UiFlags::AlignRight);
 				}
