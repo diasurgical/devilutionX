@@ -124,6 +124,15 @@ constexpr int RightColumnLabelWidth = 68;
 constexpr unsigned AttributeHeaderEntryIndices[2] = { 5, 6 };
 constexpr unsigned GoldHeaderEntryIndex = 16;
 
+int GetXPSpacing(int xp)
+{
+	if (xp < 100000000)
+		return 1;
+	if (xp < 1000000000)
+		return 0;
+	return -1;
+}
+
 PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, InspectPlayer->_pName }; } },
@@ -134,7 +143,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->getCharacterLevel()) }; } },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
-	        int spacing = ((InspectPlayer->_pExperience >= 1000000000) ? 0 : 1);
+	        int spacing = GetXPSpacing(InspectPlayer->_pExperience);
 	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pExperience), spacing };
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
@@ -143,7 +152,7 @@ PanelEntry panelEntries[] = {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        uint32_t nextExperienceThreshold = InspectPlayer->getNextExperienceThreshold();
-	        int spacing = ((nextExperienceThreshold >= 1000000000) ? 0 : 1);
+	        int spacing = GetXPSpacing(nextExperienceThreshold);
 	        return StyledText { UiFlags::ColorWhite, FormatInteger(nextExperienceThreshold), spacing };
 	    } },
 
