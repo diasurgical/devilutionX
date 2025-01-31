@@ -1966,51 +1966,47 @@ void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 		GetItemAttrs(premiumItem, itemType, plvl);
 		GetItemBonus(player, premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
-		if (!gbIsHellfire) {
-			if (premiumItem._iIvalue <= MaxVendorValue) {
-				break;
-			}
-		} else {
-			int itemValue = 0;
-			switch (premiumItem._itype) {
-			case ItemType::LightArmor:
-			case ItemType::MediumArmor:
-			case ItemType::HeavyArmor: {
-				const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
-				    [](const Item &item) {
-					    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
-				    });
+		if (!gbIsHellfire)
+			break;
 
-				itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
-				break;
-			}
-			case ItemType::Shield:
-			case ItemType::Axe:
-			case ItemType::Bow:
-			case ItemType::Mace:
-			case ItemType::Sword:
-			case ItemType::Helm:
-			case ItemType::Staff:
-			case ItemType::Ring:
-			case ItemType::Amulet: {
-				const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-				    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
+		int itemValue = 0;
+		switch (premiumItem._itype) {
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
+		case ItemType::HeavyArmor: {
+			const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
+				[](const Item &item) {
+					return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
+				});
 
-				itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
-				break;
-			}
-			default:
-				itemValue = 0;
-				break;
-			}
-			itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
-			if (premiumItem._iIvalue <= MaxVendorValueHf
-			    && premiumItem._iMinStr <= strength
-			    && premiumItem._iMinMag <= magic
-			    && premiumItem._iMinDex <= dexterity
-			    && premiumItem._iIvalue >= itemValue) {
-				break;
-			}
+			itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
+			break;
+		}
+		case ItemType::Shield:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Sword:
+		case ItemType::Helm:
+		case ItemType::Staff:
+		case ItemType::Ring:
+		case ItemType::Amulet: {
+			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
+				[filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
+
+			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
+			break;
+		}
+		default:
+			itemValue = 0;
+			break;
+		}
+		itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
+		if (premiumItem._iMinStr <= strength
+			&& premiumItem._iMinMag <= magic
+			&& premiumItem._iMinDex <= dexterity
+			&& premiumItem._iIvalue >= itemValue) {
+			break;
 		}
 	}
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
@@ -4390,24 +4386,19 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	int maxValue = MaxVendorValue;
 	int maxItems = 19;
-	if (gbIsHellfire) {
-		maxValue = MaxVendorValueHf;
+	if (gbIsHellfire)
 		maxItems = 24;
-	}
 
 	int iCnt = RandomIntBetween(10, maxItems);
 	for (int i = 0; i < iCnt; i++) {
 		Item &newItem = SmithItems[i];
 
-		do {
-			newItem = {};
-			newItem._iSeed = AdvanceRndSeed();
-			SetRndSeed(newItem._iSeed);
-			_item_indexes itemData = RndSmithItem(*MyPlayer, lvl);
-			GetItemAttrs(newItem, itemData, lvl);
-		} while (newItem._iIvalue > maxValue);
+		newItem = {};
+		newItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(newItem._iSeed);
+		_item_indexes itemData = RndSmithItem(*MyPlayer, lvl);
+		GetItemAttrs(newItem, itemData, lvl);
 
 		newItem._iCreateInfo = lvl | CF_SMITH;
 		newItem._iIdentified = true;
@@ -4461,7 +4452,6 @@ void SpawnWitch(int lvl)
 	int bookCount = 0;
 	const int pinnedBookCount = gbIsHellfire ? RandomIntLessThan(MaxPinnedBookCount) : 0;
 	const int itemCount = RandomIntBetween(10, gbIsHellfire ? 24 : 17);
-	const int maxValue = gbIsHellfire ? MaxVendorValueHf : MaxVendorValue;
 
 	for (int i = 0; i < WITCH_ITEMS; i++) {
 		Item &item = WitchItems[i];
@@ -4496,20 +4486,18 @@ void SpawnWitch(int lvl)
 			continue;
 		}
 
-		do {
-			item = {};
-			item._iSeed = AdvanceRndSeed();
-			SetRndSeed(item._iSeed);
-			_item_indexes itemData = RndWitchItem(*MyPlayer, lvl);
-			GetItemAttrs(item, itemData, lvl);
-			int maxlvl = -1;
-			if (GenerateRnd(100) <= 5)
-				maxlvl = 2 * lvl;
-			if (maxlvl == -1 && item._iMiscId == IMISC_STAFF)
-				maxlvl = 2 * lvl;
-			if (maxlvl != -1)
-				GetItemBonus(*MyPlayer, item, maxlvl / 2, maxlvl, true, true);
-		} while (item._iIvalue > maxValue);
+		item = {};
+		item._iSeed = AdvanceRndSeed();
+		SetRndSeed(item._iSeed);
+		_item_indexes itemData = RndWitchItem(*MyPlayer, lvl);
+		GetItemAttrs(item, itemData, lvl);
+		int maxlvl = -1;
+		if (GenerateRnd(100) <= 5)
+			maxlvl = 2 * lvl;
+		if (maxlvl == -1 && item._iMiscId == IMISC_STAFF)
+			maxlvl = 2 * lvl;
+		if (maxlvl != -1)
+			GetItemBonus(*MyPlayer, item, maxlvl / 2, maxlvl, true, true);
 
 		item._iCreateInfo = lvl | CF_WITCH;
 		item._iIdentified = true;
@@ -4537,7 +4525,6 @@ void SpawnBoy(int lvl)
 	if (BoyItemLevel >= (lvl / 2) && !BoyItem.isEmpty())
 		return;
 	do {
-		keepgoing = false;
 		BoyItem = {};
 		BoyItem._iSeed = AdvanceRndSeed();
 		SetRndSeed(BoyItem._iSeed);
@@ -4545,13 +4532,8 @@ void SpawnBoy(int lvl)
 		GetItemAttrs(BoyItem, itype, lvl);
 		GetItemBonus(*MyPlayer, BoyItem, lvl, 2 * lvl, true, true);
 
-		if (!gbIsHellfire) {
-			if (BoyItem._iIvalue > MaxBoyValue) {
-				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
-				continue;
-			}
+		if (!gbIsHellfire)
 			break;
-		}
 
 		ivalue = 0;
 
@@ -4619,14 +4601,13 @@ void SpawnBoy(int lvl)
 				break;
 			}
 		}
-	} while (keepgoing
-	    || ((
-	            BoyItem._iIvalue > MaxBoyValueHf
-	            || BoyItem._iMinStr > strength
+	} while (
+	        (
+	            BoyItem._iMinStr > strength
 	            || BoyItem._iMinMag > magic
 	            || BoyItem._iMinDex > dexterity
 	            || BoyItem._iIvalue < ivalue)
-	        && count < 250));
+	        && count < 250);
 	BoyItem._iCreateInfo = lvl | CF_BOY;
 	BoyItem._iIdentified = true;
 	BoyItemLevel = lvl / 2;
