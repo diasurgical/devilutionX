@@ -93,19 +93,28 @@ MpqWriter::MpqWriter(const char *path)
 	LogVerbose("Opening {}", path);
 	std::string error;
 	bool exists = FileExists(path);
-	const char *mode = "wbx";
-	if (exists) {
-		mode = "r+b";
-		std::uintmax_t fileSize;
-		if (!GetFileSize(path, &fileSize)) {
-			error = R"(GetFileSize failed: "{}")";
-			LogError(error, path, std::strerror(errno));
-			goto on_error;
-		}
-		size_ = static_cast<uint32_t>(fileSize);
-		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
+	if (!exists) {
+		// FileExists() may return false in the case of an error
+		// so we use "ab" instead of "wb" to avoid accidentally
+		// truncating an existing file
+		stream_.Open(path, "ab");
+
+		// However, we cannot actually use a file handle that was
+		// opened in "ab" mode because we need to be able to seek
+		// and write to the middle of the file
+		stream_.Close();
 	}
-	if (!stream_.Open(path, mode)) {
+
+	std::uintmax_t fileSize;
+	if (!GetFileSize(path, &fileSize)) {
+		error = R"(GetFileSize failed: "{}")";
+		LogError(error, path, std::strerror(errno));
+		goto on_error;
+	}
+	size_ = static_cast<uint32_t>(fileSize);
+	LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
+
+	if (!stream_.Open(path, "r+b")) {
 		stream_.Close();
 		error = "Failed to open file";
 		goto on_error;
