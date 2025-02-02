@@ -90,9 +90,9 @@ MpqWriter::MpqWriter(const char *path)
 	const std::string dir = std::string(Dirname(path));
 	RecursivelyCreateDir(dir.c_str());
 	LogVerbose("Opening {}", path);
+	bool isNewFile = false;
 	std::string error;
-	bool exists = FileExists(path);
-	if (!exists) {
+	if (!FileExists(path)) {
 		// FileExists() may return false in the case of an error
 		// so we use "ab" instead of "wb" to avoid accidentally
 		// truncating an existing file
@@ -109,6 +109,7 @@ MpqWriter::MpqWriter(const char *path)
 		LogError(error, path, std::strerror(errno));
 		goto on_error;
 	}
+	isNewFile = size_ == 0;
 	LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
 
 	if (!stream_.Open(path, "r+b")) {
@@ -121,7 +122,7 @@ MpqWriter::MpqWriter(const char *path)
 
 	if (blockTable_ == nullptr || hashTable_ == nullptr) {
 		MpqFileHeader fhdr;
-		if (!exists) {
+		if (isNewFile) {
 			InitDefaultMpqHeader(&fhdr);
 		} else if (!ReadMPQHeader(&fhdr)) {
 			error = "Failed to read MPQ header";
@@ -161,7 +162,7 @@ MpqWriter::MpqWriter(const char *path)
 
 		// Write garbage header and tables because some platforms cannot `Seekp` beyond EOF.
 		// The data is incorrect at this point, it will be overwritten on Close.
-		if (!exists)
+		if (isNewFile)
 			WriteHeaderAndTables();
 #endif
 	}
