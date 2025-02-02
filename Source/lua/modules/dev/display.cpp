@@ -42,7 +42,7 @@ std::string DebugCmdFullbright(std::optional<bool> on)
 
 std::string DebugCmdShowTileData(std::optional<std::string_view> dataType)
 {
-	static const std::array<std::string_view, 22> DataTypes {
+	static const std::array<std::string_view, 23> DataTypes {
 		"microTiles",
 		"dPiece",
 		"dTransVal",
@@ -51,6 +51,7 @@ std::string DebugCmdShowTileData(std::optional<std::string_view> dataType)
 		"dFlags",
 		"dPlayer",
 		"dMonster",
+		"missiles",
 		"dCorpse",
 		"dObject",
 		"dItem",

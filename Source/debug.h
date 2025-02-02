@@ -43,6 +43,7 @@ enum class DebugGridTextItem : uint16_t {
 	dFlags,
 	dPlayer,
 	dMonster,
+	missiles,
 	dCorpse,
 	dObject,
 	dItem,

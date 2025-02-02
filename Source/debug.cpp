@@ -19,6 +19,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "lighting.h"
+#include "missiles.h"
 #include "monster.h"
 #include "plrmsg.h"
 #include "utils/str_case.hpp"
@@ -208,6 +209,16 @@ bool GetDebugGridText(Point dungeonCoords, std::string &debugGridText)
 	case DebugGridTextItem::dMonster:
 		info = dMonster[dungeonCoords.x][dungeonCoords.y];
 		break;
+	case DebugGridTextItem::missiles: {
+		for (auto &missile : Missiles) {
+			if (missile.position.tile == dungeonCoords) {
+				if (!debugGridText.empty()) debugGridText += '\n';
+				debugGridText.append(std::to_string((int)missile._mitype));
+			}
+		}
+		if (debugGridText.empty()) return false;
+		return true;
+	} break;
 	case DebugGridTextItem::dCorpse:
 		info = dCorpse[dungeonCoords.x][dungeonCoords.y];
 		break;
