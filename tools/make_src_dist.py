@@ -35,8 +35,15 @@ import sys
 # We only package the dependencies that are:
 # 1. Uncommon in package managers (sdl_audiolib).
 # 2. Require devilutionx forks (all others).
-_DEPS = ['asio', 'libmpq', 'libsmackerdec',
-         'libzt', 'sdl_audiolib', 'unordered_dense']
+_DEPS = [
+    "asio",
+    "libmpq",
+    "libsmackerdec",
+    "libzt",
+    "sdl_audiolib",
+    "sheenbidi",
+    "unordered_dense",
+]
 _ALWAYS_VENDORED_DEPS = ['asio', 'libmpq', 'libsmackerdec', 'libzt']
 
 # These dependencies are not vendored by default.
