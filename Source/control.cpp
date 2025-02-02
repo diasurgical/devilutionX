@@ -1688,20 +1688,24 @@ bool CheckKeypress(SDL_Keycode vkey)
 
 void DiabloHotkeyMsg(uint32_t dwMsg)
 {
+	assert(dwMsg < QuickMessages.size());
+
+#ifdef _DEBUG
+	constexpr std::string_view LuaPrefix = "/lua ";
+	for (const std::string &msg : GetOptions().Chat.szHotKeyMsgs[dwMsg]) {
+		if (!msg.starts_with(LuaPrefix)) continue;
+		InitConsole();
+		RunInConsole(std::string_view(msg).substr(LuaPrefix.size()));
+	}
+#endif
+
 	if (!IsChatAvailable()) {
 		return;
 	}
 
-	assert(dwMsg < QuickMessages.size());
-
 	for (const std::string &msg : GetOptions().Chat.szHotKeyMsgs[dwMsg]) {
 #ifdef _DEBUG
-		constexpr std::string_view LuaPrefix = "/lua ";
-		if (msg.starts_with(LuaPrefix)) {
-			InitConsole();
-			RunInConsole(std::string_view(msg).substr(LuaPrefix.size()));
-			continue;
-		}
+		if (msg.starts_with(LuaPrefix)) continue;
 #endif
 		char charMsg[MAX_SEND_STR_LEN];
 		CopyUtf8(charMsg, msg, sizeof(charMsg));
