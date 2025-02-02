@@ -2,7 +2,6 @@ include(functions/FetchContent_ExcludeFromAll_backport)
 include(FetchContent)
 
 set(BUILD_TESTING OFF)
-set(ENABLE_INSTALL OFF)
 set(ASAN OFF)
 set(UBSAN OFF)
 
