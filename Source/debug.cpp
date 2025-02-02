@@ -144,19 +144,20 @@ void SetDebugGridTextType(DebugGridTextItem value)
 	SelectedDebugGridTextItem = value;
 }
 
-bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
+bool GetDebugGridText(Point dungeonCoords, std::string &debugGridText)
 {
 	int info = 0;
 	int blankValue = 0;
+	debugGridText.clear();
 	Point megaCoords = dungeonCoords.worldToMega();
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
-		*BufCopy(debugGridTextBuffer, dungeonCoords.x, ":", dungeonCoords.y) = '\0';
+		StrAppend(debugGridText, dungeonCoords.x, ":", dungeonCoords.y);
 		return true;
 	case DebugGridTextItem::cursorcoords:
 		if (dungeonCoords != cursPosition)
 			return false;
-		*BufCopy(debugGridTextBuffer, dungeonCoords.x, ":", dungeonCoords.y) = '\0';
+		StrAppend(debugGridText, dungeonCoords.x, ":", dungeonCoords.y);
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
@@ -167,23 +168,21 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		break;
 	}
 	case DebugGridTextItem::microTiles: {
-		std::string result;
 		const MICROS &micros = DPieceMicros[dPiece[dungeonCoords.x][dungeonCoords.y]];
 		for (const LevelCelBlock tile : micros.mt) {
 			if (!tile.hasValue()) break;
-			if (!result.empty()) result += '\n';
-			StrAppend(result, tile.frame(), " ");
+			if (!debugGridText.empty()) debugGridText += '\n';
+			StrAppend(debugGridText, tile.frame(), " ");
 			switch (tile.type()) {
-			case TileType::Square: StrAppend(result, "S"); break;
-			case TileType::TransparentSquare: StrAppend(result, "T"); break;
-			case TileType::LeftTriangle: StrAppend(result, "<"); break;
-			case TileType::RightTriangle: StrAppend(result, ">"); break;
-			case TileType::LeftTrapezoid: StrAppend(result, "\\"); break;
-			case TileType::RightTrapezoid: StrAppend(result, "/"); break;
+			case TileType::Square: StrAppend(debugGridText, "S"); break;
+			case TileType::TransparentSquare: StrAppend(debugGridText, "T"); break;
+			case TileType::LeftTriangle: StrAppend(debugGridText, "<"); break;
+			case TileType::RightTriangle: StrAppend(debugGridText, ">"); break;
+			case TileType::LeftTrapezoid: StrAppend(debugGridText, "\\"); break;
+			case TileType::RightTrapezoid: StrAppend(debugGridText, "/"); break;
 			}
 		}
-		if (result.empty()) return false;
-		*BufCopy(debugGridTextBuffer, result) = '\0';
+		if (debugGridText.empty()) return false;
 		return true;
 	} break;
 	case DebugGridTextItem::dPiece:
@@ -251,7 +250,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	}
 	if (info == blankValue)
 		return false;
-	*BufCopy(debugGridTextBuffer, info) = '\0';
+	StrAppend(debugGridText, info);
 	return true;
 }
 

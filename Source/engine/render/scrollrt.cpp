@@ -1158,7 +1158,7 @@ void DrawView(const Surface &out, Point startPosition)
 	if (debugGridTextNeeded || DebugGrid) {
 		// force redrawing or debug stuff stays on panel on 640x480 resolution
 		RedrawEverything();
-		char debugGridTextBuffer[10];
+		std::string debugGridText;
 		bool megaTiles = IsDebugGridInMegatiles();
 
 		for (auto [dunCoordVal, pixelCoords] : DebugCoordsMap) {
@@ -1169,11 +1169,11 @@ void DrawView(const Surface &out, Point startPosition)
 				pixelCoords += Displacement { 0, TILE_HEIGHT / 2 };
 			if (*GetOptions().Graphics.zoom)
 				pixelCoords *= 2;
-			if (debugGridTextNeeded && GetDebugGridText(dunCoords, debugGridTextBuffer)) {
+			if (debugGridTextNeeded && GetDebugGridText(dunCoords, debugGridText)) {
 				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
 				if (*GetOptions().Graphics.zoom)
 					tileSize *= 2;
-				DrawString(out, debugGridTextBuffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize },
+				DrawString(out, debugGridText, { pixelCoords - Displacement { 0, tileSize.height }, tileSize },
 				    { .flags = UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter });
 			}
 			if (DebugGrid) {

@@ -73,7 +73,7 @@ bool IsDebugGridTextNeeded();
 bool IsDebugGridInMegatiles();
 DebugGridTextItem GetDebugGridTextType();
 void SetDebugGridTextType(DebugGridTextItem value);
-bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer);
+bool GetDebugGridText(Point dungeonCoords, std::string &debugGridText);
 bool IsDebugAutomapHighlightNeeded();
 bool ShouldHighlightDebugAutomapTile(Point position);
 void AddDebugAutomapMonsterHighlight(std::string_view name);
