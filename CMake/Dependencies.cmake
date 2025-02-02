@@ -207,8 +207,6 @@ endif()
 
 add_subdirectory(3rdParty/tl)
 
-add_subdirectory(3rdParty/hoehrmann_utf8)
-
 if(NOT DEFINED DEVILUTIONX_SYSTEM_SHEENBIDI)
   find_package(SheenBidi QUIET)
   if(SheenBidi_FOUND)
