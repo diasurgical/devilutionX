@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-foreach(_policy CMP0111 CMP0126 CMP0135)
+foreach(_policy CMP0111 CMP0126 CMP0135 CMP0141)
   if(POLICY ${_policy})
     cmake_policy(SET ${_policy} NEW)
     set(CMAKE_POLICY_DEFAULT_${_policy} NEW)
@@ -282,6 +282,11 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # u8path() function is deprecated but there is no sensible alternative and it might even get un-deprecated.
   add_definitions(-D_SILENCE_CXX20_U8PATH_DEPRECATION_WARNING)
+  if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.25")
+    # This enables Edit & Continue support, see https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio#edit-and-continue-for-cmake-projects
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug>:EditAndContinue>") # Sets /ZI compiler option, see https://cmake.org/cmake/help/latest/variable/CMAKE_MSVC_DEBUG_INFORMATION_FORMAT.html
+    add_link_options("$<$<CONFIG:Debug>:/INCREMENTAL>")
+  endif()
 endif()
 
 # Not a genexp because CMake doesn't support it
