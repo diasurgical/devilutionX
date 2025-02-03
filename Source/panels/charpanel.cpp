@@ -318,8 +318,8 @@ void DrawChr(const Surface &out)
 			DrawString(
 			    out,
 			    tmp.text,
-			    { entry.position + Displacement { pos.x + 5, pos.y + PanelFieldPaddingTop }, { entry.length - 10, PanelFieldInnerHeight } },
-			    { .flags = UiFlags::KerningFitSpacing | UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style });
+			    { entry.position + Displacement { pos.x, pos.y + PanelFieldPaddingTop }, { entry.length, PanelFieldInnerHeight } },
+			    { .flags = UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, .spacing = tmp.spacing });
 		}
 	}
 	DrawStatButtons(out);
