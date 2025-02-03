@@ -82,6 +82,8 @@ public:
 	 */
 	[[nodiscard]] uint8_t getAnimationProgress() const;
 
+	void configureFrameDistribution(AnimationDistributionFlags flags, int8_t numberOfFrames, int8_t distributeFramesBeforeFrame, int8_t numSkippedFrames, int8_t ticksPerFrame, uint8_t previewShownGameTickFragments);
+
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
 	 * @param sprites Animation sprites
