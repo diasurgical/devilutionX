@@ -416,9 +416,13 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
     TextRenderOptions &opts)
 {
 	CurrentFont currentFont;
-	int curSpacing = HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)
-	    ? AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width)
-	    : opts.spacing;
+	int curSpacing = opts.spacing;
+	if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)) {
+		curSpacing = AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width);
+		int adjustedLineWidth = GetLineWidth(text, size, curSpacing, &charactersInLine);
+		characterPosition.x = GetLineStartX(opts.flags, rect, adjustedLineWidth);
+		opts.spacing = curSpacing;
+	}
 
 	char32_t next;
 	std::string_view remaining = text;
@@ -704,15 +708,11 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 	const text_color color = GetColorFromFlags(opts.flags);
 
 	int charactersInLine = 0;
-	int unadjustedWidth = GetLineWidth(text, size, opts.spacing, &charactersInLine);
-	int adjustedSpacing = HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)
-	    ? AdjustSpacingToFitHorizontally(unadjustedWidth, opts.spacing, charactersInLine, rect.size.width)
-	    : opts.spacing;
-	int adjustedLineWidth = GetLineWidth(text, size, adjustedSpacing, &charactersInLine);
-	Point characterPosition { GetLineStartX(opts.flags, rect, adjustedLineWidth), rect.position.y };
+	int lineWidth = 0;
+	if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
+		lineWidth = GetLineWidth(text, size, opts.spacing, &charactersInLine);
 
-	opts.spacing = adjustedSpacing;
-
+	Point characterPosition { GetLineStartX(opts.flags, rect, lineWidth), rect.position.y };
 	const int initialX = characterPosition.x;
 
 	const int rightMargin = rect.position.x + rect.size.width;
@@ -738,7 +738,7 @@ uint32_t DrawString(const Surface &out, std::string_view text, const Rectangle &
 	}
 
 	const uint32_t bytesDrawn = DoDrawString(clippedOut, text, rect, characterPosition,
-	    unadjustedWidth, charactersInLine, rightMargin, bottomMargin, size, color, outlined, opts);
+	    lineWidth, charactersInLine, rightMargin, bottomMargin, size, color, outlined, opts);
 
 	if (HasAnyOf(opts.flags, UiFlags::PentaCursor)) {
 		const ClxSprite sprite = (*pSPentSpn2Cels)[PentSpn2Spin()];
