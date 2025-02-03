@@ -194,7 +194,7 @@ void ApplyToneMapping(std::array<SDL_Color, 256> &dst,
 	int brightnessSlider = *GetOptions().Graphics.brightness; // New brightness setting.
 
 	// Maximum adjustment factor (tweak this constant to change the effect strength)
-	const float maxAdjustment = 0.5f;
+	const float maxAdjustment = 1.0f;
 	// Compute the quadratic parameter:
 	// When brightnessSlider==0, then a==0 (identity mapping)
 	// When brightnessSlider==100, then a== -maxAdjustment (maximum brightening)
