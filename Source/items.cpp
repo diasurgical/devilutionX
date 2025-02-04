@@ -3986,15 +3986,11 @@ bool DoOil(Player &player, int cii)
 	case IPL_STEALMANA:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
 			return _(/*xgettext:no-c-format*/ "3% Mana Stolen per Hit");
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
-			return _(/*xgettext:no-c-format*/ "5% Mana Stolen per Hit");
-		return {};
+		return _(/*xgettext:no-c-format*/ "5% Mana Stolen per Hit");
 	case IPL_STEALLIFE:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
 			return _(/*xgettext:no-c-format*/ "3% Life Stolen Per Hit");
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
-			return _(/*xgettext:no-c-format*/ "5% Life Stolen Per Hit");
-		return {};
+		return _(/*xgettext:no-c-format*/ "5% Life Stolen Per Hit");
 	case IPL_TARGAC:
 		return _("Increased Chance To Hit");
 	case IPL_FASTATTACK:
@@ -4004,17 +4000,13 @@ bool DoOil(Player &player, int cii)
 			return _("Fast Attack Speed");
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterAttack))
 			return _("Faster Attack Speed");
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastestAttack))
-			return _("Fastest Attack Speed");
-		return _("");
+		return _("Fastest Attack Speed");
 	case IPL_FASTRECOVER:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastHitRecovery))
 			return _("Fast Hit Recovery");
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterHitRecovery))
 			return _("Faster Hit Recovery");
-		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastestHitRecovery))
-			return _("Fastest Hit Recovery");
-		return _("Another ability (NW)");
+		return _("Fastest Hit Recovery");
 	case IPL_FASTBLOCK:
 		return _("Fastest Block Rate");
 	case IPL_DAMMOD:
