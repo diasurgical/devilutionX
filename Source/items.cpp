@@ -3924,10 +3924,7 @@ bool DoOil(Player &player, int cii)
 		else
 			return fmt::format(fmt::runtime(_("Adds {:d}-{:d} Fire Damage")), item._iFMinDam, item._iFMaxDam);
 	case IPL_FIREBALL:
-		if (item._iFMinDam == item._iFMaxDam)
-			return fmt::format(fmt::runtime(_("Casts Fireball on Attack ({:d} Damage)")), item._iFMinDam);
-		else
-			return fmt::format(fmt::runtime(_("Casts Fireball on Attack({:d}-{:d} Damage)")), item._iFMinDam, item._iFMaxDam);
+		return _("Casts Fireball on Attack (15-20 Damage)");
 	case IPL_LIGHTDAM:
 	case IPL_LIGHT_ARROWS:
 		if (item._iLMinDam == item._iLMaxDam)
@@ -3935,15 +3932,9 @@ bool DoOil(Player &player, int cii)
 		else
 			return fmt::format(fmt::runtime(_("Adds {:d}-{:d} Lightning Damage")), item._iLMinDam, item._iLMaxDam);
 	case IPL_ADDACLIFE:
-		if (item._iLMinDam == item._iLMaxDam)
-			return fmt::format(fmt::runtime(_("Casts Lightning on Attack ({:d} Damage)")), item._iLMinDam);
-		else
-			return fmt::format(fmt::runtime(_("Casts Lightning on Attack ({:d}-{:d} Damage)")), item._iLMinDam, item._iLMaxDam);
+		return _("Casts Lightning on Attack (10-15 Damage)");
 	case IPL_ADDMANAAC:
-		if (item._iLMinDam == item._iLMaxDam)
-			return fmt::format(fmt::runtime(_("Casts Charged Bolt on Attack ({:d} Damage)")), item._iLMinDam);
-		else
-			return fmt::format(fmt::runtime(_("Casts Charged Bolt on Attack ({:d}-{:d} Damage)")), item._iLMinDam, item._iLMaxDam);
+		return _("Casts Charged Bolt on Attack (3-6 Damage)");
 	case IPL_STR:
 	case IPL_STR_CURSE:
 		return fmt::format(fmt::runtime(_("{:+d} to Strength")), item._iPLStr);
@@ -4031,7 +4022,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_RNDARROWVEL:
 		return _("Random Speed Arrows");
 	case IPL_SETDAM:
-		return _("Unusual Damage");
+		return _("Altered Damage");
 	case IPL_SETDUR:
 		return _("Altered Durability");
 	case IPL_ONEHAND:
