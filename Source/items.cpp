@@ -3919,18 +3919,31 @@ bool DoOil(Player &player, int cii)
 		return fmt::format(fmt::runtime(_("Level {:d} {:s} ({:d}/{:d} Charges)")), MyPlayer->GetSpellLevel(item._iSpell), pgettext("spell", GetSpellData(item._iSpell).sNameText), item._iCharges, item._iMaxCharges);
 	case IPL_FIREDAM:
 	case IPL_FIRE_ARROWS:
-	case IPL_FIREBALL:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(fmt::runtime(_("Adds {:d} Fire Damage")), item._iFMinDam);
 		else
 			return fmt::format(fmt::runtime(_("Adds {:d}-{:d} Fire Damage")), item._iFMinDam, item._iFMaxDam);
+	case IPL_FIREBALL:
+		if (item._iFMinDam == item._iFMaxDam)
+			return fmt::format(fmt::runtime(_("Casts Fireball on Attack ({:d} Damage)")), item._iFMinDam);
+		else
+			return fmt::format(fmt::runtime(_("Casts Fireball on Attack({:d}-{:d} Damage)")), item._iFMinDam, item._iFMaxDam);
 	case IPL_LIGHTDAM:
 	case IPL_LIGHT_ARROWS:
-	case IPL_ADDACLIFE:
 		if (item._iLMinDam == item._iLMaxDam)
 			return fmt::format(fmt::runtime(_("Adds {:d} Lightning Damage")), item._iLMinDam);
 		else
 			return fmt::format(fmt::runtime(_("Adds {:d}-{:d} Lightning Damage")), item._iLMinDam, item._iLMaxDam);
+	case IPL_ADDACLIFE:
+		if (item._iLMinDam == item._iLMaxDam)
+			return fmt::format(fmt::runtime(_("Casts Lightning on Attack ({:d} Damage)")), item._iLMinDam);
+		else
+			return fmt::format(fmt::runtime(_("Casts Lightning on Attack ({:d}-{:d} Damage)")), item._iLMinDam, item._iLMaxDam);
+	case IPL_ADDMANAAC:
+		if (item._iLMinDam == item._iLMaxDam)
+			return fmt::format(fmt::runtime(_("Casts Charged Bolt on Attack ({:d} Damage)")), item._iLMinDam);
+		else
+			return fmt::format(fmt::runtime(_("Casts Charged Bolt on Attack ({:d}-{:d} Damage)")), item._iLMinDam, item._iLMaxDam);
 	case IPL_STR:
 	case IPL_STR_CURSE:
 		return fmt::format(fmt::runtime(_("{:+d} to Strength")), item._iPLStr);
@@ -4029,8 +4042,6 @@ bool DoOil(Player &player, int cii)
 		return _("0-12.5% Life Stolen Per Hit");
 	case IPL_NOMINSTR:
 		return _("No Strength Requirement");
-	case IPL_ADDMANAAC:
-		return _("Casts Charged Bolt on Attack");
 	case IPL_DEVASTATION:
 		return _("5% Chance for Triple Damage");
 	case IPL_PERIL:
