@@ -4081,7 +4081,10 @@ void PrintItemDetails(const Item &item)
 		return;
 
 	if (item._iClass == ICLASS_WEAPON) {
-		if (item._iMinDam == item._iMaxDam) {
+		if (item._iMinDam == 0 && item._iMaxDam == 0) {
+			if (item._iMaxDur != DUR_INDESTRUCTIBLE)
+				AddInfoBoxString(fmt::format(fmt::runtime(_(/* TRANSLATORS: Dur: is durability */ "Dur: {:d}/{:d}")), item._iMinDam, item._iDurability, item._iMaxDur));
+		} else if (item._iMinDam == item._iMaxDam) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
 				AddInfoBoxString(fmt::format(fmt::runtime(_("Damage: {:d}")), item._iMinDam));
 			else
