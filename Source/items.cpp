@@ -3893,7 +3893,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_TOHIT_DAMP:
 	case IPL_TOHIT_DAMP_CURSE:
 	case IPL_DOPPELGANGER:
-		return fmt::format(fmt::runtime(_("{:+d}% Chance To Hit; {:+d}% damage")), item._iPLToHit, item._iPLDam);
+		return fmt::format(fmt::runtime(_("{:+d}% to Chance To Hit; {:+d}% damage")), item._iPLToHit, item._iPLDam);
 	case IPL_ACP:
 	case IPL_ACP_CURSE:
 		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "{:+d}% Armor Class")), item._iPLAC);
