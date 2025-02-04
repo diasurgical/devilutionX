@@ -3949,7 +3949,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_GETHIT_CURSE:
 		return fmt::format(fmt::runtime(_("Damage Taken Increased by {:d}")), item._iPLGetHit);
 	case IPL_GETHIT:
-		return fmt::format(fmt::runtime(_("Damage Taken Reduced by {:d}")), item._iPLGetHit);
+		return fmt::format(fmt::runtime(_("Damage Taken Reduced by {:d}")), -item._iPLGetHit);
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
 		return fmt::format(fmt::runtime(_("{:+d} to Life")), item._iPLHP >> 6);
