@@ -1679,9 +1679,14 @@ bool IsTileAvailable(Point position)
  */
 bool IsTileAccessible(const Monster &monster, Point position)
 {
-	for (const TriggerStruct trig : trigs) {
+	for (const TriggerStruct &trig : trigs) {
 		if (position == trig.position && IsAnyOf(trig._tmsg, WM_DIABNEXTLVL, WM_DIABPREVLVL, WM_DIABTOWNWARP)) {
-			return false;
+			if (!std::any_of(Players.begin(), Players.end(), [&](const Player &player) {
+				    return position.WalkingDistance(player.position.tile) < 2;
+			    })) {
+				return false;
+			}
+			break;
 		}
 	}
 
