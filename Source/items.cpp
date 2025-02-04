@@ -3947,9 +3947,9 @@ bool DoOil(Player &player, int cii)
 	case IPL_ATTRIBS_CURSE:
 		return fmt::format(fmt::runtime(_("{:+d} to All Attributes")), item._iPLStr);
 	case IPL_GETHIT_CURSE:
-		return fmt::format(fmt::runtime(_("Damage Taken Increased by {:+d}")), item._iPLGetHit);
+		return fmt::format(fmt::runtime(_("Damage Taken Increased by {:d}")), item._iPLGetHit);
 	case IPL_GETHIT:
-		return fmt::format(fmt::runtime(_("Damage Taken Reduced by {:+d}")), item._iPLGetHit);
+		return fmt::format(fmt::runtime(_("Damage Taken Reduced by {:d}")), item._iPLGetHit);
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
 		return fmt::format(fmt::runtime(_("{:+d} to Life")), item._iPLHP >> 6);
@@ -4034,11 +4034,11 @@ bool DoOil(Player &player, int cii)
 	case IPL_DEVASTATION:
 		return _("5% Chance for Triple Damage");
 	case IPL_PERIL:
-		return fmt::format(fmt::runtime(_("Double Damage, Damages User {:d}-{:d}")), item._iMinDam, item._iMaxDam);
+		return fmt::format(fmt::runtime(_("Double Damage; Damages User {:d}-{:d}")), item._iMinDam, item._iMaxDam);
 	case IPL_JESTERS:
 		return std::string(_(/*xgettext:no-c-format*/ "-100% to +500% Damage"));
 	case IPL_CRYSTALLINE:
-		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "Decreased Durability, {:+d}% Damage")), item._iPLDam);
+		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "Decreased Durability; {:+d}% Damage")), item._iPLDam);
 	case IPL_ACDEMON:
 		return _("+120 to Armor Class vs. Demons");
 	case IPL_ACUNDEAD:
