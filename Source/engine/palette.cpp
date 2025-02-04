@@ -205,9 +205,7 @@ void ApplyToneMapping(std::array<SDL_Color, 256> &dst,
 	for (int i = 0; i < 256; i++) {
 		float x = i / 255.0f;
 		// Our quadratic tone mapping: f(x) = a*x^2 + (1-a)*x.
-		float y = a * x * x + (1.0f - a) * x;
-		if (y < 0.0f) y = 0.0f;
-		if (y > 1.0f) y = 1.0f;
+		const float y = std::clamp(a * x * x + (1.0f - a) * x, 0.0f, 1.0f);
 		toneMap[i] = static_cast<Uint8>(y * 255.0f + 0.5f);
 	}
 
