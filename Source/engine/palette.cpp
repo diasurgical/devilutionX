@@ -206,7 +206,7 @@ void ApplyToneMapping(std::array<SDL_Color, 256> &dst,
 		float x = i / 255.0f;
 		// Our quadratic tone mapping: f(x) = a*x^2 + (1-a)*x.
 		const float y = std::clamp(a * x * x + (1.0f - a) * x, 0.0f, 1.0f);
-		toneMap[i] = static_cast<Uint8>(y * 255.0f + 0.5f);
+		toneMap[i] = static_cast<uint8_t>(y * 255.0f + 0.5f);
 	}
 
 	// Apply the lookup table to each color channel in the palette.
