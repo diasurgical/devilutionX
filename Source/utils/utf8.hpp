@@ -6,7 +6,7 @@
 
 namespace devilution {
 
-constexpr char32_t Utf8DecodeError = 0xD83F;
+constexpr char32_t Utf8DecodeError = 0xFFFD;
 
 /**
  * Decodes the first code point from UTF8-encoded input.
