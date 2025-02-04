@@ -505,7 +505,7 @@ void ProgressEventHandler(const SDL_Event &event, uint16_t modState)
 				if (RenderDirectlyToOutputSurface && PalSurface != nullptr) {
 					// The loading thread sets `orig_palette`, so we make sure to use
 					// our own palette for drawing the foreground.
-					ApplyGamma(logical_palette, ProgressEventHandlerState.palette, 256);
+					ApplyToneMapping(logical_palette, ProgressEventHandlerState.palette, 256);
 
 					// Ensure that all back buffers have the full progress bar.
 					const void *initialPixels = PalSurface->pixels;

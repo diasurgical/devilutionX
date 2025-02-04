@@ -653,7 +653,7 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 void UiLoadDefaultPalette()
 {
 	LoadPalette(gbIsHellfire ? "ui_art\\hellfire.pal" : "ui_art\\diablo.pal", /*blend=*/false);
-	ApplyGamma(logical_palette, orig_palette, 256);
+	ApplyToneMapping(logical_palette, orig_palette, 256);
 }
 
 bool UiLoadBlackBackground()
@@ -673,7 +673,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 		return;
 
 	LoadPalInMem(pPal);
-	ApplyGamma(logical_palette, orig_palette, 256);
+	ApplyToneMapping(logical_palette, orig_palette, 256);
 	UiOnBackgroundChange();
 }
 
