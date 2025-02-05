@@ -120,6 +120,7 @@ StyledText GetResistInfo(int8_t resist)
 constexpr int LeftColumnLabelX = 88;
 constexpr int TopRightLabelX = 211;
 constexpr int RightColumnLabelX = 253;
+constexpr int RightColumnNarrowLabelX = 265;
 
 // Indices in `panelEntries`.
 constexpr unsigned AttributeHeaderEntryIndices[2] = { 5, 6 };
@@ -206,11 +207,11 @@ PanelEntry panelEntries[] = {
 	{ "", { 135, 312 }, noTextNarrowLabel,
 	    []() { return StyledText { (InspectPlayer->_pMana != InspectPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat((HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) || (InspectPlayer->_pMana >> 6) <= 0) ? 0 : InspectPlayer->_pMana >> 6) }; } },
 
-	{ N_("Resist Magic"), { RightColumnLabelX, 256 }, wideLabel,
+	{ N_("Magic Resistance"), { RightColumnNarrowLabelX, 256 }, narrowLabel,
 	    []() { return GetResistInfo(InspectPlayer->_pMagResist); } },
-	{ N_("Resist Fire"), { RightColumnLabelX, 284 }, wideLabel,
+	{ N_("Fire Resistance"), { RightColumnNarrowLabelX, 284 }, narrowLabel,
 	    []() { return GetResistInfo(InspectPlayer->_pFireResist); } },
-	{ N_("Resist Lightning"), { RightColumnLabelX, 313 }, wideLabel,
+	{ N_("Lightning Resistance"), { RightColumnNarrowLabelX, 313 }, narrowLabel,
 	    []() { return GetResistInfo(InspectPlayer->_pLghtResist); } },
 };
 
