@@ -123,20 +123,23 @@ constexpr int RightColumnLabelX = 253;
 constexpr int RightColumnNarrowLabelX = 265;
 
 // Indices in `panelEntries`.
-constexpr unsigned AttributeHeaderEntryIndices[2] = { 5, 6 };
-constexpr unsigned GoldHeaderEntryIndex = 16;
+constexpr unsigned PanelHeaderEntryIndices[3] = { 2, 4, 6 };
+constexpr unsigned AttributeHeaderEntryIndices[2] = { 8, 9 };
 
 PanelLabel nameLabel = { 0, 150 };
 PanelLabel classLabel = { 0, 149 };
-PanelLabel levelLabel = { 45, 57 };
-PanelLabel expLabel = { 91, 99 };
-PanelLabel nextExpLabel = { 198, 99 };
+PanelLabel levelHeaderLabel = { 56, 0 };
+PanelLabel levelLabel = { 0, 57 };
+PanelLabel expHeaderLabel = { 119, 0 };
+PanelLabel expLabel = { 0, 120 };
 PanelLabel attributeHeaderLabel = { 44, 0 };
 PanelLabel goldHeaderLabel = { 98, 0 };
 PanelLabel goldLabel = { 0, 99 };
+PanelLabel veryWideLabel = { 56, 69 };
 PanelLabel wideLabel = { 68, 57 };
 PanelLabel narrowLabel = { 76, 45 };
 PanelLabel noTextNarrowLabel = { 0, 45 };
+PanelLabel resistLabel = { 96, 45 };
 
 PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, nameLabel,
@@ -144,14 +147,19 @@ PanelEntry panelEntries[] = {
 	{ "", { 161, 14 }, classLabel,
 	    []() { return StyledText { UiFlags::ColorWhite, std::string(InspectPlayer->getClassName()) }; } },
 
-	{ N_("Level"), { 57, 52 }, levelLabel,
+	{ N_("Level"), { 9, /* set dynamically */ 0 }, levelHeaderLabel, {} },
+	{ N_(""), { 9, 61 }, levelLabel,
 	    []() { return StyledText { UiFlags::ColorWhite, StrCat(InspectPlayer->getCharacterLevel()) }; } },
-	{ N_("Experience"), { TopRightLabelX, 52 }, expLabel,
+
+	{ N_("Experience"), { 9 + levelLabel.boxWidth + 2, /* set dynamically */ 0 }, expHeaderLabel, {} },
+	{ N_(""), { 9 + levelLabel.boxWidth + 2, 61 }, expLabel,
 	    []() {
 	        int spacing = ((InspectPlayer->_pExperience >= 1000000000) ? 0 : 1);
 	        return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pExperience), spacing };
 	    } },
-	{ N_("Next level"), { TopRightLabelX, 80 }, nextExpLabel,
+
+	{ N_("Next Level"), { 9 + levelLabel.boxWidth + 2 + expLabel.boxWidth + 2, /* set dynamically */ 0 }, expHeaderLabel, {} },
+	{ N_(""), { 9 + levelLabel.boxWidth + 2 + expLabel.boxWidth + 2, 61 }, expLabel,
 	    []() {
 	        if (InspectPlayer->isMaxCharacterLevel()) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
@@ -163,56 +171,61 @@ PanelEntry panelEntries[] = {
 
 	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, attributeHeaderLabel, {} },
 	{ N_("Now"), { 135, /* set dynamically */ 0 }, attributeHeaderLabel, {} },
-	{ N_("Strength"), { LeftColumnLabelX, 135 }, narrowLabel,
+	{ N_("Strength"), { LeftColumnLabelX, 108 }, narrowLabel,
 	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Strength), StrCat(InspectPlayer->_pBaseStr) }; } },
-	{ "", { 135, 135 }, noTextNarrowLabel,
+	{ "", { 135, 108 }, noTextNarrowLabel,
 	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Strength), StrCat(InspectPlayer->_pStrength) }; } },
-	{ N_("Magic"), { LeftColumnLabelX, 163 }, narrowLabel,
-	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Magic), StrCat(InspectPlayer->_pBaseMag) }; } },
-	{ "", { 135, 163 }, noTextNarrowLabel,
-	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Magic), StrCat(InspectPlayer->_pMagic) }; } },
-	{ N_("Dexterity"), { LeftColumnLabelX, 191 }, narrowLabel, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Dexterity), StrCat(InspectPlayer->_pBaseDex) }; } },
-	{ "", { 135, 191 }, noTextNarrowLabel,
+	{ N_("Dexterity"), { LeftColumnLabelX, 150 }, narrowLabel, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Dexterity), StrCat(InspectPlayer->_pBaseDex) }; } },
+	{ "", { 135, 150 }, noTextNarrowLabel,
 	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Dexterity), StrCat(InspectPlayer->_pDexterity) }; } },
-	{ N_("Vitality"), { LeftColumnLabelX, 219 }, narrowLabel, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pBaseVit) }; } },
-	{ "", { 135, 219 }, noTextNarrowLabel,
+	{ N_("Vitality"), { LeftColumnLabelX, 192 }, narrowLabel, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pBaseVit) }; } },
+	{ "", { 135, 192 }, noTextNarrowLabel,
 	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Vitality), StrCat(InspectPlayer->_pVitality) }; } },
-	{ N_("Points to distribute"), { LeftColumnLabelX, 248 }, narrowLabel,
-	    []() {
-	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
-	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
-	    } },
+	{ N_("Magic"), { LeftColumnLabelX, 220 }, narrowLabel,
+	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Magic), StrCat(InspectPlayer->_pBaseMag) }; } },
+	{ "", { 135, 220 }, noTextNarrowLabel,
+	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Magic), StrCat(InspectPlayer->_pMagic) }; } },
 
-	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, goldHeaderLabel, {} },
-	{ "", { TopRightLabelX, 127 }, goldLabel,
-	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
-
-	{ N_("Armor class"), { RightColumnLabelX, 163 }, wideLabel,
-	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->getCharacterLevel() * 2) }; } },
-	{ N_("To hit"), { RightColumnLabelX, 191 }, wideLabel,
-	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
-	{ N_("Damage"), { RightColumnLabelX, 219 }, wideLabel,
+	{ N_("Damage"), { RightColumnLabelX, 108 }, wideLabel,
 	    []() {
 	        const auto [dmgMin, dmgMax] = GetDamage();
 	        int spacing = ((dmgMin >= 100) ? -1 : 1);
 	        return StyledText { GetValueColor(InspectPlayer->_pIBonusDam), StrCat(dmgMin, "-", dmgMax), spacing };
 	    } },
+	{ N_("To hit"), { RightColumnLabelX, 136 }, wideLabel,
+	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusToHit), StrCat(InspectPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? InspectPlayer->GetRangedToHit() : InspectPlayer->GetMeleeToHit(), "%") }; } },
+	{ N_("Armor class"), { RightColumnLabelX, 164 }, wideLabel,
+	    []() { return StyledText { GetValueColor(InspectPlayer->_pIBonusAC), StrCat(InspectPlayer->GetArmor() + InspectPlayer->getCharacterLevel() * 2) }; } },
+	{ N_("Life"), { RightColumnLabelX - 12, 192 }, veryWideLabel,
+	    []() {
+	        int currLife = InspectPlayer->_pHitPoints >> 6;
+	        int maxLife = InspectPlayer->_pMaxHP >> 6;
+	        int spacing = ((maxLife >= 100) ? -1 : 1);
+	        return StyledText { (InspectPlayer->_pHitPoints != InspectPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(currLife, "/", maxLife), spacing };
+	    } },
+	{ N_("Mana"), { RightColumnLabelX - 12, 220 }, veryWideLabel,
+	    []() {
+	        int currMana = HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) ? 0 : InspectPlayer->_pMana >> 6;
+	        int maxMana = HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) ? 0 : InspectPlayer->_pMaxMana >> 6;
+	        int spacing = ((maxMana >= 100) ? -1 : 1);
+	        return StyledText { (InspectPlayer->_pMana != InspectPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat(currMana, "/", maxMana), spacing };
+	    } },
 
-	{ N_("Life"), { LeftColumnLabelX, 284 }, narrowLabel,
-	    []() { return StyledText { GetMaxHealthColor(), StrCat(InspectPlayer->_pMaxHP >> 6) }; } },
-	{ "", { 135, 284 }, noTextNarrowLabel,
-	    []() { return StyledText { (InspectPlayer->_pHitPoints != InspectPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(InspectPlayer->_pHitPoints >> 6) }; } },
-	{ N_("Mana"), { LeftColumnLabelX, 312 }, narrowLabel,
-	    []() { return StyledText { GetMaxManaColor(), StrCat(HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) ? 0 : InspectPlayer->_pMaxMana >> 6) }; } },
-	{ "", { 135, 312 }, noTextNarrowLabel,
-	    []() { return StyledText { (InspectPlayer->_pMana != InspectPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat((HasAnyOf(InspectPlayer->_pIFlags, ItemSpecialEffect::NoMana) || (InspectPlayer->_pMana >> 6) <= 0) ? 0 : InspectPlayer->_pMana >> 6) }; } },
-
-	{ N_("Magic Resistance"), { RightColumnNarrowLabelX, 256 }, narrowLabel,
+	{ N_("Magic Resistance"), { LeftColumnLabelX + 26, 251 }, resistLabel,
 	    []() { return GetResistInfo(InspectPlayer->_pMagResist); } },
-	{ N_("Fire Resistance"), { RightColumnNarrowLabelX, 284 }, narrowLabel,
+	{ N_("Fire Resistance"), { RightColumnNarrowLabelX, 251 }, resistLabel,
 	    []() { return GetResistInfo(InspectPlayer->_pFireResist); } },
-	{ N_("Lightning Resistance"), { RightColumnNarrowLabelX, 313 }, narrowLabel,
+	{ N_("Lightning Resistance"), { LeftColumnLabelX + 26, 279 }, resistLabel,
 	    []() { return GetResistInfo(InspectPlayer->_pLghtResist); } },
+
+	{ N_("Points to distribute"), { LeftColumnLabelX + 26, 313 }, narrowLabel,
+	    []() {
+	        InspectPlayer->_pStatPts = std::min(CalcStatDiff(*InspectPlayer), InspectPlayer->_pStatPts);
+	        return StyledText { UiFlags::ColorRed, (InspectPlayer->_pStatPts > 0 ? StrCat(InspectPlayer->_pStatPts) : "") };
+	    } },
+
+	{ N_("Gold"), { TopRightLabelX, 313 }, goldLabel,
+	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(InspectPlayer->_pGold) }; } },
 };
 
 OptionalOwnedClxSpriteList Panel;
@@ -299,11 +312,17 @@ tl::expected<void, std::string> LoadCharPanel()
 		ASSIGN_OR_RETURN(OwnedClxSpriteList boxRight, LoadClxWithStatus("data\\boxrightend.clx"));
 
 		const bool isSmallFontTall = IsSmallFontTall();
-		const int attributeHeadersY = isSmallFontTall ? 112 : 114;
+		const int panelHeadersY = isSmallFontTall ? 37 : 39;
+
+		for (unsigned i : PanelHeaderEntryIndices) {
+			panelEntries[i].position.y = panelHeadersY;
+		}
+
+		const int attributeHeadersY = isSmallFontTall ? 85 : 87;
+
 		for (unsigned i : AttributeHeaderEntryIndices) {
 			panelEntries[i].position.y = attributeHeadersY;
 		}
-		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
 
 		for (auto &entry : panelEntries) {
 			if (entry.statDisplayFunc) {
