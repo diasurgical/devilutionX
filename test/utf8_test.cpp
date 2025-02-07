@@ -6,6 +6,46 @@
 namespace devilution {
 namespace {
 
+TEST(DecodeFirstUtf8CodePointTest, OneByteCodePoint)
+{
+	size_t len;
+	char32_t cp = DecodeFirstUtf8CodePoint("a", &len);
+	EXPECT_EQ(cp, U'a');
+	EXPECT_EQ(len, 1);
+}
+
+TEST(DecodeFirstUtf8CodePointTest, TwoByteCodePoint)
+{
+	size_t len;
+	char32_t cp = DecodeFirstUtf8CodePoint("ж", &len);
+	EXPECT_EQ(cp, U'ж');
+	EXPECT_EQ(len, 2);
+}
+
+TEST(DecodeFirstUtf8CodePointTest, ThreeByteCodePoint)
+{
+	size_t len;
+	char32_t cp = DecodeFirstUtf8CodePoint("€", &len);
+	EXPECT_EQ(cp, U'€');
+	EXPECT_EQ(len, 3);
+}
+
+TEST(DecodeFirstUtf8CodePointTest, FourByteCodePoint)
+{
+	size_t len;
+	char32_t cp = DecodeFirstUtf8CodePoint("💡", &len);
+	EXPECT_EQ(cp, U'💡');
+	EXPECT_EQ(len, 4);
+}
+
+TEST(DecodeFirstUtf8CodePointTest, InvalidCodePoint)
+{
+	size_t len;
+	char32_t cp = DecodeFirstUtf8CodePoint("\xc3\x28", &len);
+	EXPECT_EQ(cp, Utf8DecodeError);
+	EXPECT_EQ(len, 1);
+}
+
 TEST(AppendUtf8Test, OneByteCodePoint)
 {
 	std::string s = "x";
@@ -30,8 +70,8 @@ TEST(AppendUtf8Test, ThreeByteCodePoint)
 TEST(AppendUtf8Test, FourByteCodePoint)
 {
 	std::string s;
-	AppendUtf8(U'あ', s);
-	EXPECT_EQ(s, "あ");
+	AppendUtf8(U'💡', s);
+	EXPECT_EQ(s, "💡");
 }
 
 TEST(Utf8CodeUnits, ValidCodePoints)
