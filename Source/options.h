@@ -526,8 +526,8 @@ struct GraphicsOptions : OptionCategoryBase {
 #endif
 	/** @brief Limit frame rate either for vsync or CPU load. */
 	OptionEntryEnum<FrameRateControl> frameRateControl;
-	/** @brief Gamma correction level. */
-	OptionEntryInt<int> gammaCorrection;
+	/** @brief Brightness level. */
+	OptionEntryInt<int> brightness;
 	/** @brief Zoom on start. */
 	OptionEntryBoolean zoom;
 	/** @brief Enable color cycling animations. */
