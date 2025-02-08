@@ -15,7 +15,7 @@ android {
 		}
 		minSdkVersion 21
 		targetSdkVersion 35
-		versionCode 30
+		versionCode 31
 		versionName project.file('../../VERSION').text.trim()
 		externalNativeBuild {
 			cmake {
