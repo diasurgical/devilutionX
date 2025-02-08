@@ -9,23 +9,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## DevilutionX 1.5.4
 
-### Bug Fixes
+### Features
 
 #### Multiplayer
 
+- Make invalid items unusable
+
+#### Controls
+
+- Better support for various gamepads
+- Gamepad: Improve navigation of the stash
+- Improve keymapper options
+
+#### Platforms
+
+- Added support for macOS 10.4 PowerPC
+- Added support for Windows XP
+- Android: Avoid game lagging on devices that can switch refresh rates
+- Correct networking support on big-endian systems
+- iOS: High refresh rate support
+- Xbox One/Series: Include translations
+
 #### Translations
 
-### Bugfixes
-
-#### Gameplay
+- Improve rendering of Turkish texts
+- Update Italian translation
+- Update Russian translation
+- Update Ukrainian translation
 
 #### Stability / Performance / System
 
-### Bugfixes for original Diablo bugs
+- Fix crashes on device hot-plugging
+- Fixed game crash
+- Hide Upscale option in the Settings menu to avoid stability issues
+- Looser validation in Single Player games
+- Make file sync services less likely to corrupt saves
+- Make it clearer how to switch between Hellfire and Diablo
+- Use available screen space in the Settings menu
+
+### Bug Fixes
 
 #### Gameplay
 
-#### Known Issues
+- Fixed being able to repair equipped items for free
+- Fixed game freezing when using a town portal to Lazarus
+- Unique drops now reset on a new game
+- Wake up the whole pack of Gargoyles when disturbed
+
+#### Platforms
+
+- Android: Fix performance and audio issues on recent versions
+- Incorrect menu graphics on DirectFB devices
+- PS4/Switch/Vita/Xbox One/Series: Correct controller mapping
+
+#### Multiplayer
+
+- Correct some item validation
+- Fixed items being lost when held in the cursor during lag spikes
+
+### Bug Fixes for Original Diablo Bugs
+
+#### Gameplay
+
+- Fixed non-solid fences in the caves
+
+### Bug Fixes for Original Hellfire Bugs
+
+#### Gameplay
+
+- Fixed incorrectly solid tile next to crypt stairs down
+
+#### Multiplayer
+
+- Fixed runes not being seen as a player spell in PvP
 
 ## DevilutionX 1.5.3
 
