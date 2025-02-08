@@ -1897,6 +1897,8 @@ void PerformPrimaryAction()
 {
 	if (invflag) { // inventory is open
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
+			if (pcurs == CURSOR_HOURGLASS)
+				return;
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else if (GetRightPanel().contains(MousePosition) || GetMainPanel().contains(MousePosition)) {
