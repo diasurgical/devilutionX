@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Stability / Performance / System
 
 - Fix crashes on device hot-plugging
-- Fixed game crash
+- Fix game crash
 - Hide Upscale option in the Settings menu to avoid stability issues
 - Looser validation in Single Player games
 - Make file sync services less likely to corrupt saves
@@ -51,8 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Gameplay
 
-- Fixed being able to repair equipped items for free
-- Fixed game freezing when using a town portal to Lazarus
+- Fix being able to repair equipped items for free
+- Fix game freezing when using a town portal to Lazarus
 - Unique drops now reset on a new game
 - Wake up the whole pack of Gargoyles when disturbed
 
@@ -65,23 +65,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Multiplayer
 
 - Correct some item validation
-- Fixed items being lost when held in the cursor during lag spikes
+- Fix items being lost when held in the cursor during lag spikes
 
 ### Bug Fixes for Original Diablo Bugs
 
 #### Gameplay
 
-- Fixed non-solid fences in the caves
+- Fix non-solid fences in the caves
 
 ### Bug Fixes for Original Hellfire Bugs
 
 #### Gameplay
 
-- Fixed incorrectly solid tile next to crypt stairs down
+- Fix incorrectly solid tile next to crypt stairs down
 
 #### Multiplayer
 
-- Fixed runes not being seen as a player spell in PvP
+- Fix runes not being seen as a player spell in PvP
 
 ## DevilutionX 1.5.3
 
