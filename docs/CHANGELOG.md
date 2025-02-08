@@ -5,6 +5,86 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## DevilutionX 1.5.4
+
+### Bug Fixes
+
+#### Multiplayer
+
+#### Translations
+
+### Bugfixes
+
+#### Gameplay
+
+#### Stability / Performance / System
+
+### Bugfixes for original Diablo bugs
+
+#### Gameplay
+
+#### Known Issues
+
+## DevilutionX 1.5.3
+
+### Bug Fixes
+
+#### Multiplayer
+
+- Resolved validation multiplayer errors.
+
+#### Translations
+
+- Added Hungarian translation.
+- Added Turkish translation.
+
+#### Stability / Performance / System
+
+- Fixed issue where a line is repeated in the info panel.
+- Fixed errors when converting Hellfire saved games.
+- Miyoo Mini: Update integration.
+- Android: Update integration (now requires Android 5.0).
+- Android: Improved the data import dialog.
+- Android: Game now runs full screen on devices with a notch.
+- Windows: Fix non-English TCP error messages.
+
+### Bugfixes for original Diablo bugs
+
+#### Gameplay
+
+- Fixed item repairs with multiple gold piles.
+
+#### Known Issues
+
+- Some builds (like Amiga) are not ready yet and will be uploaded over the next couple of days
+
+## DevilutionX 1.5.2
+
+### Bug Fixes
+
+#### Multiplayer
+
+- Unable to join game due to invalid player data
+
+#### Translations
+
+- Improve rendering of Chinese/Japanese/Korean texts
+
+#### Gameplay
+
+- Hellfire items not saving their identified state
+
+#### Stability / Performance / System
+
+- Amiga: Incorrect rendering of things behind transparent elements
+- Android: Game locking up when switching sound output
+- Linux: Statically link BZIP2 and libsodium on x86_64
+- Stash corrupting when converting a hero between Diablo and Hellfire
+- Xbox: Game crashing unexpectedly
+- Xbox: Improve performance
+
 ## DevilutionX 1.5.1
 
 ### Features
