@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Gameplay
 
 - Fix being able to repair equipped items for free
-- Fix game freezing when using a town portal to Lazarus
+- Fix game freezing when loading Lazarus lair from a save game
 - Unique drops now reset on a new game
 - Wake up the whole pack of Gargoyles when disturbed
 
