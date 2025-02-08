@@ -2,8 +2,12 @@
 <component type="desktop-application">
 	<id>org.diasurgical.DevilutionX</id>
 
+	<developer id="org.diasurgical">
+		<name>Diasurgical team</name>
+	</developer>
+
 	<name>DevilutionX</name>
-	<summary>Diablo/Hellfire source port for modern operating systems</summary>
+	<summary>Diablo/Hellfire source port</summary>
 
 	<metadata_license>CC-BY-SA-4.0</metadata_license>
 	<project_license>LicenseRef-proprietary</project_license>
@@ -55,15 +59,33 @@
 	<screenshots>
 		<screenshot type="default">
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen1.png</image>
+			<caption>Diablo gameplay in widescreen</caption>
 		</screenshot>
 		<screenshot>
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen2.png</image>
+			<caption>Diablo gameplay with enemy health bar and XP bar</caption>
 		</screenshot>
 		<screenshot>
 			<image>https://raw.githubusercontent.com/flathub/org.diasurgical.DevilutionX/master/screens/screen3.png</image>
+			<caption>Diablo gameplay on Android mobile device</caption>
 		</screenshot>
 	</screenshots>
 	<releases>
+		<release version="1.5.4" date="2025-02-08">
+			<description>
+				<p>This release includes the following updates:</p>
+				<ul>
+					<li>Invalid items are now unusable</li>
+					<li>Improved gamepad controls</li>
+					<li>Updated Italian, Russian and Ukrainian translations</li>
+					<li>Fixed multiple crashes</li>
+					<li>Improved item validation in multiplayer</li>
+					<li>Fixed multiple bugs found in original Diablo and Hellfire</li>
+				</ul>
+				<p>Please visit the full changelog for more detailed notes</p>
+			</description>
+			<url>https://github.com/diasurgical/devilutionX/releases/tag/1.5.4</url>
+		</release>
 		<release version="1.5.3" date="2024-08-30">
 			<description>
 				<p>This release includes the following updates:</p>
