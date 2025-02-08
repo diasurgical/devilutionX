@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Platforms
 
 - Android: Fix performance and audio issues on recent versions
+- Android: Fix full immersive mode in Android 9 and higher
 - Incorrect menu graphics on DirectFB devices
 - PS4/Switch/Vita/Xbox One/Series: Correct controller mapping
 
