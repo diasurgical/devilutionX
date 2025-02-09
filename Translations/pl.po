@@ -1259,7 +1259,7 @@ msgstr ""
 #: Source/data/file.cpp:76
 msgid "Out of range value {0} for {1} in {2} at row {3} and column {4}"
 msgstr ""
-"Wartość spoza zasięgu dla {0} w kolumnie {1} w pliku {2}, rząd {3} kolumna "
+"Wartość spoza zakresu dla {0} w kolumnie {1} w pliku {2}, rząd {3} kolumna "
 "{4}"
 
 #. TRANSLATORS: Error message when we find an unrecognised value in a key column. Arguments are {found value}, {column heading}, {file name}, {row/record number}, {column/field number}
@@ -4087,7 +4087,7 @@ msgstr ""
 
 #: Source/options.cpp:869
 msgid "Zoom on when enabled."
-msgstr "Po włączeniu tej funkcji powiększa obraz."
+msgstr "Po włączeniu tej funkcji przybliża obraz."
 
 #: Source/options.cpp:870
 msgid "Color Cycling"
