@@ -14,8 +14,8 @@ set(SDL_TEST_ENABLED_BY_DEFAULT OFF)
 
 include(functions/FetchContent_ExcludeFromAll_backport)
 include(FetchContent)
-FetchContent_Declare_ExcludeFromAll(SDL2
-    URL https://github.com/libsdl-org/SDL/releases/download/release-2.30.10/SDL2-2.30.10.tar.gz
-    URL_HASH SHA256=f59adf36a0fcf4c94198e7d3d776c1b3824211ab7aeebeb31fe19836661196aa
+FetchContent_Declare(SDL2
+    URL https://github.com/libsdl-org/SDL/releases/download/release-2.32.0/SDL2-2.32.0.tar.gz
+    URL_HASH SHA256=f5c2b52498785858f3de1e2996eba3c1b805d08fe168a47ea527c7fc339072d0
 )
 FetchContent_MakeAvailable_ExcludeFromAll(SDL2)

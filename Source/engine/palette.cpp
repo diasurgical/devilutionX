@@ -40,11 +40,11 @@ namespace {
 /** Specifies whether the palette has max brightness. */
 bool sgbFadedIn = true;
 
-void LoadGamma()
+void LoadBrightness()
 {
-	int gammaValue = *GetOptions().Graphics.gammaCorrection;
-	gammaValue = std::clamp(gammaValue, 30, 100);
-	GetOptions().Graphics.gammaCorrection.SetValue(gammaValue - gammaValue % 5);
+	int brightnessValue = *GetOptions().Graphics.brightness;
+	brightnessValue = std::clamp(brightnessValue, 0, 100);
+	GetOptions().Graphics.brightness.SetValue(brightnessValue - brightnessValue % 5);
 }
 
 Uint8 FindBestMatchForColor(std::array<SDL_Color, 256> &palette, SDL_Color color, int skipFrom, int skipTo)
@@ -183,21 +183,44 @@ void palette_update(int first, int ncolor)
 	pal_surface_palette_version++;
 }
 
-void ApplyGamma(std::array<SDL_Color, 256> &dst, const std::array<SDL_Color, 256> &src, int n)
+// Applies a tone mapping curve based on the brightness slider value.
+// The brightness value is in the range [0, 100] where 0 is neutral (no change)
+// and 100 produces maximum brightening.
+void ApplyToneMapping(std::array<SDL_Color, 256> &dst,
+    const std::array<SDL_Color, 256> &src,
+    int n)
 {
-	float g = *GetOptions().Graphics.gammaCorrection / 100.0F;
+	// Get the brightness slider value (0 = neutral, 100 = max brightening)
+	int brightnessSlider = *GetOptions().Graphics.brightness; // New brightness setting.
 
+	// Maximum adjustment factor (tweak this constant to change the effect strength)
+	const float maxAdjustment = 2.0f;
+	// Compute the quadratic parameter:
+	// When brightnessSlider==0, then a==0 (identity mapping)
+	// When brightnessSlider==100, then a== -maxAdjustment (maximum brightening)
+	float a = -(brightnessSlider / 100.0f) * maxAdjustment;
+
+	// Precompute a lookup table for speed.
+	uint8_t toneMap[256];
+	for (int i = 0; i < 256; i++) {
+		float x = i / 255.0f;
+		// Our quadratic tone mapping: f(x) = a*x^2 + (1-a)*x.
+		const float y = std::clamp(a * x * x + (1.0f - a) * x, 0.0f, 1.0f);
+		toneMap[i] = static_cast<uint8_t>(y * 255.0f + 0.5f);
+	}
+
+	// Apply the lookup table to each color channel in the palette.
 	for (int i = 0; i < n; i++) {
-		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0F, g) * 256.0F);
-		dst[i].g = static_cast<Uint8>(pow(src[i].g / 256.0F, g) * 256.0F);
-		dst[i].b = static_cast<Uint8>(pow(src[i].b / 256.0F, g) * 256.0F);
+		dst[i].r = toneMap[src[i].r];
+		dst[i].g = toneMap[src[i].g];
+		dst[i].b = toneMap[src[i].b];
 	}
 	RedrawEverything();
 }
 
 void palette_init()
 {
-	LoadGamma();
+	LoadBrightness();
 	system_palette = orig_palette;
 	InitPalette();
 }
@@ -267,34 +290,37 @@ void LoadRndLvlPal(dungeon_type l)
 	LoadPalette(szFileName);
 }
 
-void IncreaseGamma()
+void IncreaseBrightness()
 {
-	int gammaValue = *GetOptions().Graphics.gammaCorrection;
-	if (gammaValue < 100) {
-		GetOptions().Graphics.gammaCorrection.SetValue(std::min(gammaValue + 5, 100));
-		ApplyGamma(system_palette, logical_palette, 256);
+	int brightnessValue = *GetOptions().Graphics.brightness;
+	if (brightnessValue < 100) {
+		int newBrightness = std::min(brightnessValue + 5, 100);
+		GetOptions().Graphics.brightness.SetValue(newBrightness);
+		ApplyToneMapping(system_palette, logical_palette, 256);
 		palette_update();
 	}
 }
 
-void DecreaseGamma()
+void DecreaseBrightness()
 {
-	int gammaValue = *GetOptions().Graphics.gammaCorrection;
-	if (gammaValue > 30) {
-		GetOptions().Graphics.gammaCorrection.SetValue(std::max(gammaValue - 5, 30));
-		ApplyGamma(system_palette, logical_palette, 256);
+	int brightnessValue = *GetOptions().Graphics.brightness;
+	if (brightnessValue > 0) {
+		int newBrightness = std::max(brightnessValue - 5, 0);
+		GetOptions().Graphics.brightness.SetValue(newBrightness);
+		ApplyToneMapping(system_palette, logical_palette, 256);
 		palette_update();
 	}
 }
 
-int UpdateGamma(int gamma)
+int UpdateBrightness(int brightness)
 {
-	if (gamma > 0) {
-		GetOptions().Graphics.gammaCorrection.SetValue(130 - gamma);
-		ApplyGamma(system_palette, logical_palette, 256);
+	if (brightness >= 0) {
+		GetOptions().Graphics.brightness.SetValue(brightness);
+		ApplyToneMapping(system_palette, logical_palette, 256);
 		palette_update();
 	}
-	return 130 - *GetOptions().Graphics.gammaCorrection;
+
+	return *GetOptions().Graphics.brightness;
 }
 
 void SetFadeLevel(int fadeval, bool updateHardwareCursor, const std::array<SDL_Color, 256> &srcPalette)
@@ -331,7 +357,7 @@ void PaletteFadeIn(int fr, const std::array<SDL_Color, 256> &srcPalette)
 	if (demo::IsRunning())
 		fr = 0;
 
-	ApplyGamma(logical_palette, srcPalette, 256);
+	ApplyToneMapping(logical_palette, srcPalette, 256);
 
 	if (fr > 0) {
 		const uint32_t tc = SDL_GetTicks();
@@ -434,7 +460,7 @@ void palette_update_quest_palette(int n)
 {
 	int i = 32 - n;
 	logical_palette[i] = orig_palette[i];
-	ApplyGamma(system_palette, logical_palette, 32);
+	ApplyToneMapping(system_palette, logical_palette, 32);
 	palette_update(0, 31);
 	// Update blended transparency, but only for the color that was updated
 	for (int j = 0; j < 256; j++) {

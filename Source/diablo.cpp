@@ -1909,19 +1909,19 @@ void InitKeymapActions()
 	    SDLK_PAUSE,
 	    diablo_pause_game);
 	options.Keymapper.AddAction(
-	    "DecreaseGamma",
-	    N_("Decrease Gamma"),
+	    "DecreaseBrightness",
+	    N_("Decrease Brightness"),
 	    N_("Reduce screen brightness."),
-	    'G',
-	    DecreaseGamma,
+	    'F',
+	    DecreaseBrightness,
 	    nullptr,
 	    CanPlayerTakeAction);
 	options.Keymapper.AddAction(
-	    "IncreaseGamma",
-	    N_("Increase Gamma"),
+	    "IncreaseBrightness",
+	    N_("Increase Brightness"),
 	    N_("Increase screen brightness."),
-	    'F',
-	    IncreaseGamma,
+	    'G',
+	    IncreaseBrightness,
 	    nullptr,
 	    CanPlayerTakeAction);
 	options.Keymapper.AddAction(
@@ -2395,19 +2395,19 @@ void InitPadmapActions()
 	    ControllerButton_NONE,
 	    diablo_pause_game);
 	options.Padmapper.AddAction(
-	    "DecreaseGamma",
-	    N_("Decrease Gamma"),
+	    "DecreaseBrightness",
+	    N_("Decrease Brightness"),
 	    N_("Reduce screen brightness."),
 	    ControllerButton_NONE,
-	    DecreaseGamma,
+	    DecreaseBrightness,
 	    nullptr,
 	    CanPlayerTakeAction);
 	options.Padmapper.AddAction(
-	    "IncreaseGamma",
-	    N_("Increase Gamma"),
+	    "IncreaseBrightness",
+	    N_("Increase Brightness"),
 	    N_("Increase screen brightness."),
 	    ControllerButton_NONE,
-	    IncreaseGamma,
+	    IncreaseBrightness,
 	    nullptr,
 	    CanPlayerTakeAction);
 	options.Padmapper.AddAction(
