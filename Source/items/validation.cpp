@@ -160,6 +160,8 @@ bool IsItemValid(const Player &player, const Item &item)
 	if (!gbIsMultiplayer)
 		return true;
 
+	if (item.IDidx == IDI_EAR)
+		return true;
 	if (item.IDidx != IDI_GOLD && !IsCreationFlagComboValid(item._iCreateInfo))
 		return false;
 	if ((item._iCreateInfo & CF_TOWN) != 0)
