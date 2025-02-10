@@ -3629,7 +3629,7 @@ bool Object::IsDisabled() const
 	if (!IsShrine()) {
 		return false;
 	}
-	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred, shrine_type::ShrineMurphys);
+	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
 }
 
 Object *FindObjectAtPosition(Point position, bool considerLargeObjects)
