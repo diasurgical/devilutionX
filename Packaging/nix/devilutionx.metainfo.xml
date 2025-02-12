@@ -7,10 +7,15 @@
 	</developer>
 
 	<name>DevilutionX</name>
-	<summary>Diablo/Hellfire source port</summary>
+	<summary>Experience Diablo and Hellfire anew</summary>
 
 	<metadata_license>CC-BY-SA-4.0</metadata_license>
 	<project_license>LicenseRef-proprietary</project_license>
+
+	<branding>
+		<color type="primary" scheme_preference="light">#c86666</color>
+		<color type="primary" scheme_preference="dark">#640000</color>
+	</branding>
 
 	<url type="homepage">https://github.com/diasurgical/devilutionX</url>
 	<url type="bugtracker">https://github.com/diasurgical/devilutionX/issues</url>
