@@ -40,28 +40,27 @@ void GamemenuMusicVolume(bool bActivate);
 void GamemenuSoundVolume(bool bActivate);
 void GamemenuBrightness(bool bActivate);
 void GamemenuSpeed(bool bActivate);
-void GamemenuReturnToGame(bool bActivate);
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
-	// dwFlags,      pszStr,               fnMenu
-	{ GMENU_ENABLED, N_("Options"),        &GamemenuOptions    },
-	{ GMENU_ENABLED, N_("Save Game"),      &gamemenu_save_game  },
-	{ GMENU_ENABLED, N_("Load Game"),      &gamemenu_load_game  },
-	{ GMENU_ENABLED, N_("Exit Game"),      &GamemenuNewGame   },
-	{ GMENU_ENABLED, N_("Return to Game"), &GamemenuReturnToGame  },
-	{ GMENU_ENABLED, nullptr,               nullptr             }
+	// dwFlags,      pszStr,          fnMenu
+	{ GMENU_ENABLED, N_("Options"),   &GamemenuOptions    },
+	{ GMENU_ENABLED, N_("Save Game"), &gamemenu_save_game },
+	{ GMENU_ENABLED, N_("Load Game"), &gamemenu_load_game },
+	{ GMENU_ENABLED, N_("Exit Game"), &GamemenuNewGame    },
+	{ GMENU_ENABLED, N_("Quit Game"), &gamemenu_quit_game },
+	{ GMENU_ENABLED, nullptr,         nullptr             },
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
 	// dwFlags,      pszStr,               fnMenu
-	{ GMENU_ENABLED, N_("Options"),        &GamemenuOptions      },
-	{ GMENU_ENABLED, N_("Exit Game"),      &GamemenuNewGame     },
-	{ GMENU_ENABLED, N_("Return to Game"), &GamemenuReturnToGame  },
-	{ GMENU_ENABLED, nullptr,                nullptr               },
+	{ GMENU_ENABLED, N_("Options"),   &GamemenuOptions    },
+	{ GMENU_ENABLED, N_("Exit Game"), &GamemenuNewGame    },
+	{ GMENU_ENABLED, N_("Quit Game"), &gamemenu_quit_game },
+	{ GMENU_ENABLED, nullptr,         nullptr             },
 	// clang-format on
 };
 TMenuItem sgOptionsMenu[] = {
@@ -277,11 +276,6 @@ void GamemenuSpeed(bool bActivate)
 
 	GetOptions().Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
-}
-
-void GamemenuReturnToGame(bool /*bActivate*/)
-{
-	gamemenu_off();
 }
 
 } // namespace
