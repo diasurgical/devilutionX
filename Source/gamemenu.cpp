@@ -20,6 +20,7 @@
 #include "pfile.h"
 #include "qol/floatingnumbers.h"
 #include "utils/language.h"
+#include "player.h"
 
 #ifndef USE_SDL1
 #include "controls/touch/renderers.h"
@@ -98,6 +99,8 @@ void GamemenuUpdateSingle()
 void GamemenuUpdateMulti()
 {
 	sgMultiMenu[2].setEnabled(MyPlayerIsDead);
+	sgMultiMenu[1].setEnabled(!MyPlayerIsDead);
+	sgMultiMenu[3].setEnabled(!MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
