@@ -1844,20 +1844,21 @@ msgstr "F5, F6, F7, F8:     Ustawianie skrótu klawiszowego umiejętności"
 
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button: Attack without moving"
-msgstr "Shift + LPM: Atak w miejscu"
+msgstr "Shift + lewoklik: Atak w miejscu"
 
 #: Source/help.cpp:44
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
-msgstr "Shift + LPM (na panelu postaci): Przydziel wszystkie punkty"
+msgstr "Shift + lewoklik (w panelu postaci): Przydziel wszystkie punkty"
 
 #: Source/help.cpp:45
 msgid ""
 "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item"
-msgstr "Shift + LPM (w ekwipunku): Przenieś na pas lub przygotuj/schowaj przedmiot"
+msgstr ""
+"Shift + lewoklik (w ekwipunku): Przenieś na pas lub przygotuj/schowaj przedmiot"
 
 #: Source/help.cpp:46
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr "Shift + LPM (na pasie): Przenieś przedmiot do ekwipunku"
+msgstr "Shift + lewoklik (na pasie): Przenieś przedmiot do ekwipunku"
 
 #: Source/help.cpp:48
 msgid "$Movement:"
@@ -1918,7 +1919,7 @@ msgstr "$Złoto:"
 msgid ""
 "You can select a specific amount of gold to drop by right-clicking on a pile of "
 "gold in your inventory."
-msgstr "Kliknięcie PPM na złoto w ekwipunku umożliwia jego rozdzielenie."
+msgstr "Prawoklik myszą na złoto w ekwipunku umożliwia jego rozdzielenie."
 
 #: Source/help.cpp:73
 msgid "$Skills & Spells:"
@@ -1932,8 +1933,8 @@ msgid ""
 "A readied spell may be cast by simply right-clicking in the play area."
 msgstr ""
 "Możesz zobaczyć listę dostępnych czarów i umiejętności klikając w przycisk 'Czary' "
-"na panelu postaci. Po nacisnięciu LPM na dane zaklęcie, staje się ono aktywne i "
-"gotowe do użycia. Wtedy, kliknięcie PPM na danym terenie, umożliwia rzucenie go."
+"na panelu postaci. Po lewokliku na dane zaklęcie, staje się ono aktywne i gotowe "
+"do użycia. Wtedy, prawoklik na danym terenie, umożliwia rzucenie go."
 
 #: Source/help.cpp:80
 msgid "$Using the Speedbook for Spells:"
@@ -1945,8 +1946,8 @@ msgid ""
 "you to select a skill or spell for immediate use. To use a readied skill or spell, "
 "simply right-click in the main play area."
 msgstr ""
-"Wciśnięcie LPM na 'przygotowany czar' otworzy 'podręczną księgę' pozwalającą "
-"wybrać umiejętność. By ją użyć wciśnij PPM na główne okno rozgrywki."
+"Lewoklik na 'przygotowany czar' otworzy 'podręczną księgę' pozwalającą wybrać "
+"umiejętność. By ją użyć wykonaj prawoklik na główne okno rozgrywki."
 
 #: Source/help.cpp:85
 msgid ""
@@ -3983,7 +3984,7 @@ msgstr "odnawia całe życie i manę"
 
 #: Source/items.cpp:1826 Source/items.cpp:1866
 msgid "Right-click to read"
-msgstr "PPM by odczytać"
+msgstr "Prawoklik by odczytać"
 
 #: Source/items.cpp:1829 Source/items.cpp:1844 Source/items.cpp:1858
 msgid "Open inventory to use"
@@ -3998,8 +3999,8 @@ msgid ""
 "Right-click to read, then\n"
 "left-click to target"
 msgstr ""
-"PPM by odczytać, następnie\n"
-"LPM na cel"
+"Prawoklik by odczytać,\n"
+"następnie lewoklik na cel"
 
 #: Source/items.cpp:1841
 msgid ""
@@ -4011,7 +4012,7 @@ msgstr ""
 
 #: Source/items.cpp:1855
 msgid "Right-click to use"
-msgstr "PPM by użyć"
+msgstr "Prawoklik by użyć"
 
 #: Source/items.cpp:1860
 msgid "Activate to use"
@@ -4019,7 +4020,7 @@ msgstr "Aktywuj, aby użyć"
 
 #: Source/items.cpp:1873
 msgid "Right-click to view"
-msgstr "PPM by wyświetlić"
+msgstr "Prawoklik by wyświetlić"
 
 #: Source/items.cpp:1875
 msgid "Activate to view"
