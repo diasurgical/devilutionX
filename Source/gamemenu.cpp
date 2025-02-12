@@ -18,9 +18,9 @@
 #include "multi.h"
 #include "options.h"
 #include "pfile.h"
+#include "player.h"
 #include "qol/floatingnumbers.h"
 #include "utils/language.h"
-#include "player.h"
 
 #ifndef USE_SDL1
 #include "controls/touch/renderers.h"
