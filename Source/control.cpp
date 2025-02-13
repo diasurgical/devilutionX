@@ -1436,9 +1436,9 @@ void DrawDeathText(const Surface &out)
 		if (gbValidSaveFile)
 			text = _("Press ESC to load last save.");
 		else
-			text = _("Press ESC to exit game.");
+			text = _("Press ESC to return to Main Menu.");
 	} else {
-		text = _("Press ESC to continue.");
+		text = _("Press ESC to restart in town.");
 	}
 	DrawString(out, text, linePosition, smallTextOptions);
 }
