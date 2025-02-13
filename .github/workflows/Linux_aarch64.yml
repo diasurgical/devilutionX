@@ -64,8 +64,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: build
-        key: ${{ github.workflow }}-v6-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v6-
+        key: ${{ github.workflow }}-v7-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v7-
 
     - name: Build
       working-directory: ${{github.workspace}}
