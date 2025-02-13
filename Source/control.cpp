@@ -1181,6 +1181,19 @@ void CheckMainPanelButtonUp()
 			DoAutoMap();
 			break;
 		case PanelButtonMainmenu:
+			if (MyPlayerIsDead) {
+				if (!gbIsMultiplayer) {
+					if (gbValidSaveFile)
+						gamemenu_load_game(false);
+					else
+						gamemenu_exit_game(false);
+				} else {
+					NetSendCmd(true, CMD_RETOWN);
+				}
+				break;
+			} else if (MyPlayer->_pHitPoints == 0) {
+				break;
+			}
 			qtextflag = false;
 			gamemenu_handle_previous();
 			gamemenuOff = false;
@@ -1432,13 +1445,29 @@ void DrawDeathText(const Surface &out)
 	text = _("You have died");
 	DrawString(out, text, linePosition, largeTextOptions);
 	linePosition.y += verticalPadding;
+
+	std::string buttonText;
+
+	switch (ControlMode) {
+	case ControlTypes::KeyboardAndMouse:
+		buttonText = _("ESC");
+		break;
+	case ControlTypes::Gamepad:
+		buttonText = ToString(GamepadType, ControllerButton_BUTTON_START);
+		break;
+	case ControlTypes::VirtualGamepad:
+		buttonText = _("Menu Button");
+		break;
+	}
+
 	if (!gbIsMultiplayer) {
 		if (gbValidSaveFile)
-			text = _("Press ESC to load last save.");
+			text = fmt::format(fmt::runtime(_("Press {} to load last save.")), buttonText);
 		else
-			text = _("Press ESC to return to Main Menu.");
+			text = fmt::format(fmt::runtime(_("Press {} to return to Main Menu.")), buttonText);
+
 	} else {
-		text = _("Press ESC to restart in town.");
+		text = fmt::format(fmt::runtime(_("Press {} to restart in town.")), buttonText);
 	}
 	DrawString(out, text, linePosition, smallTextOptions);
 }
