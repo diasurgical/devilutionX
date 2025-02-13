@@ -1656,6 +1656,12 @@ bool IsTileSafe(const Monster &monster, Point position)
 	const bool fearsFire = (monster.resistance & IMMUNE_FIRE) == 0 || monster.type().type == MT_DIABLO;
 	const bool fearsLightning = (monster.resistance & IMMUNE_LIGHTNING) == 0 || monster.type().type == MT_DIABLO;
 
+	bool isInFire = HasAnyOf(dFlags[monster.position.tile.x][monster.position.tile.y], DungeonFlag::MissileFireWall);
+	bool isInLightning = HasAnyOf(dFlags[monster.position.tile.x][monster.position.tile.y], DungeonFlag::MissileLightningWall);
+
+	if ((fearsFire && isInFire) || (fearsLightning && isInLightning))
+		return true;
+
 	return !(fearsFire && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::MissileFireWall))
 	    && !(fearsLightning && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::MissileLightningWall));
 }
