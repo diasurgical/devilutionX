@@ -31,12 +31,13 @@ jobs:
       run: |
         sudo apt-get update -y
         sudo apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libbenchmark-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev wget
+
     - name: Cache CMake build folder
       uses: actions/cache@v4
       with:
         path: build
-        key: ${{ github.workflow }}-v1-${{ github.sha }}
-        restore-keys: ${{ github.workflow }}-v1-
+        key: ${{ github.workflow }}-v2-${{ github.sha }}
+        restore-keys: ${{ github.workflow }}-v2-
 
     # We specify `-DDEVILUTIONX_SYSTEM_BENCHMARK=OFF` to work around the following error:
     # lto1: fatal error: bytecode stream in file ‘/usr/lib/x86_64-linux-gnu/libbenchmark_main.a’ generated with LTO version 11.2 instead of the expected 11.3
