@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <regex>
 
 #include <fmt/format.h>
 
@@ -1410,10 +1411,15 @@ void DrawAutomapText(const Surface &out)
 
 	if (gbIsMultiplayer) {
 		if (GameName != "0.0.0.0" && !IsLoopback) {
-			std::string description = std::string(_("Game: "));
-			description.append(GameName);
-			DrawString(out, description, linePosition);
-			linePosition.y += 15;
+			std::regex ipRegex(
+			    R"((\d{1,3}\.){3}\d{1,3})");
+
+			if (!std::regex_match(GameName, ipRegex)) {
+				std::string description = std::string(_("Game: "));
+				description.append(GameName);
+				DrawString(out, description, linePosition);
+				linePosition.y += 15;
+			}
 		}
 
 		std::string description;
