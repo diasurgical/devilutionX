@@ -598,7 +598,7 @@ void ProcessVisionList()
 		if (!VisionActive[id])
 			continue;
 		Light &vision = VisionList[id];
-		if (!player.plractive || !player.isOnActiveLevel()) {
+		if (!player.plractive || !player.isOnActiveLevel() || (player._pLvlChanging && &player != MyPlayer)) {
 			DoUnVision(vision.position.tile, vision.radius);
 			VisionActive[id] = false;
 			continue;
