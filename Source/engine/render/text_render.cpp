@@ -416,9 +416,13 @@ uint32_t DoDrawString(const Surface &out, std::string_view text, Rectangle rect,
     TextRenderOptions &opts)
 {
 	CurrentFont currentFont;
-	int curSpacing = HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)
-	    ? AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width)
-	    : opts.spacing;
+	int curSpacing = opts.spacing;
+	if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)) {
+		curSpacing = AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width);
+		int adjustedLineWidth = GetLineWidth(text, size, curSpacing, &charactersInLine);
+		characterPosition.x = GetLineStartX(opts.flags, rect, adjustedLineWidth);
+		opts.spacing = curSpacing;
+	}
 
 	char32_t next;
 	std::string_view remaining = text;
