@@ -12,6 +12,7 @@
 #include <expected.hpp>
 
 #include "control.h"
+#include "controls/input.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/events.hpp"
@@ -683,9 +684,9 @@ void ShowProgress(interface_mode uMsg)
 	while (true) {
 		CheckShouldSkipRendering();
 		SDL_Event event;
-		// We use the real `SDL_PollEvent` here instead of `FetchEvent`
+		// We use the real `PollEvent` here instead of `FetchMessage`
 		// to process real events rather than the recorded ones in demo mode.
-		while (SDL_PollEvent(&event)) {
+		while (PollEvent(&event)) {
 			if (!processEvent(event)) return;
 		}
 #if !SDL_PUSH_EVENT_BG_THREAD_WORKS
