@@ -181,7 +181,7 @@ In addition to the 32-bit MinGW build tools, the build process depends on the 32
 
 ```bash
 # Install the 32-bit MinGW build tools
-sudo apt install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 libz-mingw-w64-dev
+sudo apt install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 libz-mingw-w64-dev git wget
 
 # Download the 32-bit development libraries for SDL2 and libsodium
 # as well as the headers for zlib and place them in subfolders under
@@ -195,7 +195,7 @@ In addition to the 64-bit MinGW build tools, the build process depends on the 64
 
 ```bash
 # Install the 64-bit MinGW build tools
-sudo apt install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev
+sudo apt install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev git wget
 
 # Download the 64-bit development libraries for SDL2 and libsodium
 # as well as the headers for zlib and place them in subfolders under
