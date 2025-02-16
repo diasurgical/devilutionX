@@ -4,8 +4,8 @@ set(SOL2_ENABLE_INSTALL OFF)
 
 include(FetchContent)
 FetchContent_Declare_ExcludeFromAll(sol2
-    URL https://github.com/ThePhD/sol2/archive/9c882a28fdb6f4ad79a53a4191b43ce48a661175.tar.gz
-    URL_HASH MD5=2637c3fcdcce3ff34b36437c1d3b99d1
+    URL https://github.com/ThePhD/sol2/archive/2b0d2fe8ba0074e16b499940c4f3126b9c7d3471.tar.gz
+    URL_HASH MD5=869937e96e7c739b89920d12256fef4f
 )
 FetchContent_MakeAvailable_ExcludeFromAll(sol2)
 
