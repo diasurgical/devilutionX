@@ -3680,7 +3680,7 @@ void ProcessRhino(Missile &missile)
 	}
 	UpdateMissilePos(missile);
 	Point newPos = missile.position.tile;
-	if (!IsTileAvailable(monster, newPos) || (monster.ai == MonsterAIID::Snake && !IsTileAvailable(monster, newPosSnake))) {
+	if (!IsTileAvailable(monster, newPos) || (monster.ai == MonsterAIID::Snake && (!IsTileAvailable(monster, newPosSnake) || missile._miAnimFrame == missile._miAnimLen))) {
 		MissToMonst(missile, prevPos);
 		missile._miDelFlag = true;
 		return;
