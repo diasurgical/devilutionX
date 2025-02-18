@@ -1804,8 +1804,8 @@ void printItemMiscGamepad(const Item &item, bool isOil, bool isCastOnTarget)
 		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
 		return;
 	}
-	const std::string_view activateButton = ToString(GamepadType, ControllerButton_BUTTON_Y);
-	const std::string_view castButton = ToString(GamepadType, ControllerButton_BUTTON_X);
+	const std::string_view activateButton = GetOptions().Padmapper.InputNameForAction("SecondaryAction");
+	const std::string_view castButton = GetOptions().Padmapper.InputNameForAction("SpellAction");
 
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		AddInfoBoxString(fmt::format(fmt::runtime(_("{} to view")), activateButton));
