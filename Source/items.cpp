@@ -1881,20 +1881,21 @@ void PrintItemMisc(const Item &item)
 	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
 	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST)
 	    || item._iMiscId == IMISC_ARENAPOT;
-	const bool isCastOnTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
+	const bool mouseRequiresTarget = (item._iMiscId == IMISC_SCROLLT && item._iSpell != SpellID::Flash)
 	    || (item._iMiscId == IMISC_SCROLL && IsAnyOf(item._iSpell, SpellID::TownPortal, SpellID::Identify));
+	const bool gamepadRequiresTarget = item.isScroll() && TargetsMonster(item._iSpell);
 
 	switch (ControlMode) {
 	case ControlTypes::None:
 		break;
 	case ControlTypes::KeyboardAndMouse:
-		printItemMiscKBM(item, isOil, isCastOnTarget);
+		printItemMiscKBM(item, isOil, mouseRequiresTarget);
 		break;
 	case ControlTypes::VirtualGamepad:
-		printItemMiscGenericGamepad(item, isOil, isCastOnTarget);
+		printItemMiscGenericGamepad(item, isOil, gamepadRequiresTarget);
 		break;
 	case ControlTypes::Gamepad:
-		printItemMiscGamepad(item, isOil, isCastOnTarget);
+		printItemMiscGamepad(item, isOil, gamepadRequiresTarget);
 		break;
 	}
 }
