@@ -758,6 +758,10 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				ChatLogScrollUp();
 			} else if (IsStashOpen) {
 				Stash.PreviousPage();
+			} else if (SDL_GetModState() & KMOD_CTRL) {
+				if (AutomapActive) {
+					AutomapZoomIn();
+				}
 			} else {
 				KeymapperPress(MouseScrollUpButton);
 			}
@@ -772,6 +776,10 @@ void GameEventHandler(const SDL_Event &event, uint16_t modState)
 				ChatLogScrollDown();
 			} else if (IsStashOpen) {
 				Stash.NextPage();
+			} else if (SDL_GetModState() & KMOD_CTRL) {
+				if (AutomapActive) {
+					AutomapZoomOut();
+				}
 			} else {
 				KeymapperPress(MouseScrollDownButton);
 			}
