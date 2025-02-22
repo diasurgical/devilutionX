@@ -720,7 +720,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Нормальная сложность\n"
-"Отсюда новичкам стоит начинать путь к победы над Диабло."
+"Отсюда новичкам стоит начинать путь к победе над Диабло."
 
 # Подобрано под размер меню.
 #: Source/DiabloUI/multi/selgame.cpp:394
@@ -783,7 +783,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Нормальная скорость\n"
-"Отсюда новичкам стоит начинать путь к победы над Диабло."
+"Отсюда новичкам стоит начинать путь к победе над Диабло."
 
 # Подобрано под размер меню.
 #: Source/DiabloUI/multi/selgame.cpp:520
@@ -1053,8 +1053,6 @@ msgid "Command "
 msgstr "Команда "
 
 #: Source/control.cpp:356
-#, fuzzy
-#| msgid " is unknown."
 msgid " is unkown."
 msgstr " неизвестна."
 
@@ -1112,7 +1110,7 @@ msgstr "Игрок с таким именем не найден"
 
 #: Source/control.cpp:524
 msgid "/help"
-msgstr ""
+msgstr "/help"
 
 #: Source/control.cpp:524
 msgid "Prints help overview or help for a specific command."
@@ -1124,7 +1122,7 @@ msgstr "[command]"
 
 #: Source/control.cpp:525
 msgid "/arena"
-msgstr ""
+msgstr "/arena"
 
 #: Source/control.cpp:525
 msgid "Enter a PvP Arena."
@@ -1136,7 +1134,7 @@ msgstr "<arena-number>"
 
 #: Source/control.cpp:526
 msgid "/arenapot"
-msgstr ""
+msgstr "/arenapot"
 
 #: Source/control.cpp:526
 msgid "Gives Arena Potions."
@@ -1148,7 +1146,7 @@ msgstr "<number>"
 
 #: Source/control.cpp:527
 msgid "/inspect"
-msgstr ""
+msgstr "/inspect"
 
 #: Source/control.cpp:527
 msgid "Inspects stats and equipment of another player."
@@ -1160,17 +1158,15 @@ msgstr "<player name>"
 
 #: Source/control.cpp:528
 msgid "/seedinfo"
-msgstr ""
+msgstr "/seedinfo"
 
 #: Source/control.cpp:528
 msgid "Show seed infos for current level."
 msgstr "Показать информацию о сиде для этого уровня."
 
 #: Source/control.cpp:538
-#, fuzzy
-#| msgid "Command "
 msgid "Command \""
-msgstr "Команда "
+msgstr "Команда \""
 
 #: Source/control.cpp:1013
 msgid "Player friendly"
@@ -1296,8 +1292,6 @@ msgid "level 15"
 msgstr "уровень 15"
 
 #: Source/diablo.cpp:126
-#, fuzzy
-#| msgid "I need help! Come here!"
 msgid "I need help! Come Here!"
 msgstr "Мне нужна помощь! Ко мне!"
 
@@ -2728,11 +2722,11 @@ msgstr "Пластинчатый Доспех"
 
 #: Source/itemdat.cpp:121
 msgid "Field Plate"
-msgstr "Полевая Пластина"
+msgstr "Латный Доспех"
 
 #: Source/itemdat.cpp:122
 msgid "Gothic Plate"
-msgstr "Готическая Пластина"
+msgstr "Готические Латы"
 
 #: Source/itemdat.cpp:123
 msgid "Full Plate Mail"
@@ -2873,10 +2867,8 @@ msgstr "Свиток Апокалипсиса"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
-#, fuzzy
-#| msgid "Book of {:s}"
 msgid "Book of "
-msgstr "Книга {:s}"
+msgstr "Книга "
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
@@ -4083,7 +4075,7 @@ msgstr "Ночной Пейзаж"
 
 #: Source/itemdat.cpp:511
 msgid "Naj's Light Plate"
-msgstr "Лёгкая Пластина Наджа"
+msgstr "Лёгкие Латы Наджа"
 
 #: Source/itemdat.cpp:512
 msgid "Demonspike Coat"
@@ -4794,17 +4786,17 @@ msgstr "Другая способность (NW)"
 # Сократил восстановление до восст., т.к. текст любит вылезать за рамки
 #: Source/items.cpp:3866
 msgid "fast hit recovery"
-msgstr "быстрое восст. от удара"
+msgstr "быстрое восстановление от удара"
 
 # Сократил восстановление до восст., т.к. текст любит вылезать за рамки
 #: Source/items.cpp:3868
 msgid "faster hit recovery"
-msgstr "более быстрое восст. от удара"
+msgstr "более быстрое восстановление от удара"
 
 # Сократил восстановление до восст., т.к. текст любит вылезать за рамки
 #: Source/items.cpp:3870
 msgid "fastest hit recovery"
-msgstr "наибыстрейшее восст. от удара"
+msgstr "наибыстрейшее восстановление от удара"
 
 #: Source/items.cpp:3873
 msgid "fast block"
@@ -4814,9 +4806,9 @@ msgstr "быстрый блок"
 #, c++-format
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] "добавляет {:d} очко к урону"
-msgstr[1] "добавляет {:d} очка к урону"
-msgstr[2] "добавляет {:d} очков к урону"
+msgstr[0] "+{:d} очко к урону"
+msgstr[1] "+{:d} очка к урону"
+msgstr[2] "+{:d} очков к урону"
 
 #: Source/items.cpp:3877
 msgid "fires random speed arrows"
@@ -7290,8 +7282,7 @@ msgstr "Отключить калечащие святилища"
 #: Source/options.cpp:1082
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
-"and Sacred Shrines are not able to be clicked on and "
-"labeled as disabled."
+"and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
 "Если включено, святилища со случайным эффектом не будут доступны к "
 "применению. Будут доступны лишь фонтаны и бассейны."
@@ -8069,10 +8060,9 @@ msgid "Armor: {:d}  "
 msgstr "Броня: {:d}  "
 
 #: Source/stores.cpp:313
-#, fuzzy, c++-format
-#| msgid "Dur: {:d}/{:d}"
+#, c++-format
 msgid "Dur: {:d}/{:d},  "
-msgstr "Прчн: {:d}/{:d}"
+msgstr "Прчн: {:d}/{:d}, "
 
 #: Source/stores.cpp:315
 msgid "Indestructible,  "
@@ -10940,12 +10930,6 @@ msgstr ""
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
-#, fuzzy
-#| msgid ""
-#| "If I was you... and I ain't... but if I was, I'd sell all that stuff you "
-#| "got and get out of here. That boy out there... He's always got somethin' "
-#| "good, but you gotta give him some gold or he won't even show you what "
-#| "he's got."
 msgid ""
 "If I was you... and I ain't... but if I was, I'd sell all that stuff you got "
 "and get out of here. That boy out there... He's always got somethin good, "
@@ -11605,15 +11589,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
-#, fuzzy
-#| msgid ""
-#| "My grandmother often tells me stories about the strange forces that "
-#| "inhabit the graveyard outside of the church.  And it may well interest "
-#| "you to hear one of them.  She said that if you were to leave the proper "
-#| "offering in the cemetery, enter the cathedral to pray for the dead, and "
-#| "then return, the offering would be altered in some strange way.  I don't "
-#| "know if this is just the talk of an old sick woman, but anything seems "
-#| "possible these days."
 msgid ""
 "My grandmother often tells me stories about the strange forces that inhabit "
 "the graveyard outside of the church.  And it may well interest you to hear "
@@ -11623,11 +11598,11 @@ msgid ""
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
 "Моя бабушка часто рассказывает мне о странных духах, обитающих на кладбище "
-"возле церкви. Тебе, наверное, будет интересно послушать об этом. Она "
+"возле церкви.  Тебе, наверное, будет интересно послушать об этом.  Она "
 "говорит, что если оставить на кладбище подобающий дар, зайти в Собор и "
 "помолиться за мёртвых, а затем вернуться, то дар странным образом "
-"измениться. Я не знаю, возможно, это просто фантазия старой больной женщины, "
-"но теперь настало такое время, что всякое может произойти."
+"измениться.  Я не знаю, возможно, это просто фантазия старой больной "
+"женщины, но теперь настало такое время, что всякое может произойти."
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
