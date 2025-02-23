@@ -31,6 +31,7 @@ namespace devilution {
 // Item indestructible durability
 #define DUR_INDESTRUCTIBLE 255
 
+constexpr int ItemNameLength = 64;
 constexpr int MaxVendorValue = 140000;
 constexpr int MaxVendorValueHf = 200000;
 constexpr int MaxBoyValue = 90000;
@@ -200,8 +201,8 @@ struct Item {
 	bool _iPostDraw = false;
 	bool _iIdentified = false;
 	item_quality _iMagical = ITEM_QUALITY_NORMAL;
-	char _iName[64] = {};
-	char _iIName[64] = {};
+	char _iName[ItemNameLength] = {};
+	char _iIName[ItemNameLength] = {};
 	item_equip_type _iLoc = ILOC_NONE;
 	item_class _iClass = ICLASS_NONE;
 	uint8_t _iCurs = 0;
