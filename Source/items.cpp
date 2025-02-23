@@ -645,8 +645,8 @@ void GetBookSpell(Item &item, int lvl)
 	const std::string_view spellName = GetSpellData(bs).sNameText;
 	const size_t iNameLen = std::string_view(item._iName).size();
 	const size_t iINameLen = std::string_view(item._iIName).size();
-	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
-	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
+	CopyUtf8(item._iName + iNameLen, spellName, ItemNameLength - iNameLen);
+	CopyUtf8(item._iIName + iINameLen, spellName, ItemNameLength - iINameLen);
 	item._iSpell = bs;
 	const SpellData &spellData = GetSpellData(bs);
 	item._iMinMag = spellData.minInt;
@@ -1134,12 +1134,12 @@ void GetStaffPower(const Player &player, Item &item, int lvl, SpellID bs, bool o
 	const ItemData &baseItemData = AllItemsList[item.IDidx];
 	std::string staffName = GenerateStaffName(baseItemData, item._iSpell, false);
 
-	CopyUtf8(item._iName, staffName, sizeof(item._iName));
+	CopyUtf8(item._iName, staffName, ItemNameLength);
 	if (preidx != -1) {
 		std::string staffNameMagical = GenerateStaffNameMagical(baseItemData, item._iSpell, preidx, false, std::nullopt);
-		CopyUtf8(item._iIName, staffNameMagical, sizeof(item._iIName));
+		CopyUtf8(item._iIName, staffNameMagical, ItemNameLength);
 	} else {
-		CopyUtf8(item._iIName, item._iName, sizeof(item._iIName));
+		CopyUtf8(item._iIName, item._iName, ItemNameLength);
 	}
 
 	CalcItemValue(item);
@@ -1242,9 +1242,9 @@ void GetItemPower(const Player &player, Item &item, int minlvl, int maxlvl, Affi
 		    pSufix = &suffix;
 	    });
 
-	CopyUtf8(item._iIName, GenerateMagicItemName(item._iName, pPrefix, pSufix, false), sizeof(item._iIName));
+	CopyUtf8(item._iIName, GenerateMagicItemName(item._iName, pPrefix, pSufix, false), ItemNameLength);
 	if (!StringInPanel(item._iIName)) {
-		CopyUtf8(item._iIName, GenerateMagicItemName(AllItemsList[item.IDidx].iSName, pPrefix, pSufix, false), sizeof(item._iIName));
+		CopyUtf8(item._iIName, GenerateMagicItemName(AllItemsList[item.IDidx].iSName, pPrefix, pSufix, false), ItemNameLength);
 	}
 	if (pPrefix != nullptr || pSufix != nullptr)
 		CalcItemValue(item);
@@ -1316,8 +1316,8 @@ void GetOilType(Item &item, int maxLvl)
 
 	int8_t t = rnd[GenerateRnd(cnt)];
 
-	CopyUtf8(item._iName, OilNames[t], sizeof(item._iName));
-	CopyUtf8(item._iIName, OilNames[t], sizeof(item._iIName));
+	CopyUtf8(item._iName, OilNames[t], ItemNameLength);
+	CopyUtf8(item._iIName, OilNames[t], ItemNameLength);
 	item._iMiscId = OilMagic[t];
 	item._ivalue = OilValues[t];
 	item._iIvalue = OilValues[t];
@@ -1479,7 +1479,7 @@ void GetUniqueItem(const Player &player, Item &item, _unique_items uid)
 		SaveItemPower(player, item, power);
 	}
 
-	CopyUtf8(item._iIName, uniqueItemData.UIName, sizeof(item._iIName));
+	CopyUtf8(item._iIName, uniqueItemData.UIName, ItemNameLength);
 	if (uniqueItemData.UICurs != ICURS_DEFAULT)
 		item._iCurs = uniqueItemData.UICurs;
 	item._iIvalue = uniqueItemData.UIValue;
@@ -2929,8 +2929,8 @@ void InitializeItem(Item &item, _item_indexes itemData)
 
 	item._itype = pAllItem.itype;
 	item._iCurs = pAllItem.iCurs;
-	CopyUtf8(item._iName, pAllItem.iName, sizeof(item._iName));
-	CopyUtf8(item._iIName, pAllItem.iName, sizeof(item._iIName));
+	CopyUtf8(item._iName, pAllItem.iName, ItemNameLength);
+	CopyUtf8(item._iIName, pAllItem.iName, ItemNameLength);
 	item._iLoc = pAllItem.iLoc;
 	item._iClass = pAllItem.iClass;
 	item._iMinDam = pAllItem.iMinDam;
@@ -3126,8 +3126,8 @@ void GetItemAttrs(Item &item, _item_indexes itemData, int lvl)
 	auto &baseItemData = AllItemsList[static_cast<size_t>(itemData)];
 	item._itype = baseItemData.itype;
 	item._iCurs = baseItemData.iCurs;
-	CopyUtf8(item._iName, baseItemData.iName, sizeof(item._iName));
-	CopyUtf8(item._iIName, baseItemData.iName, sizeof(item._iIName));
+	CopyUtf8(item._iName, baseItemData.iName, ItemNameLength);
+	CopyUtf8(item._iIName, baseItemData.iName, ItemNameLength);
 	item._iLoc = baseItemData.iLoc;
 	item._iClass = baseItemData.iClass;
 	item._iMinDam = baseItemData.iMinDam;
@@ -3570,8 +3570,8 @@ void RecreateEar(Item &item, uint16_t ic, uint32_t iseed, uint8_t bCursval, std:
 
 	std::string itemName = fmt::format(fmt::runtime("Ear of {:s}"), heroName);
 
-	CopyUtf8(item._iName, itemName, sizeof(item._iName));
-	CopyUtf8(item._iIName, heroName, sizeof(item._iIName));
+	CopyUtf8(item._iName, itemName, ItemNameLength);
+	CopyUtf8(item._iIName, heroName, ItemNameLength);
 
 	item._iCurs = ((bCursval >> 6) & 3) + ICURS_EAR_SORCERER;
 	item._ivalue = bCursval & 0x3F;
