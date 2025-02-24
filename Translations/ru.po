@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2025-02-24 23:50+0300\n"
+"POT-Creation-Date: 2025-02-23 17:21+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Dominus Iniquitatis <zerosaiko@gmail.com>\n"
 "Language-Team: \n"
@@ -722,7 +722,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Нормальная сложность\n"
-"Отсюда новичкам стоит начинать путь к победы над Диабло."
+"Отсюда новичкам стоит начинать путь к победе над Диабло."
 
 # Подобрано под размер меню.
 #: Source/DiabloUI/multi/selgame.cpp:395
@@ -785,7 +785,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Нормальная скорость\n"
-"Отсюда новичкам стоит начинать путь к победы над Диабло."
+"Отсюда новичкам стоит начинать путь к победе над Диабло."
 
 # Подобрано под размер меню.
 #: Source/DiabloUI/multi/selgame.cpp:521
@@ -830,7 +830,7 @@ msgstr "Войти в Hellfire"
 
 #: Source/DiabloUI/selstart.cpp:42
 msgid "Switch to Diablo"
-msgstr "Переключиться на Diablo"
+msgstr "Переключить на Diablo"
 
 #: Source/DiabloUI/selyesno.cpp:57 Source/stores.cpp:967
 msgid "Yes"
@@ -1625,24 +1625,20 @@ msgid "Pause Game (Alternate)"
 msgstr "Пауза (Альтернатива)"
 
 #: Source/diablo.cpp:1921 Source/diablo.cpp:2407
-#, fuzzy
-#| msgid "Increase screen brightness."
 msgid "Decrease Brightness"
-msgstr "Увеличить яркость экрана."
+msgstr "Уменьшить яркость."
 
 #: Source/diablo.cpp:1922 Source/diablo.cpp:2408
 msgid "Reduce screen brightness."
-msgstr "Уменьшить яркость экрана."
+msgstr "Уменьшает яркость экрана."
 
 #: Source/diablo.cpp:1929 Source/diablo.cpp:2415
-#, fuzzy
-#| msgid "Increase screen brightness."
 msgid "Increase Brightness"
-msgstr "Увеличить яркость экрана."
+msgstr "Увеличить яркость."
 
 #: Source/diablo.cpp:1930 Source/diablo.cpp:2416
 msgid "Increase screen brightness."
-msgstr "Увеличить яркость экрана."
+msgstr "Увеличивает яркость экрана."
 
 #: Source/diablo.cpp:1937 Source/diablo.cpp:2423
 msgid "Help"
@@ -2668,7 +2664,7 @@ msgstr "увеличивает"
 
 #: Source/items.cpp:1655
 msgid "chance to hit"
-msgstr "шанс попадания"
+msgstr "меткость оружия"
 
 #: Source/items.cpp:1658
 msgid "greatly increases a"
@@ -2676,7 +2672,7 @@ msgstr "значительно увеличивает"
 
 #: Source/items.cpp:1659
 msgid "weapon's chance to hit"
-msgstr "шанс попадания оружия"
+msgstr "меткость оружия"
 
 #: Source/items.cpp:1663
 msgid "damage potential"
@@ -2684,11 +2680,11 @@ msgstr "потенциал урона"
 
 #: Source/items.cpp:1666
 msgid "greatly increases a weapon's"
-msgstr "сильно улучшает"
+msgstr "сильно улучшает потенциал"
 
 #: Source/items.cpp:1667
 msgid "damage potential - not bows"
-msgstr "потенциал урона - не луки"
+msgstr "урона, исключая луки"
 
 #: Source/items.cpp:1670
 msgid "reduces attributes needed"
@@ -2709,19 +2705,19 @@ msgstr "прочности предмета"
 
 #: Source/items.cpp:1678
 msgid "increases an item's"
-msgstr "увеличивает"
+msgstr "увеличивает текущую"
 
 #: Source/items.cpp:1679
 msgid "current and max durability"
-msgstr "текущую и максимальную прочность"
+msgstr "и максимальную прочность"
 
 #: Source/items.cpp:1682
 msgid "makes an item indestructible"
-msgstr "делает предмет нерушимым"
+msgstr "делает предмет неразрушимым"
 
 #: Source/items.cpp:1685
 msgid "increases the armor class"
-msgstr "увеличивает класс брони"
+msgstr "улучшает класс защиты"
 
 #: Source/items.cpp:1686
 msgid "of armor and shields"
@@ -2729,11 +2725,11 @@ msgstr "брони и щитов"
 
 #: Source/items.cpp:1689
 msgid "greatly increases the armor"
-msgstr "значительно улучшает класс брони"
+msgstr "значительно улучшает класс"
 
 #: Source/items.cpp:1690
 msgid "class of armor and shields"
-msgstr "щитов и брони"
+msgstr "защиты брони и щитов"
 
 #: Source/items.cpp:1693 Source/items.cpp:1700
 msgid "sets fire trap"
@@ -2785,7 +2781,7 @@ msgstr "восстановит часть здоровья и маны"
 
 #: Source/items.cpp:1733 Source/items.cpp:1736
 msgid "restore all life and mana"
-msgstr "восстановить всё здороье и ману"
+msgstr "восстановит всё здоровье и ману"
 
 #: Source/items.cpp:1737
 msgid "(works only in arenas)"
@@ -2919,12 +2915,12 @@ msgstr "меткость: {:+d}%, {:+d}% урона"
 #: Source/items.cpp:3898
 #, no-c-format, c++-format
 msgid "{:+d}% armor"
-msgstr "{:+d}% брони"
+msgstr "{:+d}% защиты"
 
 #: Source/items.cpp:3901
 #, c++-format
 msgid "armor class: {:d}"
-msgstr "класс брони: {:d}"
+msgstr "класс защиты: {:d}"
 
 #: Source/items.cpp:3905
 #, c++-format
@@ -3082,7 +3078,7 @@ msgstr "-{:d}% радиуса света"
 
 #: Source/items.cpp:3981
 msgid "multiple arrows per shot"
-msgstr "много стрел за выстрел"
+msgstr "несколько стрел за выстрел"
 
 #: Source/items.cpp:3984
 #, c++-format
@@ -3166,7 +3162,7 @@ msgstr "пробивает броню цели"
 
 #: Source/items.cpp:4025
 msgid "quick attack"
-msgstr "скорая атака"
+msgstr "быстрая атака"
 
 #: Source/items.cpp:4027
 msgid "fast attack"
@@ -3185,20 +3181,17 @@ msgstr "наибыстрейшая атака"
 msgid "Another ability (NW)"
 msgstr "Другая способность (NW)"
 
-# Сократил восстановление до восст., т.к. текст любит вылезать за рамки
 #: Source/items.cpp:4035
 msgid "fast hit recovery"
-msgstr "быстрое восст. от удара"
+msgstr "быстрое восстановление"
 
-# Сократил восстановление до восст., т.к. текст любит вылезать за рамки
 #: Source/items.cpp:4037
 msgid "faster hit recovery"
-msgstr "более быстрое восст. от удара"
+msgstr "более быстрое восстановление"
 
-# Сократил восстановление до восст., т.к. текст любит вылезать за рамки
 #: Source/items.cpp:4039
 msgid "fastest hit recovery"
-msgstr "наибыстрейшее восст. от удара"
+msgstr "наибыстрейшее восстановление"
 
 #: Source/items.cpp:4042
 msgid "fast block"
@@ -3208,9 +3201,9 @@ msgstr "быстрый блок"
 #, c++-format
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] "добавляет {:d} очко к урону"
-msgstr[1] "добавляет {:d} очка к урону"
-msgstr[2] "добавляет {:d} очков к урону"
+msgstr[0] "+{:d} очко к урону"
+msgstr[1] "+{:d} очка к урону"
+msgstr[2] "+{:d} очков к урону"
 
 #: Source/items.cpp:4046
 msgid "fires random speed arrows"
@@ -3218,10 +3211,10 @@ msgstr "выпускает случайные быстрые стрелы"
 
 # этот параметр бесполезен, можно хоть матом писать
 # ᅠ ᅠᅠ
-# Ну я придумал просто гениальную интерпретацию
+# Было принято решение привести к общему виду "изменённая прочность" и "изменённый урон" соответственно
 #: Source/items.cpp:4048
 msgid "unusual item damage"
-msgstr "урон изменён разрабами"
+msgstr "изменённый урон"
 
 #: Source/items.cpp:4050
 msgid "altered durability"
@@ -3281,15 +3274,13 @@ msgstr "Случайные 0 - 600% урона"
 msgid "low dur, {:+d}% damage"
 msgstr "низк прчн, {:+d}% урона"
 
-# ОБ=очки брони
-# Сделаю АС, сообщество привыкло к данной абривиатуре
 #: Source/items.cpp:4079
 msgid "extra AC vs demons"
-msgstr "дополнительные АС против демонов"
+msgstr "больше защиты против демонов"
 
 #: Source/items.cpp:4081
 msgid "extra AC vs undead"
-msgstr "дополнительные АС против нежити"
+msgstr "больше защиты против нежити"
 
 #: Source/items.cpp:4083
 msgid "50% Mana moved to Health"
@@ -3302,7 +3293,7 @@ msgstr "40% здоровья становятся маной"
 #: Source/items.cpp:4128 Source/items.cpp:4169
 #, c++-format
 msgid "damage: {:d}  Indestructible"
-msgstr "урон: {:d}  Нерушимый"
+msgstr "урон: {:d}  Неразрушимое"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4130 Source/items.cpp:4171
@@ -3313,7 +3304,7 @@ msgstr "урон: {:d}  Прчн: {:d}/{:d}"
 #: Source/items.cpp:4133 Source/items.cpp:4174
 #, c++-format
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr "урон: {:d}-{:d}  Нерушимый"
+msgstr "урон: {:d}-{:d}  Неразрушимое"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4135 Source/items.cpp:4176
@@ -3324,13 +3315,13 @@ msgstr "урон: {:d}-{:d}  Прчн: {:d}/{:d}"
 #: Source/items.cpp:4140 Source/items.cpp:4186
 #, c++-format
 msgid "armor: {:d}  Indestructible"
-msgstr "броня: {:d}  Нерушимая"
+msgstr "защита: {:d}  Неразрушимое"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4142 Source/items.cpp:4188
 #, c++-format
 msgid "armor: {:d}  Dur: {:d}/{:d}"
-msgstr "броня: {:d}  Прчн:{:d}/{:d}"
+msgstr "защита: {:d}  Прчн:{:d}/{:d}"
 
 #: Source/items.cpp:4145 Source/items.cpp:4179 Source/items.cpp:4192
 #: Source/stores.cpp:301
@@ -4641,7 +4632,7 @@ msgstr "База"
 
 #: Source/panels/charpanel.cpp:151
 msgid "Now"
-msgstr "Сейчас"
+msgstr "Общее"
 
 #: Source/panels/charpanel.cpp:152
 msgid "Strength"
@@ -4660,11 +4651,10 @@ msgid "Vitality"
 msgstr "Живучесть"
 
 # Всё-таки поменял на более логиный перевод...
+# А я поменял на ещё более логичный, только не перевод, а вариант интерпритации, т.к. оба варианта не есть перевод фразы
 #: Source/panels/charpanel.cpp:166
 msgid "Points to distribute"
-msgstr ""
-"Всего\n"
-"очков"
+msgstr "Свободные очки"
 
 #: Source/panels/charpanel.cpp:172 Source/translation_dummy.cpp:247
 #: Source/translation_dummy.cpp:602
@@ -4673,7 +4663,7 @@ msgstr "Золото"
 
 #: Source/panels/charpanel.cpp:176
 msgid "Armor class"
-msgstr "Класс брони"
+msgstr "Класс защиты"
 
 #: Source/panels/charpanel.cpp:178
 msgid "To hit"
@@ -4772,7 +4762,7 @@ msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Посох ({:d} заряд)"
 msgstr[1] "Посох ({:d} заряда)"
-msgstr[2] "Посох ({:d} зарядов)"
+msgstr[2] "Посох ({:d} )"
 
 #. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:195
@@ -5059,7 +5049,7 @@ msgstr "Урон: {:d}-{:d}  "
 #: Source/stores.cpp:313
 #, c++-format
 msgid "Armor: {:d}  "
-msgstr "Броня: {:d}  "
+msgstr "Защита: {:d}  "
 
 #: Source/stores.cpp:315
 #, c++-format
@@ -7652,7 +7642,7 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
-"Я росла вместе с Кэнэйс - матерью Вирта. Не смотря на то, те ужасные твари, "
+"Я росла вместе с Канос - матерью Вирта. Не смотря на то, те ужасные твари, "
 "которые утащили её сына, только слегка её зацепили, она так и не "
 "выздоровела. Я думаю, она умерла от горя. Вирт стал злым подростком. Он ищет "
 "выгоду только в том, что заставляет других попотеть. Я знаю, что он страдал "
@@ -9623,7 +9613,7 @@ msgstr "Заговорщик"
 #: Source/translation_dummy.cpp:117
 msgctxt "monster"
 msgid "Advocate"
-msgstr "Заступник"
+msgstr "Адвокат"
 
 #: Source/translation_dummy.cpp:118
 msgctxt "monster"
@@ -10541,11 +10531,11 @@ msgstr "Пластинчатый Доспех"
 
 #: Source/translation_dummy.cpp:335
 msgid "Field Plate"
-msgstr "Полевая Пластина"
+msgstr "Полевые Латы"
 
 #: Source/translation_dummy.cpp:337
 msgid "Gothic Plate"
-msgstr "Готическая Пластина"
+msgstr "Готические Латы"
 
 #: Source/translation_dummy.cpp:339
 msgid "Full Plate Mail"
@@ -11122,7 +11112,7 @@ msgstr "Проклятие Гладиатора"
 
 #: Source/translation_dummy.cpp:557
 msgid "The Rainbow Cloak"
-msgstr "Плащ Радуги"
+msgstr "Радужный Плащ"
 
 #: Source/translation_dummy.cpp:558
 msgid "Leather of Aut"
@@ -11146,7 +11136,7 @@ msgstr "Ночной Пейзаж"
 
 #: Source/translation_dummy.cpp:563
 msgid "Naj's Light Plate"
-msgstr "Лёгкая Пластина Наджа"
+msgstr "Лёгкие Латы Наджа"
 
 #: Source/translation_dummy.cpp:564
 msgid "Demonspike Coat"
@@ -11392,6 +11382,7 @@ msgstr "Солдатский"
 # Лордский...
 # ---------------------------------------------
 # Тут либо "господский", либо "властелинский".
+# --------------------------------------------- Властелинский говно
 #: Source/translation_dummy.cpp:626
 msgid "Lord's"
 msgstr "Господский"
@@ -11446,11 +11437,11 @@ msgstr "Освящённый"
 
 #: Source/translation_dummy.cpp:640
 msgid "Awesome"
-msgstr "Устрашающий"
+msgstr "Потрясающий"
 
 #: Source/translation_dummy.cpp:642
 msgid "Godly"
-msgstr "Благочестивый"
+msgstr "Божественный"
 
 #: Source/translation_dummy.cpp:643
 msgid "Red"
