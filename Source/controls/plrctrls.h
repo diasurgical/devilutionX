@@ -54,7 +54,6 @@ void PerformPrimaryAction();
 // Open chests, doors, pickup items.
 void PerformSecondaryAction();
 void UpdateSpellTarget(SpellID spell);
-bool TryDropItem();
 void InvalidateInventorySlot();
 void FocusOnInventory();
 void PerformSpellAction();
