@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2025-02-24 18:54+0100\n"
-"PO-Revision-Date: 2025-02-24 18:54+0100\n"
+"PO-Revision-Date: 2025-02-24 18:58+0100\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -1610,20 +1610,16 @@ msgid "Pause Game (Alternate)"
 msgstr "Sospendi Partita (Alternativo)"
 
 #: Source/diablo.cpp:1921 Source/diablo.cpp:2407
-#, fuzzy
-#| msgid "Increase screen brightness."
 msgid "Decrease Brightness"
-msgstr "Aumenta luminosità schermo."
+msgstr "Riduci Luminosità"
 
 #: Source/diablo.cpp:1922 Source/diablo.cpp:2408
 msgid "Reduce screen brightness."
 msgstr "Riduci luminosità schermo."
 
 #: Source/diablo.cpp:1929 Source/diablo.cpp:2415
-#, fuzzy
-#| msgid "Increase screen brightness."
 msgid "Increase Brightness"
-msgstr "Aumenta luminosità schermo."
+msgstr "Aumenta Luminosità"
 
 #: Source/diablo.cpp:1930 Source/diablo.cpp:2416
 msgid "Increase screen brightness."
@@ -9555,7 +9551,7 @@ msgstr "Tessitore di Realtà"
 #: Source/translation_dummy.cpp:110
 msgctxt "monster"
 msgid "Succubus"
-msgstr "Succubo"
+msgstr "Succube"
 
 #: Source/translation_dummy.cpp:111
 msgctxt "monster"
