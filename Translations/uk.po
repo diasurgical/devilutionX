@@ -1598,20 +1598,16 @@ msgid "Pause Game (Alternate)"
 msgstr "Зупинити гру (Альтернатива)"
 
 #: Source/diablo.cpp:1921 Source/diablo.cpp:2407
-#, fuzzy
-#| msgid "Increase screen brightness."
 msgid "Decrease Brightness"
-msgstr "Збільшити яскравість екрану."
+msgstr "Зменшити Яскравість"
 
 #: Source/diablo.cpp:1922 Source/diablo.cpp:2408
 msgid "Reduce screen brightness."
 msgstr "Зменшити яскравість екрану."
 
 #: Source/diablo.cpp:1929 Source/diablo.cpp:2415
-#, fuzzy
-#| msgid "Increase screen brightness."
 msgid "Increase Brightness"
-msgstr "Збільшити яскравість екрану."
+msgstr "Збільшити Яскравість"
 
 #: Source/diablo.cpp:1930 Source/diablo.cpp:2416
 msgid "Increase screen brightness."
@@ -3169,7 +3165,7 @@ msgstr "стріляє кілька швидких стріл"
 
 #: Source/items.cpp:4048
 msgid "unusual item damage"
-msgstr "у предмету незвичайна шкода"
+msgstr "у предмету змінена шкода"
 
 #: Source/items.cpp:4050
 msgid "altered durability"
@@ -4150,12 +4146,14 @@ msgstr "Збільшує зображення гри по коефіцієнту
 
 #: Source/options.cpp:660
 msgid "Frame Rate Control"
-msgstr ""
+msgstr "Керування Частотою Кадрів"
 
 #: Source/options.cpp:661
 msgid ""
 "Manages frame rate to balance performance, reduce tearing, or save power."
 msgstr ""
+"Керує частотою кадрів, щоб збалансувати продуктивність, зменшити розриви або "
+"заощадити енергію."
 
 #: Source/options.cpp:671
 msgid "Vertical Sync"
@@ -4163,7 +4161,7 @@ msgstr "Вертикальна Синхронізація"
 
 #: Source/options.cpp:673
 msgid "Limit FPS"
-msgstr ""
+msgstr "FPS ліміт"
 
 #: Source/options.cpp:676
 msgid "Zoom on when enabled."
@@ -5118,7 +5116,7 @@ msgstr "але воно коштує 50 золота"
 
 #: Source/stores.cpp:981
 msgid "just to take a look. "
-msgstr "подивись. "
+msgstr "щоб тільки глянути. "
 
 #: Source/stores.cpp:982
 msgid "What have you got?"
@@ -6036,7 +6034,7 @@ msgid ""
 msgstr ""
 "Прошу тебе, вислухай. Архієпископ Лазар, він привів нас сюди, щоб знайти "
 "загубленого принца. Мерзотник завів нас у пастку! Тепер усі мертві… убиті "
-"демоном, якого він назвав М’ясником. Помстись за нас! Знайди цього М'ясника "
+"демоном, якого він назвав М'ясником. Помстись за нас! Знайди цього М'ясника "
 "і вбий його, щоб наші душі нарешті упокоїлись…"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
@@ -11013,7 +11011,7 @@ msgstr "Нічний Покров"
 
 #: Source/translation_dummy.cpp:563
 msgid "Naj's Light Plate"
-msgstr "Легка Пластина Наджа"
+msgstr "Легкі Лати Наджа"
 
 #: Source/translation_dummy.cpp:564
 msgid "Demonspike Coat"
