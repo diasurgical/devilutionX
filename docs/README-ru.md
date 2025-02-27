@@ -4,11 +4,11 @@
 
 ---
 
-<a href="docs/README.md">English</a>
+<a href="README.md">English</a>
 &nbsp;&nbsp;| &nbsp;&nbsp;
 Русский
 &nbsp;&nbsp;| &nbsp;&nbsp;
-<a href="docs/README-ua.md">Українська</a>
+<a href="README-ua.md">Українська</a>
 
 [![Discord Channel](https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/devilutionx)
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases/latest)
