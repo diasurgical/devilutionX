@@ -4,6 +4,12 @@
 
 ---
 
+English
+&nbsp;&nbsp;| &nbsp;&nbsp;
+<a href="docs/README-ru.md">Русский</a>
+&nbsp;&nbsp;| &nbsp;&nbsp;
+<a href="docs/README-ua.md">Українська</a>
+
 [![Discord Channel](https://img.shields.io/discord/518540764754608128?color=%237289DA&logo=discord&logoColor=%23FFFFFF)](https://discord.gg/devilutionx)
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases/latest)
 [![Codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
