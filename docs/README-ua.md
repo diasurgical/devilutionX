@@ -15,7 +15,7 @@
 [![Codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
 
 <p align="center">
-<img width="838" src="https://github.com/user-attachments/assets/b1827862-835e-4d13-a878-c6c448eaf044">
+<img width="838" src="https://github.com/user-attachments/assets/bf3f7f0d-7319-45a6-9615-94537198b3da">
 </p>
 
 <sub>*(Індикатори здоров'я ворога і досвіду за замовчуванням вимкнени, але можуть бути включені в [налаштуваннях гри](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide). Широкоекранний режим також можна вимкнути.)*</sub>
