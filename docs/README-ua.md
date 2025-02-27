@@ -4,9 +4,9 @@
 
 ---
 
-<a href="docs/README.md">English</a>
+<a href="README.md">English</a>
 &nbsp;&nbsp;| &nbsp;&nbsp;
-<a href="docs/README-ru.md">Русский</a>
+<a href="README-ru.md">Русский</a>
 &nbsp;&nbsp;| &nbsp;&nbsp;
 Українська
 
