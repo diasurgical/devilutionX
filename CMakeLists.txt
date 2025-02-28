@@ -353,7 +353,6 @@ else()
     if(CMAKE_STRIP AND NOT DEVILUTIONX_DISABLE_STRIP)
       add_custom_command(
         TARGET ${BIN_TARGET} POST_BUILD
-        DEPENDS ${BIN_TARGET}
         COMMAND $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>>:${CMAKE_STRIP}>
         ARGS $<TARGET_FILE:${BIN_TARGET}>)
     endif()
