@@ -74,15 +74,15 @@ DevilutionX - это порт Diablo и Hellfire, который стремит�
 
 Хотите скомпилировать программу самостоятельно? Отлично! Просто следуйте [инструкциям по сборке](./docs/building.md).
 
-# Титры
+# Благодареость
 
-- Оригинальный проект Devilution: [Devilution](https://github.com/diasurgical/devilution#credits)
-- [Все](https://github.com/diasurgical/devilutionX/graphs/contributors), кто работал над Devilution/DevilutionX
-- [Николай Попов](https://www.instagram.com/nikolaypopovz/) над пользовательским интерфейсом и графикой.
-- [WiAParker](https://wiaparker.pl/projekty/diablo-hellfire/) для польского голосового пакета
+- Оригинальному проекту Devilution: [Devilution](https://github.com/diasurgical/devilution#credits)
+- [Всем](https://github.com/diasurgical/devilutionX/graphs/contributors), кто работал над Devilution/DevilutionX
+- [Николаю Попову](https://www.instagram.com/nikolaypopovz/) за работу над пользовательским интерфейсом и графикой
+- [WiAParker](https://wiaparker.pl/projekty/diablo-hellfire/) за польскую озвучку
 - И спасибо всем, кто поддерживает проект, сообщает об ошибках и помогает распространять информацию ❤️
 
-# Легальность
+# Юридическая информация
 
 DevilutionX является общедоступным и выпускается под Sustainable Use License (см. [ЛИЦЕНЗИЯ](LICENSE.md)).
 
