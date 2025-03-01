@@ -18,7 +18,7 @@
 <img width="838" src="https://github.com/user-attachments/assets/bf3f7f0d-7319-45a6-9615-94537198b3da">
 </p>
 
-<sub>*(Індикатори здоров'я ворога і досвіду за замовчуванням вимкнени, але можуть бути включені в [налаштуваннях гри](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide). Широкоекранний режим також можна вимкнути.)*</sub>
+<sub>*(Індикатори здоров'я ворога і досвіду вимкнені за замовчуванням, але можуть бути ввімкнені в [налаштуваннях гри](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide). Широкоекранний режим також можна вимкнути.)*</sub>
 
 # Що таке DevilutionX
 
@@ -30,21 +30,21 @@ DevilutionX - це порт Diablo та Hellfire, який прагне поле
 
 # Як встановити
 
-Примітка: вам буде потрібно доступ до даних з оригінальної гри. Якщо у вас немає оригінального CD диска, ви можете [купити Diablo в GoG.com](https://www.gog.com/game/diablo) або Battle.net. В якості альтернативи ви можете використовувати "spawn.mpq" з [умовно-безкоштовної](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/spawn.mpq) [[2]](http://ftp.blizzard.com/pub/demos/diablosw.exe) версії замість "DIABDAT.MPQ", щоб грати в умовно-безкоштовну частину гри.
+Примітка: вам буде необхідний доступ до даних з оригінальної гри. Якщо у вас немає оригінального CD диска, ви можете [купити Diablo в GoG.com](https://www.gog.com/game/diablo) або Battle.net. В якості альтернативи ви можете використовувати "spawn.mpq" з [умовно-безкоштовної](https://github.com/diasurgical/devilutionx-assets/releases/latest/download/spawn.mpq) [[2]](http://ftp.blizzard.com/pub/demos/diablosw.exe) версії замість "DIABDAT.MPQ", щоб грати в умовно-безкоштовну частину гри.
 
-Завантажте останню версію [DevilutionX](https://github.com/diasurgical/devilutionX/releases/latest) та витягніть вміст у будь-яке місце на ваш вибір або [скомпілюйте з вихідного коду](#building-from-source).
+Завантажте останню версію [DevilutionX](https://github.com/diasurgical/devilutionX/releases/latest) та розпакуйте вміст у будь-яку теку на ваш вибір або [скомпілюйте з вихідного коду](#building-from-source).
 
 - Скопіюйте `DIABDAT.MPQ` з CD диска або інсталяційного диска Diablo (або [витягніть його з інсталятора GoG](https://github.com/diasurgical/devilutionX/wiki/Extracting-MPQs-from-the-GoG-installer)) в папку DevilutionX.
-- Щоб запустити додаток Diablo: Hellfire, вам також потрібно скопіювати файли `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq` і `hfvoice.mpq`.
+- Щоб запустити аддон Diablo: Hellfire, вам також потрібно скопіювати файли `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq` і `hfvoice.mpq`.
 Для отримання більш детальних інструкцій: [інструкції з встановлення](./docs/installing.md).
 
 # Участь
 
-Ми завжди шукаємо нових людей, які могли б допомогти з [написанням коду] (docs/CONTRIBUTING.md), [документацією](https://github.com/diasurgical/devilutionX/wiki), [тестуванням останніх збірок](#test-builds), поширенням інформації або просто спілкуванням на нашому [Discord сервері](https://discord.gg/devilutionx).
+Ми завжди шукаємо нових людей, які могли б допомогти з [написанням коду] (docs/CONTRIBUTING.md), [документацією](https://github.com/diasurgical/devilutionX/wiki), [тестуванням останніх збірок](#test-builds), поширенням інформації або просто для спілкуванням на нашому [Discord сервері](https://discord.gg/devilutionx).
 
 # Мода
 
-Ми сподіваємося стати гарною відправною точкою для створення модів. На додаток до повного вихідного коду Devilution, ми також надаємо інструменти для моддингу. Перегляньте список відомих [модів на основі DevilutionX](https://github.com/diasurgical/devilutionX/wiki/Mods).
+Ми сподіваємося стати гарною відправною точкою для створення модів. Ми також надаємо інструменти для моддингу, на додаток до повного вихідного коду Devilution. Перегляньте список відомих [модів на основі DevilutionX](https://github.com/diasurgical/devilutionX/wiki/Mods).
 
 # Тестові збірки (білди)
 
@@ -74,15 +74,15 @@ DevilutionX - це порт Diablo та Hellfire, який прагне поле
 
 Хочете скомпілювати програму самостійно? Чудово! Просто дотримуйтесь [інструкцій по збірці](./docs/building.md).
 
-# Титри
+# Подяка
 
-- Оригінальний проект Devilution: [Devilution](https://github.com/diasurgical/devilution#credits)
-- [Всі](https://github.com/diasurgical/devilutionX/graphs/contributors), хто працював над Devilution/DevilutionX
-- [Миколай Попов](https://www.instagram.com/nikolaypopovz/) над інтерфейсом користувача та графікою.
-- [WiAParker](https://wiaparker.pl/projekty/diablo-hellfire/) для польського голосового пакету
+- Оригінальному проекту Devilution: [Devilution](https://github.com/diasurgical/devilution#credits)
+- [Всім](https://github.com/diasurgical/devilutionX/graphs/contributors), хто працював над Devilution/DevilutionX
+- [Миколаю Попову](https://www.instagram.com/nikolaypopovz/) за роботу над інтерфейсом користувача та графікою
+- [WiAParker](https://wiaparker.pl/projekty/diablo-hellfire/) за польську озвучку
 - І дякую всім, хто підтримує проект, повідомляє про помилки та допомагає поширювати інформацію ❤️
 
-# Легальність
+# Юридична інформація
 
 DevilutionX є загальнодоступним і випускається під Sustainable Use License (див. [ЛІЦЕНЗІЯ](LICENSE.md)).
 
