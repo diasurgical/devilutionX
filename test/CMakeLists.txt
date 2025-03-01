@@ -37,6 +37,9 @@ set(tests
   timedemo_test
   writehero_test
 )
+if(NOT USE_SDL1)
+  list(APPEND tests text_render_integration_test)
+endif()
 set(standalone_tests
   codec_test
   crawl_test
