@@ -40,6 +40,10 @@ struct PlayerPack {
 	uint8_t targx;
 	uint8_t targy;
 	char pName[PlayerNameLength];
+	uint32_t unused1;
+	uint32_t unused2;
+	uint32_t unused3;
+	uint32_t unused4;
 	uint8_t pClass;
 	uint8_t pBaseStr;
 	uint8_t pBaseMag;
