@@ -86,6 +86,14 @@ T SwapBE(T in)
 	}
 }
 
+void TerminateUtf8(char *str, size_t maxLength)
+{
+	std::string_view inStr { str, maxLength };
+	std::string_view truncStr = TruncateUtf8(inStr, maxLength - 1);
+	size_t utf8Length = truncStr.size();
+	str[utf8Length] = '\0';
+}
+
 class LoadHelper {
 	std::unique_ptr<std::byte[]> m_buffer_;
 	size_t m_cur_ = 0;
@@ -268,8 +276,10 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iPostDraw = file.NextBool32();
 	item._iIdentified = file.NextBool32();
 	item._iMagical = static_cast<item_quality>(file.NextLE<int8_t>());
-	file.NextBytes(item._iName, 64);
-	file.NextBytes(item._iIName, 64);
+	file.NextBytes(item._iName, ItemNameLength);
+	TerminateUtf8(item._iName, ItemNameLength);
+	file.NextBytes(item._iIName, ItemNameLength);
+	TerminateUtf8(item._iIName, ItemNameLength);
 	item._iLoc = static_cast<item_equip_type>(file.NextLE<int8_t>());
 	item._iClass = static_cast<item_class>(file.NextLE<uint8_t>());
 	file.Skip(1); // Alignment
@@ -439,6 +449,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pLvlChanging = file.NextBool8();
 
 	file.NextBytes(player._pName, PlayerNameLength);
+	TerminateUtf8(player._pName, PlayerNameLength);
 	player._pClass = static_cast<HeroClass>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	player._pStrength = file.NextLE<int32_t>();
@@ -1088,8 +1099,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<uint32_t>(item._iPostDraw ? 1 : 0);
 	file.WriteLE<uint32_t>(item._iIdentified ? 1 : 0);
 	file.WriteLE<int8_t>(item._iMagical);
-	file.WriteBytes(item._iName, 64);
-	file.WriteBytes(item._iIName, 64);
+	file.WriteBytes(item._iName, ItemNameLength);
+	file.WriteBytes(item._iIName, ItemNameLength);
 	file.WriteLE<int8_t>(item._iLoc);
 	file.WriteLE<uint8_t>(item._iClass);
 	file.Skip(1); // Alignment

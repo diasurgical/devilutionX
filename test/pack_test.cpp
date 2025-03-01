@@ -95,7 +95,7 @@ void ComparePackedItems(const ItemPack &item1LE, const ItemPack &item2LE)
 	}
 }
 typedef struct TestItemStruct {
-	char _iIName[64];
+	char _iIName[ItemNameLength];
 	ItemType _itype;
 	int _iClass;
 	int _iCurs;
