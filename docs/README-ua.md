@@ -26,7 +26,7 @@ DevilutionX - це порт Diablo та Hellfire, який прагне поле
 
 Ознайомтеся з [керівництвом користувача](https://github.com/diasurgical/devilutionX/wiki), щоб дізнатися про доступні функції та як їх використовувати.
 
-Повний список змін можна переглянути в нашому [журналі змін](docs/CHANGELOG.MD).
+Повний список змін можна переглянути в нашому [журналі змін](CHANGELOG.MD).
 
 # Як встановити
 
@@ -36,11 +36,11 @@ DevilutionX - це порт Diablo та Hellfire, який прагне поле
 
 - Скопіюйте `DIABDAT.MPQ` з CD диска або інсталяційного диска Diablo (або [витягніть його з інсталятора GoG](https://github.com/diasurgical/devilutionX/wiki/Extracting-MPQs-from-the-GoG-installer)) в папку DevilutionX.
 - Щоб запустити аддон Diablo: Hellfire, вам також потрібно скопіювати файли `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq` і `hfvoice.mpq`.
-Для отримання більш детальних інструкцій: [інструкції з встановлення](./docs/installing.md).
+Для отримання більш детальних інструкцій: [інструкції з встановлення](installing.md).
 
 # Участь
 
-Ми завжди шукаємо нових людей, які могли б допомогти з [написанням коду] (docs/CONTRIBUTING.md), [документацією](https://github.com/diasurgical/devilutionX/wiki), [тестуванням останніх збірок](#test-builds), поширенням інформації або просто для спілкуванням на нашому [Discord сервері](https://discord.gg/devilutionx).
+Ми завжди шукаємо нових людей, які могли б допомогти з [написанням коду](CONTRIBUTING.md), [документацією](https://github.com/diasurgical/devilutionX/wiki), [тестуванням останніх збірок](#test-builds), поширенням інформації або просто для спілкуванням на нашому [Discord сервері](https://discord.gg/devilutionx).
 
 # Мода
 
@@ -72,7 +72,7 @@ DevilutionX - це порт Diablo та Hellfire, який прагне поле
 
 # Компіляція з коду
 
-Хочете скомпілювати програму самостійно? Чудово! Просто дотримуйтесь [інструкцій по збірці](./docs/building.md).
+Хочете скомпілювати програму самостійно? Чудово! Просто дотримуйтесь [інструкцій по збірці](building.md).
 
 # Подяка
 
