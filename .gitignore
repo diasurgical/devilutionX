@@ -467,4 +467,4 @@ uwp-project/Assets/ui_art
 /.s390x-ccache/
 
 # Test fixtures
-/test/fixtures/text_render_integration_test/actual.png
+/test/fixtures/text_render_integration_test/*-Actual.png

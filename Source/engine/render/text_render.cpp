@@ -556,7 +556,10 @@ int GetLineWidth(std::string_view text, GameFontTables size, int spacing, int *c
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
 }
 
-int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine)
+bool IsConsumed(std::string_view s) { return s.empty() || s[0] == '\0'; };
+
+int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, size_t argsOffset, GameFontTables size, int spacing, int *charactersInLine,
+    std::optional<size_t> firstArgOffset)
 {
 	int lineWidth = 0;
 	CurrentFont currentFont;
@@ -564,32 +567,48 @@ int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t ar
 	uint32_t codepoints = 0;
 	char32_t prev = U'\0';
 	char32_t next;
-
+	std::string_view remaining = fmt;
 	FmtArgParser fmtArgParser { fmt, args, argsLen, argsOffset };
-	std::string_view rest = fmt;
-	while (!rest.empty()) {
-		if ((prev == U'{' || prev == U'}') && static_cast<char>(prev) == rest[0]) {
-			rest.remove_prefix(1);
-			continue;
-		}
-		const std::optional<std::size_t> fmtArgPos = fmtArgParser(rest);
-		if (fmtArgPos) {
-			int argCodePoints;
-			lineWidth += GetLineWidth(args[*fmtArgPos].GetFormatted(), size, spacing, &argCodePoints);
-			codepoints += argCodePoints;
-			prev = U'\0';
-			continue;
-		}
+	size_t cpLen;
 
-		next = ConsumeFirstUtf8CodePoint(&rest);
-		if (next == Utf8DecodeError)
-			break;
-		if (next == ZWSP) {
-			prev = next;
-			continue;
+	// The current formatted argument value being processed.
+	std::string_view curFormatted;
+
+	// The string that we're currently processing: either `remaining` or `curFormatted`.
+	std::string_view *str;
+
+	if (firstArgOffset.has_value()) {
+		curFormatted = args[argsOffset - 1].GetFormatted().substr(*firstArgOffset);
+	}
+
+	for (; !(IsConsumed(curFormatted) && IsConsumed(remaining));
+	     str->remove_prefix(cpLen), prev = next) {
+		const bool isProcessingFormatArgValue = !IsConsumed(curFormatted);
+		str = isProcessingFormatArgValue ? &curFormatted : &remaining;
+		next = DecodeFirstUtf8CodePoint(*str, &cpLen);
+		if (next == Utf8DecodeError) break;
+
+		// {{ and }} escapes in fmt.
+		if (!isProcessingFormatArgValue && (prev == U'{' || prev == U'}') && prev == next) continue;
+		// ZWSP are line-breaking opportunities that can otherwise be skipped for rendering as they have 0-width.
+		if (next == ZWSP) continue;
+		if (next == U'\n') break;
+
+		if (!isProcessingFormatArgValue) {
+			const std::optional<std::size_t> fmtArgPos = fmtArgParser(*str);
+			if (fmtArgPos.has_value()) {
+				// `fmtArgParser` has already consumed `*str`. Ensure the loop doesn't consume any more.
+				cpLen = 0;
+				// The loop assigns `prev = next`.
+				// We reset it to U'\0' to ensure that {{ and }} escapes are not processed accross
+				// the boundary of the format string and a formatted value.
+				next = U'\0';
+				currentFont.clear();
+				const DrawStringFormatArg &arg = args[*fmtArgPos];
+				curFormatted = arg.GetFormatted();
+				continue;
+			}
 		}
-		if (next == U'\n')
-			break;
 
 		if (!currentFont.load(size, text_color::ColorDialogWhite, next)) {
 			next = U'?';
@@ -600,8 +619,7 @@ int GetLineWidth(std::string_view fmt, DrawStringFormatArg *args, std::size_t ar
 
 		const uint8_t frame = next & 0xFF;
 		lineWidth += (*currentFont.sprite)[frame].width() + spacing;
-		codepoints++;
-		prev = next;
+		++codepoints;
 	}
 	if (charactersInLine != nullptr)
 		*charactersInLine = codepoints;
@@ -781,11 +799,11 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 	const Surface clippedOut = ClipSurface(out, rect);
 
 	CurrentFont currentFont;
-	int curSpacing = opts.spacing;
+	const int originalSpacing = opts.spacing;
 	if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)) {
-		curSpacing = AdjustSpacingToFitHorizontally(lineWidth, opts.spacing, charactersInLine, rect.size.width);
-		if (curSpacing != opts.spacing && HasAnyOf(opts.flags, UiFlags::AlignCenter | UiFlags::AlignRight)) {
-			const int adjustedLineWidth = GetLineWidth(fmt, args, argsLen, 0, size, curSpacing, &charactersInLine);
+		opts.spacing = AdjustSpacingToFitHorizontally(lineWidth, originalSpacing, charactersInLine, rect.size.width);
+		if (opts.spacing != originalSpacing && HasAnyOf(opts.flags, UiFlags::AlignCenter | UiFlags::AlignRight)) {
+			const int adjustedLineWidth = GetLineWidth(fmt, args, argsLen, 0, size, opts.spacing, &charactersInLine);
 			characterPosition.x = GetLineStartX(opts.flags, rect, adjustedLineWidth);
 		}
 	}
@@ -795,28 +813,47 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 	std::string_view remaining = fmt;
 	FmtArgParser fmtArgParser { fmt, args, argsLen };
 	size_t cpLen;
-	for (; !remaining.empty() && remaining[0] != '\0'
-	     && (next = DecodeFirstUtf8CodePoint(remaining, &cpLen)) != Utf8DecodeError;
-	     remaining.remove_prefix(cpLen), prev = next) {
-		if (((prev == U'{' || prev == U'}') && prev == next)
-		    || next == ZWSP)
-			continue;
 
-		const std::optional<std::size_t> fmtArgPos = fmtArgParser(remaining);
-		if (fmtArgPos) {
-			DoDrawString(clippedOut, args[*fmtArgPos].GetFormatted(), rect, characterPosition, lineWidth, charactersInLine, rightMargin, bottomMargin, size,
-			    GetColorFromFlags(args[*fmtArgPos].GetFlags()), outlined, opts);
-			// `fmtArgParser` has already consumed `remaining`. Ensure the loop doesn't consume any more.
-			cpLen = 0;
-			// The loop assigns `prev = next`. We want `prev` to be `\0` after this.
-			next = U'\0';
-			currentFont.clear();
-			continue;
+	// The current formatted argument value being processed.
+	std::string_view curFormatted;
+	text_color curFormattedColor;
+
+	// The string that we're currently processing: either `remaining` or `curFormatted`.
+	std::string_view *str;
+
+	for (; !(IsConsumed(curFormatted) && IsConsumed(remaining));
+	     str->remove_prefix(cpLen), prev = next) {
+		const bool isProcessingFormatArgValue = !IsConsumed(curFormatted);
+		str = isProcessingFormatArgValue ? &curFormatted : &remaining;
+		next = DecodeFirstUtf8CodePoint(*str, &cpLen);
+		if (next == Utf8DecodeError) break;
+
+		// {{ and }} escapes in fmt.
+		if (!isProcessingFormatArgValue && (prev == U'{' || prev == U'}') && prev == next) continue;
+		// ZWSP are line-breaking opportunities that can otherwise be skipped for rendering as they have 0-width.
+		if (next == ZWSP) continue;
+
+		if (!isProcessingFormatArgValue) {
+			const std::optional<std::size_t> fmtArgPos = fmtArgParser(*str);
+			if (fmtArgPos.has_value()) {
+				// `fmtArgParser` has already consumed `*str`. Ensure the loop doesn't consume any more.
+				cpLen = 0;
+				// The loop assigns `prev = next`.
+				// We reset it to U'\0' to ensure that {{ and }} escapes are not processed accross
+				// the boundary of the format string and a formatted value.
+				next = U'\0';
+				currentFont.clear();
+				const DrawStringFormatArg &arg = args[*fmtArgPos];
+				curFormatted = arg.GetFormatted();
+				curFormattedColor = GetColorFromFlags(arg.GetFlags());
+				continue;
+			}
 		}
 
-		if (!currentFont.load(size, color, next)) {
+		const text_color curColor = isProcessingFormatArgValue ? curFormattedColor : color;
+		if (!currentFont.load(size, curColor, next)) {
 			next = U'?';
-			if (!currentFont.load(size, color, next)) {
+			if (!currentFont.load(size, curColor, next)) {
 				app_fatal("Missing fonts");
 			}
 		}
@@ -830,14 +867,22 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 			characterPosition.y = nextLineY;
 
 			if (HasAnyOf(opts.flags, UiFlags::KerningFitSpacing)) {
-				int nextLineWidth = GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, opts.spacing, &charactersInLine);
-				curSpacing = AdjustSpacingToFitHorizontally(nextLineWidth, opts.spacing, charactersInLine, rect.size.width);
+				int nextLineWidth = isProcessingFormatArgValue
+				    ? GetLineWidth(remaining, args, argsLen, fmtArgParser.offset(), size, originalSpacing, &charactersInLine,
+				          /*firstArgOffset=*/args[fmtArgParser.offset() - 1].GetFormatted().size() - (curFormatted.size() - cpLen))
+				    : GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, originalSpacing, &charactersInLine);
+				opts.spacing = AdjustSpacingToFitHorizontally(nextLineWidth, originalSpacing, charactersInLine, rect.size.width);
 			}
 
-			if (HasAnyOf(opts.flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
+			if (HasAnyOf(opts.flags, UiFlags::AlignCenter | UiFlags::AlignRight)) {
 				lineWidth = width;
-				if (remaining.size() > cpLen)
-					lineWidth += curSpacing + GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, curSpacing);
+				if (str->size() > cpLen) {
+					lineWidth += opts.spacing
+					    + (isProcessingFormatArgValue
+					            ? GetLineWidth(remaining, args, argsLen, fmtArgParser.offset(), size, opts.spacing, &charactersInLine,
+					                  /*firstArgOffset=*/args[fmtArgParser.offset() - 1].GetFormatted().size() - (curFormatted.size() - cpLen))
+					            : GetLineWidth(remaining.substr(cpLen), args, argsLen, fmtArgParser.offset(), size, opts.spacing, &charactersInLine));
+				}
 			}
 			characterPosition.x = GetLineStartX(opts.flags, rect, lineWidth);
 
@@ -845,8 +890,8 @@ void DrawStringWithColors(const Surface &out, std::string_view fmt, DrawStringFo
 				continue;
 		}
 
-		DrawFont(clippedOut, characterPosition, (*currentFont.sprite)[frame], color, outlined);
-		characterPosition.x += width + curSpacing;
+		DrawFont(clippedOut, characterPosition, (*currentFont.sprite)[frame], curColor, outlined);
+		characterPosition.x += width + opts.spacing;
 	}
 
 	if (HasAnyOf(opts.flags, UiFlags::PentaCursor)) {
